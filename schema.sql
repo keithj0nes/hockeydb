@@ -1,42 +1,36 @@
--- DROP TABLE IF EXISTS (table) CASCADE;
+-- DROP TABLE IF EXISTS users CASCADE;
+-- DROP TABLE IF EXISTS passwords CASCADE;
 
-CREATE TABLE "admins" (
-  "id" serial,
-  "first_name" varchar,
-  "last_name" varchar,
-  "email" varchar,
-  "is_suspended" bool,
-  "is_scorekeeper" bool
+
+CREATE TABLE "users" (
+  "id" SERIAL PRIMARY KEY,
+  "first_name" VARCHAR,
+  "last_name" VARCHAR,
+  "email" VARCHAR,
+  "is_suspended" BOOLEAN,
+  "suspended_date" TIMESTAMP,
+  "is_admin" BOOLEAN
 );
 
-INSERT INTO admins (first_name, last_name, email, is_suspended)
-VALUES ('test', 'ing', 'test@test.com', false)
+INSERT INTO users (first_name, last_name, email, is_suspended, suspended_date, is_admin)
+VALUES ('test', 'user', 'test@test.com', false, null, true)
 
 
 
--- CREATE TABLE "admins" (
---   "id" int,
---   "first_name" varchar,
---   "last_name" varchar,
---   "email" varchar,
---   "is_active" bool
--- );
+CREATE TABLE "passwords" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER REFERENCES users(id),
+  "salt" VARCHAR,
+  "pw" VARCHAR
+);
 
--- CREATE TABLE "scorekeepers" (
---   "id" int,
---   "first_name" varchar,
---   "last_name" varchar,
---   "email" varchar,
---   "is_active" bool
--- );
+INSERT INTO passwords (user_id, salt, pw)
+VALUES ('1', null, '123')
 
--- CREATE TABLE "passwords" (
---   "id" int,
---   "admin_id" int,
---   "scorekeeper_id" int,
---   "salt" varchar,
---   "pw" varchar
--- );
+
+
+
+
 
 -- CREATE TABLE "players" (
 --   "id" int,
