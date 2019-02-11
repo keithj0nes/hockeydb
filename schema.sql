@@ -1,6 +1,7 @@
 -- DROP TABLE IF EXISTS users CASCADE;
 -- DROP TABLE IF EXISTS passwords CASCADE;
 
+DROP TABLE IF EXISTS players;
 
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
@@ -13,7 +14,7 @@ CREATE TABLE "users" (
 );
 
 INSERT INTO users (first_name, last_name, email, is_suspended, suspended_date, is_admin)
-VALUES ('test', 'user', 'test@test.com', false, null, true)
+VALUES ('test', 'user', 'test@test.com', false, null, true);
 
 
 
@@ -25,7 +26,8 @@ CREATE TABLE "passwords" (
 );
 
 INSERT INTO passwords (user_id, salt, pw)
-VALUES ('1', null, '123')
+VALUES ('1', null, '123');
+
 
 
 CREATE TABLE "blog" (
@@ -36,16 +38,44 @@ CREATE TABLE "blog" (
 );
 
 
-
-
-
--- CREATE TABLE "players" (
 --   "id" int,
 --   "first_name" varchar,
 --   "last_name" varchar,
 --   "email" varchar,
 --   "team_id" int
 -- );
+
+CREATE TABLE IF NOT EXISTS players (
+  id  SERIAL PRIMARY KEY,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  email VARCHAR(255)
+);
+INSERT INTO players (first_name, last_name, email) VALUES ('keith' ,'j0nes', 'kjones@gmail.com');
+
+
+
+CREATE TABLE "player_stats" (
+  "id" SERIAL PRIMARY KEY,
+  "player_id" INTEGER REFERENCES players(id),
+  "team_id" INTEGER,
+  "season" varchar,
+  "games_played" INTEGER,
+  "goals" INTEGER,
+  "assists" INTEGER,
+  "points" INTEGER,
+  "penalties_in_minutes" INTEGER,
+  "game_winning_goals" INTEGER,
+  "power_play_goals" INTEGER,
+  "short_handed_goals" INTEGER,
+  "goals_per_game" INTEGER,
+  "assists_per_game" INTEGER,
+  "points_per_game" INTEGER
+);
+
+INSERT INTO player_stats (player_id, team_id, season, games_played, goals, assists, points, penalties_in_minutes, game_winning_goals, power_play_goals, short_handed_goals, goals_per_game, assists_per_game, points_per_game) 
+VALUES (1, 2, 'season 1', 10, 24, 12, 36, 20, 2, 3, 0, 0, 2, 2);
+
 
 -- CREATE TABLE "referees" (
 --   "id" int,
