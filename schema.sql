@@ -28,6 +28,13 @@ INSERT INTO passwords (user_id, salt, pw)
 VALUES ('1', null, '123')
 
 
+CREATE TABLE "blog" (
+  "id" SERIAL PRIMARY KEY,
+  "posted_by" INTEGER REFERENCES users(id),
+  "posted_date" TIMESTAMP,
+  "message" VARCHAR
+);
+
 
 
 
@@ -72,12 +79,6 @@ VALUES ('1', null, '123')
 --   "posted_date" datetime
 -- );
 
--- CREATE TABLE "blog" (
---   "id" int,
---   "posted_by" int,
---   "posted_date" datetime,
---   "message" varchar
--- );
 
 -- CREATE TABLE "games" (
 --   "id" int,
