@@ -41,11 +41,29 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 
 // return res.status(200).send({status: 200, data: user, message: 'You have successfully logged in'})
 
+// return errors -  
+// {
+//     status: number,
+//     error: boolean,
+//     message: string
+// }
+
+
+// return success - 
+// {
+//     status: number,
+//     data: array/object
+// }
 
 // ROUTES //
 
 // Blog
-app.get('/api/blog')
+app.get('/api/blog', async (req, res) => {
+    const data = await db.query('select * from blog order by id desc');
+    console.log(data, 'blogs!')
+    
+    res.status(200).send({status: 200, data, message: 'retrieved blog'})
+})
 
 // Schedule
 app.get('/api/schedule')
@@ -125,7 +143,20 @@ app.put('/api/players/:id', async (req, res) => {
 })
 
 // Update blog (post new blog)
-app.post('/api/blog')
+app.post('/api/blog', async (req, res) => {
+    const { message } = req.body;
+
+    console.log('message', message)
+
+    const data = await db.blog.insert({message, posted_date: new Date(), posted_by: 1})
+
+    console.log(blog, 'BLOG!')
+
+    return res.status(200).send({status: 200, data, message: 'Blog post created'})
+
+    
+})
+
 app.put('/api/blog/:id')
 
 // Update about 
@@ -159,9 +190,8 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
 
-    return res.status(200).send(user)
-
-
+    return res.status(200).send({status: 200, data: user, message: 'You have successfully logged in'})
+    
 
 })
 
@@ -179,18 +209,6 @@ app.put('/api/auth/:id')
 
 
 
-
-
-app.get('/api/start', (req, res) => {
-    console.log('getting here')
-
-    db.query('select * from admins where id = $1 AND email = $2', [2423, 'email@email.com']).then(users => {
-        console.log(users, 'res!')
-
-        res.send({ message: 'Getting users from the postgres DB.', users });
-
-    })
-});
 
 app.put('/api/admins', (req, res) => {
     console.log(req.body)
