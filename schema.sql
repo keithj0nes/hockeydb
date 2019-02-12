@@ -16,8 +16,6 @@ CREATE TABLE "users" (
 INSERT INTO users (first_name, last_name, email, is_suspended, suspended_date, is_admin)
 VALUES ('test', 'user', 'test@test.com', false, null, true);
 
-
-
 CREATE TABLE "passwords" (
   "id" SERIAL PRIMARY KEY,
   "user_id" INTEGER REFERENCES users(id),
@@ -28,32 +26,24 @@ CREATE TABLE "passwords" (
 INSERT INTO passwords (user_id, salt, pw)
 VALUES ('1', null, '123');
 
-
-
 CREATE TABLE "blog" (
   "id" SERIAL PRIMARY KEY,
   "posted_by" INTEGER REFERENCES users(id),
   "posted_date" TIMESTAMP,
-  "message" VARCHAR
+  "message" VARCHAR,
+  "updated_date" TIMESTAMP,
+  "deleted_date" TIMESTAMP,
+  "deleted_by" INTEGER REFERENCES users(id)
 );
 
-
---   "id" int,
---   "first_name" varchar,
---   "last_name" varchar,
---   "email" varchar,
---   "team_id" int
--- );
-
-CREATE TABLE IF NOT EXISTS players (
-  id  SERIAL PRIMARY KEY,
-  first_name VARCHAR(255),
-  last_name VARCHAR(255),
-  email VARCHAR(255)
+CREATE TABLE "players" (
+  "id"  SERIAL PRIMARY KEY,
+  "first_name" VARCHAR(255),
+  "last_name" VARCHAR(255),
+  "email" VARCHAR(255)
 );
-INSERT INTO players (first_name, last_name, email) VALUES ('keith' ,'j0nes', 'kjones@gmail.com');
 
-
+INSERT INTO players (first_name, last_name, email) VALUES ('yo' ,'mang', 'yomang@gmail.com');
 
 CREATE TABLE "player_stats" (
   "id" SERIAL PRIMARY KEY,
