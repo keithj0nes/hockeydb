@@ -92,8 +92,9 @@ app.post(`/api/admin/divisions`)
 app.put(`/api/admin/divisions/:id`)
 
 // Create team
-app.post(`/api/admin/teams`)
-app.put(`/api/admin/teams/:id`)
+app.post(`/api/admin/teams`, admin.createTeam);
+app.put(`/api/admin/teams/:id`, admin.updateTeam);
+app.delete(`/api/admin/teams/:id`, admin.deleteTeam);
 
 // Create player
 app.post(`/api/admin/players`, admin.createPlayer);

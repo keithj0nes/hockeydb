@@ -134,14 +134,16 @@ VALUES (1, 2, 'season 1', 10, 24, 12, 36, 20, 2, 3, 0, 0, 2, 2);
 --   "game_notes" varchar
 -- );
 
--- CREATE TABLE "teams" (
---   "id" int,
---   "team_name" varchar,
---   "team_division" varchar,
---   "team_colors" varchar,
---   "next_game" int,
---   "previous_game" int
--- );
+CREATE TABLE "teams" (
+  "id"  SERIAL PRIMARY KEY,
+  "team_name" VARCHAR(255),
+  "team_division" VARCHAR(255),
+  "team_colors" VARCHAR(255),
+  "next_game" int,
+  "previous_game" int
+);
+INSERT into teams (team_name, team_division, team_colors, next_game, previous_game)
+VALUES ('thunderbirds', 'western', 'navy blue/green/white', 2,1);
 
 -- CREATE TABLE "rinks" (
 --   "id" int,
