@@ -1,9 +1,12 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS passwords CASCADE;
 DROP TABLE IF EXISTS blog CASCADE;
-
 DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS player_stats CASCADE;
+DROP TABLE IF EXISTS teams CASCADE;
+DROP TABLE IF EXISTS seasons CASCADE;
+DROP TABLE IF EXISTS divisions CASCADE;
+
 
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
@@ -15,8 +18,6 @@ CREATE TABLE "users" (
   "is_admin" BOOLEAN
 );
 
-INSERT INTO users (first_name, last_name, email, is_suspended, suspended_date, is_admin)
-VALUES ('test', 'user', 'test@test.com', false, null, true);
 
 CREATE TABLE "passwords" (
   "id" SERIAL PRIMARY KEY,
@@ -25,15 +26,14 @@ CREATE TABLE "passwords" (
   "pw" VARCHAR
 );
 
-INSERT INTO passwords (user_id, salt, pw)
-VALUES ('1', null, '123');
 
 CREATE TABLE "blog" (
   "id" SERIAL PRIMARY KEY,
-  "posted_by" INTEGER REFERENCES users(id),
-  "posted_date" TIMESTAMP,
   "message" VARCHAR,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER REFERENCES users(id),
   "updated_date" TIMESTAMP,
+  "updated_by" INTEGER REFERENCES users(id),
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
@@ -42,10 +42,15 @@ CREATE TABLE "players" (
   "id"  SERIAL PRIMARY KEY,
   "first_name" VARCHAR(255),
   "last_name" VARCHAR(255),
-  "email" VARCHAR(255)
+  "email" VARCHAR(255),
+  "registered_date" TIMESTAMP,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER REFERENCES users(id),
+  "updated_date" TIMESTAMP,
+  "updated_by" INTEGER REFERENCES users(id),
+  "deleted_date" TIMESTAMP,
+  "deleted_by" INTEGER REFERENCES users(id)
 );
-
-INSERT INTO players (first_name, last_name, email) VALUES ('yo' ,'mang', 'yomang@gmail.com');
 
 CREATE TABLE "player_stats" (
   "id" SERIAL PRIMARY KEY,
@@ -65,8 +70,6 @@ CREATE TABLE "player_stats" (
   "points_per_game" INTEGER
 );
 
-INSERT INTO player_stats (player_id, team_id, season, games_played, goals, assists, points, penalties_in_minutes, game_winning_goals, power_play_goals, short_handed_goals, goals_per_game, assists_per_game, points_per_game) 
-VALUES (1, 2, 'season 1', 10, 24, 12, 36, 20, 2, 3, 0, 0, 2, 2);
 
 
 -- CREATE TABLE "referees" (
@@ -142,10 +145,42 @@ CREATE TABLE "teams" (
   "team_division" VARCHAR(255),
   "team_colors" VARCHAR(255),
   "next_game" int,
-  "previous_game" int
+  "previous_game" int,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER REFERENCES users(id),
+  "updated_date" TIMESTAMP,
+  "updated_by" INTEGER REFERENCES users(id),
+  "deleted_date" TIMESTAMP,
+  "deleted_by" INTEGER REFERENCES users(id)
 );
-INSERT into teams (team_name, team_division, team_colors, next_game, previous_game)
-VALUES ('thunderbirds', 'western', 'navy blue/green/white', 2,1);
+
+
+
+CREATE TABLE "seasons" (
+  "id"  SERIAL PRIMARY KEY,
+  "name" VARCHAR,
+  "type" VARCHAR,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER REFERENCES users(id),
+  "updated_date" TIMESTAMP,
+  "updated_by" INTEGER REFERENCES users(id),
+  "deleted_date" TIMESTAMP,
+  "deleted_by" INTEGER REFERENCES users(id)
+);
+
+
+CREATE TABLE "divisions" (
+  "id"  SERIAL PRIMARY KEY,
+  "name" VARCHAR,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER REFERENCES users(id),
+  "updated_date" TIMESTAMP,
+  "updated_by" INTEGER REFERENCES users(id),
+  "deleted_date" TIMESTAMP,
+  "deleted_by" INTEGER REFERENCES users(id)
+);
+
+
 
 -- CREATE TABLE "rinks" (
 --   "id" int,
@@ -190,6 +225,26 @@ VALUES ('thunderbirds', 'western', 'navy blue/green/white', 2,1);
 --   "empty_net_goals_against" int,
 --   "time_on_ice" int
 -- );
+
+
+
+INSERT INTO users (first_name, last_name, email, is_suspended, suspended_date, is_admin)
+VALUES ('test', 'user', 'test@test.com', false, null, true);
+
+INSERT INTO passwords (user_id, salt, pw)
+VALUES ('1', null, '123');
+
+INSERT INTO players (first_name, last_name, email) 
+VALUES ('yo' ,'mang', 'yomang@gmail.com');
+
+INSERT INTO player_stats (player_id, team_id, season, games_played, goals, assists, points, penalties_in_minutes, game_winning_goals, power_play_goals, short_handed_goals, goals_per_game, assists_per_game, points_per_game) 
+VALUES (1, 2, 'season 1', 10, 24, 12, 36, 20, 2, 3, 0, 0, 2, 2);
+
+INSERT INTO teams (team_name, team_division, team_colors, next_game, previous_game)
+VALUES ('thunderbirds', 'western', 'navy blue/green/white', 2,1);
+
+
+
 
 -- ALTER TABLE "passwords" ADD FOREIGN KEY ("admin_id") REFERENCES "admins" ("id");
 

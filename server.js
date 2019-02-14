@@ -84,12 +84,16 @@ app.get(`/api/about`)
 // ⭐ ️ ADMIN  ⭐️
 
 // Create seasons
-app.post(`/api/admin/seasons`)
-app.put(`/api/admin/seasons/:id`)
+app.post(`/api/admin/seasons`, admin.createSeason);
+app.put(`/api/admin/seasons/:id`, admin.updateSeason);
+app.delete(`/api/admin/seasons/:id`, admin.deleteSeason);
+
 
 // Create division
-app.post(`/api/admin/divisions`)
-app.put(`/api/admin/divisions/:id`)
+app.post(`/api/admin/divisions`, admin.createDivision);
+app.put(`/api/admin/divisions/:id`, admin.updateDivision);
+app.delete(`/api/admin/divisions/:id`, admin.deleteDivision);
+
 
 // Create team
 app.post(`/api/admin/teams`, admin.createTeam);
@@ -99,6 +103,7 @@ app.delete(`/api/admin/teams/:id`, admin.deleteTeam);
 // Create player
 app.post(`/api/admin/players`, admin.createPlayer);
 app.put(`/api/admin/players/:id`, admin.updatePlayer)
+app.delete(`/api/admin/players/:id`, admin.deletePlayer)
 
 // Create blog post
 app.post(`/api/admin/blog`, admin.createBlog)
