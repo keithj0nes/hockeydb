@@ -9,6 +9,8 @@ const getBlogs = async (req, res) => {
     res.status(200).send({status: 200, data, message: 'Retrieved list of blogs'})
 }
 
+
+
 const getBlogbyId = async (req, res) => {
     const db = app.get('db');
     const { id } = req.params;
