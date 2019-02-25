@@ -120,7 +120,7 @@ const createBlog = async (req, res) => {
 
     console.log('message', message)
 
-    const data = await db.blog.insert({ id }, { message, posted_date: new Date(), posted_by: 1 }).catch(err => console.log(err, 'create blog error'))
+    const data = await db.blog.insert({ message, posted_date: new Date(), posted_by: 1 }).catch(err => console.log(err, 'create blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Blog post created' })
 
