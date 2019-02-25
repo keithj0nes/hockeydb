@@ -106,7 +106,7 @@ app.put(`/api/admin/players/:id`, admin.updatePlayer)
 app.delete(`/api/admin/players/:id`, admin.deletePlayer)
 
 // Create blog post
-app.post(`/api/admin/blog`, admin.createBlog)
+app.post(`/api/admin/blog`, auth.authorizeAccessToken, admin.createBlog)
 app.put(`/api/admin/blog/:id`, admin.updateBlog)
 app.delete(`/api/admin/blog/:id`, admin.deleteBlog)
 
@@ -119,6 +119,9 @@ app.post(`/api/admin/about`)
 
 // Log in
 app.post(`/api/auth/login`, auth.login)
+// Sign up
+app.post('/api/auth/signup', auth.signup)
+
 
 // Log out
 app.post(`/api/auth/:id/logout`)
@@ -133,6 +136,19 @@ app.post(`/api/auth`);
 app.put(`/api/auth/:id`)
 
 
+// secure route
+
+app.get('/topsecretroute', auth.authorizeAccessToken, (req, res, next) => {
+
+    return res.status(200).send({
+        status: 200, 
+        data: {
+            user: req.user, 
+            access_token: req.headers.authorization.split(' ')[1]
+        }, 
+        message: 'We reached the top secret route'
+    })
+})
 
 
 
