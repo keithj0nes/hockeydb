@@ -280,6 +280,67 @@ const deleteDivision = async (req, res) => {
 
 
 
+// ⭐️  Locations ⭐️
+
+
+const createLocation = async (req, res) => {
+    console.log('creating!')
+    const db = app.get('db');
+
+    const { name, address } = req.body;
+
+    const location = await db.locations.findOne({ name }).catch(err => console.log(err, 'error in create season'));
+
+    console.log(location, 'location!')
+    if(location){
+        return res.status(400).send({ status: 400, error: true, message: 'Location already exists.' })        
+    }
+
+    const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create location error'))
+
+    return res.status(200).send({ status: 200, data, message: 'Division created' })
+
+}
+
+
+const updateLocation = async (req, res) => {
+    const db = app.get('db');
+
+    const { name, address } = req.body;
+    const { id } = req.params;
+
+    const location = await db.locations.findOne({ id }).catch(err => console.log(err));
+
+    if (!location) {
+        return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
+    }
+
+    const data = await db.locations.update({ id }, { name, address, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update location error'))
+
+    return res.status(200).send({ status: 200, data, message: 'Location updated' })
+
+}
+
+const deleteLocation = async (req, res) => {
+    const db = app.get('db');
+
+    const { id } = req.params;
+
+    const location = await db.locations.findOne({ id }).catch(err => console.log(err));
+
+    if (!location) {
+        return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
+    }
+
+    const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete location error'))
+
+    return res.status(200).send({ status: 200, data, message: 'Location deleted' })
+
+}
+
+
+
+
 module.exports = {
     createPlayer,
     updatePlayer,
@@ -299,5 +360,9 @@ module.exports = {
 
     createDivision,
     updateDivision,
-    deleteDivision
+    deleteDivision,
+
+    createLocation,
+    updateLocation,
+    deleteLocation
 }

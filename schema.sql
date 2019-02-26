@@ -184,12 +184,17 @@ CREATE TABLE "divisions" (
 );
 
 
-
--- CREATE TABLE "rinks" (
---   "id" int,
---   "rink_name" varchar,
---   "rink_address" varchar
--- );
+CREATE TABLE "locations" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR,
+  "address" VARCHAR,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER REFERENCES users(id),
+  "updated_date" TIMESTAMP,
+  "updated_by" INTEGER REFERENCES users(id),
+  "deleted_date" TIMESTAMP,
+  "deleted_by" INTEGER REFERENCES users(id)
+);
 
 -- CREATE TABLE "player_stats" (
 --   "id" int,
