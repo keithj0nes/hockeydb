@@ -15,7 +15,10 @@ CREATE TABLE "users" (
   "email" VARCHAR,
   "is_suspended" BOOLEAN,
   "suspended_date" TIMESTAMP,
-  "is_admin" BOOLEAN
+  "is_admin" BOOLEAN,
+  "invite_token" VARCHAR,
+  "invite_date" TIMESTAMP,
+  "reinvite_date" TIMESTAMP
 );
 
 
