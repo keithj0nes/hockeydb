@@ -96,12 +96,15 @@ app.post(`/api/admin/seasons`, admin.createSeason);
 app.put(`/api/admin/seasons/:id`, admin.updateSeason);
 app.delete(`/api/admin/seasons/:id`, admin.deleteSeason);
 
-
 // Create division
 app.post(`/api/admin/divisions`, admin.createDivision);
 app.put(`/api/admin/divisions/:id`, admin.updateDivision);
 app.delete(`/api/admin/divisions/:id`, admin.deleteDivision);
 
+// Create location
+app.post(`/api/admin/locations`, admin.createLocation);
+app.put(`/api/admin/locations/:id`, admin.updateLocation);
+app.delete(`/api/admin/locations/:id`, admin.deleteLocation);
 
 // Create team
 app.post(`/api/admin/teams`, admin.createTeam);
