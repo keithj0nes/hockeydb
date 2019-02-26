@@ -2,10 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const massive = require('massive');
 
+const config = require('./config');
+
+
+const jwt = require('jsonwebtoken');
+
+
+
+
 require('dotenv').config();
 
 const app = module.exports = express();
-const port = process.env.PORT || 8010;
+const port = process.env.PORT || config.PORT;
 
 const version = 'v1';
 
@@ -122,6 +130,12 @@ app.post(`/api/auth/login`, auth.login)
 // Sign up
 app.post('/api/auth/signup', auth.signup)
 
+// Invite user
+// THESE ROUTES NEED:
+//  - NODEMAILER
+//  - ROUTE FOR USER TO ENTER PASSWORD AFTER CLICKING EMAIL LINK
+app.post('/api/auth/invite', auth.invite)
+app.put('/api/auth/invite/:id', auth.reinvite)
 
 // Log out
 app.post(`/api/auth/:id/logout`)

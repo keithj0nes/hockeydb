@@ -3,7 +3,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const config = require('../config');
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const authorizeAccessToken = async (req, res, next) => {
     passport.authenticate('jwt', {session: false}, (err, user, info) => {
@@ -15,6 +17,7 @@ const authorizeAccessToken = async (req, res, next) => {
     })(req, res, next)
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const login = async (req, res) => {
     passport.authenticate('local-login', async (err, user, info) => {
@@ -28,12 +31,13 @@ const login = async (req, res) => {
                 console.log(errr, 'errr')
                 return res.status(500).send({status: 500, error: true, message:  `An error occurred: ${errr}`})
             }
-            const token = jwt.sign({user}, 'top_secret')
+            const token = jwt.sign({user}, config.JWTSECRET)
             res.status(200).send({status: 200, data: user, token, message: 'Welcome! You"re logged in!'})
         })
     })(req, res)
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const signup = async (req, res) => {
     passport.authenticate('local-signup', async (err, user, info) => {
@@ -47,6 +51,50 @@ const signup = async (req, res) => {
     })(req, res)
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const invite = async (req, res) => {
+    const { email, first_name, last_name } = req.body;
+    
+    const user = await db.users.findOne({email});
+
+    if(user){
+        return res.status(400).send({status: 400, error: true, message: 'User exists.'})
+    }
+
+    //set invite token with expiry
+    const invite_token = jwt.sign({email, first_name, last_name}, config.JWTSECRET, {expiresIn: '8h'})
+    //add user by email
+    //add user names
+    //add invite_token
+    const newUser = await db.users.insert({email, first_name, last_name, invite_token, invite_date: new Date()})
+    //send email 
+    //await for response
+    return res.status(200).send({status: 200, data: newUser, message: 'User has been invited.'})
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const reinvite = async (req, res) => {
+
+    const { id } = req.params;
+
+    const user = await db.users.findOne({id});
+
+    if(!user){
+        return res.status(400).send({status: 400, error: true, message: 'User does not exist.'})
+    }
+
+    //set invite token with expiry
+    const invite_token = jwt.sign({email: user.email, first_name: user.first_name, last_name: user.last_name}, config.JWTSECRET, {expiresIn: '8h'})
+    //update invite_token
+    //update reinvite_date
+    const reInvitedUser = await db.users.update({id}, { invite_token, reinvite_date: new Date()})
+    //send email 
+    //await for response
+    return res.status(200).send({status: 200, data: reInvitedUser, message: 'User has been reinvited.'})
+
+}
 
 
 
@@ -54,7 +102,9 @@ const signup = async (req, res) => {
 module.exports = {
     authorizeAccessToken,
     login, 
-    signup
+    signup,
+    invite,
+    reinvite
 }
 
 
@@ -78,9 +128,7 @@ passport.use('local-login', new LocalStrategy({
     }
     const pw = await db.passwords.findOne({user_id: user.id})
 
-
     const comparedPassword = await bcrypt.compare(password, pw.pw)
-    console.log(comparedPassword)
 
     if(!comparedPassword){
         return done(null, false, {message: "PASSWORD WRONGGGG"})
@@ -129,7 +177,7 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 passport.use('jwt', new JWTStrategy({
-    secretOrKey: 'top_secret',
+    secretOrKey: config.JWTSECRET,
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
     console.log(token, 'TOKEN!!!!!!!!')
