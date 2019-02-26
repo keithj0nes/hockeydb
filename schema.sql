@@ -108,47 +108,13 @@ CREATE TABLE "player_stats" (
 -- );
 
 
--- CREATE TABLE "games" (
---   "id" int,
---   "has_been_played" bool,
---   "home_team" int,
---   "away_team" int,
---   "rink_id" int,
---   "start_date" datetime,
---   "home_score" int,
---   "home_first_score" int,
---   "home_second_score" int,
---   "home_third_score" int,
---   "home_first_sog" int,
---   "home_second_sog" int,
---   "home_third_sog" int,
---   "home_first_pim" int,
---   "home_second_pim" int,
---   "home_third_pim" int,
---   "away_score" int,
---   "away_first_score" int,
---   "away_second_score" int,
---   "away_third_score" int,
---   "away_first_sog" int,
---   "away_second_sog" int,
---   "away_third_sog" int,
---   "away_first_pim" int,
---   "away_second_pim" int,
---   "away_third_pim" int,
---   "ref_one" int,
---   "ref_two" int,
---   "ref_three" int,
---   "scorekeeper" int,
---   "game_notes" varchar
--- );
+
 
 CREATE TABLE "teams" (
-  "id"  SERIAL PRIMARY KEY,
-  "team_name" VARCHAR(255),
-  "team_division" VARCHAR(255),
-  "team_colors" VARCHAR(255),
-  "next_game" int,
-  "previous_game" int,
+  "id" SERIAL PRIMARY KEY,
+  "division_id" INTEGER REFERENCES divisions(id),
+  "name" VARCHAR,
+  "colors" VARCHAR,
   "created_date" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
   "updated_date" TIMESTAMP,
@@ -156,7 +122,6 @@ CREATE TABLE "teams" (
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
-
 
 
 CREATE TABLE "seasons" (
@@ -194,6 +159,38 @@ CREATE TABLE "locations" (
   "updated_by" INTEGER REFERENCES users(id),
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
+);
+
+
+CREATE TABLE "games" (
+  "id" SERIAL PRIMARY KEY,
+  "has_been_played" BOOLEAN,
+  "home_team" INTEGER REFERENCES teams(id),
+  "away_team" INTEGER REFERENCES teams(id),
+  "location_id" INTEGER REFERENCES locations(id),
+  "scorekeeper" INTEGER REFERENCES users(id),
+  "start_date" TIMESTAMP,
+  "home_score" INTEGER,
+  "home_first_score" INTEGER,
+  "home_second_score" INTEGER,
+  "home_third_score" INTEGER,
+  "home_first_sog" INTEGER,
+  "home_second_sog" INTEGER,
+  "home_third_sog" INTEGER,
+  "home_first_pim" INTEGER,
+  "home_second_pim" INTEGER,
+  "home_third_pim" INTEGER,
+  "away_score" INTEGER,
+  "away_first_score" INTEGER,
+  "away_second_score" INTEGER,
+  "away_third_score" INTEGER,
+  "away_first_sog" INTEGER,
+  "away_second_sog" INTEGER,
+  "away_third_sog" INTEGER,
+  "away_first_pim" INTEGER,
+  "away_second_pim" INTEGER,
+  "away_third_pim" INTEGER,
+  "game_notes" VARCHAR
 );
 
 -- CREATE TABLE "player_stats" (

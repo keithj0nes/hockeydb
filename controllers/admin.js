@@ -22,7 +22,7 @@ const createPlayer = async (req, res) => {
     console.log('saved players and stats');
 
     const data = { ...createdStats, ...createdPlayer }
-    return res.status(200).send({ status: 200, data, message: 'Player player' })
+    return res.status(200).send({ status: 200, data, message: 'Player created' })
 
 }
 
@@ -39,7 +39,7 @@ const updatePlayer = async (req, res) => {
     const data = await db.players.update({ id }, { first_name, last_name, email, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update player error'));
 
 
-    return res.status(200).send({ status: 200, data, message: 'player has been updated' });
+    return res.status(200).send({ status: 200, data, message: 'Player updated' });
 
 }
 
@@ -57,7 +57,7 @@ const deletePlayer = async (req, res) => {
 
     const data = await db.players.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete player error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Blog post deleted' })
+    return res.status(200).send({ status: 200, data, message: 'Player deleted' })
 
 }
 
@@ -68,30 +68,30 @@ const deletePlayer = async (req, res) => {
 
 const createTeam = async (req, res) => {
     const db = app.get('db')
-    const { team_name, team_division, team_colors, next_game, previous_game } = req.body;
-    const team = await db.teams.findOne({ team_name }).catch(err => console.log(err, 'error'));
+    const { name, division_id, colors } = req.body;
+    const team = await db.teams.findOne({ name }).catch(err => console.log(err, 'error'));
 
     if (team) {
         return res.status(400).send({ status: 400, data: [], message: 'team already exists' });
     }
 
-    const data = await db.teams.insert({ team_name, team_division, team_colors, next_game, previous_game, created_date: new Date(), created_by: 1 });
-    return res.status(200).send({ status: 200, data, message: 'You have successfully created a team' });
+    const data = await db.teams.insert({ name, division_id, colors, created_date: new Date(), created_by: 1 });
+    return res.status(200).send({ status: 200, data, message: 'Team created' });
 
 
 }
 
 const updateTeam = async (req, res) => {
     const db = app.get('db');
-    const { team_name, team_division, team_colors, next_game, previous_game } = req.body;
+    const { name, division_id, colors } = req.body;
     const { id } = req.params;
 
     const team = await db.teams.findOne({ id }).catch(err => console.log(err));
     if (!team) {
-        return res.status(404).send({ status: 404, error: true, message: 'team not found' })
+        return res.status(404).send({ status: 404, error: true, message: 'Team not found' })
     }
-    const updatedTeam = await db.teams.update({ id }, { team_name, team_division, team_colors, next_game, previous_game, updated_date: new Date(), updated_by: 1 });
-    return res.status(200).send({ status: 200, data: updatedTeam, message: 'team has been updated' });
+    const updatedTeam = await db.teams.update({ id }, { name, division_id, colors, next_game, previous_game, updated_date: new Date(), updated_by: 1 });
+    return res.status(200).send({ status: 200, data: updatedTeam, message: 'Team updated' });
 }
 
 const deleteTeam = async (req, res) => {
@@ -100,11 +100,11 @@ const deleteTeam = async (req, res) => {
 
     const team = await db.teams.findOne({ id }).catch(err => console.log(err));
     if (!team) {
-        return res.status(404).send({ status: 404, error: true, message: 'team not found' })
+        return res.status(404).send({ status: 404, error: true, message: 'Team not found' })
     }
     // 🚨 🚨  not sure what deleted_by should be just copied how you had it in posts, not exactly sure how you want to delete teams
     const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'error'))
-    return res.status(200).send({ status: 200, data, message: 'team deleted' })
+    return res.status(200).send({ status: 200, data, message: 'Team deleted' })
 }
 
 
@@ -298,7 +298,7 @@ const createLocation = async (req, res) => {
 
     const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create location error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Division created' })
+    return res.status(200).send({ status: 200, data, message: 'Location created' })
 
 }
 
