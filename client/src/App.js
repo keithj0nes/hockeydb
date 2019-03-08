@@ -10,10 +10,10 @@ class App extends Component {
     users: []
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     const data = await axios.get('/api/start');
     console.log(data.data, 'data')
-    this.setState({users: data.data.users})
+    this.setState({ users: data.data.users })
   }
 
   handleUser = async () => {
@@ -23,7 +23,7 @@ class App extends Component {
       email: 'tanner@smitherines.com'
     }
     const data = await axios.post('/api/admins', user)
-    if(data.data.error) return alert(data.data.message)
+    if (data.data.error) return alert(data.data.message)
     const users = [...this.state.users, data.data.user];
 
     this.setState({ users })

@@ -89,12 +89,12 @@ CREATE TABLE "player_stats" (
 --   "game_id" int
 -- );
 
--- CREATE TABLE "players_teams" (
---   "id" int,
---   "player_id" int,
---   "team_id" int,
---   "season" varchar
--- );
+CREATE TABLE "players_teams" (
+  "id" SERIAL PRIMARY KEY,
+  "player_id" INTEGER REFERENCES players(id),
+  "team_id" INTEGER REFERENCES teams(id),
+  "season" INTEGER REFERENCES seasons(id),
+);
 
 -- CREATE TABLE "suspensions" (
 --   "id" int,
