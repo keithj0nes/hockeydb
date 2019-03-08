@@ -23,6 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const admin = require('./controllers/admin');
 const blogs = require('./controllers/blogs');
 const auth = require('./controllers/auth');
+const players = require('./controllers/players');
+const teams = require('./controllers/teams');
 
 //Make sure to create a local postgreSQL db called hockeydb
 
@@ -36,6 +38,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 }).catch(err => {
     console.log(err, 'massive err');
 });
+
 
 // return errors -  
 // {
@@ -59,7 +62,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 
 // Blog
 app.get(`/api/blog`, blogs.getBlogs);
-app.get(`/api/blog/:id`, blogs.getBlogbyId)
+app.get(`/api/blog/:id`, blogs.getBlogById)
 
 // Schedule
 app.get(`/api/schedule`)
@@ -68,12 +71,12 @@ app.get(`/api/schedule`)
 app.get(`/api/scoresheets/:id`)
 
 // Teams
-app.get(`/api/teams/`)
-app.get(`/api/teams/:id`)
+app.get(`/api/teams/`, teams.getAllTeams);
+app.get(`/api/teams/:id`, teams.getTeamById);
 
 // Players
-app.get(`/api/players`)
-app.get(`/api/players/:id`)
+app.get(`/api/players`, players.getAllPlayers);
+app.get(`/api/players/:id`, players.getPlayerById);
 
 
 // Standings 
@@ -158,11 +161,11 @@ app.put(`/api/auth/:id`)
 app.get('/topsecretroute', auth.authorizeAccessToken, (req, res, next) => {
 
     return res.status(200).send({
-        status: 200, 
+        status: 200,
         data: {
-            user: req.user, 
+            user: req.user,
             access_token: req.headers.authorization.split(' ')[1]
-        }, 
+        },
         message: 'We reached the top secret route'
     })
 })
