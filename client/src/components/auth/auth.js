@@ -1,7 +1,5 @@
 import React from 'react';
-import jwt from 'jsonwebtoken';
 
-import { LoginContext } from './context.js';
 
 const If = props => {
   console.log(props.condition, '✅', props.children);
@@ -11,24 +9,9 @@ const If = props => {
 
 class Auth extends React.Component {
   render() {
+    console.log(this.props.role, 'ROLE')
     return (
-      <LoginContext.Consumer>
-        {context => {
-          let user = context.token ? jwt.verify(context.token, 'changeit') : {};
-          let okToRender =
-            context.loggedIn &&
-            (this.props.capability
-              ? user.capabilities.includes(this.props.capability)
-              : true);
-          console.log(this.props.capability, 'here');
-          console.log(user.capabilities, 'lol');
-
-
-
-
-          return <If condition={okToRender}>{this.props.children}</If>;
-        }}
-      </LoginContext.Consumer>
+      <If condition={this.props.role}>{this.props.children}</If>
     );
   }
 }

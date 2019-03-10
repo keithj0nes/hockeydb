@@ -6,8 +6,14 @@ export class Test extends Component {
     return (
       <div>
         <h1>Made it</h1>
-        <Auth capability="update">
-          <h1>Admin</h1>
+        <Auth role='Super Administrator'>
+          <h1> Super Admin</h1>
+        </Auth>
+        <Auth role='Administrator'>
+          <h1>Admin </h1>
+        </Auth>
+        <Auth role='Scorekeeper'>
+          <h1>ScreKepper </h1>
         </Auth>
       </div>
     )
