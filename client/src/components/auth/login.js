@@ -1,17 +1,8 @@
-import superagent from "superagent";
-import querystring from "querystring";
 import React from "react";
 import { connect } from "react-redux";
-import { LoginContext } from "./context.js";
-import axios from 'axios';
-
-import { login } from '../../redux/actions';
-
-
+import { login, logout } from '../../redux/actions/actions';
 // import '../../styles/login.scss';
 
-const API = 'http://localhost:8010';
-// const API = "https://javascript-401-api.herokuapp.com";
 
 const If = props => {
   return !!props.condition ? props.children : null;
@@ -21,8 +12,10 @@ class Login extends React.Component {
 
 
   state = {
-    email: 'seramurt@gmail.com',
-    password: 'tann09'
+    // email: 'seramurt@gmail.com',
+    // password: 'tann09'
+    email: 'test@test.test',
+    password: 'test'
   }
 
   handleChange = e => {
@@ -41,20 +34,17 @@ class Login extends React.Component {
   };
 
   render() {
-    // return (
-    // <LoginContext.Consumer>
-    //   {context => {
-    //     console.log("CTX", context);
     return (
       <div>
         <If condition={this.props.isUserLoggedIn}>
-          <button className='logout-btn' onClick={e => this.logout(e)}>
+          <h1>Welcome {this.props.user.first_name}</h1>
+          <button className='logout-btn' onClick={this.props.logout}>
             Log Out
-                </button>
+          </button>
         </If>
         <If condition={!this.props.isUserLoggedIn}>
           <div className="form">
-            <form onSubmit={e => this.handleSubmit(e)}>
+            <form onSubmit={this.handleSubmit}>
               <h1>Login</h1>
               <div className='inputs'>
                 <input
@@ -80,10 +70,6 @@ class Login extends React.Component {
     );
   }
 }
-// </LoginContext.Consumer>
-// );
-// }
-// }
 
 
 const mapStateToProps = state => ({
@@ -100,6 +86,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   login: loginData => dispatch(login(loginData)),
+  logout: () => dispatch(logout())
 })
 
 

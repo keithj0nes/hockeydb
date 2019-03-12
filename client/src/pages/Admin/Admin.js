@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { Provider } from 'react-redux';
 // import { BrowserRouter } from 'react-router-dom';
 import One from './Test';
 
 // Auth
-import Auth from "../../components/auth/auth.js";
+import Auth from "../../components/auth/Auth.js";
 import Login from "../../components/auth/Login.js";
-import LoginContext from "../../components/auth/context.js";
+import LoginContext from "../../components/auth/Context.js";
 
 export class Admin extends Component {
   render() {

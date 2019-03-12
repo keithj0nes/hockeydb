@@ -9,9 +9,9 @@ const If = props => {
 
 class Auth extends React.Component {
   render() {
-    console.log(this.props.role, 'ROLE')
+    console.log(this.props.roles, 'ROLE')
     return (
-      <If condition={this.props.role}>{this.props.children}</If>
+      <If condition={this.props.roles}>{this.props.children}</If>
     );
   }
 }
