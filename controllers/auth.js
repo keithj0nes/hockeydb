@@ -22,8 +22,10 @@ const authorizeAccessToken = async (req, res, next) => {
 const login = async (req, res) => {
     passport.authenticate('local-login', async (err, user, info) => {
         if(err || !user){
-            console.log(err, user, info)
-            return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
+            console.log(err, user, info, 'error')
+            // return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
+            return res.send({status: 404, error: true, message: err || 'Incorrect email or password.'})
+
         }
 
         req.login(user, { session: false }, async (errr) => {
@@ -31,8 +33,8 @@ const login = async (req, res) => {
                 console.log(errr, 'errr')
                 return res.status(500).send({status: 500, error: true, message:  `An error occurred: ${errr}`})
             }
-            const token = jwt.sign({user}, config.JWTSECRET)
-            res.status(200).send({status: 200, data: user, token, message: 'Welcome! You"re logged in!'})
+            const acces_token = jwt.sign({user}, config.JWTSECRET)
+            res.status(200).send({status: 200, data: {...user, access_token: acces_token}, message: 'Welcome! You"re logged in!'})
         })
     })(req, res)
 }
