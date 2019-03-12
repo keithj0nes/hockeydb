@@ -124,6 +124,24 @@ app.delete(`/api/admin/blog/:id`, admin.deleteBlog)
 // Update about 
 app.post(`/api/admin/about`)
 
+// Create game
+
+app.post('/api/admin/games', async (req, res) => {
+    
+    const { home_team, away_team, location_id, start_date } = req.body;
+
+    const game = await db.games.insert({home_team, away_team, location_id, start_date, has_been_played: false});
+
+    return res.status(200).send({status: 200, data: game, message: 'Game created.'})
+
+})
+
+
+
+
+
+
+
 
 
 // AUTH //
