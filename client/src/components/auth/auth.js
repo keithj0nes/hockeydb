@@ -2,7 +2,7 @@ import React from 'react';
 
 
 const If = props => {
-  console.log(props.condition, '✅', props.children);
+  // console.log(props.condition, '✅', props.children);
 
   return !!props.condition ? props.children : null;
 };
