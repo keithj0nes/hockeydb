@@ -9,6 +9,7 @@ const config = require('../config');
 
 const authorizeAccessToken = async (req, res, next) => {
     passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        console.log(user, 'user!')
         if(err || !user){
             return res.status(401).send({status: 401, error: true, message: err || "Unauthorized"})
         }
@@ -18,6 +19,21 @@ const authorizeAccessToken = async (req, res, next) => {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const loginFromCookie = async (req, res, next) => {
+    passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        console.log(user, err, info)
+        if(err || !user){
+            return res.status(401).send({status: 401, error: true, message: err || "Unauthorized"})
+        }
+        req.user = user;
+        res.status(200).send({status: 200, data: {...user}, message: 'Welcome back! You\'re logged in on refresh!'})
+    })(req, res)
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 const login = async (req, res) => {
     passport.authenticate('local-login', async (err, user, info) => {
@@ -34,7 +50,7 @@ const login = async (req, res) => {
                 return res.status(500).send({status: 500, error: true, message:  `An error occurred: ${errr}`})
             }
             const acces_token = jwt.sign({user}, config.JWTSECRET)
-            res.status(200).send({status: 200, data: {...user, access_token: acces_token}, message: 'Welcome! You"re logged in!'})
+            res.status(200).send({status: 200, data: {...user, access_token: acces_token}, message: 'Welcome! You\'re logged in!'})
         })
     })(req, res)
 }
@@ -106,7 +122,8 @@ module.exports = {
     login, 
     signup,
     invite,
-    reinvite
+    reinvite,
+    loginFromCookie
 }
 
 
@@ -182,8 +199,8 @@ passport.use('jwt', new JWTStrategy({
     secretOrKey: config.JWTSECRET,
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
-    console.log(token, 'TOKEN!!!!!!!!')
     try {
+        console.log(token, 'TOKEN!!!!!!!!')
         return done(null, token.user)
     }
     catch (err) {
