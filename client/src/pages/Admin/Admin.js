@@ -7,9 +7,10 @@ import Login from "../../components/auth/Login.js";
 
 export class Admin extends Component {
   render() {
+    console.log(this.props, 'pr')
     return (
       <div>
-        <Login />
+        <Login {...this.props}/>
         <hr />
         <Auth>
           <One />
