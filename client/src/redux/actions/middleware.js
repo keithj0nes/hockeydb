@@ -34,7 +34,8 @@ export const request = async (route, method, session, noAuth) => {
         //NOT BEING USED YET
 
         console.log(`status error: ${status} - ${message}`)
-        return alert(`status error: ${status} - ${message}`)
+        alert(`status error: ${status} - ${message}`)
+        return false;
     }
 
 

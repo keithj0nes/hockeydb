@@ -3,22 +3,24 @@ import { request } from './middleware';
 import cookie from 'react-cookies';
 import jwt from 'jsonwebtoken';
 import { JWTSECRET } from '../../client_config';
+import { AUTH_SET_USER } from '../actionTypes';
 
-export const setUser = user => ({ type: 'AUTH_SET_USER', payload: user })
+
+
+export const setUser = user => ({ type: AUTH_SET_USER, payload: user })
 
 export const login = loginData => async dispatch => {
 
   const data = await request('/api/auth/login', 'POST', {data: loginData}, true)
-  console.log(data, 'data!')
+  if(!data) return false;
   cookie.save('auth', data.access_token);
   dispatch(setUser( data ))
+  return true;
 }
 
 export const logout = () => (dispatch, getState) => {
-
   cookie.remove('auth');
   dispatch(setUser({}))
-
 }
 
 

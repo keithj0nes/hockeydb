@@ -4,12 +4,7 @@ import { login, logout } from '../../redux/actions/actions';
 // import '../../styles/login.scss';
 
 
-const If = props => {
-  return !!props.condition ? props.children : null;
-};
-
 class Login extends React.Component {
-
 
   state = {
     // email: 'seramurt@gmail.com',
@@ -18,31 +13,30 @@ class Login extends React.Component {
     password: 'test'
   }
 
+  componentDidMount(){
+    return this.props.isUserLoggedIn && this.props.history.push('/dashboard');
+  }
+
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    this.props.login(this.state)
-
-
+    const loggedIn = await this.props.login(this.state)
+    return loggedIn && this.props.history.push('/dashboard');
   };
 
-  logout = (e, logoutMethodFromProvider) => {
-    logoutMethodFromProvider();
-  };
+  handleLogout = () => {
+    this.props.logout();
+    this.props.history.push('/');
+  }
+
+
 
   render() {
     return (
       <div>
-        <If condition={this.props.isUserLoggedIn}>
-          <h1>Welcome {this.props.user.first_name}</h1>
-          <button className='logout-btn' onClick={this.props.logout}>
-            Log Out
-          </button>
-        </If>
-        <If condition={!this.props.isUserLoggedIn}>
           <div className="form">
             <form onSubmit={this.handleSubmit}>
               <h1>Login</h1>
@@ -64,8 +58,6 @@ class Login extends React.Component {
               </div>
             </form>
           </div>
-        </If>
-
       </div>
     );
   }

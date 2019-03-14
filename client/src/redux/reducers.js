@@ -1,3 +1,5 @@
+import { AUTH_SET_USER } from './actionTypes';
+
 const initialState = {
   user: {},
   isUserLoggedIn: false,
@@ -6,7 +8,7 @@ const initialState = {
 
 export const user = (state = initialState, { type, payload }) => {
   switch (type) {
-    case "AUTH_SET_USER":
+    case AUTH_SET_USER:
       return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn }
     default:
       return state;
