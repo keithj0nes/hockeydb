@@ -1,8 +1,10 @@
-import { AUTH_SET_USER } from './actionTypes';
+import { AUTH_SET_USER, GET_BLOGS } from './actionTypes';
+
 
 const initialState = {
   user: {},
   isUserLoggedIn: false,
+  blogs: []
 
 };
 
@@ -14,3 +16,13 @@ export const user = (state = initialState, { type, payload }) => {
       return state;
   }
 };
+
+export const blogs = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case GET_BLOGS:
+      return { ...state, blogs: payload }
+    default:
+      return state;
+  }
+};
+

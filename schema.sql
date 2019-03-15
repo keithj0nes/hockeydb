@@ -40,6 +40,9 @@ CREATE TABLE "blog" (
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
+-- INSERT INTO blog (message, created_date, created_by, updated_date, updated_by, deleted_date, deleted_by)
+-- VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales metus et dolor convallis, auctor vulputate lectus imperdiet. Donec tempor porta metus, sit amet dictum nisi pretium id. Nulla vitae massa efficitur, malesuada velit eget, aliquam odio. Vestibulum nunc ex, ullamcorper a luctus vitae, rhoncus eget turpis. Duis rhoncus lobortis dignissim. In sollicitudin vel turpis at lobortis. Aenean eget pretium mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum sit amet sapien nec diam commodo dignissim eu at dui.', 
+-- null, null, null, null, null, null);
 
 CREATE TABLE "players" (
   "id"  SERIAL PRIMARY KEY,
