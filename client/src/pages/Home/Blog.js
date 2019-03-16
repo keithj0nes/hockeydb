@@ -12,17 +12,19 @@ export class Blog extends Component {
     return (
       <div>
         <h1>blog</h1>
-
+        {this.props.blogs.map(item => (
+          <p>{item.message}</p>
+        ))}
       </div>
     )
   }
 }
 const mapStateToProps = state => {
   console.log(state, "our state 🈯️");
-  console.log(state.blogs.blogs[0], "our state.blog 🈯️");
+  console.log(state.blogs.blogs, "our state.blog 🈯️");
 
   return {
-    blogs: state.blogs
+    blogs: state.blogs.blogs
   };
 };
 
