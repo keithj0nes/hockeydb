@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loginFromCookie } from '../../redux/actions/actions';
+import { loginFromCookie } from '../../redux/actions/auth';
 
 import Home from '../Home/Home';
 import Dashboard from '../Dashboard/Dashboard';

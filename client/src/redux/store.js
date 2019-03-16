@@ -1,12 +1,13 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from 'redux-thunk';
 // import { composeWithDevTools } from "redux-devtools-extension";
-import { user } from './reducers';
+import { user, season } from './reducers';
 
 
 
 let reducers = combineReducers({
-  user
+  user,
+  season
 });
 
 const store = createStore(reducers, {}, applyMiddleware(thunk));

@@ -36,6 +36,7 @@ const loginFromCookie = async (req, res, next) => {
 
 
 const login = async (req, res) => {
+    const db = app.get('db');
     passport.authenticate('local-login', async (err, user, info) => {
         if(err || !user){
             console.log(err, user, info, 'error')
@@ -49,8 +50,10 @@ const login = async (req, res) => {
                 console.log(errr, 'errr')
                 return res.status(500).send({status: 500, error: true, message:  `An error occurred: ${errr}`})
             }
-            const acces_token = jwt.sign({user}, config.JWTSECRET)
-            res.status(200).send({status: 200, data: {...user, access_token: acces_token}, message: 'Welcome! You\'re logged in!'})
+            const season = await db.query('SELECT * FROM seasons ORDER BY id DESC LIMIT 1')
+            // console.log(season[0], 'SEASON')
+            const access_token = jwt.sign({user, season: season[0]}, config.JWTSECRET)
+            res.status(200).send({status: 200, data: {user, season: season[0], access_token}, message: 'Welcome! You\'re logged in!'})
         })
     })(req, res)
 }
