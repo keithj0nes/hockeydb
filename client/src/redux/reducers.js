@@ -1,12 +1,11 @@
-import { AUTH_SET_USER } from './actionTypes';
+import { AUTH_SET_USER, SET_SEASON } from './actionTypes';
 
-const initialState = {
+const initialAuthState = {
   user: {},
   isUserLoggedIn: false,
-
 };
 
-export const user = (state = initialState, { type, payload }) => {
+export const user = (state = initialAuthState, { type, payload }) => {
   switch (type) {
     case AUTH_SET_USER:
       return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn }
@@ -14,3 +13,21 @@ export const user = (state = initialState, { type, payload }) => {
       return state;
   }
 };
+
+
+
+const initialSeasonState = {
+  // season: {}
+};
+
+export const season = (state = initialSeasonState, { type, payload }) => {
+  switch (type) {
+    case SET_SEASON:
+      return { ...state, ...payload }
+    default:
+      return state;
+  }
+};
+
+
+
