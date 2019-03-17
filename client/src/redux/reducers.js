@@ -1,8 +1,18 @@
+<<<<<<< HEAD
 import { AUTH_SET_USER, GET_BLOGS, SET_SEASON } from './actionTypes';
+=======
+
+import { AUTH_SET_USER, SET_SEASON, GET_BLOGS } from './actionTypes';
+>>>>>>> 04f1f2657192a9b90d88a6582a7981c40b6bc260
 
 const initialAuthState = {
   user: {},
   isUserLoggedIn: false,
+<<<<<<< HEAD
+=======
+  blogs: []
+
+>>>>>>> 04f1f2657192a9b90d88a6582a7981c40b6bc260
 };
 
 const initialBlogState = {
@@ -18,6 +28,7 @@ export const user = (state = initialAuthState, { type, payload }) => {
   }
 };
 
+<<<<<<< HEAD
 export const blogs = (state = initialBlogState, { type, payload }) => {
   switch (type) {
     case GET_BLOGS:
@@ -27,6 +38,14 @@ export const blogs = (state = initialBlogState, { type, payload }) => {
   }
 };
 
+=======
+export const blogs = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case GET_BLOGS:
+      return { ...state, blogs: payload }
+  }
+ }
+>>>>>>> 04f1f2657192a9b90d88a6582a7981c40b6bc260
 
 const initialSeasonState = {
   // season: {}
