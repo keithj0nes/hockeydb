@@ -7,13 +7,13 @@ import { login, logout } from '../../redux/actions/auth';
 class Login extends React.Component {
 
   state = {
-    // email: 'seramurt@gmail.com',
-    // password: 'tann09'
-    email: 'test@test.test',
-    password: 'test'
+    email: '',
+    password: ''
+    // email: 'test@test.test',
+    // password: 'test'
   }
 
-  componentDidMount(){
+  componentDidMount() {
     return this.props.isUserLoggedIn && this.props.history.push('/dashboard');
   }
 
@@ -37,27 +37,27 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-          <div className="form">
-            <form onSubmit={this.handleSubmit}>
-              <h1>Login</h1>
-              <div className='inputs'>
-                <input
-                  placeholder="email"
-                  name="email"
-                  onChange={this.handleChange}
-                  value={this.state.email}
-                />
-                <input
-                  placeholder="password"
-                  name="password"
-                  type="password"
-                  onChange={this.handleChange}
-                  value={this.state.password}
-                />
-                <input className='btn' type="submit" value="login" />
-              </div>
-            </form>
-          </div>
+        <div className="form">
+          <form onSubmit={this.handleSubmit}>
+            <h1>Login</h1>
+            <div className='inputs'>
+              <input
+                placeholder="email"
+                name="email"
+                onChange={this.handleChange}
+                value={this.state.email}
+              />
+              <input
+                placeholder="password"
+                name="password"
+                type="password"
+                onChange={this.handleChange}
+                value={this.state.password}
+              />
+              <input className='btn' type="submit" value="login" />
+            </div>
+          </form>
+        </div>
       </div>
     );
   }

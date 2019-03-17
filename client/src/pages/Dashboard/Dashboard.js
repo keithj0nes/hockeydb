@@ -5,14 +5,14 @@ import { DashboardMain } from '../../components';
 
 
 class Dashboard extends Component {
-    
 
-  handleLogout = () => {
-    this.props.logout();
-    this.props.history.push('/');
-  }
 
-    render(){
+    handleLogout = () => {
+        this.props.logout();
+        this.props.history.push('/');
+    }
+
+    render() {
         return (
             <div>
                 <h1>Dashboard component</h1>
@@ -23,7 +23,7 @@ class Dashboard extends Component {
                     : */}
                         <DashboardMain />
                 {/* } */}
-        
+
 
                 <button onClick={this.handleLogout}>Logout</button>
             </div>
@@ -32,9 +32,8 @@ class Dashboard extends Component {
 }
 
 
-
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logout())
-})  
+})
 
 export default connect(null, mapDispatchToProps)(Dashboard);

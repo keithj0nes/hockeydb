@@ -1,8 +1,11 @@
-import { AUTH_SET_USER, SET_SEASON } from './actionTypes';
+
+import { AUTH_SET_USER, SET_SEASON, GET_BLOGS } from './actionTypes';
 
 const initialAuthState = {
   user: {},
   isUserLoggedIn: false,
+  blogs: []
+
 };
 
 export const user = (state = initialAuthState, { type, payload }) => {
@@ -14,7 +17,12 @@ export const user = (state = initialAuthState, { type, payload }) => {
   }
 };
 
-
+export const blogs = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case GET_BLOGS:
+      return { ...state, blogs: payload }
+  }
+ }
 
 const initialSeasonState = {
   // season: {}
