@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { login, logout } from '../../redux/actions/actions';
+import { login, logout } from '../../redux/actions/auth';
 // import '../../styles/login.scss';
 
 
