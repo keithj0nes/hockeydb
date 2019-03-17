@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { logout } from '../../redux/actions/actions';
+import { logout } from '../../redux/actions/auth';
+import { DashboardMain } from '../../components';
 
 
 class Dashboard extends Component {
@@ -20,7 +21,7 @@ class Dashboard extends Component {
                     ?
                         <TeamManagerDashboard />
                     : */}
-                {/* <MainDashboard /> */}
+                        <DashboardMain />
                 {/* } */}
 
 

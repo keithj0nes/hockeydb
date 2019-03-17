@@ -6,13 +6,13 @@ export class Test extends Component {
     return (
       <div>
         <h1>Made it</h1>
-        <Auth roles='Super Administrator'>
+        <Auth roles={['super']}>
           <h1> Super Admin</h1>
         </Auth>
-        <Auth roles='Administrator'>
+        <Auth roles={['super', 'admin']}>
           <h1>Admin </h1>
         </Auth>
-        <Auth roles='Scorekeeper'>
+        <Auth roles={['super', 'admin', 'scorekeeper']}>
           <h1>ScreKepper </h1>
         </Auth>
       </div>
