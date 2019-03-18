@@ -8,3 +8,6 @@ export const GET_BLOGS = 'GET_BLOGS'
 
 //Season
 export const SET_SEASON = 'SET_SEASON';
+
+//Misc
+export const TOGGLE_NAV_SLIDER = 'TOGGLE_NAV_SLIDER';

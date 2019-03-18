@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { getBlogs } from '../../redux/actions/blogActions';
 
 export class Blog extends Component {
-  // console.log(this.props.);
   componentDidMount() {
     this.props.getBlogs();
   }
@@ -13,15 +12,14 @@ export class Blog extends Component {
       <div>
         <h1>blog</h1>
         {this.props.blogs.map(item => (
-          <p>{item.message}</p>
+          <p key={item.id}>{item.message}</p>
         ))}
       </div>
     )
   }
 }
 const mapStateToProps = state => {
-  console.log(state, "our state 🈯️");
-  console.log(state.blogs.blogs, "our state.blog 🈯️");
+  // console.log(state, "our state in blogs🈯️");
 
   return {
     blogs: state.blogs.blogs
