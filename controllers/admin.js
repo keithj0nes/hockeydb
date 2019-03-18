@@ -1,4 +1,5 @@
 const app = require('../server.js');
+var dateFormat = require('date-fns/format')
 
 
 // ⭐️  Players ⭐️
@@ -12,12 +13,12 @@ const createPlayer = async (req, res) => {
     console.log(player, 'player!')
 
 
-    if(player){
+    if (player) {
         return res.status(400).send({ status: 400, error: true, message: 'Player already exists' })
     }
 
 
-    const createdPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: 1});
+    const createdPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: 1 });
     const createdStats = await db.player_stats.insert({ player_id: createdPlayer.id, team_id: null, season: null, games_played: null, goals: null, assists: null, points: null, penalties_in_minutes: null, game_winning_goals: null, power_play_goals: null, short_handed_goals: null, goals_per_game: null, assists_per_game: null, points_per_game: null })
     console.log('saved players and stats');
 
@@ -68,6 +69,8 @@ const deletePlayer = async (req, res) => {
 
 const createTeam = async (req, res) => {
     const db = app.get('db')
+
+
     const { name, division_id, colors } = req.body;
     const team = await db.teams.findOne({ name }).catch(err => console.log(err, 'error'));
 
@@ -117,13 +120,14 @@ const createBlog = async (req, res) => {
     const db = app.get('db');
 
     const { message } = req.body;
+    console.log(req.user, 'ussser');
 
-    console.log('message', message)
 
-    const data = await db.blog.insert({ message, posted_date: new Date(), posted_by: 1 }).catch(err => console.log(err, 'create blog error'))
+    let currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
+
+    const data = await db.blog.insert({ message, created_date: currentDate, created_by: req.user.id }).catch(err => console.log(err, 'create blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Blog post created' })
-
 }
 
 
@@ -174,8 +178,8 @@ const createSeason = async (req, res) => {
 
     const season = await db.seasons.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
-    if(season){
-        return res.status(400).send({ status: 400, data: [], message: 'Season already exists' })        
+    if (season) {
+        return res.status(400).send({ status: 400, data: [], message: 'Season already exists' })
     }
 
     const data = await db.seasons.insert({ name, type, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create blog error'))
@@ -232,8 +236,8 @@ const createDivision = async (req, res) => {
     const season = await db.divisions.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
     console.log(season, 'season!')
-    if(season){
-        return res.status(400).send({ status: 400, error: true, message: 'Division already exists' })        
+    if (season) {
+        return res.status(400).send({ status: 400, error: true, message: 'Division already exists' })
     }
 
     const data = await db.divisions.insert({ name, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))
@@ -292,8 +296,8 @@ const createLocation = async (req, res) => {
     const location = await db.locations.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
     console.log(location, 'location!')
-    if(location){
-        return res.status(400).send({ status: 400, error: true, message: 'Location already exists.' })        
+    if (location) {
+        return res.status(400).send({ status: 400, error: true, message: 'Location already exists.' })
     }
 
     const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create location error'))
@@ -344,7 +348,7 @@ const deleteLocation = async (req, res) => {
 module.exports = {
     createPlayer,
     updatePlayer,
-    deletePlayer, 
+    deletePlayer,
 
     createTeam,
     updateTeam,

@@ -9,10 +9,10 @@ class DashTeams extends Component {
     }
 
     handleChange = e => {
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({ [e.target.name]: e.target.value })
     }
 
-    render(){
+    render() {
         return (
             <div>
                 <h1>Add a team</h1>
@@ -24,13 +24,11 @@ class DashTeams extends Component {
                     <option value="3">Div C</option>
 
                 </select>
-                
-                <br/>
-                <input type="text" name='team_name' onChange={this.handleChange} placeholder={'team name'}/>
-                <input type="text" name='team_colors' onChange={this.handleChange} placeholder={'team colors'}/>
 
-                <div style={{marginBottom: '100px'}}></div>
-                
+                <br />
+                <input type="text" name='team_name' onChange={this.handleChange} placeholder={'team name'} />
+                <input type="text" name='team_colors' onChange={this.handleChange} placeholder={'team colors'} />
+
             </div>
         )
     }

@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 
 
 
+
 require('dotenv').config();
 
 const app = module.exports = express();
@@ -121,6 +122,7 @@ app.put(`/api/admin/players/:id`, admin.updatePlayer)
 app.delete(`/api/admin/players/:id`, admin.deletePlayer)
 
 // Create blog post
+// auth.authorizeAccessToken, -- middleware for authorizing admin blog post
 app.post(`/api/admin/blog`, auth.authorizeAccessToken, admin.createBlog)
 app.put(`/api/admin/blog/:id`, admin.updateBlog)
 app.delete(`/api/admin/blog/:id`, admin.deleteBlog)
@@ -131,12 +133,12 @@ app.post(`/api/admin/about`)
 // Create game
 
 app.post('/api/admin/games', async (req, res) => {
-    
+
     const { home_team, away_team, location_id, start_date } = req.body;
 
-    const game = await db.games.insert({home_team, away_team, location_id, start_date, has_been_played: false});
+    const game = await db.games.insert({ home_team, away_team, location_id, start_date, has_been_played: false });
 
-    return res.status(200).send({status: 200, data: game, message: 'Game created.'})
+    return res.status(200).send({ status: 200, data: game, message: 'Game created.' })
 
 })
 

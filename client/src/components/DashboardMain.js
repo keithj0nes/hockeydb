@@ -8,6 +8,7 @@ import DashDivisions from '../pages/Dashboard/DashDivisions/DashDivisions';
 import DashTeams from '../pages/Dashboard/DashTeams/DashTeams';
 import DashPlayers from '../pages/Dashboard/DashPlayers/DashPlayers';
 import DashGames from '../pages/Dashboard/DashGames/DashGames';
+import DashBlogs from '../pages/Dashboard/DashBlogs/DashBlogs';
 
 import { DashboardSidebarNav } from './';
 
@@ -15,23 +16,24 @@ import '../style/dashboard.scss';
 
 class DashboardMain extends Component {
 
-    render(){
+    render() {
         const { match } = this.props;
         return (
             <div className="dashboard-container">
                 <DashboardSidebarNav {...this.props} />
 
                 <div className="dashboard-content">
-                
+
                     <h3>Main dashboard - hello {this.props.user.first_name}</h3>
                     <p>{this.props.season.name}</p>
                     <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button>
 
-                    <Route path={`${match.path}/seasons`}   component={DashSeasons} />                    
+                    <Route path={`${match.path}/seasons`} component={DashSeasons} />
                     <Route path={`${match.path}/divisions`} component={DashDivisions} />
-                    <Route path={`${match.path}/teams`}     component={DashTeams} />                    
-                    <Route path={`${match.path}/players`}   component={DashPlayers} />                    
-                    <Route path={`${match.path}/games`}     component={DashGames} />
+                    <Route path={`${match.path}/teams`} component={DashTeams} />
+                    <Route path={`${match.path}/players`} component={DashPlayers} />
+                    <Route path={`${match.path}/games`} component={DashGames} />
+                    <Route path={`${match.path}/blogs`} component={DashBlogs} />
 
                 </div>
             </div>

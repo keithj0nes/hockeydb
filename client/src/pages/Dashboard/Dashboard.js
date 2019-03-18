@@ -20,7 +20,7 @@ class Dashboard extends Component {
                     ?
                         <TeamManagerDashboard />
                     : */}
-                        <DashboardMain {...this.props}/>
+                <DashboardMain {...this.props} />
                 {/* } */}
 
 

@@ -6,7 +6,7 @@ import '../style/dashboardsidebarnav.scss';
 
 class DashboardSidebarNav extends Component {
 
-    render(){
+    render() {
         const { match, navSliderVisible } = this.props;
         let visibility = navSliderVisible ? "show" : "hide";
 
@@ -17,28 +17,31 @@ class DashboardSidebarNav extends Component {
                 </div>
 
                 <div className={`dashboard-nav-sliding-container dashboard-nav-${visibility}`}>
-                
-                
+
+
                     <div className={"dashboard-nav"}>
                         <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>close</button>
                         <ul>
                             <li>
-                                <Link to={`${match.url}`} onClick={this.props.toggleNavSlider}>Home</Link>    
+                                <Link to={`${match.url}`} onClick={this.props.toggleNavSlider}>Home</Link>
                             </li>
                             <li>
-                                <Link to={`${match.url}/seasons`} onClick={this.props.toggleNavSlider}>Seasons</Link>    
+                                <Link to={`${match.url}/seasons`} onClick={this.props.toggleNavSlider}>Seasons</Link>
                             </li>
                             <li>
-                                <Link to={`${match.url}/divisions`} onClick={this.props.toggleNavSlider}>Divisions</Link>    
+                                <Link to={`${match.url}/divisions`} onClick={this.props.toggleNavSlider}>Divisions</Link>
                             </li>
                             <li>
-                                <Link to={`${match.url}/teams`} onClick={this.props.toggleNavSlider}>Teams</Link>    
+                                <Link to={`${match.url}/teams`} onClick={this.props.toggleNavSlider}>Teams</Link>
                             </li>
                             <li>
-                                <Link to={`${match.url}/players`} onClick={this.props.toggleNavSlider}>Players</Link>    
+                                <Link to={`${match.url}/players`} onClick={this.props.toggleNavSlider}>Players</Link>
                             </li>
                             <li>
-                                <Link to={`${match.url}/games`} onClick={this.props.toggleNavSlider}>Games</Link>    
+                                <Link to={`${match.url}/games`} onClick={this.props.toggleNavSlider}>Games</Link>
+                            </li>
+                            <li>
+                                <Link to={`${match.url}/blogs`} onClick={this.props.toggleNavSlider}>Blog</Link>
                             </li>
                         </ul>
                     </div>
@@ -46,8 +49,8 @@ class DashboardSidebarNav extends Component {
                     <div className={"dashboard-nav-close"} onClick={this.props.toggleNavSlider}>
 
                     </div>
-                
-                
+
+
                 </div>
 
             </div>
@@ -59,7 +62,7 @@ const mapStateToProps = state => ({
     navSliderVisible: state.misc.navSliderVisible
 })
 
-const mapDispatchToProps = dispatch => ({    
+const mapDispatchToProps = dispatch => ({
     toggleNavSlider: () => dispatch(toggleNavSlider())
 })
 

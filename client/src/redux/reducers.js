@@ -3,9 +3,9 @@ import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL }
 const initialAuthState = {
   user: {},
   isUserLoggedIn: false,
-  blogs: []
 
 };
+
 
 export const user = (state = initialAuthState, { type, payload }) => {
   switch (type) {
@@ -17,8 +17,6 @@ export const user = (state = initialAuthState, { type, payload }) => {
 };
 
 
-
-
 const initialBlogState = {
   blogs: [],
 }
@@ -27,10 +25,11 @@ export const blogs = (state = initialBlogState, { type, payload }) => {
   switch (type) {
     case GET_BLOGS:
       return { ...state, blogs: payload }
-    default: 
+    default:
       return state;
   }
 }
+
 
 
 
@@ -61,9 +60,9 @@ const initialMiscState = {
 export const misc = (state = initialMiscState, { type, payload }) => {
   switch (type) {
     case TOGGLE_NAV_SLIDER:
-      return {...state, navSliderVisible: !state.navSliderVisible}
+      return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-      return {...state, modalVisible: !state.modalVisible, modalData: state.modalVisible ? {} : {status: payload.status, message: payload.message}}
+      return { ...state, modalVisible: !state.modalVisible, modalData: state.modalVisible ? {} : { status: payload.status, message: payload.message } }
     default:
       return state;
   }

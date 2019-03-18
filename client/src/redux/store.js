@@ -4,7 +4,6 @@ import thunk from 'redux-thunk';
 import { user, season, blogs, misc } from './reducers';
 
 
-
 let reducers = combineReducers({
   user,
   season,
