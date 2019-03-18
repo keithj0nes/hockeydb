@@ -9,7 +9,7 @@ class DashboardSidebarNav extends Component {
     render(){
         const { match, navSliderVisible } = this.props;
         let visibility = navSliderVisible ? "show" : "hide";
-        
+
         return (
             <div className={`dashboard-nav-container dashboard-nav-container-${visibility}`}>
 
@@ -55,16 +55,12 @@ class DashboardSidebarNav extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        navSliderVisible: state.misc.navSliderVisible
-    }
-}
+const mapStateToProps = state => ({
+    navSliderVisible: state.misc.navSliderVisible
+})
 
-const mapDispatchToProps = dispatch => {
-    return {
-        toggleNavSlider: () => dispatch(toggleNavSlider())
-    }
-}
+const mapDispatchToProps = dispatch => ({    
+    toggleNavSlider: () => dispatch(toggleNavSlider())
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardSidebarNav);

@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS } from './actionTypes';
+import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -53,13 +53,17 @@ export const season = (state = initialSeasonState, { type, payload }) => {
 
 
 const initialMiscState = {
-  navSliderVisible: false
+  navSliderVisible: false,
+  modalVisible: false,
+  modalData: {}
 }
 
 export const misc = (state = initialMiscState, { type, payload }) => {
   switch (type) {
     case TOGGLE_NAV_SLIDER:
       return {...state, navSliderVisible: !state.navSliderVisible}
+    case TOGGLE_MODAL:
+      return {...state, modalVisible: !state.modalVisible, modalData: state.modalVisible ? {} : {status: payload.status, message: payload.message}}
     default:
       return state;
   }
