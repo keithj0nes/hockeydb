@@ -7,10 +7,10 @@ import { login, logout } from '../../redux/actions/auth';
 class Login extends React.Component {
 
   state = {
-    email: '',
-    password: ''
-    // email: 'test@test.test',
-    // password: 'test'
+    // email: '',
+    // password: ''
+    email: 'test@test.test',
+    password: 'test'
   }
 
   componentDidMount() {

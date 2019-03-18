@@ -15,14 +15,6 @@ import '../style/dashboard.scss';
 
 class DashboardMain extends Component {
 
-    state = {
-        isMenuVisible: false
-    }
-
-    toggleMenu = () => {
-        this.setState({isMenuVisible: !this.state.isMenuVisible})
-    }
-
     render(){
         const { match } = this.props;
         return (
@@ -38,7 +30,7 @@ class DashboardMain extends Component {
                     <Route path={`${match.path}/seasons`}   component={DashSeasons} />                    
                     <Route path={`${match.path}/divisions`} component={DashDivisions} />
                     <Route path={`${match.path}/teams`}     component={DashTeams} />                    
-                    <Route path={`${match.path}/players`} component={DashPlayers} />                    
+                    <Route path={`${match.path}/players`}   component={DashPlayers} />                    
                     <Route path={`${match.path}/games`}     component={DashGames} />
 
                 </div>
