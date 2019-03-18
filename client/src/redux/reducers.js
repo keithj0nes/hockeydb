@@ -1,8 +1,10 @@
-import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER } from './actionTypes';
+import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS } from './actionTypes';
 
 const initialAuthState = {
   user: {},
   isUserLoggedIn: false,
+  blogs: []
+
 };
 
 export const user = (state = initialAuthState, { type, payload }) => {
@@ -13,6 +15,23 @@ export const user = (state = initialAuthState, { type, payload }) => {
       return state;
   }
 };
+
+
+
+
+const initialBlogState = {
+  blogs: [],
+}
+
+export const blogs = (state = initialBlogState, { type, payload }) => {
+  switch (type) {
+    case GET_BLOGS:
+      return { ...state, blogs: payload }
+    default: 
+      return state;
+  }
+}
+
 
 
 
@@ -28,6 +47,10 @@ export const season = (state = initialSeasonState, { type, payload }) => {
       return state;
   }
 };
+
+
+
+
 
 const initialMiscState = {
   navSliderVisible: false

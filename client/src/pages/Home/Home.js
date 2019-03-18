@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import Blog from './Blog';
+
 export class Home extends Component {
   render() {
     return (
@@ -10,6 +12,8 @@ export class Home extends Component {
         <Link to={'/dashboard'}>
           Admin
         </Link>
+
+        <Blog />
       </div>
     )
   }
