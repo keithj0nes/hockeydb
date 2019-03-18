@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const massive = require('massive');
-
+const cors = require('cors');
 const config = require('./config');
 
 
@@ -17,17 +17,20 @@ const port = process.env.PORT || config.PORT;
 
 const version = 'v1';
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const admin = require('./controllers/admin');
 const blogs = require('./controllers/blogs');
 const auth = require('./controllers/auth');
+const players = require('./controllers/players');
+const teams = require('./controllers/teams');
 
 //Make sure to create a local postgreSQL db called hockeydb
 
 // const connectionInfo = process.env.DATA_BASE_URL || "postgres://@localhost/hockeydb";
-const connectionInfo = "postgres://@localhost/hockeydb";
+const connectionInfo = config.DB_URI
 
 let db = null;
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {
@@ -36,6 +39,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 }).catch(err => {
     console.log(err, 'massive err');
 });
+
 
 // return errors -  
 // {
@@ -59,7 +63,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 
 // Blog
 app.get(`/api/blog`, blogs.getBlogs);
-app.get(`/api/blog/:id`, blogs.getBlogbyId)
+app.get(`/api/blog/:id`, blogs.getBlogById)
 
 // Schedule
 app.get(`/api/schedule`)
@@ -68,12 +72,12 @@ app.get(`/api/schedule`)
 app.get(`/api/scoresheets/:id`)
 
 // Teams
-app.get(`/api/teams/`)
-app.get(`/api/teams/:id`)
+app.get(`/api/teams/`, teams.getAllTeams);
+app.get(`/api/teams/:id`, teams.getTeamById);
 
 // Players
-app.get(`/api/players`)
-app.get(`/api/players/:id`)
+app.get(`/api/players`, players.getAllPlayers);
+app.get(`/api/players/:id`, players.getPlayerById);
 
 
 // Standings 
@@ -124,6 +128,24 @@ app.delete(`/api/admin/blog/:id`, admin.deleteBlog)
 // Update about 
 app.post(`/api/admin/about`)
 
+// Create game
+
+app.post('/api/admin/games', async (req, res) => {
+    
+    const { home_team, away_team, location_id, start_date } = req.body;
+
+    const game = await db.games.insert({home_team, away_team, location_id, start_date, has_been_played: false});
+
+    return res.status(200).send({status: 200, data: game, message: 'Game created.'})
+
+})
+
+
+
+
+
+
+
 
 
 // AUTH //
@@ -158,17 +180,17 @@ app.put(`/api/auth/:id`)
 app.get('/topsecretroute', auth.authorizeAccessToken, (req, res, next) => {
 
     return res.status(200).send({
-        status: 200, 
+        status: 200,
         data: {
-            user: req.user, 
+            user: req.user,
             access_token: req.headers.authorization.split(' ')[1]
-        }, 
+        },
         message: 'We reached the top secret route'
     })
 })
 
 
-
+app.post('/api/auth/login/cookie', auth.loginFromCookie)
 
 
 app.listen(port, () => console.log(`Server running on port ${port}`))

@@ -9,6 +9,7 @@ const config = require('../config');
 
 const authorizeAccessToken = async (req, res, next) => {
     passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        console.log(user, 'user!')
         if(err || !user){
             return res.status(401).send({status: 401, error: true, message: err || "Unauthorized"})
         }
@@ -19,11 +20,29 @@ const authorizeAccessToken = async (req, res, next) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const loginFromCookie = async (req, res, next) => {
+    passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        console.log(user, err, info)
+        if(err || !user){
+            return res.status(401).send({status: 401, error: true, message: err || "Unauthorized"})
+        }
+        req.user = user;
+        res.status(200).send({status: 200, data: {...user}, message: 'Welcome back! You\'re logged in on refresh!'})
+    })(req, res)
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const login = async (req, res) => {
+    const db = app.get('db');
     passport.authenticate('local-login', async (err, user, info) => {
         if(err || !user){
-            console.log(err, user, info)
-            return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
+            console.log(err, user, info, 'error')
+            // return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
+            return res.send({status: 404, error: true, message: err || 'Incorrect email or password.'})
+
         }
 
         req.login(user, { session: false }, async (errr) => {
@@ -31,8 +50,10 @@ const login = async (req, res) => {
                 console.log(errr, 'errr')
                 return res.status(500).send({status: 500, error: true, message:  `An error occurred: ${errr}`})
             }
-            const token = jwt.sign({user}, config.JWTSECRET)
-            res.status(200).send({status: 200, data: user, token, message: 'Welcome! You"re logged in!'})
+            const season = await db.query('SELECT * FROM seasons ORDER BY id DESC LIMIT 1')
+            // console.log(season[0], 'SEASON')
+            const access_token = jwt.sign({user, season: season[0]}, config.JWTSECRET)
+            res.status(200).send({status: 200, data: {user, season: season[0], access_token}, message: 'Welcome! You\'re logged in!'})
         })
     })(req, res)
 }
@@ -104,7 +125,8 @@ module.exports = {
     login, 
     signup,
     invite,
-    reinvite
+    reinvite,
+    loginFromCookie
 }
 
 
@@ -180,8 +202,8 @@ passport.use('jwt', new JWTStrategy({
     secretOrKey: config.JWTSECRET,
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
-    console.log(token, 'TOKEN!!!!!!!!')
     try {
+        console.log(token, 'TOKEN!!!!!!!!')
         return done(null, token.user)
     }
     catch (err) {
