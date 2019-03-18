@@ -4,8 +4,9 @@ const app = require('../server.js');
 
 const getBlogs = async (req, res) => {
     const db = app.get('db');
-    const data = await db.query('select * from blog order by id desc');
-    // console.log(data, 'blogs!')
+    const data = await db.query('select blog.id, blog.message, blog.created_by, blog.created_date, users.id as user_id, users.first_name, users.last_name from blog JOIN users ON blog.created_by = users.id order by blog.id desc ');
+    console.log(data, 'blogs!')
+
     res.status(200).send({ status: 200, data, message: 'Retrieved list of blogs' })
 }
 

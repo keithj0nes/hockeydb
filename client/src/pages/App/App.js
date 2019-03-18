@@ -6,6 +6,11 @@ import { loginFromCookie } from '../../redux/actions/auth';
 import Home from '../Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/auth/Login';
+import { Modal } from '../../components';
+
+
+// for demoing 
+import { toggleModal } from '../../redux/actions/misc';
 
 import './App.scss';
 
@@ -19,9 +24,11 @@ class App extends Component {
     return (
         <Router>
           <div>
+            <button onClick={this.props.toggleModal}>toggle modal!</button>
             <Route exact path="/" component={Home} />
             <Route path='/login' component={Login} />
             <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
+            <Modal />
           </div>
         </Router>
     );
@@ -49,7 +56,8 @@ const mapStateToProps = state => ({
 // }
 
 const mapDispatchToProps = dispatch => ({
-  loginFromCookie: () => dispatch(loginFromCookie())
+  loginFromCookie: () => dispatch(loginFromCookie()),
+  toggleModal: () => dispatch(toggleModal(200, 'opening from app.js'))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

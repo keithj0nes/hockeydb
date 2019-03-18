@@ -1,6 +1,7 @@
 import axios from 'axios';
-// import store from '../store';
+import store from '../store';
 import { ROOT } from '../../client_config';
+import { TOGGLE_MODAL } from '../actionTypes';
 
 
 
@@ -33,8 +34,10 @@ export const request = async (route, method, session, noAuth) => {
         // store.dispatch({type: 'REQUEST_METHOD_FAILURE', payload: {status, message}})  //NOT BEING USED YET
         //NOT BEING USED YET
 
+        store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
+
         console.log(`status error: ${status} - ${message}`)
-        alert(`status error: ${status} - ${message}`)
+        // alert(`status error: ${status} - ${message}`)
         return false;
     }
 

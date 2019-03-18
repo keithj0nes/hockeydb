@@ -33,7 +33,7 @@ CREATE TABLE "passwords" (
 CREATE TABLE "blog" (
   "id" SERIAL PRIMARY KEY,
   "message" VARCHAR,
-  "created_date" TIMESTAMP,
+  "created_date" VARCHAR,
   "created_by" INTEGER REFERENCES users(id),
   "updated_date" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
