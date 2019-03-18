@@ -21,12 +21,7 @@ class Dashboard extends Component {
                     ?
                         <TeamManagerDashboard />
                     : */}
-<<<<<<< HEAD
-                {/* <MainDashboard /> */}
                 <DashboardMain />
-=======
-                        <DashboardMain />
->>>>>>> 04f1f2657192a9b90d88a6582a7981c40b6bc260
                 {/* } */}
 
 
