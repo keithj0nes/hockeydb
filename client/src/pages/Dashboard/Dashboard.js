@@ -15,13 +15,12 @@ class Dashboard extends Component {
     render(){
         return (
             <div>
-                <h1>Dashboard component</h1>
 
                 {/* {this.props.user.role === 'team_manager' 
                     ?
                         <TeamManagerDashboard />
                     : */}
-                        <DashboardMain />
+                        <DashboardMain {...this.props}/>
                 {/* } */}
         
 

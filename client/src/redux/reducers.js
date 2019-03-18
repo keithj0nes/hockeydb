@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_SEASON } from './actionTypes';
+import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -29,5 +29,15 @@ export const season = (state = initialSeasonState, { type, payload }) => {
   }
 };
 
+const initialMiscState = {
+  navSliderVisible: false
+}
 
-
+export const misc = (state = initialMiscState, { type, payload }) => {
+  switch (type) {
+    case TOGGLE_NAV_SLIDER:
+      return {...state, navSliderVisible: !state.navSliderVisible}
+    default:
+      return state;
+  }
+}

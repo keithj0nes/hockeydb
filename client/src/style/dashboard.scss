@@ -1,0 +1,9 @@
+.dashboard-container {
+    background: pink;
+}
+
+@media only screen and (min-width: 768px) {
+    .dashboard-container {
+        display: flex;
+    }
+}
