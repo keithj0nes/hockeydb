@@ -1,14 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { toggleNavSlider } from '../redux/actions/misc';
-import { Link } from 'react-router-dom';
-import '../style/dashboardsidebarnav.scss';
+import { NavLink } from 'react-router-dom';
+import '../assets/styles/dashboardsidebarnav.scss';
+
+import { ReactComponent as Home } from '../assets/icons/home.svg';
+import { ReactComponent as Seasons } from '../assets/icons/seasons.svg';
+import { ReactComponent as Divisions } from '../assets/icons/divisions.svg';
+import { ReactComponent as Teams } from '../assets/icons/teams.svg';
+import { ReactComponent as Players } from '../assets/icons/players.svg';
+import { ReactComponent as Games } from '../assets/icons/games.svg';
+import { ReactComponent as News } from '../assets/icons/news.svg';
+
+import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
+
+
 
 class DashboardSidebarNav extends Component {
 
     render() {
         const { match, navSliderVisible } = this.props;
         let visibility = navSliderVisible ? "show" : "hide";
+
+        // console.log(this.props, 'match!')
 
         return (
             <div className={`dashboard-nav-container dashboard-nav-container-${visibility}`}>
@@ -19,30 +33,78 @@ class DashboardSidebarNav extends Component {
                 <div className={`dashboard-nav-sliding-container dashboard-nav-${visibility}`}>
 
 
+
+
                     <div className={"dashboard-nav"}>
-                        <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>close</button>
+                        <div className={"hide-desktop close"} onClick={this.props.toggleNavSlider}>&times;</div>
+
+                        <div className="dashboard-nav-header">
+                            <div><LeagueLogo /></div>
+                            <h2>HockeyDB</h2>
+                        </div>
+
+
                         <ul>
                             <li>
-                                <Link to={`${match.url}`} onClick={this.props.toggleNavSlider}>Home</Link>
+                                <NavLink to={`${match.url}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                
+                                    <div className="nav-icon-container">
+                                        <Home alt="home icon"/>
+                                        {/* <img src={Home} alt=""/>  */}
+                                    </div>
+                                    Home
+                                
+                                </NavLink>
                             </li>
                             <li>
-                                <Link to={`${match.url}/seasons`} onClick={this.props.toggleNavSlider}>Seasons</Link>
+                                <NavLink to={`${match.url}/blogs`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        <News alt="news icon"/>
+                                    </div>
+                                    News
+                                </NavLink>
                             </li>
                             <li>
-                                <Link to={`${match.url}/divisions`} onClick={this.props.toggleNavSlider}>Divisions</Link>
+                                <NavLink to={`${match.url}/seasons`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        <Seasons alt="season icon"/>
+                                    </div>
+                                    Seasons
+                                </NavLink>
                             </li>
                             <li>
-                                <Link to={`${match.url}/teams`} onClick={this.props.toggleNavSlider}>Teams</Link>
+                                <NavLink to={`${match.url}/divisions`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        <Divisions alt="divisions icon"/>
+                                    </div>
+                                    Divisions
+                                </NavLink>
                             </li>
                             <li>
-                                <Link to={`${match.url}/players`} onClick={this.props.toggleNavSlider}>Players</Link>
+                                <NavLink to={`${match.url}/teams`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        <Teams alt="teams icon"/>
+                                    </div>
+                                    Teams
+                                </NavLink>
                             </li>
                             <li>
-                                <Link to={`${match.url}/games`} onClick={this.props.toggleNavSlider}>Games</Link>
+                                <NavLink to={`${match.url}/players`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        <Players alt="players icon"/>
+                                    </div>
+                                    Players
+                                </NavLink>
                             </li>
                             <li>
-                                <Link to={`${match.url}/blogs`} onClick={this.props.toggleNavSlider}>Blog</Link>
+                                <NavLink to={`${match.url}/games`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        <Games alt="games icon"/>
+                                    </div>
+                                    Games
+                                </NavLink>
                             </li>
+
                         </ul>
                     </div>
 
