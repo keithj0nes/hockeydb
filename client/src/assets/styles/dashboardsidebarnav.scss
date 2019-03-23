@@ -1,0 +1,187 @@
+@import './variables';
+
+.dashboard-nav-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    &-hide {
+        transition-delay: 0.5s;
+        transform: translate(-100vw, 0);
+    }
+
+    .dashboard-nav-background {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        background: rgba(0,0,0,0.5);
+    }
+
+    .fade-in-show {
+        opacity: 1;
+    }
+
+    .fade-in-hide {
+        opacity: 0;
+    }
+
+    .dashboard-nav-sliding-container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        transition: transform .35s cubic-bezier(.25, .1, .25, .1);
+        
+        .dashboard-nav {
+            background: $white_color;
+            width: 80vw;
+            height: 100%;
+            position: relative;
+
+
+            div.close {
+                border: none;
+                position: absolute;
+                right: 10px;
+                // top: 10px;
+                font-size: 30px;
+                padding: 10px;
+                cursor: pointer;
+                color: $main_font_color;
+            }
+
+            .dashboard-nav-header {
+                display: flex;
+                flex-direction: column;
+                // justify-content: center;
+                align-items: center;
+                padding: 30px;
+                color: $main_font_color;
+
+
+                > div:first-child > * > * {
+                   fill: $main_font_color;
+               }
+            }
+
+            .dashboard-nav-header:first-child {
+                background: pink;
+            }
+
+            .selected {
+                color: $main_font_color;
+                background: darken($white_color, 10%);
+        
+                //if the selected class is applied by NavLink 
+                //component, change the fill of the SVG
+                .nav-icon-container > * > *, 
+                .nav-icon-container > * > * > * {
+                    fill: $main_font_color;
+                }
+            }
+
+            .nav-icon-container {
+                // background: blue;
+                display: flex;
+                justify-content: center;
+                width: 40px;
+                margin-right: 10px;
+                margin-left: 30%;
+                color: inherit;
+            }
+
+            //set the SVG to this color when not selected by NavLink
+            .nav-icon-container > * > *, 
+            .nav-icon-container > * > * > * {
+                fill: $nav_link;
+            }
+
+            li a {
+                display: flex;
+                align-items: center;
+                padding: 15px 0;
+                margin: 10px 0;
+            }
+
+            li a:hover {
+                background: darken($white_color, 10%);
+            }
+        }
+        
+        .dashboard-nav-close {
+            width: 20vw;
+            height: 100%;
+            cursor: pointer;
+        }
+    }
+
+}
+
+
+.dashboard-nav-hide { 
+    transform: translate(-100vw, 0);
+}
+
+.dashboard-nav-show {
+    transform: translate(0vw, 0);
+}
+
+
+
+
+@media only screen and (min-width: 768px) {
+
+    .dashboard-nav-container {
+        width: 25%;
+        max-width: 260px;
+        position: static;
+
+
+
+        &-hide {
+            transition-delay: 0s;
+            transform: translate(0vw, 0) !important;
+        }
+
+        .dashboard-nav-background {
+            display: none;
+        }
+
+        .dashboard-nav-sliding-container {
+            .dashboard-nav {
+                width: 100%;
+                border-right: 5px solid $gray_color;
+                .nav-icon-container {
+                    margin-left: 18%;
+                }
+            }
+
+
+            .dashboard-nav-close {
+                display: none;
+                width: 20vw;
+                height: 100%;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .dashboard-nav-hide { 
+        transform: translate(0vw, 0);
+    }
+    
+    // .dashboard-nav-show {
+    //     transform: translate(0vw, 0);
+    // }
+    
+}
+
+
+// @media all and (max-width: 991px) { ... }
+// @media all and (max-width: 768px) { ... }
+// @media all and (max-width: 480px) { ... }

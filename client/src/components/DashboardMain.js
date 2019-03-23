@@ -12,7 +12,7 @@ import DashBlogs from '../pages/Dashboard/DashBlogs/DashBlogs';
 
 import { DashboardSidebarNav } from './';
 
-import '../style/dashboard.scss';
+import '../assets/styles/dashboard.scss';
 
 class DashboardMain extends Component {
 
@@ -28,12 +28,12 @@ class DashboardMain extends Component {
                     <p>{this.props.season.name}</p>
                     <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button>
 
-                    <Route path={`${match.path}/seasons`} component={DashSeasons} />
+                    <Route path={`${match.path}/seasons`}   component={DashSeasons}   />
                     <Route path={`${match.path}/divisions`} component={DashDivisions} />
-                    <Route path={`${match.path}/teams`} component={DashTeams} />
-                    <Route path={`${match.path}/players`} component={DashPlayers} />
-                    <Route path={`${match.path}/games`} component={DashGames} />
-                    <Route path={`${match.path}/blogs`} component={DashBlogs} />
+                    <Route path={`${match.path}/teams`}     component={DashTeams}     />
+                    <Route path={`${match.path}/players`}   component={DashPlayers}   />
+                    <Route path={`${match.path}/games`}     component={DashGames}     />
+                    <Route path={`${match.path}/blogs`}     component={DashBlogs}     />
 
                 </div>
             </div>

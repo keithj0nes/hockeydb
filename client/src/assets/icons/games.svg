@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Games_Icon" data-name="Games Icon" transform="translate(-1.1 -1)">
+    <rect id="Rectangle_1" data-name="Rectangle 1" width="12.676" height="6.297" transform="translate(6.868 18.703)" fill="#6f6f6f"/>
+    <path id="Path_1" data-name="Path 1" d="M23.9,1H2.252A1.162,1.162,0,0,0,1.1,2.174V17a1.205,1.205,0,0,0,1.2,1.174H23.9A1.205,1.205,0,0,0,25.1,17V2.174A1.24,1.24,0,0,0,23.9,1ZM11.973,16.315H3.254V2.859h8.718Zm10.923,0H14.177V2.859H22.9Z" transform="translate(0)" fill="#6f6f6f"/>
+    <path id="Path_2" data-name="Path 2" d="M12.94,10.782,14.421,9.3H9.5l1.482,1.482Z" transform="translate(-4.248 -4.165)" fill="#6f6f6f"/>
+    <path id="Path_3" data-name="Path 3" d="M16.7,13.434l1.429,1.482V10.1L16.7,11.582Z" transform="translate(-7.81 -4.612)" fill="#6f6f6f"/>
+    <path id="Path_4" data-name="Path 4" d="M12.94,17.2H9.5l1.482,1.429h3.44Z" transform="translate(-4.248 -8.128)" fill="#6f6f6f"/>
+    <path id="Path_5" data-name="Path 5" d="M10.282,19.382,8.8,17.9v4.815l1.482-1.429Z" transform="translate(-3.855 -8.565)" fill="#6f6f6f"/>
+    <path id="Path_6" data-name="Path 6" d="M10.982,25,9.5,26.482h4.921L12.94,25Z" transform="translate(-4.248 -12.043)" fill="#6f6f6f"/>
+    <path id="Path_7" data-name="Path 7" d="M34.5,10.929v1.852l1.482,1.482V9.5Z" transform="translate(-16.723 -4.307)" fill="#6f6f6f"/>
+    <path id="Path_8" data-name="Path 8" d="M35.982,18.5,34.5,19.982v1.852l1.482,1.482Z" transform="translate(-16.723 -8.869)" fill="#6f6f6f"/>
+  </g>
+</svg>
