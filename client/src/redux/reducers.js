@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL } from './actionTypes';
+import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -63,6 +63,20 @@ export const misc = (state = initialMiscState, { type, payload }) => {
       return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
       return { ...state, modalVisible: !state.modalVisible, modalData: state.modalVisible ? {} : { status: payload.status, message: payload.message } }
+    default:
+      return state;
+  }
+}
+
+const initialPlayersState = {
+  allPlayers: [],
+  selectedPlayer: null,
+};
+
+export const players = (state = initialPlayersState, { type, payload }) => {
+  switch (type) {
+    case GET_PLAYERS:
+      return { ...state, allPlayers: payload };
     default:
       return state;
   }

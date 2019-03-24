@@ -17,9 +17,8 @@ const createPlayer = async (req, res) => {
         return res.status(400).send({ status: 400, error: true, message: 'Player already exists' })
     }
 
-
     const createdPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: 1 });
-    const createdStats = await db.player_stats.insert({ player_id: createdPlayer.id, team_id: null, season: null, games_played: null, goals: null, assists: null, points: null, penalties_in_minutes: null, game_winning_goals: null, power_play_goals: null, short_handed_goals: null, goals_per_game: null, assists_per_game: null, points_per_game: null })
+    const createdStats = await db.player_stats.insert({ player_id: createdPlayer.id, team_id: null, season: null, games_played: 0, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0, assists_per_game: 0, points_per_game: 0 })
     console.log('saved players and stats');
 
     const data = { ...createdStats, ...createdPlayer }

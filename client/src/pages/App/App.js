@@ -6,6 +6,7 @@ import { loginFromCookie } from '../../redux/actions/auth';
 import Home from '../Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/auth/Login';
+import Players from '../Players/Players';
 import { Modal } from '../../components';
 
 
@@ -16,32 +17,33 @@ import './App.scss';
 
 class App extends Component {
 
-  async componentDidMount(){
+  async componentDidMount() {
     await this.props.loginFromCookie();
   }
 
   render() {
     return (
-        <Router>
-          <div>
-            <button onClick={this.props.toggleModal}>toggle modal!</button>
-            <Route exact path="/" component={Home} />
-            <Route path='/login' component={Login} />
-            <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
-            <Modal />
-          </div>
-        </Router>
+      <Router>
+        <div>
+          <button onClick={this.props.toggleModal}>toggle modal!</button>
+          <Route exact path="/" component={Home} />
+          <Route path='/login' component={Login} />
+          <Route path='/players' component={Players} />
+          <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
+          <Modal />
+        </div>
+      </Router>
     );
   }
 }
 
 
-const PrivateRoute = ({component: Component, ...rest}) => (
-    <Route {...rest} render={(props) => (
-      rest.authenticated 
-        ? <Component {...props} />
-        : <Redirect to={'/login'} />
-    )} />
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    rest.authenticated
+      ? <Component {...props} />
+      : <Redirect to={'/login'} />
+  )} />
 )
 
 
