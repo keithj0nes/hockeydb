@@ -70,7 +70,7 @@ app.get(`/api/blog/:id`, blogs.getBlogById)
 app.get(`/api/schedule`)
 
 // Games
-app.get(`/api/scoresheets/:id`)
+app.get(`/api/games`)
 
 // Teams
 app.get(`/api/teams/`, teams.getAllTeams);
@@ -141,6 +141,7 @@ app.post('/api/admin/games', async (req, res) => {
     return res.status(200).send({ status: 200, data: game, message: 'Game created.' })
 
 })
+
 
 
 
