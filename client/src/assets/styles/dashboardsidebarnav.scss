@@ -8,6 +8,7 @@
     top: 0;
     left: 0;
     z-index: 1000;
+    // font-size: 20px;
 
     &-hide {
         transition-delay: 0.5s;
@@ -69,9 +70,9 @@
                }
             }
 
-            .dashboard-nav-header:first-child {
-                background: pink;
-            }
+            // .dashboard-nav-header:first-child {
+            //     // background: pink;
+            // }
 
             .selected {
                 color: $main_font_color;

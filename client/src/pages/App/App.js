@@ -25,7 +25,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <button onClick={this.props.toggleModal}>toggle modal!</button>
+          {/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
           <Route exact path="/" component={Home} />
           <Route path='/login' component={Login} />
           <Route path='/players' component={Players} />

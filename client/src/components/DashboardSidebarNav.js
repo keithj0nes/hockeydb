@@ -38,7 +38,9 @@ class DashboardSidebarNav extends Component {
                     <div className={"dashboard-nav"}>
                         <div className={"hide-desktop close"} onClick={this.props.toggleNavSlider}>&times;</div>
 
-                        <div className="dashboard-nav-header">
+                        {this.props.children}
+
+                        {/* <div className="dashboard-nav-header">
                             <div><LeagueLogo /></div>
                             <h2>HockeyDB</h2>
                         </div>
@@ -50,7 +52,6 @@ class DashboardSidebarNav extends Component {
                                 
                                     <div className="nav-icon-container">
                                         <Home alt="home icon"/>
-                                        {/* <img src={Home} alt=""/>  */}
                                     </div>
                                     Home
                                 
@@ -105,7 +106,7 @@ class DashboardSidebarNav extends Component {
                                 </NavLink>
                             </li>
 
-                        </ul>
+                        </ul> */}
                     </div>
 
                     <div className={"dashboard-nav-close"} onClick={this.props.toggleNavSlider}>
@@ -129,3 +130,54 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardSidebarNav);
+
+
+
+
+// EXAMPLE A
+// class App extends Component {
+    
+//     //you don't need a constructor anymore with react
+
+//     //return the .map inside the jsx
+//     render(){
+//         return (
+//             <div>
+//                 { productsData.map( info => {
+//                     //i would just pass the whole info variable into Products
+//                     //like so <Products key={info.id} info={info} />
+//                     //you must also have a key in anything that's mapped
+//                     return <Products key={info.id} name={info.name} price={info.price} />  
+//                 })}
+//             </div>
+//         )
+//     }
+// }
+
+// EXAMPLE B
+// class App extends Component {
+    
+//     //you don't need a constructor anymore with react
+
+//     //create a render function, use 'render' to let yourself know it's a render function
+//     renderFurnitureList = () => {
+//         //must return the .map AND the item inside the .map (unless doing it implicitly)
+//         return productsData.map( (info, index) => {
+//             //i would just pass the whole info variable into Products
+//             //like so <Products key={info.id} info={info} />
+//             //you must also have a key in anything that's mapped
+//             return <Products key={info.id} name={info.name} price={info.price} />  
+//             //if you don't have info.id, you can pass the index, but that's said to be avoided
+//             // return <Products key={index} name={info.name} price={info.price} />  
+//         })
+//     }
+    
+//     render(){
+//         //"this" refers to the component, so get the furnitureList function from "this" component
+//         return (
+//             <div>
+//                 {this.renderFurnitureList} 
+//             </div>
+//         )
+//     }
+// }
