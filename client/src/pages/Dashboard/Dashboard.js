@@ -14,7 +14,7 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <div>
+            <div className="dashboard-container">
 
                 {/* {this.props.user.role === 'team_manager' 
                     ?
@@ -24,7 +24,6 @@ class Dashboard extends Component {
                 {/* } */}
 
 
-                <button onClick={this.handleLogout}>Logout</button>
             </div>
         )
     }

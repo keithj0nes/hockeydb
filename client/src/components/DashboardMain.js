@@ -10,7 +10,7 @@ import DashPlayers from '../pages/Dashboard/DashPlayers/DashPlayers';
 import DashGames from '../pages/Dashboard/DashGames/DashGames';
 import DashBlogs from '../pages/Dashboard/DashBlogs/DashBlogs';
 
-import { DashboardSidebarNav } from './';
+import { DashboardSidebarNav, DashboardNav } from './';
 
 import '../assets/styles/dashboard.scss';
 
@@ -20,13 +20,17 @@ class DashboardMain extends Component {
         const { match } = this.props;
         return (
             <div className="dashboard-container">
-                <DashboardSidebarNav {...this.props} />
+                <DashboardSidebarNav {...this.props} >
+                    <DashboardNav {...this.props}/>
+                </DashboardSidebarNav>
 
                 <div className="dashboard-content">
 
-                    <h3>Main dashboard - hello {this.props.user.first_name}</h3>
-                    <p>{this.props.season.name}</p>
-                    <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button>
+                    <div className="dashboard-header">
+                        <p>{this.props.season.name}</p>
+                        <p>{this.props.user.first_name}</p>
+                        <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button>
+                    </div>
 
                     <Route path={`${match.path}/seasons`}   component={DashSeasons}   />
                     <Route path={`${match.path}/divisions`} component={DashDivisions} />

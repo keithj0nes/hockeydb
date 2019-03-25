@@ -1,11 +1,17 @@
 @import './variables';
 
 .dashboard-container {
-    background: $white_color;
+    background: $gray_color;
     font-family: $main_font;
+    height: 100vh;
 
     a {
         color: $nav_link;
+    }
+
+    .dashboard-header {
+        background: $gray_color;
+        border-bottom: 5px solid $white_color;
     }
 }
 
