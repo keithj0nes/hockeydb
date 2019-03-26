@@ -7,6 +7,7 @@ import Home from '../Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/auth/Login';
 import Players from '../Players/Players';
+import Games from '../Games/Games';
 import { Modal } from '../../components';
 
 
@@ -29,6 +30,7 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <Route path='/login' component={Login} />
           <Route path='/players' component={Players} />
+          <Route path='/games' component={Games} />
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />
         </div>

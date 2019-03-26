@@ -27,6 +27,7 @@ const blogs = require('./controllers/blogs');
 const auth = require('./controllers/auth');
 const players = require('./controllers/players');
 const teams = require('./controllers/teams');
+const games = require('./controllers/games')
 
 //Make sure to create a local postgreSQL db called hockeydb
 
@@ -70,7 +71,8 @@ app.get(`/api/blog/:id`, blogs.getBlogById)
 app.get(`/api/schedule`)
 
 // Games
-app.get(`/api/games`)
+app.get(`/api/games`, games.getGames);
+// app.get(`/api/games/:id`, games.getGamesById);
 
 // Teams
 app.get(`/api/teams/`, teams.getAllTeams);
@@ -142,6 +144,7 @@ app.post('/api/admin/games', async (req, res) => {
 
 })
 
+// app.put('/api/admin/games/:id', async)
 
 
 

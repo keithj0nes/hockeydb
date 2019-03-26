@@ -1,8 +1,8 @@
 const app = require('../server.js');
 
-const getAllGames = async (req, res) => {
+const getGames = async (req, res) => {
   const db = app.get('db');
-  const data = await db.query('SELECT * from games JOIN teams ON games.home_team = teams.id AND games.away_team = teams.id');
+  const data = await db.get_games();
   console.log(data, 'GAMES!')
   res.status(200).send({ status: 200, data, message: 'Retrieved list of games' })
 }
@@ -21,5 +21,6 @@ const getGameById = async (req, res) => {
 
 
 module.exports = {
+  getGames,
 
 }
