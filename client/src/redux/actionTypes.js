@@ -13,5 +13,8 @@ export const SET_SEASON = 'SET_SEASON';
 export const TOGGLE_NAV_SLIDER = 'TOGGLE_NAV_SLIDER';
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
 
-// players
+// Players
 export const GET_PLAYERS = 'GET_PLAYERS';
+
+// Games
+export const GET_GAMES = 'GET_GAMES';

@@ -9,8 +9,6 @@ export class Players extends Component {
 
   }
 
-
-
   render() {
     return (
       <div>
