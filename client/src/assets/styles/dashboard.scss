@@ -2,11 +2,16 @@
 
 .dashboard-container {
     background: $gray_color;
-    font-family: $main_font;
+    // font-family: $main_font;
     height: 100vh;
 
     a {
         color: $nav_link;
+    }
+
+    .dashboard-content {
+        width: 100%;
+        background: red;
     }
 
     .dashboard-header {
