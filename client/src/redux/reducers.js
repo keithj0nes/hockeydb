@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES } from './actionTypes';
+import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -96,3 +96,32 @@ export const games = (state = initialGameState, { type, payload }) => {
   }
 }
 
+const initialLocationsState = {
+  allLocations: [],
+  selectedlocation: null,
+};
+
+export const locations = (state = initialLocationsState, { type, payload }) => {
+  switch (type) {
+    case GET_LOCATIONS:
+      return { ...state, allLocations: payload };
+    case NEW_LOCATION:
+      return { ...state, allLocations: [...state.allLocations, payload] }
+    default:
+      return state;
+  }
+}
+
+const initialTeamsState = {
+  allTeams: [],
+  selectedTeam: null,
+};
+
+export const teams = (state = initialTeamsState, { type, payload }) => {
+  switch (type) {
+    case GET_TEAMS:
+      return { ...state, allTeams: payload };
+    default:
+      return state;
+  }
+}

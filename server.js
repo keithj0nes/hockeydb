@@ -27,7 +27,8 @@ const blogs = require('./controllers/blogs');
 const auth = require('./controllers/auth');
 const players = require('./controllers/players');
 const teams = require('./controllers/teams');
-const games = require('./controllers/games')
+const games = require('./controllers/games');
+const locations = require('./controllers/locations');
 
 //Make sure to create a local postgreSQL db called hockeydb
 
@@ -94,6 +95,9 @@ app.get(`/api/suspensions`)
 
 // About
 app.get(`/api/about`)
+
+// Locations
+app.get(`/api/locations`, locations.getLocations)
 
 
 // ⭐ ️ ADMIN  ⭐️

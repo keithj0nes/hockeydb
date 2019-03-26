@@ -1,5 +1,4 @@
 
-
 //Auth
 export const AUTH_SET_USER = 'AUTH_SET_USER';
 
@@ -18,3 +17,10 @@ export const GET_PLAYERS = 'GET_PLAYERS';
 
 // Games
 export const GET_GAMES = 'GET_GAMES';
+
+// Teams
+export const GET_TEAMS = 'GET_TEAMS';
+
+// Locations
+export const GET_LOCATIONS = 'GET_LOCATIONS';
+export const NEW_LOCATION = 'NEW_LOCATION';
