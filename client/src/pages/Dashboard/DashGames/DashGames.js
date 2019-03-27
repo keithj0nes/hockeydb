@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
-// import moment from 'moment';
-// import InputMoment from 'input-moment';
+
+
+
 
 
 import { newLocation, getLocations } from '../../../redux/actions/locationsActions';
 import { getTeams } from '../../../redux/actions/teamsActions';
-import { getGames } from '../../../redux/actions/gamesActions';
+import { getGames, newGame } from '../../../redux/actions/gamesActions';
+
+
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+
+
 
 
 export class DashGames extends Component {
@@ -15,7 +22,15 @@ export class DashGames extends Component {
     state = {
         locationName: '',
         locationAddress: '',
-        // m: moment()
+        date: new Date(),
+        homeTeam: '',
+        awayTeam: '',
+        gameLocation: '',
+
+    }
+
+    onChange(date, dateString) {
+        console.log(date, dateString);
     }
 
     componentDidMount() {
@@ -37,6 +52,28 @@ export class DashGames extends Component {
     handleLocationsSubmit = e => {
         e.preventDefault();
         this.props.newLocation(this.state.locationName, this.state.locationAddress);
+        this.props.getGames();
+    }
+
+    handleDateChange = date => {
+        this.setState({ date: date });
+    }
+
+    handleHomeTeamChange = e => {
+        this.setState({ homeTeam: e.target.value })
+    }
+
+    handleAwayTeamChange = e => {
+        this.setState({ awayTeam: e.target.value })
+    }
+
+    handleGameLocationChange = e => {
+        this.setState({ gameLocation: e.target.value })
+    }
+
+    handleNewGameSubmit = (e) => {
+        e.preventDefault();
+        this.props.newGame(this.state.homeTeam, this.state.awayTeam, this.state.gameLocation, this.state.date);
     }
 
     render() {
@@ -57,35 +94,47 @@ export class DashGames extends Component {
 
                 <div>
                     <h2>Add New Game</h2>
-                    <form>
+                    <form onSubmit={this.handleNewGameSubmit}>
                         <label> Home Team:
-                            <select name="Home">
+                            <select name="Home" onChange={this.handleHomeTeamChange}>
+                                <option value='select'>Select</option>
                                 {this.props.teams.map(item => (
-                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                    <option key={item.id} value={item.id}>{item.name}</option>
                                 ))}
                             </select>
                         </label>
 
                         <label> Away Team:
-                                <select name="Home">
+                                <select name="Home" onChange={this.handleAwayTeamChange}>
+                                <option value='select'>Select</option>
                                 {this.props.teams.map(item => (
-                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                    <option key={item.id} value={item.id}>{item.name}</option>
                                 ))}
                             </select>
                         </label>
 
                         <label> Location:
-                                <select name="Home">
+                                <select name="Home" onChange={this.handleGameLocationChange}>
+                                <option value='select'>Select</option>
                                 {this.props.locations.map(item => (
-                                    <option key={item.id} value={item.name}>{item.name}</option>
+                                    <option key={item.id} value={item.id}>{item.name}</option>
                                 ))}
                             </select>
                         </label>
-                        
+                        <DatePicker
+                            selected={this.state.date}
+                            onChange={this.handleDateChange}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            dateFormat="MMMM d, yyyy h:mm aa"
+                            timeCaption="time"
+                        />
+
+                        <input type="submit" value="Submit" />
                     </form>
 
 
-                    <input type="submit" value="Submit" />
 
                     <div>
                         {this.props.games.map(item => (
@@ -118,7 +167,8 @@ const mapDispatchToProps = dispatch => ({
     newLocation: (name, address) => dispatch(newLocation(name, address)),
     getLocations: () => dispatch(getLocations()),
     getTeams: () => dispatch(getTeams()),
-    getGames: () => dispatch(getGames())
+    getGames: () => dispatch(getGames()),
+    newGame: (home, away, location, date) => dispatch(newGame(home, away, location, date)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashGames);
