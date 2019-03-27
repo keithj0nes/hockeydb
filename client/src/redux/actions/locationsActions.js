@@ -2,21 +2,17 @@ import { request } from './middleware';
 import { NEW_LOCATION, GET_LOCATIONS } from '../actionTypes';
 
 
-
-export const sendNewLocation = data => ({ type: NEW_LOCATION, payload: data })
-export const sendLocation = data => ({ type: GET_LOCATIONS, payload: data })
-
 export const getLocations = () => async dispatch => {
   const data = await request('/api/locations', 'GET', {}, true)
   if (!data) return false;
-  dispatch(sendLocation(data))
+  dispatch({ type: GET_LOCATIONS, payload: data })
   return true;
 }
 
-export const newLocation = (name, address) => async (dispatch, getState) => {
+export const newLocation = (data) => async (dispatch, getState) => {
   const { user } = getState();
-  const post = await request('/api/admin/locations', 'POST', { data: { name: name, address: address }, access_token: user.user.access_token })
+  const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token })
   if (!post) return false;
-  dispatch(sendNewLocation(post))
+  dispatch({ type: NEW_LOCATION, payload: data })
   return true;
 }
