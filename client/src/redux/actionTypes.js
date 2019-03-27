@@ -17,6 +17,7 @@ export const GET_PLAYERS = 'GET_PLAYERS';
 
 // Games
 export const GET_GAMES = 'GET_GAMES';
+export const NEW_GAME = 'NEW_GAME';
 
 // Teams
 export const GET_TEAMS = 'GET_TEAMS';

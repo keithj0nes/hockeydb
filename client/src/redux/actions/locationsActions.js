@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { request } from './middleware';
 import { NEW_LOCATION, GET_LOCATIONS } from '../actionTypes';
 
@@ -17,8 +16,6 @@ export const getLocations = () => async dispatch => {
 export const newLocation = (name, address) => async (dispatch, getState) => {
   const { user } = getState();
   const post = await request('/api/admin/locations', 'POST', { data: { name: name, address: address }, access_token: user.user.access_token })
-  console.log(post, 'POSTTTT HERE');
-
   if (!post) return false;
   dispatch(sendNewLocation(post))
   return true;
