@@ -19,5 +19,6 @@ export const newGame = (home, away, location, date) => async (dispatch, getState
   const post = await request('/api/admin/games', 'POST', { data: { home_team: home, away_team: away, location_id: location, start_date: date }, access_token: user.user.access_token })
   if (!post) return false;
   dispatch(sendNewGame(post))
+  dispatch(getGames(post))
   return true;
 }

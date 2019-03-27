@@ -52,6 +52,7 @@ export class DashGames extends Component {
     handleLocationsSubmit = e => {
         e.preventDefault();
         this.props.newLocation(this.state.locationName, this.state.locationAddress);
+        this.props.getGames();
     }
 
     handleDateChange = date => {
