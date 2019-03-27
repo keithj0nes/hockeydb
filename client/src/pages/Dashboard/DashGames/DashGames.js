@@ -20,19 +20,14 @@ import "react-datepicker/dist/react-datepicker.css";
 export class DashGames extends Component {
 
     state = {
-        locationName: '',
-        locationAddress: '',
-        date: new Date(),
-        homeTeam: '',
-        awayTeam: '',
-        gameLocation: '',
+        name: '',
+        address: '',
+        start_date: new Date(),
+        home_team: null,
+        away_team: null,
+        location_id: null,
 
     }
-
-    onChange(date, dateString) {
-        console.log(date, dateString);
-    }
-
     componentDidMount() {
         this.props.getLocations();
         this.props.getTeams();
@@ -40,40 +35,48 @@ export class DashGames extends Component {
     }
 
     handleNameChange = e => {
-        this.setState({ locationName: e.target.value })
+        this.setState({ name: e.target.value })
         console.log(this.state);
     }
 
     handleLocationChange = e => {
-        this.setState({ locationAddress: e.target.value })
+        this.setState({ address: e.target.value })
         console.log(this.state);
     }
 
     handleLocationsSubmit = e => {
         e.preventDefault();
-        this.props.newLocation(this.state.locationName, this.state.locationAddress);
+        const { name, address } = this.state;
+        if (!name || !address) {
+            return alert('please enter a input');
+        }
+        this.props.newLocation({ name, address });
         this.props.getGames();
     }
 
     handleDateChange = date => {
-        this.setState({ date: date });
+        this.setState({ start_date: date });
     }
 
     handleHomeTeamChange = e => {
-        this.setState({ homeTeam: e.target.value })
+        this.setState({ home_team: e.target.value })
     }
 
     handleAwayTeamChange = e => {
-        this.setState({ awayTeam: e.target.value })
+        this.setState({ away_team: e.target.value })
     }
 
     handleGameLocationChange = e => {
-        this.setState({ gameLocation: e.target.value })
+        this.setState({ location_id: e.target.value })
     }
 
     handleNewGameSubmit = (e) => {
         e.preventDefault();
-        this.props.newGame(this.state.homeTeam, this.state.awayTeam, this.state.gameLocation, this.state.date);
+        const { home_team, away_team, location_id, start_date } = this.state
+        if (!home_team || !away_team || !location_id || !start_date) {
+            return alert('please fill all inputs');
+        }
+        this.props.newGame({ home_team, away_team, location_id, start_date });
     }
 
     render() {
@@ -97,7 +100,7 @@ export class DashGames extends Component {
                     <form onSubmit={this.handleNewGameSubmit}>
                         <label> Home Team:
                             <select name="Home" onChange={this.handleHomeTeamChange}>
-                                <option value='select'>Select</option>
+                                <option >Select</option>
                                 {this.props.teams.map(item => (
                                     <option key={item.id} value={item.id}>{item.name}</option>
                                 ))}
@@ -106,7 +109,7 @@ export class DashGames extends Component {
 
                         <label> Away Team:
                                 <select name="Home" onChange={this.handleAwayTeamChange}>
-                                <option value='select'>Select</option>
+                                <option>Select</option>
                                 {this.props.teams.map(item => (
                                     <option key={item.id} value={item.id}>{item.name}</option>
                                 ))}
@@ -115,14 +118,14 @@ export class DashGames extends Component {
 
                         <label> Location:
                                 <select name="Home" onChange={this.handleGameLocationChange}>
-                                <option value='select'>Select</option>
+                                <option>Select</option>
                                 {this.props.locations.map(item => (
                                     <option key={item.id} value={item.id}>{item.name}</option>
                                 ))}
                             </select>
                         </label>
                         <DatePicker
-                            selected={this.state.date}
+                            selected={this.state.start_date}
                             onChange={this.handleDateChange}
                             showTimeSelect
                             timeFormat="HH:mm"
@@ -130,10 +133,8 @@ export class DashGames extends Component {
                             dateFormat="MMMM d, yyyy h:mm aa"
                             timeCaption="time"
                         />
-
                         <input type="submit" value="Submit" />
                     </form>
-
 
 
                     <div>
@@ -143,8 +144,6 @@ export class DashGames extends Component {
                             </div>
                         ))}
                     </div>
-
-
                 </div>
             </div>
         )
