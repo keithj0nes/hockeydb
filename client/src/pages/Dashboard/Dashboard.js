@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { logout } from '../../redux/actions/auth';
 
 
 import { Route } from 'react-router-dom';
@@ -14,17 +13,11 @@ import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
 import DashBlogs from './DashBlogs/DashBlogs';
 
-import { DashboardSidebarNav, DashboardNav } from '../../components';
+import { DashboardSidebarNav, DashboardNav, HamburgerIcon } from '../../components';
 
 import '../../assets/styles/dashboard.scss';
 
 class Dashboard extends Component {
-
-
-    handleLogout = () => {
-        this.props.logout();
-        this.props.history.push('/');
-    }
 
     render() {
         const { match } = this.props;
@@ -40,9 +33,12 @@ class Dashboard extends Component {
                 <div className="dashboard-content">
 
                     <div className="dashboard-header">
+
                         <p>{this.props.season.name}</p>
                         <p>{this.props.user.first_name}</p>
-                        <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button>
+
+                        <HamburgerIcon onClick={this.props.toggleNavSlider}/>
+                        {/* <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button> */}
                     </div>
 
                     <Route path={`${match.path}/seasons`}   component={DashSeasons}   />
@@ -61,7 +57,6 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => {
     // console.log(state, 'state in dashboardMain component')
-
     return {
         user: state.user.user,
         season: state.season
@@ -69,21 +64,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    // logout: () => dispatch(logout())
     toggleNavSlider: () => dispatch(toggleNavSlider())
 
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
-
-// export default connect(null, mapDispatchToProps)(Dashboard);
-
-
-
-
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         toggleNavSlider: () => dispatch(toggleNavSlider())
-//     }
-// }
-// export default connect(mapStateToProps, mapDispatchToProps)(DashboardMain);
-

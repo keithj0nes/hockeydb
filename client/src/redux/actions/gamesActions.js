@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_GAMES, NEW_GAME } from '../actionTypes';
+import { GET_GAMES } from '../actionTypes';
 
 
 
