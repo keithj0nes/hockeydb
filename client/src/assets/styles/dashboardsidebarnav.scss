@@ -87,7 +87,6 @@
             }
 
             .nav-icon-container {
-                // background: blue;
                 display: flex;
                 justify-content: center;
                 width: 40px;
@@ -141,8 +140,6 @@
         width: 25%;
         max-width: 260px;
         position: static;
-        background: blue;
-
 
         &-hide {
             transition-delay: 0s;
