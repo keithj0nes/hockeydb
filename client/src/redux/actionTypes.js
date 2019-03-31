@@ -5,9 +5,6 @@ export const AUTH_SET_USER = 'AUTH_SET_USER';
 // Blog
 export const GET_BLOGS = 'GET_BLOGS'
 
-//Season
-export const SET_SEASON = 'SET_SEASON';
-
 //Misc
 export const TOGGLE_NAV_SLIDER = 'TOGGLE_NAV_SLIDER';
 export const TOGGLE_MODAL = 'TOGGLE_MODAL';
@@ -24,3 +21,8 @@ export const GET_TEAMS = 'GET_TEAMS';
 // Locations
 export const GET_LOCATIONS = 'GET_LOCATIONS';
 export const NEW_LOCATION = 'NEW_LOCATION';
+
+// Seasons 
+export const SET_CURRENT_SEASON = 'SET_CURRENT_SEASON';
+export const GET_SEASONS = 'GET_SEASONS';
+export const GET_SEASONS_SUCCESS = 'GET_SEASONS_SUCCESS';

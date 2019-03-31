@@ -31,6 +31,8 @@ class App extends Component {
           <Route path='/login' component={Login} />
           <Route path='/players' component={Players} />
           <Route path='/games' component={Games} />
+          {/* <Route path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} /> */}
+
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />
         </div>
@@ -40,14 +42,24 @@ class App extends Component {
 }
 
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={(props) => (
+// const PrivateRoute = ({ component: Component, ...rest }) => (
+//   <Route {...rest} render={(props) => (
+//     rest.authenticated
+//       ? <Component {...props} />
+//       : <Redirect to={'/login'} />
+//   )} />
+// )
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  
+    // console.log(rest);
+
+  return <Route {...rest} render={(props) => (
     rest.authenticated
       ? <Component {...props} />
       : <Redirect to={'/login'} />
   )} />
-)
-
+  }
 
 const mapStateToProps = state => ({
   isUserLoggedIn: state.user && state.user.isUserLoggedIn

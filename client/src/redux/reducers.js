@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_SEASON, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, } from './actionTypes';
+import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -33,13 +33,19 @@ export const blogs = (state = initialBlogState, { type, payload }) => {
 
 
 const initialSeasonState = {
-  // season: {}
+  isLoading: true,
+  seasons: [],
+  currentSeason: {}
 };
 
-export const season = (state = initialSeasonState, { type, payload }) => {
+export const seasons = (state = initialSeasonState, { type, payload }) => {
   switch (type) {
-    case SET_SEASON:
-      return { ...state, ...payload }
+    case SET_CURRENT_SEASON:
+      return { ...state, currentSeason: payload }
+    case GET_SEASONS:
+      return { ...state, isLoading: true }
+    case GET_SEASONS_SUCCESS:
+      return { ...state, isLoading: false, seasons: payload }
     default:
       return state;
   }
