@@ -32,7 +32,6 @@ class App extends Component {
           <Route path='/players'  component={Players} />
           <Route path='/games'    component={Games} />
           {/* <Route path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} /> */}
-
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />
         </div>

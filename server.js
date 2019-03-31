@@ -29,6 +29,8 @@ const players = require('./controllers/players');
 const teams = require('./controllers/teams');
 const games = require('./controllers/games');
 const locations = require('./controllers/locations');
+const seasons = require('./controllers/seasons');
+
 
 //Make sure to create a local postgreSQL db called hockeydb
 
@@ -63,6 +65,10 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 // return res.status(200).send({status: 200, data: user, message: 'You have successfully logged in'})
 
 // ROUTES //
+
+// Teams
+app.get(`/api/seasons/`, seasons.getSeasons);
+app.get(`/api/seasons/:id`, seasons.getSeasonById);
 
 // Blog
 app.get(`/api/blog`, blogs.getBlogs);

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getSeasons } from '../../../redux/actions/seasons';
+import { getSeasons, deleteSeason } from '../../../redux/actions/seasons';
 import { Button } from '../../../components';
 import './DashSeasons.scss';
+import ListItem from './ListItem';
 
 class DashSeasons extends Component{
 
@@ -23,6 +24,8 @@ class DashSeasons extends Component{
     toggleSeasonVisible = () => {
         this.setState({isAddSeasonVisible: !this.state.isAddSeasonVisible})
     }
+
+    
 
     render(){
         //this should be it's own loading icon component
@@ -90,18 +93,20 @@ class DashSeasons extends Component{
                     {this.props.seasons && this.props.seasons.map(item => {
 
                         return (
-                            <div key={item.id} className="dashboard-list-item">
-                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
-                                    <p className="flex-three">{item.name}</p>
-                                    <p className="flex-one">{item.type}</p>
+                            <ListItem key={item.id} item={item} onClick={() => this.props.deleteSeason(item.id)} />
+                            // <div key={item.id} className="dashboard-list-item">
+                            //     <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
-                                    <div className="flex-one hide-mobile">
-                                        {'<edit>'}
-                                        {'<delete>'} 
-                                    </div>
-                                </div>
-                            </div>
+                            //         <p className="flex-three">{item.name}</p>
+                            //         <p className="flex-one">{item.type}</p>
+
+                            //         <div className="flex-one hide-mobile">
+                            //             {'<edit>'}
+                            //             <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span>
+                            //         </div>
+                            //     </div>
+                            // </div>
                         )
 
                     })}
@@ -131,7 +136,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getSeasons: () => dispatch(getSeasons())
+        getSeasons: () => dispatch(getSeasons()),
+        deleteSeason: id => dispatch(deleteSeason(id))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(DashSeasons) 
