@@ -23,10 +23,10 @@ class DashboardNav extends Component {
     }
 
 
-    render(){
+    render() {
         const { match } = this.props;
         return (
-            <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
                     <div className="dashboard-nav-header">
                         <div><LeagueLogo /></div>
@@ -36,18 +36,18 @@ class DashboardNav extends Component {
                     <ul>
                         <li>
                             <NavLink to={`${match.url}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                            
+
                                 <div className="nav-icon-container">
-                                    <Home alt="home icon"/>
+                                    <Home alt="home icon" />
                                 </div>
                                 Home
-                            
+
                             </NavLink>
                         </li>
                         <li>
                             <NavLink to={`${match.url}/blogs`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
-                                    <News alt="news icon"/>
+                                    <News alt="news icon" />
                                 </div>
                                 News
                             </NavLink>
@@ -55,7 +55,7 @@ class DashboardNav extends Component {
                         <li>
                             <NavLink to={`${match.url}/seasons`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
-                                    <Seasons alt="season icon"/>
+                                    <Seasons alt="season icon" />
                                 </div>
                                 Seasons
                             </NavLink>
@@ -63,7 +63,7 @@ class DashboardNav extends Component {
                         <li>
                             <NavLink to={`${match.url}/divisions`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
-                                    <Divisions alt="divisions icon"/>
+                                    <Divisions alt="divisions icon" />
                                 </div>
                                 Divisions
                             </NavLink>
@@ -71,7 +71,7 @@ class DashboardNav extends Component {
                         <li>
                             <NavLink to={`${match.url}/teams`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
-                                    <Teams alt="teams icon"/>
+                                    <Teams alt="teams icon" />
                                 </div>
                                 Teams
                             </NavLink>
@@ -79,15 +79,23 @@ class DashboardNav extends Component {
                         <li>
                             <NavLink to={`${match.url}/players`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
-                                    <Players alt="players icon"/>
+                                    <Players alt="players icon" />
                                 </div>
                                 Players
                             </NavLink>
                         </li>
                         <li>
+                            <NavLink to={`${match.url}/locations`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                <div className="nav-icon-container">
+                                    <Players alt="players icon" />
+                                </div>
+                                Locations
+                            </NavLink>
+                        </li>
+                        <li>
                             <NavLink to={`${match.url}/games`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
-                                    <Games alt="games icon"/>
+                                    <Games alt="games icon" />
                                 </div>
                                 Games
                             </NavLink>
@@ -95,10 +103,10 @@ class DashboardNav extends Component {
                     </ul>
                 </div>
 
-                <div style={{marginBottom: 30, textAlign: 'center'}}>
+                <div style={{ marginBottom: 30, textAlign: 'center' }}>
                     <Button title={'Logout'} onClick={this.handleLogout} />
                 </div>
-            </div>    
+            </div>
         )
     }
 }
@@ -110,7 +118,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return  {
+    return {
         logout: () => dispatch(logout())
     }
 }
