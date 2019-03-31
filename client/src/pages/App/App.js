@@ -5,7 +5,7 @@ import { loginFromCookie } from '../../redux/actions/auth';
 
 import Home from '../Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
-import Login from '../../components/auth/Login';
+import Login from '../../components/Login';
 import Players from '../Players/Players';
 import Games from '../Games/Games';
 import { Modal } from '../../components';
@@ -27,10 +27,10 @@ class App extends Component {
       <Router>
         <div>
           {/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
-          <Route exact path="/" component={Home} />
-          <Route path='/login' component={Login} />
-          <Route path='/players' component={Players} />
-          <Route path='/games' component={Games} />
+          <Route exact path="/"   component={Home} />
+          <Route path='/login'    component={Login} />
+          <Route path='/players'  component={Players} />
+          <Route path='/games'    component={Games} />
           {/* <Route path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} /> */}
 
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />

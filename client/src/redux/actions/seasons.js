@@ -11,7 +11,7 @@ export const getSeasons = () => async dispatch => {
             type: GET_SEASONS_SUCCESS,
             payload: seasonData
         })
-    }, 2000);
+    }, 500);
     
 }
 
@@ -19,7 +19,7 @@ export const getSeasons = () => async dispatch => {
 const seasonData = [
     {
         id: 1,
-        type: 'Regular Season',
+        type: 'Regular',
         name: 'Summer 2019'
     },
     {
@@ -29,7 +29,7 @@ const seasonData = [
     },
     {
         id: 3,
-        type: 'Regular Season',
+        type: 'Regular',
         name: 'Fall/Winter 2019'
     }
 ]
