@@ -48,9 +48,42 @@ p, a, h1, h2, h3, h4, h5, h6 {
 }
 
 
+.hide-mobile {
+    display: none;
+}
 
 @media only screen and (min-width: 768px){
+
+    .flex-one {
+        flex: 1;
+        // background: pink;
+    }
+
+    .flex-two {
+        flex: 2;
+        background: blue;
+    }
+
+    .flex-three {
+        flex: 3;
+        // background: yellow;
+    }
+
+    .flex-four {
+        flex: 4;
+        background: green;
+    }
+
+    .flex-five {
+        flex: 5;
+        background: red;
+    }
+
     .hide-desktop {
-        display: none;
+        display: none !important;
+    }
+
+    .hide-mobile {
+        display: block;
     }
 }

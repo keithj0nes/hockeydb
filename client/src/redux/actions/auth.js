@@ -3,7 +3,7 @@ import { request } from './middleware';
 import cookie from 'react-cookies';
 import jwt from 'jsonwebtoken';
 import { JWTSECRET } from '../../client_config';
-import { AUTH_SET_USER, SET_SEASON } from '../actionTypes';
+import { AUTH_SET_USER, SET_CURRENT_SEASON } from '../actionTypes';
 
 
 
@@ -16,7 +16,7 @@ export const login = loginData => async dispatch => {
   // console.log(data, 'data!')
   cookie.save('auth', data.access_token);
   dispatch(setUser( data.user ))
-  dispatch({type: SET_SEASON, payload: data.season})
+  dispatch({type: SET_CURRENT_SEASON, payload: data.season})
   return true;
 }
 
@@ -40,7 +40,8 @@ export const loginFromCookie = () => async dispatch => {
   //USING THIS FOR CLIENT SIDE TOKEN AUTH (FASTER)
   const signed = jwt.verify(access_token, JWTSECRET)
   // console.log(signed, 'signeD!')
+
   dispatch(setUser({...signed.user, access_token}))
-  dispatch({type: SET_SEASON, payload: signed.season})
+  dispatch({type: SET_CURRENT_SEASON, payload: signed.season})
 
 }
