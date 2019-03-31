@@ -12,6 +12,7 @@ import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
 import DashBlogs from './DashBlogs/DashBlogs';
+import DashLocations from './DashLocations/DashLocations';
 
 import { Button } from '../../components';
 
@@ -31,7 +32,7 @@ class Dashboard extends Component {
 
 
                 <DashboardSidebarNav {...this.props} >
-                    <DashboardNav {...this.props}/>
+                    <DashboardNav {...this.props} />
                 </DashboardSidebarNav>
 
                 <div className="dashboard-content">
@@ -45,12 +46,13 @@ class Dashboard extends Component {
                         {/* <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button> */}
                     </div>
 
-                    <Route path={`${match.path}/seasons`}   component={DashSeasons}   />
+                    <Route path={`${match.path}/seasons`} component={DashSeasons} />
                     <Route path={`${match.path}/divisions`} component={DashDivisions} />
-                    <Route path={`${match.path}/teams`}     component={DashTeams}     />
-                    <Route path={`${match.path}/players`}   component={DashPlayers}   />
-                    <Route path={`${match.path}/games`}     component={DashGames}     />
-                    <Route path={`${match.path}/blogs`}     component={DashBlogs}     />
+                    <Route path={`${match.path}/teams`} component={DashTeams} />
+                    <Route path={`${match.path}/players`} component={DashPlayers} />
+                    <Route path={`${match.path}/games`} component={DashGames} />
+                    <Route path={`${match.path}/blogs`} component={DashBlogs} />
+                    <Route path={`${match.path}/locations`} component={DashLocations} />
 
                     
 
