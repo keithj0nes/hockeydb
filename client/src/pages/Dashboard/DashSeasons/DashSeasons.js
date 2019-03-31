@@ -6,6 +6,10 @@ import './DashSeasons.scss';
 
 class DashSeasons extends Component{
 
+    state = {
+        isAddSeasonVisible: false
+    }
+
     componentDidMount(){
         if(this.props.seasons.length <= 0){
             this.props.getSeasons();
@@ -14,6 +18,10 @@ class DashSeasons extends Component{
         // this.props.history.push({
         //     query: { someparam: 'MY PARAM!'}
         // })
+    }
+
+    toggleSeasonVisible = () => {
+        this.setState({isAddSeasonVisible: !this.state.isAddSeasonVisible})
     }
 
     render(){
@@ -26,10 +34,10 @@ class DashSeasons extends Component{
 
                 <div className="dashboard-filter-header">
                     <div>
-                        <Button title="Add Season" onClick={() => console.log('clicked to add season!')}/>
+                        <Button title="Add Season" onClick={this.toggleSeasonVisible}/>
                     </div>
 
-                    <div className="sort-section hide-desktop" style={{background: 'red'}}>
+                    {/* <div className="sort-section hide-desktop" style={{background: 'red'}}>
                         Sort By
                         <div className="select-style">
                             <select name="" id="">
@@ -37,8 +45,34 @@ class DashSeasons extends Component{
                                 <option value="type">Type</option>
                             </select>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
+
+                {/* <div className="dashboard-list-container">
+                    <div className="dashboard-list">
+                        <div className="dashboard-list-item">
+                            
+                            <input type="text"/>
+                            <input type="text"/>
+                        </div>                
+                    </div>
+                </div> */}
+
+                {this.state.isAddSeasonVisible && (
+
+                    
+                    <div className="dashboard-add-container">
+                        <input type="text" placeholder="Enter season name"/>
+                        <input type="text" placeholder="Select season type"/>
+
+                        <div className="dashboard-add-button-container">
+                            <Button title="Save Season" success onClick={this.toggleSeasonVisible}/>
+                        </div>
+
+                    </div>
+
+                )}
+
 
                 <div className="dashboard-list-container">
 

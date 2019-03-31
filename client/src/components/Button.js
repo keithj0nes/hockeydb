@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({title, onClick, cancel, danger}) => {
+const Button = ({title, onClick, cancel, danger, success}) => {
 
     //cancel #88C12D;
     //delete #C12D2D;
@@ -10,6 +10,8 @@ const Button = ({title, onClick, cancel, danger}) => {
         color = '#88C12D';
     } else if (danger){
         color = '#C12D2D';
+    } else if (success){
+        color = '#72cc2d';
     } else {
         color = '#50C0F0';
     }
