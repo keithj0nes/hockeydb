@@ -39,10 +39,10 @@ class Dashboard extends Component {
 
                     <div className="dashboard-header">
 
-                        <p>{this.props.currentSeason.name}</p>
+                        <p>{this.props.currentSeason && this.props.currentSeason.name}</p>
                         <p>{this.props.user.first_name}</p>
 
-                        <HamburgerIcon onClick={this.props.toggleNavSlider}/>
+                        <HamburgerIcon onClick={this.props.toggleNavSlider} />
                         {/* <button className={"hide-desktop"} onClick={this.props.toggleNavSlider}>Toggle Side Nav</button> */}
                     </div>
 
@@ -54,11 +54,11 @@ class Dashboard extends Component {
                     <Route path={`${match.path}/blogs`} component={DashBlogs} />
                     <Route path={`${match.path}/locations`} component={DashLocations} />
 
-                    
 
 
 
-                                    {/* <hr/>
+
+                    {/* <hr/>
 
                                     <div className="dashboard-filter-header">
                                         <div>
@@ -97,7 +97,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => {
-    // console.log(state, 'state in dashboardMain component')
+    console.log(state, 'state in dashboardMain component')
     return {
         user: state.user.user,
         currentSeason: state.seasons.currentSeason
