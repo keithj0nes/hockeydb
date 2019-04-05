@@ -26,3 +26,6 @@ export const NEW_LOCATION = 'NEW_LOCATION';
 export const SET_CURRENT_SEASON = 'SET_CURRENT_SEASON';
 export const GET_SEASONS = 'GET_SEASONS';
 export const GET_SEASONS_SUCCESS = 'GET_SEASONS_SUCCESS';
+
+// Divisions
+export const GET_DIVISIONS = 'GET_DIVISIONS';
