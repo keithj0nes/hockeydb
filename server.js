@@ -30,6 +30,7 @@ const teams = require('./controllers/teams');
 const games = require('./controllers/games');
 const locations = require('./controllers/locations');
 const seasons = require('./controllers/seasons');
+const divisions = require('./controllers/divisions');
 
 
 //Make sure to create a local postgreSQL db called hockeydb
@@ -104,6 +105,9 @@ app.get(`/api/about`)
 
 // Locations
 app.get(`/api/locations`, locations.getLocations)
+
+// Divisions
+app.get(`/api/divisions`, divisions.getAllDivisions);
 
 
 // ⭐ ️ ADMIN  ⭐️

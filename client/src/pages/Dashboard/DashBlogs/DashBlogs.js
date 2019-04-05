@@ -64,7 +64,6 @@ export class DashBlogs extends Component {
   // handleSubmit = e => {
   //   e.preventDefault();
   //   this.props.newBlogPost(this.state.message)
-
   // }
 
   handleQuillChange = (value) => {
@@ -101,8 +100,6 @@ export class DashBlogs extends Component {
 //     blogs: state.blogs.blogs
 //   };
 // };
-
-
 
 const mapDispatchToProps = dispatch => ({
   newBlogPost: (msg) => dispatch(newBlogPost(msg))
