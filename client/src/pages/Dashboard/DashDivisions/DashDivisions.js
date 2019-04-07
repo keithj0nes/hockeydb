@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getSeasons, deleteSeason } from '../../../redux/actions/seasons';
+import { getDivisions, } from '../../../redux/actions/divisions';
 import { Button } from '../../../components';
 import './DashDivisions.scss';
 import ListItem from './ListItem';
@@ -13,13 +13,14 @@ class DashDivisions extends Component {
     }
 
     componentDidMount() {
-        // if (this.props.seasons.length <= 0) {
-        //     this.props.getSeasons();
-        // }
+        if (this.props.divisions.length <= 0) {
+            this.props.getDivisions();
+        }
 
     }
 
     toggleSeasonVisible = () => {
+
         this.setState({ isAddDivisionVisible: !this.state.isAddDivisionVisible })
     }
 
@@ -47,9 +48,7 @@ class DashDivisions extends Component {
                         <div className="dashboard-add-button-container">
                             <Button title="Save Division" success onClick={this.toggleSeasonVisible} />
                         </div>
-
                     </div>
-
                 )}
 
 
@@ -64,7 +63,7 @@ class DashDivisions extends Component {
                             </div>
                         </div>
 
-                        {this.props.seasons && this.props.seasons.map(item => {
+                        {this.props.divisions && this.props.divisions.map(item => {
 
                             return (
                                 <ListItem key={item.id} item={item} onClick={() => this.props.deleteSeason(item.id)} />
@@ -79,18 +78,16 @@ class DashDivisions extends Component {
     }
 }
 
-// const mapStateToProps = state => {
-//     // console.log(state, 'state!')
-//     return {
-//         seasons: state.seasons.seasons,
-//         isLoading: state.seasons.isLoading
-//     }
-// }
+const mapStateToProps = state => {
+    return {
+        divisions: state.divisions.allDivisions
+    }
+}
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         getSeasons: () => dispatch(getSeasons()),
-//         deleteSeason: id => dispatch(deleteSeason(id))
-//     }
-// }
-export default connect(null, null)(DashDivisions) 
+const mapDispatchToProps = dispatch => {
+    return {
+        getDivisions: () => dispatch(getDivisions()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashDivisions) 

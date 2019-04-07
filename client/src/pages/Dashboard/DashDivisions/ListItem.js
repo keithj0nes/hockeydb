@@ -19,10 +19,8 @@ class ListItem extends Component {
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
                     {!this.state.isEditing && <p className="flex-three">{item.name}</p>}
-                    {!this.state.isEditing && <p className="flex-one">{item.type}</p>}
 
                     {this.state.isEditing && <input className="flex-three" type="text" onChange={this.handleChange} name={"name"} defaultValue={item.name} />}
-                    {this.state.isEditing && <input className="flex-one" type="text" onChange={this.handleChange} name={"type"} defaultValue={item.type} />}
 
                     <div className="flex-one hide-mobile">
                         <span onClick={() => { this.setState({ isEditing: !this.state.isEditing }) }}>{this.state.isEditing ? '<save>' : '<edit>'}</span>

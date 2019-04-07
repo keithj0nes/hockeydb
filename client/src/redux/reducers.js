@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, } from './actionTypes';
+import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -125,6 +125,20 @@ export const teams = (state = initialTeamsState, { type, payload }) => {
   switch (type) {
     case GET_TEAMS:
       return { ...state, allTeams: payload };
+    default:
+      return state;
+  }
+}
+
+const initialDivisionsState = {
+  allDivisions: [],
+  selectedDivision: null,
+};
+
+export const divisions = (state = initialDivisionsState, { type, payload }) => {
+  switch (type) {
+    case GET_DIVISIONS:
+      return { ...state, allDivisions: payload };
     default:
       return state;
   }
