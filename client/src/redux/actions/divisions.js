@@ -10,8 +10,10 @@ export const getDivisions = () => async dispatch => {
 }
 
 export const newDivision = (data) => async (dispatch, getState) => {
+  console.log('hi my', data);
+
   const { user } = getState();
-  const post = await request('/api/admin/divisions', 'POST', { data, access_token: user.user.access_token })
+  const post = await request('/api/admin/divisions', 'POST', { data: { name: data.newDivisionName }, access_token: user.user.access_token })
   if (!post) return false;
   return dispatch(getDivisions())
 }
