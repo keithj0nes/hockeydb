@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getDivisions, } from '../../../redux/actions/divisions';
+import { getDivisions, newDivision } from '../../../redux/actions/divisions';
 import { Button } from '../../../components';
 import './DashDivisions.scss';
 import ListItem from './ListItem';
@@ -20,8 +20,19 @@ class DashDivisions extends Component {
     }
 
     toggleSeasonVisible = () => {
-
         this.setState({ isAddDivisionVisible: !this.state.isAddDivisionVisible })
+    }
+
+    handleNameChange = e => {
+        this.setState({ newDivisionName: e.target.value })
+        console.log(this.state.newDivisionName);
+
+    }
+
+    sendNewDivision = () => {
+        const { newDivisionName } = this.state;
+        this.state.newDivisionName.length > 1 && (this.props.newDivision({ newDivisionName }));
+        this.toggleSeasonVisible();
     }
 
 
@@ -44,9 +55,9 @@ class DashDivisions extends Component {
                 {this.state.isAddDivisionVisible && (
 
                     <div className="dashboard-add-container">
-                        <input type="text" placeholder="Enter division name" />
+                        <input type="text" placeholder="Enter division name" onChange={this.handleNameChange} />
                         <div className="dashboard-add-button-container">
-                            <Button title="Save Division" success onClick={this.toggleSeasonVisible} />
+                            <Button title="Save Division" success onClick={this.sendNewDivision} />
                         </div>
                     </div>
                 )}
@@ -87,6 +98,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getDivisions: () => dispatch(getDivisions()),
+        newDivision: (name) => dispatch(newDivision(name)),
     }
 }
 
