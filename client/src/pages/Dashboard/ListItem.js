@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+
 
 class ListItem extends Component {
 
@@ -13,16 +16,28 @@ class ListItem extends Component {
     }
 
     render(){
-        const { onClick, item } = this.props;
+        const { onClick, item, sections } = this.props;
         return ( 
             <div className="dashboard-list-item">
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
-                    {!this.state.isEditing &&  <p className="flex-three">{item.name}</p> }
+                    {Object.keys(sections).map(section => {
+                        // console.log(section, 'section!')
+                        // console.log(sections[section])
+                        // console.log(item[section])
+                        // console.log(item, 'item')
+                        return !this.state.isEditing ? (
+                            <p key={section} className={`flex-${sections[section]}`}>{item[section]}</p>
+                         ) : (
+                            <input key={section} className={`flex-${sections[section]}`} type="text" onChange={this.handleChange} name={`${sections[section]}`} defaultValue={item[section]}/>
+                         )
+                    })}
+
+                    {/* {!this.state.isEditing &&  <p className="flex-three">{item.name}</p> }
                     {!this.state.isEditing &&  <p className="flex-one">{item.type}</p> }
 
                     {this.state.isEditing &&  <input className="flex-three" type="text" onChange={this.handleChange} name={"name"} defaultValue={item.name}/> }
-                    {this.state.isEditing &&  <input className="flex-one" type="text" onChange={this.handleChange} name={"type"} defaultValue={item.type}/> } 
+                    {this.state.isEditing &&  <input className="flex-one" type="text" onChange={this.handleChange} name={"type"} defaultValue={item.type}/> }  */}
 
                     <div className="flex-one hide-mobile">
                         <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span>
@@ -42,6 +57,12 @@ class ListItem extends Component {
             </div>
         )
     }
+}
+
+ListItem.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired,
+    sections: PropTypes.object.isRequired
 }
 
 export default ListItem;
