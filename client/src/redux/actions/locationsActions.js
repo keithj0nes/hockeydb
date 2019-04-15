@@ -13,6 +13,6 @@ export const newLocation = (data) => async (dispatch, getState) => {
   const { user } = getState();
   const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token })
   if (!post) return false;
-  dispatch({ type: NEW_LOCATION, payload: data })
+  dispatch({ type: NEW_LOCATION, payload: post })
   return true;
 }

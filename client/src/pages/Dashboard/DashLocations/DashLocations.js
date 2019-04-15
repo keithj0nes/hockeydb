@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
 import { newLocation, getLocations } from '../../../redux/actions/locationsActions';
+import { Button } from '../../../components';
+import ListItem from '../ListItem';
 
 
 export class DashGames extends Component {
 
   state = {
+    isAddLocationVisible: false,
     name: '',
     address: '',
   }
@@ -14,40 +17,94 @@ export class DashGames extends Component {
     this.props.getLocations();
   }
 
-  handleNameChange = e => {
-    this.setState({ name: e.target.value })
-    console.log(this.state);
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value })
   }
 
-  handleLocationChange = e => {
-    this.setState({ address: e.target.value })
-    console.log(this.state);
-  }
-
-  handleLocationsSubmit = e => {
+  handleLocationsSubmit = async e => {
     e.preventDefault();
     const { name, address } = this.state;
     if (!name || !address) {
       return alert('please enter a input');
     }
-    this.props.newLocation({ name, address });
+    const added = await this.props.newLocation({ name, address });
+
+    if(!added){
+      return alert('location not added')
+    }
+    return this.setState({isAddLocationVisible: false, name: '', address: ''})
   }
+
+  toggleAddVisible = () => {
+    this.setState({isAddLocationVisible: !this.state.isAddLocationVisible})
+}
 
   render() {
     return (
       <div>
-        <h1>Dash Games Component</h1>
-        <h2>Add New Location</h2>
-        <form onSubmit={this.handleLocationsSubmit}>
-          <input type="text" onChange={this.handleNameChange} placeholder={'Location Name'} />
-          <input type="text" onChange={this.handleLocationChange} placeholder={'Location Adress'} />
-          <input type="submit" value="Submit" />
-        </form>
-        {this.props.locations.map(item => (
-          <div key={item.id}>
-            <p>Name:{item.name} Address: {item.address}</p>
+
+          <div className="dashboard-filter-header">
+              <div>
+                  <Button title="Add Location" onClick={this.toggleAddVisible}/>
+              </div>
           </div>
-        ))}
+
+          {this.state.isAddLocationVisible && (
+
+              <form onSubmit={this.handleLocationsSubmit} className="dashboard-add-container">
+                  <input type="text" onChange={this.handleChange} name="name" placeholder="Location name"/>
+                  <input type="text" onChange={this.handleChange} name="address" placeholder="Location address"/>
+
+                  <div className="dashboard-add-button-container">
+                      <Button title="Save Location" success onClick={()=>{}}/>
+                  </div>
+
+              </form>
+
+          )}
+
+
+          <div className="dashboard-list-container">
+
+              <div className="dashboard-list">
+
+                  <div className="dashboard-list-item hide-mobile">
+                      <div style={{display: 'flex'}}>
+
+                          <p className="flex-three">Name</p>
+                          <p className="flex-three">Address</p>
+                          <p className="flex-one">Manage</p>
+
+
+                      </div>
+                  </div>
+
+              {this.props.locations && this.props.locations.map(item => {
+
+                  // console.log(item, 'befroe')
+                  // item.date = dateFormat(item.start_date, 'MM/DD/YYYY');
+                  // item.start_time = dateFormat(item.start_date, 'h:mm A')
+                  // console.log(item, 'after')
+
+                  return (
+
+                      <ListItem key={item.id} item={item} sections={{'name': 'three', 'address': 'three'}} onClick={() => this.props.deleteSeason(item.id)} />
+
+                  )
+
+              })}
+
+              {/* <div className="dashboard-list-item"></div>
+              <div className="dashboard-list-item"></div> */}
+
+
+                  {/* <div>Name</div>
+                  <div>Type</div>
+                  <div>Manage/Edit</div> */}
+              </div>
+
+          </div>
+
       </div>
     )
   }

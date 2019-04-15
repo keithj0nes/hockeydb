@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getDivisions, newDivision } from '../../../redux/actions/divisions';
 import { Button } from '../../../components';
 import './DashDivisions.scss';
-import ListItem from './ListItem';
+import ListItem from '../ListItem';
 
 class DashDivisions extends Component {
 
@@ -77,7 +77,7 @@ class DashDivisions extends Component {
                         {this.props.divisions && this.props.divisions.map(item => {
 
                             return (
-                                <ListItem key={item.id} item={item} onClick={() => this.props.deleteSeason(item.id)} />
+                                <ListItem key={item.id} item={item} sections={{'name': 'three'}} onClick={() => this.props.deleteSeason(item.id)} />
                             )
 
                         })}

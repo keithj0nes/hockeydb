@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getSeasons, deleteSeason } from '../../../redux/actions/seasons';
 import { Button } from '../../../components';
 import './DashSeasons.scss';
-import ListItem from './ListItem';
+import ListItem from '../ListItem';
 
 class DashSeasons extends Component{
 
@@ -51,19 +51,8 @@ class DashSeasons extends Component{
                     </div> */}
                 </div>
 
-                {/* <div className="dashboard-list-container">
-                    <div className="dashboard-list">
-                        <div className="dashboard-list-item">
-                            
-                            <input type="text"/>
-                            <input type="text"/>
-                        </div>                
-                    </div>
-                </div> */}
-
                 {this.state.isAddSeasonVisible && (
 
-                    
                     <div className="dashboard-add-container">
                         <input type="text" placeholder="Enter season name"/>
                         <input type="text" placeholder="Select season type"/>
@@ -94,7 +83,7 @@ class DashSeasons extends Component{
 
                         return (
 
-                            <ListItem key={item.id} item={item} onClick={() => this.props.deleteSeason(item.id)} />
+                            <ListItem key={item.id} item={item} sections={{'name': 'three', 'type': 'one'}} onClick={() => this.props.deleteSeason(item.id)} />
                             // <div key={item.id} className="dashboard-list-item">
                             //     <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
