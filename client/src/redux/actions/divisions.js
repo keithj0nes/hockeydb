@@ -5,8 +5,8 @@ import { GET_DIVISIONS } from '../actionTypes';
 
 export const getDivisions = () => async dispatch => {
   const data = await request('/api/divisions', 'GET', {}, true)
-  if (!data) return false;
-  return dispatch({ type: GET_DIVISIONS, payload: data })
+  if (!data.data) return false;
+  return dispatch({ type: GET_DIVISIONS, payload: data.data })
 }
 
 export const newDivision = (data) => async (dispatch, getState) => {
@@ -14,6 +14,6 @@ export const newDivision = (data) => async (dispatch, getState) => {
 
   const { user } = getState();
   const post = await request('/api/admin/divisions', 'POST', { data: { name: data.newDivisionName }, access_token: user.user.access_token })
-  if (!post) return false;
+  if (!post.data) return false;
   return dispatch(getDivisions())
 }

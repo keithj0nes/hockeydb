@@ -39,6 +39,7 @@ p, a, h1, h2, h3, h4, h5, h6, input {
     // align-items: center;
     padding-top: 20%;
     justify-content: center;
+    z-index: 1000;
 
     .modal-message {
         width: 200px;
