@@ -5,6 +5,9 @@ import { Button } from '../../../components';
 import './DashSeasons.scss';
 import ListItem from '../ListItem';
 
+import { toggleModal } from '../../../redux/actions/misc';
+
+
 class DashSeasons extends Component{
 
     state = {
@@ -23,6 +26,15 @@ class DashSeasons extends Component{
 
     toggleSeasonVisible = () => {
         this.setState({isAddSeasonVisible: !this.state.isAddSeasonVisible})
+    }
+
+    handleDeleteSeason = (item) => {
+        this.props.toggleModal({
+            toBeDeleted: item,
+            title: 'Delete Season',
+            message: 'Are you sure you want to delete this season?',
+            deleteAction: () => this.props.deleteSeason(item.id),
+        }, 'delete');
     }
 
     
@@ -83,7 +95,7 @@ class DashSeasons extends Component{
 
                         return (
 
-                            <ListItem key={item.id} item={item} sections={{'name': 'three', 'type': 'one'}} onClick={() => this.props.deleteSeason(item.id)} />
+                            <ListItem key={item.id} item={item} sections={{'name': 'three', 'type': 'one'}} onClick={() => this.handleDeleteSeason(item)} />
                             // <div key={item.id} className="dashboard-list-item">
                             //     <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
@@ -126,7 +138,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getSeasons: () => dispatch(getSeasons()),
-        deleteSeason: id => dispatch(deleteSeason(id))
+        deleteSeason: id => dispatch(deleteSeason(id)),
+        toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType))
+
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(DashSeasons) 

@@ -29,12 +29,24 @@ export const request = async (route, method, session, noAuth) => {
     console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     const { status, data, message } = responseRaw.data;
 
+    // const status = 243;
+    // const message = 'fake message lol';
+    
     if(status !== 200){
         //NOT BEING USED YET
         // store.dispatch({type: 'REQUEST_METHOD_FAILURE', payload: {status, message}})  //NOT BEING USED YET
         //NOT BEING USED YET
 
-        store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
+        // store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
+        store.dispatch({
+            type: TOGGLE_MODAL,
+            modalProps: {
+                title: 'Something Went Wrong',
+                message: `Somethinng went wrong\nPlease try again.\n ${status} - ${message}`
+            },
+            modalType: 'alert'
+        })
+
 
         console.log(`status error: ${status} - ${message}`)
         // alert(`status error: ${status} - ${message}`)
@@ -43,7 +55,7 @@ export const request = async (route, method, session, noAuth) => {
 
 
     if(status === 200){
-        return data;
+        return {data, message};
     }
 
 }

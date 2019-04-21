@@ -6,7 +6,7 @@ g.home_score,
 g.away_score,
 
 locations.name AS location_name, 
-
+locations.id AS location_id,
 h.name AS home_team, 
 a.name AS away_team 
 FROM games g

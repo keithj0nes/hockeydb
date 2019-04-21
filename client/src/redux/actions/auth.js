@@ -14,9 +14,9 @@ export const login = loginData => async dispatch => {
   const data = await request('/api/auth/login', 'POST', {data: loginData}, true)
   if(!data) return false;
   // console.log(data, 'data!')
-  cookie.save('auth', data.access_token);
-  dispatch(setUser( data.user ))
-  dispatch({type: SET_CURRENT_SEASON, payload: data.season})
+  cookie.save('auth', data.data.access_token);
+  dispatch(setUser( data.data.user ))
+  dispatch({type: SET_CURRENT_SEASON, payload: data.data.season})
   return true;
 }
 

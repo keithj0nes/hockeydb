@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 
 import { Button } from '../../../components';
+import DashGamesListItem from './DashGamesListItem';
 import ListItem from '../ListItem';
 
 
@@ -57,6 +58,11 @@ export class DashGames extends Component {
         if (!home_team || !away_team || !location_id || !start_date) {
             return alert('please fill all inputs');
         }
+
+        if (home_team === away_team) {
+            return alert('teams cannot be the same');
+        }
+
         this.props.newGame({ home_team, away_team, location_id, start_date });
     }
 
@@ -78,35 +84,34 @@ export class DashGames extends Component {
 
                 {this.state.isAddGameVisible && (
               
-                    <div>
-                        <h2>Add New Game</h2>
-                        <form onSubmit={this.handleNewGameSubmit}>
-                            <label> Home Team:
+                    <div className="dashboard-add-container">
+                        {/* <form onSubmit={this.handleNewGameSubmit}> */}
+                            {/* <label> Home Team: */}
                                 <select name="Home" onChange={this.handleHomeTeamChange}>
-                                    <option >Select</option>
+                                    <option value="">Home Team</option>
                                     {this.props.teams.map(item => (
                                         <option key={item.id} value={item.id}>{item.name}</option>
                                     ))}
                                 </select>
-                            </label>
+                            {/* </label> */}
 
-                            <label> Away Team:
-                                    <select name="Home" onChange={this.handleAwayTeamChange}>
-                                    <option>Select</option>
+                            {/* <label> Away Team: */}
+                                <select name="Home" onChange={this.handleAwayTeamChange}>
+                                    <option value="">Away Team</option>
                                     {this.props.teams.map(item => (
                                         <option key={item.id} value={item.id}>{item.name}</option>
                                     ))}
                                 </select>
-                            </label>
+                            {/* </label> */}
 
-                            <label> Location:
-                                    <select name="Home" onChange={this.handleGameLocationChange}>
-                                    <option>Select</option>
+                            {/* <label> Location: */}
+                                <select name="Home" onChange={this.handleGameLocationChange}>
+                                    <option value="">Location</option>
                                     {this.props.locations.map(item => (
                                         <option key={item.id} value={item.id}>{item.name}</option>
                                     ))}
                                 </select>
-                            </label>
+                            {/* </label> */}
                             <DatePicker
                                 selected={this.state.start_date}
                                 onChange={this.handleDateChange}
@@ -115,9 +120,12 @@ export class DashGames extends Component {
                                 timeIntervals={15}
                                 dateFormat="MMMM d, yyyy h:mm aa"
                                 timeCaption="time"
+                                withPortal
                             />
-                            <input type="submit" value="Submit" />
-                        </form>
+                            <div className="dashboard-add-button-container">
+                                <Button title="Save Game" success onClick={this.handleNewGameSubmit} />
+                            </div>
+                        {/* </form> */}
 
                     </div>
                 )}
@@ -143,14 +151,38 @@ export class DashGames extends Component {
 
                     {this.props.games && this.props.games.map(item => {
 
-                        console.log(item, 'befroe')
+                        // console.log(item, 'befroe')
                         item.date = dateFormat(item.start_date, 'MM/DD/YYYY');
                         item.start_time = dateFormat(item.start_date, 'h:mm A')
-                        console.log(item, 'after')
+                        // console.log(item, 'after')
 
                         return (
 
-                            <ListItem key={item.id} item={item} sections={{'date': 'one', 'home_team': 'one', 'away_team': 'one', 'location_name': 'one', 'start_time': 'one'}} onClick={() => this.props.deleteSeason(item.id)} />
+                            <div key={item.id}>
+                                <div className="hide-desktop">
+                                    <DashGamesListItem 
+                                        key={item.id} 
+                                        item={item} 
+                                        sections={{'date': 'one', 'home_team': 'one', 'away_team': 'one', 'location_name': 'one', 'start_time': 'one'}} 
+                                        onClick={() => this.props.deleteSeason(item.id)} 
+                                        locations={this.props.locations}
+                                    />
+
+                                </div>
+
+                                <div className="hide-mobile">
+                                    <ListItem 
+                                        key={item.id} 
+                                        item={item} 
+                                        sections={{'date': 'one', 'home_team': 'one', 'away_team': 'one', 'location_name': 'one', 'start_time': 'one'}} 
+                                        onClick={() => this.props.deleteSeason(item.id)} 
+                                        locations={this.props.locations}
+                                    />
+
+                                </div>
+
+                            </div>
+
 
                         )
 

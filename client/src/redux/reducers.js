@@ -58,15 +58,17 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
 const initialMiscState = {
   navSliderVisible: false,
   modalVisible: false,
-  modalData: {}
+  modalProps: {},
+  modalType: '',
+  isLoading: false
 }
 
-export const misc = (state = initialMiscState, { type, payload }) => {
+export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading }) => {
   switch (type) {
     case TOGGLE_NAV_SLIDER:
       return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-      return { ...state, modalVisible: !state.modalVisible, modalData: state.modalVisible ? {} : { status: payload.status, message: payload.message } }
+      return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     default:
       return state;
   }
