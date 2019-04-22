@@ -26,7 +26,7 @@ export const request = async (route, method, session, noAuth) => {
         }
     }).catch(err => console.log(err, 'error in responseRaw'))
 
-    console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
+    // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     const { status, data, message } = responseRaw.data;
 
     // const status = 243;
@@ -41,8 +41,9 @@ export const request = async (route, method, session, noAuth) => {
         store.dispatch({
             type: TOGGLE_MODAL,
             modalProps: {
-                title: 'Something Went Wrong',
-                message: `Somethinng went wrong\nPlease try again.\n ${status} - ${message}`
+                isVisible: true,
+                title: 'Error',
+                message: `${message}\nError code: ${status}`
             },
             modalType: 'alert'
         })

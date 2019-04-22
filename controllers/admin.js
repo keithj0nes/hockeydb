@@ -173,7 +173,7 @@ const deleteBlog = async (req, res) => {
 const createSeason = async (req, res) => {
     const db = app.get('db');
 
-    const { name, type } = req.body;
+    const { name, type, is_active } = req.body;
 
     const season = await db.seasons.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
@@ -181,7 +181,7 @@ const createSeason = async (req, res) => {
         return res.status(400).send({ status: 400, data: [], message: 'Season already exists' })
     }
 
-    const data = await db.seasons.insert({ name, type, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create blog error'))
+    const data = await db.seasons.insert({ name, type, is_active, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Season created' })
 
@@ -333,6 +333,12 @@ const deleteLocation = async (req, res) => {
 
     if (!location) {
         return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
+    }
+
+    const gameWithLocation = await db.games.findOne({location_id: location.id});
+
+    if(gameWithLocation){
+        return res.status(200).send({ status: 409, error: true, message: 'Location cannot be deleted, a game is using this location' })
     }
 
     const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete location error'))

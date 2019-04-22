@@ -136,7 +136,8 @@ CREATE TABLE "seasons" (
   "updated_date" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
   "deleted_date" TIMESTAMP,
-  "deleted_by" INTEGER REFERENCES users(id)
+  "deleted_by" INTEGER REFERENCES users(id),
+  "is_active" BOOLEAN
 );
 
 

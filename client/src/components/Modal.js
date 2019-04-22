@@ -30,13 +30,55 @@ const AlertModal = ({data, toggleModal}) => (
 )
 
 
+const PromptModal = ({data, toggleModal}) => {
+    console.log(data, 'data in propmpt modal')
+
+    return (
+        <div>
+            {data.fields.map(field => {
+
+                return (
+                    <div key={field.name}>
+
+                        {field.type === 'input' && (
+                            <input type="text" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}/>
+                        )}
+
+                        {field.type === 'select' && (
+                            <select name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
+                                {field.listOfSelects.map((item, ind) => (
+                                    <option key={ind} value={item}>{item}</option>
+                                ))}
+                            </select>
+                        )}
+
+                        {field.type === 'checkbox' && (
+                            <input type="checkbox" name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
+                        )}
+
+
+                    </div>
+                )
+            })}
+
+
+
+            <button onClick={data.confirmAction}> SUBMIT </button>
+
+        </div>
+    )
+}
+
+
 const renderModalType = (modalType, modalProps, isLoading) => {
     switch (modalType) {
         case 'delete':
             return <DeleteModal data={modalProps} isLoading={isLoading}/>
         case 'alert':
             return <AlertModal data={modalProps} isLoading={isLoading}/>
-    
+        case 'prompt':
+            return <PromptModal data={modalProps} isLoading={isLoading}/>
+
         default:
             break;
     }
@@ -47,10 +89,14 @@ const Modal = ({modalVisible, toggleModal, modalProps, modalType, isLoading}) =>
 
     if(!modalVisible) return null;
 
-    console.log(modalProps, 'modalProps')
+    const handleClose = e => {
+        return e.currentTarget === e.target && toggleModal();
+    }
+
+    // console.log(modalProps, 'modalProps')
 
     return (
-        <div className="modal-container">
+        <div className="modal-container" onClick={handleClose}>
             <div className="modal-message">
 
                 <h2>{modalProps.title}</h2>
@@ -64,7 +110,7 @@ const Modal = ({modalVisible, toggleModal, modalProps, modalType, isLoading}) =>
 }
 
 const mapStateToProps = state => {
-    console.log(state, 'state in modal')
+    // console.log(state, 'state in modal')
     return {
         modalVisible: state.misc.modalVisible,
         modalProps: state.misc.modalProps,

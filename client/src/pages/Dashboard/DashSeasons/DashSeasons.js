@@ -4,6 +4,7 @@ import { getSeasons, deleteSeason } from '../../../redux/actions/seasons';
 import { Button } from '../../../components';
 import './DashSeasons.scss';
 import ListItem from '../ListItem';
+import DashSeasonsListItem from './DashSeasonsListItem';
 
 import { toggleModal } from '../../../redux/actions/misc';
 
@@ -11,7 +12,12 @@ import { toggleModal } from '../../../redux/actions/misc';
 class DashSeasons extends Component{
 
     state = {
-        isAddSeasonVisible: false
+        isAddSeasonVisible: false,
+        seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
+
+        name: '',
+        type: '',
+        is_active: false,
     }
 
     componentDidMount(){
@@ -30,11 +36,46 @@ class DashSeasons extends Component{
 
     handleDeleteSeason = (item) => {
         this.props.toggleModal({
+            isVisible: true,
             toBeDeleted: item,
             title: 'Delete Season',
             message: 'Are you sure you want to delete this season?',
             deleteAction: () => this.props.deleteSeason(item.id),
         }, 'delete');
+    }
+
+    handleChange = e => {
+        this.setState({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
+    }
+
+    handleEditSeason = (item) => {
+        this.props.toggleModal({
+            isVisible: true,
+            // toBeDeleted: item,
+            title: 'Edit Season',
+            // message: 'Are you sure you want to delete this season?',
+            fields: [
+                {
+                    type: 'input',
+                    name: 'name',
+                    defaultValue: item.name
+                },
+                {
+                    type: 'select',
+                    name: 'type',
+                    defaultValue: item.type,
+                    listOfSelects: this.state.seasonTypes
+                },
+                {
+                    type: 'checkbox',
+                    name: 'is_active',
+                    defaultValue: item.is_active
+                }
+            ],
+            onChange: this.handleChange,
+            confirmAction: () => console.log(this.state, 'this.state'),
+            deleteAction: () => this.props.deleteSeason(item.id),
+        }, 'prompt');
     }
 
     
@@ -66,8 +107,13 @@ class DashSeasons extends Component{
                 {this.state.isAddSeasonVisible && (
 
                     <div className="dashboard-add-container">
-                        <input type="text" placeholder="Enter season name"/>
-                        <input type="text" placeholder="Select season type"/>
+                        <input type="text" name="name" placeholder="Season name" onChange={this.handleChange}/>
+                        {/* <input type="text" placeholder="Select season type"/> */}
+                        <select name="type" defaultValue={this.state.type || null} onChange={this.handleChange}>
+                            {this.state.seasonTypes.map((seasonType, ind) => (
+                                <option key={ind} value={seasonType}>{seasonType}</option>
+                            ))}
+                        </select>
 
                         <div className="dashboard-add-button-container">
                             <Button title="Save Season" success onClick={this.toggleSeasonVisible}/>
@@ -85,7 +131,7 @@ class DashSeasons extends Component{
                         <div className="dashboard-list-item hide-mobile">
                             <div style={{display: 'flex'}}>
 
-                                <p className="flex-three">Name</p>
+                                <p className="flex-two">Name</p>
                                 <p className="flex-one">Type</p>
                                 <p className="flex-one">Manage</p>
                             </div>
@@ -95,7 +141,7 @@ class DashSeasons extends Component{
 
                         return (
 
-                            <ListItem key={item.id} item={item} sections={{'name': 'three', 'type': 'one'}} onClick={() => this.handleDeleteSeason(item)} />
+                            // <ListItem key={item.id} item={item} sections={{'name': 'three', 'type': 'one'}} onClick={() => this.handleDeleteSeason(item)} />
                             // <div key={item.id} className="dashboard-list-item">
                             //     <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
@@ -108,6 +154,32 @@ class DashSeasons extends Component{
                             //         </div>
                             //     </div>
                             // </div>
+
+                            // <div key={item.id}>
+                            //     <div className="hide-desktop">
+                                    <DashSeasonsListItem 
+                                        key={item.id} 
+                                        item={item} 
+                                        sections={{'name': 'two', 'type': 'one'}}
+                                        onClick={() => this.handleDeleteSeason(item)} 
+                                        onEdit={() => this.handleEditSeason(item)}
+                                        locations={this.props.locations}
+                                    />
+
+                            //     {/* </div> */}
+
+                            //     {/* <div className="hide-mobile">
+                            //         <ListItem 
+                            //             key={item.id} 
+                            //             item={item} 
+                            //             sections={{'name': 'three', 'type': 'one'}}
+                            //             onClick={() => this.props.handleDeleteSeason(item)} 
+                            //             locations={this.props.locations}
+                            //         />
+
+                            //     </div> */}
+
+                            // {/* </div> */}
                         )
 
                     })}
