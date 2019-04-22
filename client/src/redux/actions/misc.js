@@ -12,6 +12,13 @@ export const toggleNavSlider = () => ({
 
 export const toggleModal = (modalProps, modalType) => {
 
+    // console.log(modalProps, modalType, 'yoooo!')
+    if(!modalProps){
+        var modalProps = {isVisible: false};
+    }
+
+    // console.log(modalProps, 'modalprops')
+
     return  {
         type: TOGGLE_MODAL,
         modalProps,

@@ -1,43 +1,55 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
-import { newLocation, getLocations } from '../../../redux/actions/locationsActions';
+import { newLocation, getLocations, deleteLocation } from '../../../redux/actions/locationsActions';
 import { Button } from '../../../components';
 import ListItem from '../ListItem';
 
+import { toggleModal } from '../../../redux/actions/misc';
 
 export class DashGames extends Component {
 
-  state = {
-    isAddLocationVisible: false,
-    name: '',
-    address: '',
-  }
-  componentDidMount() {
-    this.props.getLocations();
-  }
-
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
-
-  handleLocationsSubmit = async e => {
-    e.preventDefault();
-    const { name, address } = this.state;
-    if (!name || !address) {
-      return alert('please enter a input');
+    state = {
+        isAddLocationVisible: false,
+        name: '',
+        address: '',
     }
-    const added = await this.props.newLocation({ name, address });
-
-    if(!added){
-      return alert('location not added')
+    componentDidMount() {
+        this.props.getLocations();
     }
-    return this.setState({isAddLocationVisible: false, name: '', address: ''})
-  }
 
-  toggleAddVisible = () => {
-    this.setState({isAddLocationVisible: !this.state.isAddLocationVisible})
-}
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value })
+    }
+
+    handleLocationsSubmit = async e => {
+        e.preventDefault();
+        const { name, address } = this.state;
+        if (!name || !address) {
+        return alert('please enter a input');
+        }
+        const added = await this.props.newLocation({ name, address });
+
+        if(!added){
+        return alert('location not added')
+        }
+        return this.setState({isAddLocationVisible: false, name: '', address: ''})
+    }
+
+    toggleAddVisible = () => {
+        this.setState({isAddLocationVisible: !this.state.isAddLocationVisible})
+    }
+
+
+    handleDeleteLocation = (item) => {
+        this.props.toggleModal({
+            isVisible: true,
+            toBeDeleted: item,
+            title: 'Delete Location',
+            message: 'Are you sure you want to delete this location?',
+            deleteAction: () => this.props.deleteLocation(item.id),
+        }, 'delete');
+    }
 
   render() {
     return (
@@ -88,7 +100,7 @@ export class DashGames extends Component {
 
                   return (
 
-                      <ListItem key={item.id} item={item} sections={{'name': 'three', 'address': 'three'}} onClick={() => this.props.deleteSeason(item.id)} />
+                      <ListItem key={item.id} item={item} sections={{'name': 'three', 'address': 'three'}} onClick={() => this.handleDeleteLocation(item)} />
 
                   )
 
@@ -111,18 +123,20 @@ export class DashGames extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state, "our state in dashNav!s");
+    console.log(state, "our state in dashNav!s");
 
-  return {
-    locations: state.locations.allLocations,
-  };
+    return {
+        locations: state.locations.allLocations,
+    };
 };
 
 
 
 const mapDispatchToProps = dispatch => ({
-  newLocation: (name, address) => dispatch(newLocation(name, address)),
-  getLocations: () => dispatch(getLocations()),
+    newLocation: (name, address) => dispatch(newLocation(name, address)),
+    getLocations: () => dispatch(getLocations()),
+    toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
+    deleteLocation: id => dispatch(deleteLocation(id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashGames);

@@ -14,7 +14,7 @@ import DashGames from './DashGames/DashGames';
 import DashBlogs from './DashBlogs/DashBlogs';
 import DashLocations from './DashLocations/DashLocations';
 
-import { Button } from '../../components';
+// import { Button } from '../../components';
 
 
 import { DashboardSidebarNav, DashboardNav, HamburgerIcon } from '../../components';
@@ -97,7 +97,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state, 'state in dashboardMain component')
+    // console.log(state, 'state in dashboardMain component')
     return {
         user: state.user.user,
         currentSeason: state.seasons.currentSeason

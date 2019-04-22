@@ -68,7 +68,9 @@ export const misc = (state = initialMiscState, { type, modalProps, modalType, is
     case TOGGLE_NAV_SLIDER:
       return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-      return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
+        return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : ''}
+
+      // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     default:
       return state;
   }
