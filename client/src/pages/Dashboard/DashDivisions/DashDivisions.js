@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getDivisions, newDivision } from '../../../redux/actions/divisions';
 import { Button } from '../../../components';
-import './DashDivisions.scss';
+// import './DashDivisions.scss';
 import ListItem from '../ListItem';
 
 class DashDivisions extends Component {

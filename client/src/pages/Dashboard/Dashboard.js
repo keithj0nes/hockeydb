@@ -14,6 +14,9 @@ import DashGames from './DashGames/DashGames';
 import DashBlogs from './DashBlogs/DashBlogs';
 import DashLocations from './DashLocations/DashLocations';
 
+
+import Swiper from '../../components/Swiper';
+
 // import { Button } from '../../components';
 
 
@@ -55,7 +58,16 @@ class Dashboard extends Component {
                     <Route path={`${match.path}/locations`} component={DashLocations} />
 
 
+            {/* <h1>hello</h1>
 
+<Swiper ref={el => this.myyReff = el} options={{speed: 1000, loop: true}}>
+  <Content type="first" next={() => this.myyReff.nextSlide()}/>
+  <div>PANE 1</div>
+  <div>PANE 2</div>
+  <Content  prev={() => this.myyReff.prevSlide()}></Content>
+  <div>PANE 3</div>
+</Swiper>  */}
+            
 
 
                     {/* <hr/>

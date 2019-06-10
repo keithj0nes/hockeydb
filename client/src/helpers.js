@@ -17,3 +17,5 @@ export const setParams = search => {
     // searchParams.set()
     // return searchParams.toString();
 }
+
+export const slideTime = 500;
