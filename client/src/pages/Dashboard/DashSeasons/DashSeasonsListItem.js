@@ -17,7 +17,7 @@ class DashSeasonsListItem extends Component {
 
     render(){
         const { onClick, item, sections, onEdit } = this.props;
-        console.log(item, 'item!')
+        // console.log(item, 'item!')
 
         const sectionKeys = Object.keys(sections);
         return ( 
@@ -65,7 +65,8 @@ class DashSeasonsListItem extends Component {
 
             
                         <div className="flex-one hide-mobile">
-                            <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span>
+                            {/* <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span> */}
+                            <span onClick={onEdit}>{'<edit>'}</span>
                             
                             {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
