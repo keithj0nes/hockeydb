@@ -147,10 +147,10 @@ const styles = {
 
 //USAGE
 
-{/* <Swiper ref={el => this.myyReff = el} options={{speed: 1000, loop: true}}>
-  <Content type="first" next={() => this.myyReff.next()}/>
-  <div>PANE 1</div>
-  <div>PANE 2</div>
-  <Content  prev={() => this.myyReff.prev()}></Content>
-  <div>PANE 3</div>
-</Swiper> */}
+// {/* <Swiper ref={el => this.myyReff = el} options={{speed: 1000, loop: true}}>
+//   <Content type="first" next={() => this.myyReff.next()}/>
+//   <div>PANE 1</div>
+//   <div>PANE 2</div>
+//   <Content  prev={() => this.myyReff.prev()}></Content>
+//   <div>PANE 3</div>
+// </Swiper>  */}

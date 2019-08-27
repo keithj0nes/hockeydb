@@ -9,11 +9,11 @@ const Button = ({title, onClick, cancel, danger, success}) => {
     if(cancel){
         color = '#88C12D';
     } else if (danger){
-        color = '#C12D2D';
+        color = '#C12D2D'; //red
     } else if (success){
-        color = '#72cc2d';
+        color = '#72cc2d'; //green
     } else {
-        color = '#50C0F0';
+        color = '#50C0F0'; //blue
     }
 
     const styles = {

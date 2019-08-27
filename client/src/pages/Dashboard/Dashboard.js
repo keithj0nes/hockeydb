@@ -26,10 +26,15 @@ import '../../assets/styles/dashboard.scss';
 
 class Dashboard extends Component {
 
+    state = { redirectToReferrer: false };
+
+
+
+
     render() {
         const { match } = this.props;
 
-        // console.log(this.props.location)
+        console.log(this.props.location, 'LOCATION')
         return (
             <div className="dashboard-container">
 
