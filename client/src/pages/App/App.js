@@ -10,6 +10,8 @@ import Players from '../Players/Players';
 import Games from '../Games/Games';
 import { Modal } from '../../components';
 
+import Routes from './Routes';
+
 
 // for demoing 
 import { toggleModal } from '../../redux/actions/misc';
@@ -22,19 +24,22 @@ class App extends Component {
     await this.props.loginFromCookie();
   }
 
+  //{/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
+
   render() {
+
+    console.log('redering')
     return (
       <Router>
-        <div>
-          {/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
+        <Routes />
+        {/* <div>
           <Route exact path="/"   component={Home} />
           <Route path='/login'    component={Login} />
           <Route path='/players'  component={Players} />
           <Route path='/games'    component={Games} />
-          {/* <Route path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} /> */}
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />
-        </div>
+        </div> */}
       </Router>
     );
   }
@@ -51,13 +56,19 @@ class App extends Component {
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   
-    // console.log(rest);
+    console.log(rest);
 
-  return <Route {...rest} render={(props) => (
-    rest.authenticated
+  return <Route {...rest} render={(props) =>  {
+
+    console.log(props.location, 'props')
+
+    return rest.authenticated
       ? <Component {...props} />
       : <Redirect to={'/login'} />
-  )} />
+      
+      }
+    }/>
+
   }
 
 const mapStateToProps = state => ({

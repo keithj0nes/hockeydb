@@ -34,7 +34,7 @@ export const loginFromCookie = () => async dispatch => {
   // const data = await request('/api/auth/login/cookie', 'POST', {access_token})
   // console.log(data, 'DATA!')
   // dispatch(setUser({...data.user, access_token}))
-  // dispatch({type: SET_SEASON, payload: data.season})
+  // dispatch({type: SET_CURRENT_SEASON, payload: data.season})
 
   
   //USING THIS FOR CLIENT SIDE TOKEN AUTH (FASTER)
