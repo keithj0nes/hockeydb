@@ -25,7 +25,7 @@ class Login extends React.Component {
   async componentDidMount() {
     const redirectToReferrer = await this.props.loginFromCookie();
     // if(redirectToReferrer)
-    console.log(redirectToReferrer)
+    // console.log(redirectToReferrer)
     redirectToReferrer && this.setState({redirectToReferrer})
   }
 
@@ -48,9 +48,9 @@ class Login extends React.Component {
 
   render() {
 
-    console.log('YOOOOOOOOO!!!!!!')
+    // console.log('YOOOOOOOOO!!!!!!')
 
-    console.log(this.props)
+    // console.log(this.props)
 
     let { from } = this.props.location.state || { from: { pathname: "dashboard" } };
     let { redirectToReferrer } = this.state;

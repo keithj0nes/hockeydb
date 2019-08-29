@@ -15,7 +15,7 @@ import DashBlogs from './DashBlogs/DashBlogs';
 import DashLocations from './DashLocations/DashLocations';
 
 
-import Swiper from '../../components/Swiper';
+// import Swiper from '../../components/Swiper';
 
 // import { Button } from '../../components';
 
@@ -34,7 +34,7 @@ class Dashboard extends Component {
     render() {
         const { match } = this.props;
 
-        console.log(this.props.location, 'LOCATION')
+        // console.log(this.props.location, 'LOCATION')
         return (
             <div className="dashboard-container">
 

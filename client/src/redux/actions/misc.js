@@ -14,7 +14,7 @@ export const toggleModal = (modalProps, modalType) => {
 
     // console.log(modalProps, modalType, 'yoooo!')
     if(!modalProps){
-        var modalProps = {isVisible: false};
+        modalProps = {isVisible: false};
     }
 
     // console.log(modalProps, 'modalprops')

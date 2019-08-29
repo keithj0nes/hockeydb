@@ -20,7 +20,9 @@ class DashGamesListItem extends Component {
     /// NEED TO PASS LOCATION_ID DOWN TO DASHGAMES COMPONENT
 
     render(){
-        const { onClick, item, sections } = this.props;
+        // const { onClick, item, sections } = this.props;
+        const { item } = this.props;
+
         return ( 
             <div className="dashboard-list-item">
                <div style={{display: 'flex'}}>
