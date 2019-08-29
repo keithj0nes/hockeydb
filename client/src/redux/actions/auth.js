@@ -1,8 +1,8 @@
 // import axios from 'axios';
 import { request } from './middleware';
 import cookie from 'react-cookies';
-import jwt from 'jsonwebtoken';
-import { JWTSECRET } from '../../client_config';
+// import jwt from 'jsonwebtoken';
+// import { JWTSECRET } from '../../client_config';
 import { AUTH_SET_USER, SET_CURRENT_SEASON } from '../actionTypes';
 
 
@@ -31,18 +31,27 @@ export const loginFromCookie = () => async dispatch => {
   if(!access_token) return false;
 
   //USE THIS FOR SERVER SIDE TOKEN AUTH
-  // const data = await request('/api/auth/login/cookie', 'POST', {access_token})
-  // console.log(data, 'DATA!')
-  // dispatch(setUser({...data.user, access_token}))
-  // dispatch({type: SET_CURRENT_SEASON, payload: data.season})
+  const data = await request('/api/auth/login/cookie', 'POST', {access_token})
+  console.log(data, 'DATA!')
+
+  //triggered if user is deactivated / suspended
+  if(!data) return dispatch(logout());
+
+  // if(!data){
+  //   dispatch(logout());
+  //   return false;
+  // }
+
+  dispatch(setUser({...data.data.user, access_token}))
+  dispatch({type: SET_CURRENT_SEASON, payload: data.data.season})
 
   
   //USING THIS FOR CLIENT SIDE TOKEN AUTH (FASTER)
-  const signed = jwt.verify(access_token, JWTSECRET)
-  // console.log(signed, 'signeD!')
+  // const signed = jwt.verify(access_token, JWTSECRET)
+  // // console.log(signed, 'signeD!')
 
-  dispatch(setUser({...signed.user, access_token}))
-  dispatch({type: SET_CURRENT_SEASON, payload: signed.season})
+  // dispatch(setUser({...signed.user, access_token}))
+  // dispatch({type: SET_CURRENT_SEASON, payload: signed.season})
   return true;
 
 }

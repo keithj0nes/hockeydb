@@ -49,21 +49,47 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 
 // return errors -  
 // {
-//     status: number,
-//     error: boolean,
-//     message: string
+//     status: number,
+//     error: boolean,
+//     message: string
 // }
 
 // return res.status(400).send({status: 400, error: true, message: 'Passwords must match'})
 
 // return success - 
 // {
-//     status: number,
-//     data: array/object
+//     status: number,
+//     data: array/object,
 //     message: string
 // }
 
 // return res.status(200).send({status: 200, data: user, message: 'You have successfully logged in'})
+
+
+
+// {
+//     "site": "hockeydb.com",
+//     "version": "1.2.3",
+//     "datetime": "2016-10-06T19:58:29Z",
+//     "timestamp": 1475783909566791977,
+//     "status": "success",
+//     "code": 200,
+//     "message": "OK",
+//     "data": {
+//         "routes": [
+//             {
+//                 "method": "GET",
+//                 "path": "/status",
+//                 "description": "check this service status"
+//             },
+//             {
+//                 "method": "GET",
+//                 "path": "/password",
+//                 "description": "returns a random passwords"
+//             }
+//         ]
+//     }
+// }
 
 // ROUTES //
 
