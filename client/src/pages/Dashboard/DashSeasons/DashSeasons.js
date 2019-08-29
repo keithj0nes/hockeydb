@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactSwipe from 'react-swipe';
+// import ReactSwipe from 'react-swipe';
 import { getSeasons, deleteSeason } from '../../../redux/actions/seasons';
 import { Button, Swiper } from '../../../components';
 
 import './DashSeasons.scss';
-import ListItem from '../ListItem';
+// import ListItem from '../ListItem';
 import DashSeasonsListItem from './DashSeasonsListItem';
 
 import { toggleModal } from '../../../redux/actions/misc';
@@ -105,48 +105,48 @@ class DashSeasons extends Component{
             return <div>Loading...</div>
         }
 
-        const style = {
-            // container: {
-            //     margin: '60px 0',
-            //     overflow: 'hidden',
-            //     visibility: 'hidden',
-            //     width: '60%',
-            //     position: 'relative'
-            // },
-            // wrapper: {
-            //     width: '100%',
-            //     background: 'red',
-            //     // padding: '20px'
-            //     // display: 'flex',
-            //     overflow: 'hidden',
-            //     position: 'relative'
-            // },
-            // child: {
-            //     float: 'left',
-            //     padding: '100px',
-            //     background: 'green',
-            //     width: '10px'
-            // }
+        // const style = {
+        //     // container: {
+        //     //     margin: '60px 0',
+        //     //     overflow: 'hidden',
+        //     //     visibility: 'hidden',
+        //     //     width: '60%',
+        //     //     position: 'relative'
+        //     // },
+        //     // wrapper: {
+        //     //     width: '100%',
+        //     //     background: 'red',
+        //     //     // padding: '20px'
+        //     //     // display: 'flex',
+        //     //     overflow: 'hidden',
+        //     //     position: 'relative'
+        //     // },
+        //     // child: {
+        //     //     float: 'left',
+        //     //     padding: '100px',
+        //     //     background: 'green',
+        //     //     width: '10px'
+        //     // }
 
 
-            container: {
-                overflow: 'hidden',
-                visibility: 'hidden',
-                position: 'relative',
-                margin: '60px 0',
-                width: '50%'
-              },
-              wrapper: {
-                overflow: 'hidden',
-                position: 'relative'
-              },
-              child: {
-                float: 'left',
-                width: '100%',
-                position: 'relative',
-                transitionProperty: 'transform'
-            }
-        }
+        //     container: {
+        //         overflow: 'hidden',
+        //         visibility: 'hidden',
+        //         position: 'relative',
+        //         margin: '60px 0',
+        //         width: '50%'
+        //       },
+        //       wrapper: {
+        //         overflow: 'hidden',
+        //         position: 'relative'
+        //       },
+        //       child: {
+        //         float: 'left',
+        //         width: '100%',
+        //         position: 'relative',
+        //         transitionProperty: 'transform'
+        //     }
+        // }
 
         return (
             <div>

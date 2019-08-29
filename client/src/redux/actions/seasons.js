@@ -1,5 +1,7 @@
 import { request } from './middleware';
-import { GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+// import { GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+import { GET_SEASONS_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+
 
 
 export const getSeasons = () => async dispatch => {
