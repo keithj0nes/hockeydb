@@ -26,10 +26,6 @@ import '../../assets/styles/dashboard.scss';
 
 class Dashboard extends Component {
 
-    state = { redirectToReferrer: false };
-
-
-
 
     render() {
         const { match } = this.props;

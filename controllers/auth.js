@@ -22,13 +22,19 @@ const authorizeAccessToken = async (req, res, next) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const loginFromCookie = async (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    const db = app.get('db');
+
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
         console.log(user, err, info)
         if (err || !user) {
-            return res.status(401).send({ status: 401, error: true, message: err || "Unauthorized" })
+            // return res.status(200).send({ status: 401, error: true, message: err || "Unauthorized" })
+            console.log(err)
+            return res.status(200).send({ status: 401, error: true, message: info.message || "Unauthorized" })
+
         }
         req.user = user;
-        res.status(200).send({ status: 200, data: { ...user }, message: 'Welcome back! You\'re logged in on refresh!' })
+        const season = await db.seasons.findOne({is_active: true});
+        res.status(200).send({ status: 200, data: { user, season }, message: 'Welcome back! You\'re logged in on refresh!' })
     })(req, res)
 }
 
@@ -42,7 +48,7 @@ const login = async (req, res) => {
         if (err || !user) {
             console.log(err, user, info, 'error')
             // return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
-            return res.send({ status: 404, error: true, message: err || 'Incorrect email or password.' })
+            return res.send({ status: 404, error: true, message: info.message || 'Incorrect email or password.' })
 
         }
 
@@ -148,8 +154,13 @@ passport.use('local-login', new LocalStrategy({
     const user = await db.users.findOne({ email })
 
     if (!user) {
-        return done(null, false, { message: 'USER NOT FOUND' })
+        return done(null, false, { message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' })
     }
+
+    if(user.is_suspended){
+        return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
+    }
+
     const pw = await db.passwords.findOne({ user_id: user.id })
 
     const comparedPassword = await bcrypt.compare(password, pw.pw)
@@ -205,10 +216,24 @@ passport.use('jwt', new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
     try {
-        console.log(token, 'TOKEN!!!!!!!!')
+        const isSuspended = await checkSuspended(token.user.id);
+        if(!!isSuspended){
+            return done(null, false, isSuspended)
+        }
+        // console.log(token, 'TOKEN!!!!!!!!')
         return done(null, token.user)
     }
     catch (err) {
         console.log(err, 'catch!')
     }
 }))
+
+
+const checkSuspended = async (id) => {
+    const db = app.get('db');
+    const user = await db.users.findOne({ id })
+    if(user.is_suspended){
+        return { message: 'User has been suspended' }
+    }
+    return false;
+}
