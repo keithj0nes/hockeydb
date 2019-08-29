@@ -28,7 +28,7 @@ export const logout = () => (dispatch, getState) => {
 
 export const loginFromCookie = () => async dispatch => {
   const access_token = cookie.load('auth');
-  if(!access_token) return;
+  if(!access_token) return false;
 
   //USE THIS FOR SERVER SIDE TOKEN AUTH
   // const data = await request('/api/auth/login/cookie', 'POST', {access_token})
@@ -39,9 +39,10 @@ export const loginFromCookie = () => async dispatch => {
   
   //USING THIS FOR CLIENT SIDE TOKEN AUTH (FASTER)
   const signed = jwt.verify(access_token, JWTSECRET)
-  // console.log(signed, 'signeD!')
+  console.log(signed, 'signeD!')
 
   dispatch(setUser({...signed.user, access_token}))
   dispatch({type: SET_CURRENT_SEASON, payload: signed.season})
+  return true;
 
 }

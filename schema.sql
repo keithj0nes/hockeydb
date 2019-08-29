@@ -243,6 +243,12 @@ VALUES ('test', 'user', 'test@test.com', false, null, true);
 INSERT INTO passwords (user_id, salt, pw)
 VALUES ('1', null, '123');
 
+-- CURL COMMAND TO INSERT USER!!!
+-- curl --header "Content-Type: application/json" \
+--   --request POST \
+--   --data '{"first_name": "test", "last_name": "testagain", "is_admin": true, "password_confirmation": "test", "password": "test", "email": "test@test.test"}' \
+--   http://localhost:8010/api/auth/signup
+
 INSERT INTO players (first_name, last_name, email) 
 VALUES ('yo' ,'mang', 'yomang@gmail.com');
 

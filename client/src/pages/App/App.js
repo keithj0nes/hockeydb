@@ -20,9 +20,9 @@ import './App.scss';
 
 class App extends Component {
 
-  async componentDidMount() {
-    await this.props.loginFromCookie();
-  }
+  // async componentDidMount() {
+  //   await this.props.loginFromCookie();
+  // }
 
   //{/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
 

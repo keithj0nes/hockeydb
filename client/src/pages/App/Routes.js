@@ -32,7 +32,7 @@ class Routes extends Component {
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   
-    console.log(rest);
+    console.log(rest, 'rest!');
 
   return <Route {...rest} render={(props) =>  {
 
@@ -40,7 +40,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
     return rest.authenticated
       ? <Component {...props} />
-      : <Redirect to={'/login'} />
+      : <Redirect             to={{
+        pathname: "/login",
+        state: { from: props.location }
+      }} />
       
       }
     }/>
