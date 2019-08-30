@@ -61,38 +61,43 @@ class DashSeasons extends Component{
         
         this.setState({edit: item})
 
-        this.swiper.next();
+        // this.swiper.next();
         
-        setTimeout(() => {
-            this.setState({isAddSeasonVisible: false})
-        }, slideTime);
-        // this.props.toggleModal({
-        //     isVisible: true,
-        //     // toBeDeleted: item,
-        //     title: 'Edit Season',
-        //     // message: 'Are you sure you want to delete this season?',
-        //     fields: [
-        //         {
-        //             type: 'input',
-        //             name: 'name',
-        //             defaultValue: item.name
-        //         },
-        //         {
-        //             type: 'select',
-        //             name: 'type',
-        //             defaultValue: item.type,
-        //             listOfSelects: this.state.seasonTypes
-        //         },
-        //         {
-        //             type: 'checkbox',
-        //             name: 'is_active',
-        //             defaultValue: item.is_active
-        //         }
-        //     ],
-        //     onChange: this.handleChange,
-        //     confirmAction: () => console.log(this.state, 'this.state'),
-        //     deleteAction: () => this.props.deleteSeason(item.id),
-        // }, 'prompt');
+        // setTimeout(() => {
+        //     this.setState({isAddSeasonVisible: false})
+        // }, slideTime);
+        this.props.toggleModal({
+            isVisible: true,
+            // toBeDeleted: item,
+            title: 'Edit Season',
+            // message: 'Are you sure you want to delete this season?',
+            fields: [
+                {
+                    title: 'Name',
+                    type: 'input',
+                    name: 'name',
+                    defaultValue: item.name
+                },
+                {
+                    title: 'Type',
+                    type: 'select',
+                    name: 'type',
+                    defaultValue: item.type,
+                    listOfSelects: this.state.seasonTypes
+                },
+                {
+                    title: 'Set To Active Season',
+                    type: 'checkbox',
+                    name: 'is_active',
+                    defaultValue: item.is_active
+                }
+            ],
+            onChange: this.handleChange,
+            confirmActionTitle: 'Update Season',
+            confirmAction: () => console.log(this.state, 'this.state'),
+            deleteActionTitle: 'Delete Season',
+            deleteAction: () => console.log('dleting season'),
+        }, 'prompt');
     }
 
     
