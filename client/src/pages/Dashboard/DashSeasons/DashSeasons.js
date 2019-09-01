@@ -39,6 +39,41 @@ class DashSeasons extends Component{
         this.setState({isAddSeasonVisible: !this.state.isAddSeasonVisible})
     }
 
+    handleAddSeason = () => {
+        this.props.toggleModal({
+            isVisible: true,
+            title: 'Add Season',
+            isClosableOnBackgroundClick: false,
+            // message: 'Are you sure you want to delete this season?',
+            fields: [
+                {
+                    title: 'Name',
+                    type: 'input',
+                    name: 'name',
+                    defaultValue: null
+                },
+                {
+                    title: 'Type',
+                    type: 'select',
+                    name: 'type',
+                    defaultValue: null,
+                    listOfSelects: this.state.seasonTypes
+                },
+                // {
+                //     title: 'Set To Active Season',
+                //     type: 'checkbox',
+                //     name: 'is_active',
+                //     defaultValue: item.is_active
+                // }
+            ],
+            onChange: this.handleChange,
+            confirmActionTitle: 'Create Season',
+            confirmAction: () => console.log(this.state, 'this.state'),
+            // deleteActionTitle: 'Delete Season',
+            // deleteAction: () => console.log('dleting season'),
+        }, 'prompt');
+    }
+
     handleDeleteSeason = (item) => {
         this.props.toggleModal({
             isVisible: true,
@@ -68,6 +103,7 @@ class DashSeasons extends Component{
         // }, slideTime);
         this.props.toggleModal({
             isVisible: true,
+            isClosableOnBackgroundClick: false,
             // toBeDeleted: item,
             title: 'Edit Season',
             // message: 'Are you sure you want to delete this season?',
@@ -86,9 +122,10 @@ class DashSeasons extends Component{
                     listOfSelects: this.state.seasonTypes
                 },
                 {
-                    title: 'Set To Active Season',
+                    title: item.is_active ? 'Active Season' : 'Set To Active Season',
                     type: 'checkbox',
                     name: 'is_active',
+                    hidden: item.is_active,
                     defaultValue: item.is_active
                 }
             ],
@@ -169,7 +206,7 @@ class DashSeasons extends Component{
                                 {this.state.isAddSeasonVisible ? (
                                     <Button title="Cancel" danger onClick={this.toggleSeasonVisible}/>
                                 ):(
-                                    <Button title="Add Season" onClick={this.toggleSeasonVisible}/>
+                                    <Button title="Add Season" onClick={this.handleAddSeason}/>
                                 )}
 
                             </div>

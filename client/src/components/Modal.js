@@ -65,7 +65,10 @@ const PromptModal = ({data, toggleModal}) => {
 
                             <label htmlFor={field.name}>{field.title}</label>
 
-                            <input type="checkbox" name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
+                            {!field.hidden && (
+                                <input type="checkbox" name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
+                            )}
+
                             </div>
 
                         )}
@@ -122,7 +125,7 @@ const Modal = ({modalVisible, toggleModal, modalProps, modalType, isLoading}) =>
     // console.log(modalProps, 'modalProps')
 
     return (
-        <div className="modal-container" onClick={handleClose}>
+        <div className="modal-container" onClick={modalProps.isClosableOnBackgroundClick ? handleClose : null}>
             <div className="modal-message">
 
                 <div className="modal-close" onClick={toggleModal}>&times;</div>
@@ -170,6 +173,7 @@ Modal.propTypes = {
 
 // modalProps = {
 //     isVisible: PropTypes.bool.isRequired,
+//     isClosableOnBackgroundClick: PropTypes.bool.isRequired
 //     title: PropTypes.string.isRequired,
 
 //     toBeDeleted: PropTypes.object,
