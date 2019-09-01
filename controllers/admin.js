@@ -178,7 +178,8 @@ const createSeason = async (req, res) => {
     const season = await db.seasons.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
     if (season) {
-        return res.status(400).send({ status: 400, data: [], message: 'Season already exists' })
+        console.log(season, 'season exists!')
+        return res.status(200).send({ status: 400, data: [], message: 'Season already exists' })
     }
 
     const data = await db.seasons.insert({ name, type, is_active, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create blog error'))

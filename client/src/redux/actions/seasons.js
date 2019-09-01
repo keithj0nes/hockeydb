@@ -1,6 +1,6 @@
 import { request } from './middleware';
 // import { GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-import { GET_SEASONS_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+import { GET_SEASONS_SUCCESS, CREATE_SEASON_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 
 
 
@@ -20,6 +20,37 @@ export const getSeasons = () => async dispatch => {
     //         payload: seasonData
     //     })
     // }, 2000);
+}
+
+export const createSeason = seasonData => async (dispatch, getState) => {
+    const { user } = getState();
+
+    console.log(seasonData, 'SEASON DATA!')
+
+    const data = await request(`/api/admin/seasons`, 'POST', {access_token: user.access_token, data: seasonData})
+
+    console.log(data, 'DATA CREATE SEASON!!')
+
+    if(!data) return;
+
+
+    dispatch({
+        type: CREATE_SEASON_SUCCESS,
+        payload: data.data
+    })
+
+    dispatch({
+        type: TOGGLE_MODAL,
+        modalProps: {
+            isVisible: false,
+            // title: 'Delete Season',
+            // message: data.message
+        },
+        // modalType: 'alert'
+    })
+
+
+
 }
 
 export const deleteSeason = id => async (dispatch, getState) => {
