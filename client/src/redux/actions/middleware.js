@@ -43,6 +43,8 @@ export const request = async (route, method, session, noAuth) => {
             modalProps: {
                 isVisible: true,
                 title: 'Error',
+                isClosableOnBackgroundClick: true,
+
                 message: `${message}\nError code: ${status}`
             },
             modalType: 'alert'

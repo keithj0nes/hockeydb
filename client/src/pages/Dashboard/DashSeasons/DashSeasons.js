@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import ReactSwipe from 'react-swipe';
-import { getSeasons, deleteSeason } from '../../../redux/actions/seasons';
+import { getSeasons, deleteSeason, createSeason } from '../../../redux/actions/seasons';
 import { Button, Swiper } from '../../../components';
 
 import './DashSeasons.scss';
@@ -12,18 +12,30 @@ import { toggleModal } from '../../../redux/actions/misc';
 
 import { slideTime } from '../../../helpers';
 
+
+const defaultState = {
+    isAddSeasonVisible: false,
+    seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
+    name: '',
+    type: 'Regular Season',
+    is_active: false,
+    edit: {}
+}
+
 class DashSeasons extends Component{
 
-    state = {
-        isAddSeasonVisible: false,
-        seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
+    // state = {
+    //     isAddSeasonVisible: false,
+    //     seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
 
-        name: '',
-        type: '',
-        is_active: false,
+    //     name: '',
+    //     type: 'Regular Season',
+    //     is_active: false,
 
-        edit: {}
-    }
+    //     edit: {}
+    // }
+
+    state = defaultState;
 
     componentDidMount(){
         if(this.props.seasons.length <= 0){
@@ -68,10 +80,18 @@ class DashSeasons extends Component{
             ],
             onChange: this.handleChange,
             confirmActionTitle: 'Create Season',
-            confirmAction: () => console.log(this.state, 'this.state'),
+            // confirmAction: () => console.log(this.state, 'this.state'),
+            confirmAction: () => { this.validation() && this.props.createSeason({name: this.state.name, type: this.state.type}); this.setState(defaultState) },
+
             // deleteActionTitle: 'Delete Season',
             // deleteAction: () => console.log('dleting season'),
         }, 'prompt');
+    }
+
+    validation = () => {
+        if(!this.state.name) return false;
+
+        return true;
     }
 
     handleDeleteSeason = (item) => {
@@ -366,6 +386,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getSeasons: () => dispatch(getSeasons()),
+        createSeason: data => dispatch(createSeason(data)),
         deleteSeason: id => dispatch(deleteSeason(id)),
         toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType))
 

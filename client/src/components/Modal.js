@@ -25,7 +25,12 @@ const AlertModal = ({data, toggleModal}) => (
         {data.message.split('\n').map((text, ind) => <p key={ind}>{text}</p>)}
         <br/> <br/>
 
-        <button onClick={toggleModal}>OK</button>
+        {/* <button onClick={toggleModal}>OK</button> */}
+
+        <div className="modal-button-container">
+                {/* <Button title={'Cancel'} cancel onClick={toggleModal} /> */}
+                <Button title={'Close'} onClick={toggleModal} />
+            </div>
     </div>
 )
 

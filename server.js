@@ -91,6 +91,13 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 //     }
 // }
 
+// Examples
+// If the email field is missing, return a 400 .
+// If the password field is too short, return a 422 .
+// If the email field isn’t a valid email, return a 422 .
+// If the email is already taken, return a 409 .
+
+
 // ROUTES //
 
 // Teams
