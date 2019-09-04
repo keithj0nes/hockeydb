@@ -22,7 +22,7 @@ const defaultState = {
     edit: {}
 }
 
-class DashSeasons extends Component{
+class DashSeasons extends Component {
 
     // state = {
     //     isAddSeasonVisible: false,
@@ -37,10 +37,10 @@ class DashSeasons extends Component{
 
     state = defaultState;
 
-    componentDidMount(){
-        if(this.props.seasons.length <= 0){
+    componentDidMount() {
+        if (this.props.seasons.length <= 0) {
             this.props.getSeasons();
-        } 
+        }
 
         // this.props.history.push({
         //     query: { someparam: 'MY PARAM!'}
@@ -48,7 +48,7 @@ class DashSeasons extends Component{
     }
 
     toggleSeasonVisible = () => {
-        this.setState({isAddSeasonVisible: !this.state.isAddSeasonVisible})
+        this.setState({ isAddSeasonVisible: !this.state.isAddSeasonVisible })
     }
 
     handleAddSeason = () => {
@@ -81,7 +81,7 @@ class DashSeasons extends Component{
             onChange: this.handleChange,
             confirmActionTitle: 'Create Season',
             // confirmAction: () => console.log(this.state, 'this.state'),
-            confirmAction: () => { this.validation() && this.props.createSeason({name: this.state.name, type: this.state.type}); this.setState(defaultState) },
+            confirmAction: () => { this.validation() && this.props.createSeason({ name: this.state.name, type: this.state.type }); this.setState(defaultState) },
 
             // deleteActionTitle: 'Delete Season',
             // deleteAction: () => console.log('dleting season'),
@@ -89,7 +89,7 @@ class DashSeasons extends Component{
     }
 
     validation = () => {
-        if(!this.state.name) return false;
+        if (!this.state.name) return false;
 
         return true;
     }
@@ -107,17 +107,17 @@ class DashSeasons extends Component{
     handleChange = e => {
 
         console.log(e.target.name, 'name!')
-        this.setState({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
+        this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
     handleEditSeason = (item) => {
 
         console.log(item, 'edtinggggg item!');
-        
-        this.setState({edit: item})
+
+        this.setState({ edit: item })
 
         // this.swiper.next();
-        
+
         // setTimeout(() => {
         //     this.setState({isAddSeasonVisible: false})
         // }, slideTime);
@@ -157,13 +157,13 @@ class DashSeasons extends Component{
         }, 'prompt');
     }
 
-    
 
-    render(){
+
+    render() {
         console.log(this.state.edit)
 
         //this should be it's own loading icon component
-        if(this.props.isLoading){
+        if (this.props.isLoading) {
             return <div>Loading...</div>
         }
 
@@ -213,21 +213,21 @@ class DashSeasons extends Component{
         return (
             <div>
 
-                <Swiper ref={el => this.swiper = el} options={{speed: slideTime, loop: true}}>
-                {/* <Content type="first" next={() => this.myyReff.nextSlide()}/> */}
+                <Swiper ref={el => this.swiper = el} options={{ speed: slideTime, loop: true }}>
+                    {/* <Content type="first" next={() => this.myyReff.nextSlide()}/> */}
 
-{/* PANE ONE */}
-                            
-                    <div style={{width: '100%'}}>
+                    {/* PANE ONE */}
+
+                    <div style={{ width: '100%' }}>
 
 
                         <div className="dashboard-filter-header">
                             <div>
                                 {this.state.isAddSeasonVisible ? (
-                                    <Button title="Cancel" danger onClick={this.toggleSeasonVisible}/>
-                                ):(
-                                    <Button title="Add Season" onClick={this.handleAddSeason}/>
-                                )}
+                                    <Button title="Cancel" danger onClick={this.toggleSeasonVisible} />
+                                ) : (
+                                        <Button title="Add Season" onClick={this.handleAddSeason} />
+                                    )}
 
                             </div>
 
@@ -245,7 +245,7 @@ class DashSeasons extends Component{
                         {this.state.isAddSeasonVisible && (
 
                             <div className="dashboard-add-container">
-                                <input type="text" name="name" placeholder="Season name" onChange={this.handleChange}/>
+                                <input type="text" name="name" placeholder="Season name" onChange={this.handleChange} />
                                 {/* <input type="text" placeholder="Select season type"/> */}
                                 <select name="type" defaultValue={this.state.type || null} onChange={this.handleChange}>
                                     {this.state.seasonTypes.map((seasonType, ind) => (
@@ -254,7 +254,7 @@ class DashSeasons extends Component{
                                 </select>
 
                                 <div className="dashboard-add-button-container">
-                                    <Button title="Save Season" success onClick={this.toggleSeasonVisible}/>
+                                    <Button title="Save Season" success onClick={this.toggleSeasonVisible} />
                                 </div>
 
                             </div>
@@ -267,7 +267,7 @@ class DashSeasons extends Component{
                             <div className="dashboard-list">
 
                                 <div className="dashboard-list-item hide-mobile">
-                                    <div style={{display: 'flex'}}>
+                                    <div style={{ display: 'flex' }}>
 
                                         <p className="flex-two">Name</p>
                                         <p className="flex-one">Type</p>
@@ -278,11 +278,11 @@ class DashSeasons extends Component{
                                 {this.props.seasons && this.props.seasons.map(item => {
 
                                     return (
-                                        <DashSeasonsListItem 
-                                            key={item.id} 
-                                            item={item} 
-                                            sections={{'name': 'two', 'type': 'one'}}
-                                            onClick={() => this.handleDeleteSeason(item)} 
+                                        <DashSeasonsListItem
+                                            key={item.id}
+                                            item={item}
+                                            sections={{ 'name': 'two', 'type': 'one' }}
+                                            onClick={() => this.handleDeleteSeason(item)}
                                             onEdit={() => this.handleEditSeason(item)}
                                             locations={this.props.locations}
                                         />
@@ -295,25 +295,25 @@ class DashSeasons extends Component{
                     </div>
 
 
-{/* PANE TWO */}
+                    {/* PANE TWO */}
 
 
-                    <div style={{width: '100%'}}>
+                    <div style={{ width: '100%' }}>
                         <div className="dashboard-filter-header">
-                            <div > 
+                            <div >
 
-                                EDIT 
+                                EDIT
                                 {/* <Button title="Cancel" danger onClick={() => this.swiper.prev()}/> */}
                             </div>
                         </div>
-                        
+
 
                         <div className="dashboard-list-container">
 
                             <div className="dashboard-list">
 
                                 <div className="dashboard-list-item hide-mobile">
-                                    <div style={{display: 'flex'}}>
+                                    <div style={{ display: 'flex' }}>
 
                                         <p className="flex-two">Name</p>
                                         <p className="flex-one">Type</p>
@@ -330,7 +330,7 @@ class DashSeasons extends Component{
                                         <p className="flex-one">Manage</p>
                                     </div> */}
 
-                                    <input type="text" name="name" defaultValue={this.state.edit.name} onChange={this.handleChange}/>
+                                    <input type="text" name="name" defaultValue={this.state.edit.name} onChange={this.handleChange} />
                                     <select name="type" value={this.state.edit.type || ''} onChange={this.handleChange}>
                                         {this.state.seasonTypes.map((seasonType, ind) => (
                                             <option key={ind} value={seasonType}>{seasonType}</option>
@@ -338,10 +338,10 @@ class DashSeasons extends Component{
                                     </select>
                                 </div>
 
-                                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                                    <Button title="Cancel" danger onClick={() => this.swiper.prev()}/>
-                                    <div style={{width: 15}}/>
-                                    <Button title="Save" onClick={() => this.swiper.prev()}/>
+                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    <Button title="Cancel" danger onClick={() => this.swiper.prev()} />
+                                    <div style={{ width: 15 }} />
+                                    <Button title="Save" onClick={() => this.swiper.prev()} />
                                 </div>
 
 
@@ -369,7 +369,7 @@ class DashSeasons extends Component{
                     <div>PANE 2</div>
                     {/* <Content  prev={() => this.myyReff.prevSlide()}></Content> */}
                     <div>PANE 3</div>
-                </Swiper> 
+                </Swiper>
             </div>
         )
     }
