@@ -64,7 +64,8 @@ const initialMiscState = {
   modalVisible: false,
   modalProps: {},
   modalType: '',
-  isLoading: false
+  isLoading: false, 
+  errors: ''
 }
 
 export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading }) => {
@@ -72,7 +73,9 @@ export const misc = (state = initialMiscState, { type, modalProps, modalType, is
     case TOGGLE_NAV_SLIDER:
       return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-        return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : ''}
+      // console.log(modalProps.errors, 'hitting!!')
+      //   console.log(modalProps)
+        return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors}
 
       // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     default:

@@ -33,10 +33,32 @@ export const request = async (route, method, session, noAuth) => {
     // const message = 'fake message lol';
     
     if(status !== 200){
+        console.log(`status error: ${status} - ${message}`)
         //NOT BEING USED YET
         // store.dispatch({type: 'REQUEST_METHOD_FAILURE', payload: {status, message}})  //NOT BEING USED YET
         //NOT BEING USED YET
 
+        const state = store.getState();
+        // console.log(state, 'state!')
+
+
+        //if a modal is already visible and there's an error, show that error in the current modal
+        if(state.misc.modalVisible){
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: {
+                    ...state.misc.modalProps,
+                    isVisible: true,
+                    // title: 'Error',
+                    // isClosableOnBackgroundClick: true,
+                    errors: message
+                    // errors: `${message}\nError code: ${status}`
+                },
+                modalType: state.misc.modalType
+            })
+
+            return false;
+        }
         // store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
         store.dispatch({
             type: TOGGLE_MODAL,
@@ -51,7 +73,6 @@ export const request = async (route, method, session, noAuth) => {
         })
 
 
-        console.log(`status error: ${status} - ${message}`)
         // alert(`status error: ${status} - ${message}`)
         return false;
     }

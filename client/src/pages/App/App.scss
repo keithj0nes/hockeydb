@@ -75,7 +75,7 @@ input[type=text] {
         background: #fff;
         border-radius: 6px;
         position: relative;
-        // animation: slideinfromtop 0.5s, fadein 0.5s;
+        animation: slideinfromtop 0.3s ease-in-out, fadein 0.3s;
 
 
         .modal-close {
@@ -112,12 +112,17 @@ input[type=text] {
             .modal-button-container {
                 display: flex;
                 justify-content: space-around;
-            padding: 12px 0;
+                padding: 30px 0 12px 0;
 
             // border-top: 1px solid $gray_color;
 
             }
 
+            .modal-error {
+                color: red;
+                // background: yellow;
+                padding: 10px 0;
+            }
         }
     }
 }
@@ -129,7 +134,7 @@ input[type=text] {
 }
 
 @keyframes slideinfromtop {
-    from { top: -5px; }
+    from { top: -10px; }
     to   { top: 0px; }
 }
 

@@ -105,8 +105,6 @@ class DashSeasons extends Component {
     }
 
     handleChange = e => {
-
-        console.log(e.target.name, 'name!')
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
@@ -160,7 +158,7 @@ class DashSeasons extends Component {
 
 
     render() {
-        console.log(this.state.edit)
+        // console.log(this.state.edit)
 
         //this should be it's own loading icon component
         if (this.props.isLoading) {

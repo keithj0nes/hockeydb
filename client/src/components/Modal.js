@@ -83,6 +83,10 @@ const PromptModal = ({data, toggleModal}) => {
                 )
             })}
 
+            {data.errors && (
+                <p className={'modal-error'}>{data.errors}</p>
+            )}
+
 
 
             {/* <button onClick={data.confirmAction}> SUBMIT </button>
