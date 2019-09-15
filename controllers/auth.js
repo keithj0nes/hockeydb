@@ -33,6 +33,7 @@ const loginFromCookie = async (req, res, next) => {
 
         }
         req.user = user;
+        console.log(req.user, 'USER!')
         const season = await db.seasons.findOne({is_active: true});
         res.status(200).send({ status: 200, data: { user, season }, message: 'Welcome back! You\'re logged in on refresh!' })
     })(req, res)
@@ -57,6 +58,7 @@ const login = async (req, res) => {
                 console.log(errr, 'errr')
                 return res.status(500).send({ status: 500, error: true, message: `An error occurred: ${errr}` })
             }
+            console.log('logging in user: ', user)
             // const season = await db.query('SELECT * FROM seasons ORDER BY id DESC LIMIT 1')
             const season = await db.seasons.findOne({is_active: true});
             // console.log(season, 'SEASON')
@@ -215,12 +217,14 @@ passport.use('jwt', new JWTStrategy({
     secretOrKey: config.JWTSECRET,
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
+    // console.log(token.user, 'OKEN>USER')
     try {
         const isSuspended = await checkSuspended(token.user.id);
         if(!!isSuspended){
+            console.log(isSuspended, 'issupsended')
             return done(null, false, isSuspended)
         }
-        // console.log(token, 'TOKEN!!!!!!!!')
+        // console.log('yo')
         return done(null, token.user)
     }
     catch (err) {

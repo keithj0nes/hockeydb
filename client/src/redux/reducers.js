@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, CREATE_SEASON_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
+import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, CREATE_SEASON_SUCCESS, UPDATE_SEASON_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -48,8 +48,24 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
       return { ...state, isLoading: false, seasons: payload }
     case CREATE_SEASON_SUCCESS: 
       // return { ...state, isLoading: false, seasons: [payload, ...state.seasons]}
-      return { ...state, isLoading: false, seasons: [...state.seasons, payload]}
+      return { ...state, isLoading: false, seasons: [...state.seasons, payload] }
 
+
+    case UPDATE_SEASON_SUCCESS:
+      const newSeasons = state.seasons.map(item => {
+        if(item.id === payload.id){
+          return payload
+        } else if(payload.is_active){
+          return {...item, is_active: false}
+        }
+        return item;
+      })
+
+      return  { ...state, isLoading: false, seasons: newSeasons }
+
+
+
+      // return { ...state, isLoading: false, seasons: state.seasons.map(item => item.id === payload.id ? payload : item) }
     default:
       return state;
   }

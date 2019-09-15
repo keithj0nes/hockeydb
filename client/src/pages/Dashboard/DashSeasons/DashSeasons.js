@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import ReactSwipe from 'react-swipe';
-import { getSeasons, deleteSeason, createSeason } from '../../../redux/actions/seasons';
+import { getSeasons, deleteSeason, createSeason, updateSeason } from '../../../redux/actions/seasons';
 import { Button, Swiper } from '../../../components';
 
 import './DashSeasons.scss';
@@ -78,7 +78,7 @@ class DashSeasons extends Component {
                 //     defaultValue: item.is_active
                 // }
             ],
-            onChange: this.handleChange,
+            onChange: this.handleChange(),
             confirmActionTitle: 'Create Season',
             // confirmAction: () => console.log(this.state, 'this.state'),
             confirmAction: () => { this.validation() && this.props.createSeason({ name: this.state.name, type: this.state.type }); this.setState(defaultState) },
@@ -104,7 +104,16 @@ class DashSeasons extends Component {
         }, 'delete');
     }
 
-    handleChange = e => {
+    handleChange = edit => e => {
+        console.log(edit, 'edit!')
+        if(!!edit){
+            var editStateCopy = {...this.state.edit};
+            editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+            return this.setState({edit: editStateCopy}, () =>{
+                console.log(this.state.edit)
+            })
+        }
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
@@ -112,7 +121,9 @@ class DashSeasons extends Component {
 
         console.log(item, 'edtinggggg item!');
 
-        this.setState({ edit: item })
+        this.setState({ edit: item }, () => {
+            console.log(this.state.edit, 'edit!')
+        })
 
         // this.swiper.next();
 
@@ -147,9 +158,10 @@ class DashSeasons extends Component {
                     defaultValue: item.is_active
                 }
             ],
-            onChange: this.handleChange,
+            onChange: this.handleChange('editing'),
             confirmActionTitle: 'Update Season',
-            confirmAction: () => console.log(this.state, 'this.state'),
+            // confirmAction: () => console.log(this.state, 'this.state'),
+            confirmAction: () => this.props.updateSeason(item.id, this.state.edit),
             deleteActionTitle: 'Delete Season',
             deleteAction: () => console.log('dleting season'),
         }, 'prompt');
@@ -386,6 +398,7 @@ const mapDispatchToProps = dispatch => {
         getSeasons: () => dispatch(getSeasons()),
         createSeason: data => dispatch(createSeason(data)),
         deleteSeason: id => dispatch(deleteSeason(id)),
+        updateSeason: (id, data) => dispatch(updateSeason(id, data)),
         toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType))
 
     }
