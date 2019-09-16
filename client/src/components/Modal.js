@@ -68,11 +68,15 @@ const PromptModal = ({data, toggleModal}) => {
                         {field.type === 'checkbox' && (
                             <div className="modal-field">
 
-                            <label htmlFor={field.name}>{field.title}</label>
+                                <div style={{display: 'flex'}}>
 
-                            {!field.hidden && (
-                                <input type="checkbox" name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
-                            )}
+
+                                {!field.hidden && (
+                                    <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
+                                )}
+                                
+                                <label htmlFor={field.name}>{field.title}</label>
+                            </div>
 
                             </div>
 

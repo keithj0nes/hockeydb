@@ -173,12 +173,14 @@ const deleteBlog = async (req, res) => {
 const createSeason = async (req, res) => {
     const db = app.get('db');
 
-    const { name, type, is_active } = req.body;
+    const { name, type } = req.body;
 
-    const season = await db.seasons.findOne({ name }).catch(err => console.log(err, 'error in create season'));
+    // const season = await db.seasons.findOne({ name }).catch(err => console.log(err, 'error in create season'));
+    const season = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
 
-    if (season) {
-        console.log(season, 'season exists!')
+
+    if (season.length > 0) {
+        console.log(season[0], 'season exists!')
         return res.status(200).send({ status: 400, data: [], message: 'Season already exists' })
     }
 
