@@ -136,13 +136,15 @@ CREATE TABLE "seasons" (
   "updated_date" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
   "deleted_date" TIMESTAMP,
-  "deleted_by" INTEGER REFERENCES users(id)
+  "deleted_by" INTEGER REFERENCES users(id),
+  "is_active" BOOLEAN
 );
 
 
 CREATE TABLE "divisions" (
   "id"  SERIAL PRIMARY KEY,
   "name" VARCHAR,
+  "season_id" INTEGER REFERENCES seasons(id)
   "created_date" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
   "updated_date" TIMESTAMP,
@@ -241,6 +243,12 @@ VALUES ('test', 'user', 'test@test.com', false, null, true);
 
 INSERT INTO passwords (user_id, salt, pw)
 VALUES ('1', null, '123');
+
+-- CURL COMMAND TO INSERT USER!!!
+-- curl --header "Content-Type: application/json" \
+--   --request POST \
+--   --data '{"first_name": "test", "last_name": "testagain", "is_admin": true, "password_confirmation": "test", "password": "test", "email": "test@test.test"}' \
+--   http://localhost:8010/api/auth/signup
 
 INSERT INTO players (first_name, last_name, email) 
 VALUES ('yo' ,'mang', 'yomang@gmail.com');

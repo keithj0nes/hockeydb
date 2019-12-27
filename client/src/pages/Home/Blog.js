@@ -14,7 +14,7 @@ export class Blog extends Component {
         <h1>blog</h1>
         {this.props.blogs.map(item => (
           <div key={item.id}>
-            <p>{item.message}</p>
+            <div dangerouslySetInnerHTML={{ __html: item.message }}></div>
             <p>Posted by: {item.first_name} {item.last_name} </p>
             <p>Created: {dateFormat(item.created_date, 'MM/DD/YYYY hh:mm:ss')}</p>
           </div>

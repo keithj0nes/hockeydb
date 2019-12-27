@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from 'redux-thunk';
 // import { composeWithDevTools } from "redux-devtools-extension";
-import { user, seasons, blogs, misc, players, games, locations, teams } from './reducers';
+import { user, seasons, blogs, misc, players, games, locations, teams, divisions } from './reducers';
 
 
 let reducers = combineReducers({
@@ -13,6 +13,7 @@ let reducers = combineReducers({
   games,
   locations,
   teams,
+  divisions
 });
 
 const store = createStore(reducers, {}, applyMiddleware(thunk));

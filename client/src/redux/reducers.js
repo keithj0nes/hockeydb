@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, } from './actionTypes';
+import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SEASONS, GET_SEASONS_SUCCESS, CREATE_SEASON_SUCCESS, UPDATE_SEASON_SUCCESS, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_LOCATIONS, NEW_LOCATION, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -46,6 +46,26 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
       return { ...state, isLoading: true }
     case GET_SEASONS_SUCCESS:
       return { ...state, isLoading: false, seasons: payload }
+    case CREATE_SEASON_SUCCESS: 
+      // return { ...state, isLoading: false, seasons: [payload, ...state.seasons]}
+      return { ...state, isLoading: false, seasons: [...state.seasons, payload] }
+
+
+    case UPDATE_SEASON_SUCCESS:
+      const newSeasons = state.seasons.map(item => {
+        if(item.id === payload.id){
+          return payload
+        } else if(payload.is_active){
+          return {...item, is_active: false}
+        }
+        return item;
+      })
+
+      return  { ...state, isLoading: false, seasons: newSeasons }
+
+
+
+      // return { ...state, isLoading: false, seasons: state.seasons.map(item => item.id === payload.id ? payload : item) }
     default:
       return state;
   }
@@ -58,15 +78,22 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
 const initialMiscState = {
   navSliderVisible: false,
   modalVisible: false,
-  modalData: {}
+  modalProps: {},
+  modalType: '',
+  isLoading: false, 
+  errors: ''
 }
 
-export const misc = (state = initialMiscState, { type, payload }) => {
+export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading }) => {
   switch (type) {
     case TOGGLE_NAV_SLIDER:
       return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-      return { ...state, modalVisible: !state.modalVisible, modalData: state.modalVisible ? {} : { status: payload.status, message: payload.message } }
+      // console.log(modalProps.errors, 'hitting!!')
+      //   console.log(modalProps)
+        return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors}
+
+      // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     default:
       return state;
   }
@@ -125,6 +152,20 @@ export const teams = (state = initialTeamsState, { type, payload }) => {
   switch (type) {
     case GET_TEAMS:
       return { ...state, allTeams: payload };
+    default:
+      return state;
+  }
+}
+
+const initialDivisionsState = {
+  allDivisions: [],
+  selectedDivision: null,
+};
+
+export const divisions = (state = initialDivisionsState, { type, payload }) => {
+  switch (type) {
+    case GET_DIVISIONS:
+      return { ...state, allDivisions: payload };
     default:
       return state;
   }

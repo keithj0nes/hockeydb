@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Auth from "../../components/auth/Auth.js";
+import Auth from "../../components/Auth.js";
 
 export class Test extends Component {
   render() {

@@ -26,24 +26,60 @@ export const request = async (route, method, session, noAuth) => {
         }
     }).catch(err => console.log(err, 'error in responseRaw'))
 
-    console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
+    // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     const { status, data, message } = responseRaw.data;
 
+    // const status = 243;
+    // const message = 'fake message lol';
+    
     if(status !== 200){
+        console.log(`status error: ${status} - ${message}`)
         //NOT BEING USED YET
         // store.dispatch({type: 'REQUEST_METHOD_FAILURE', payload: {status, message}})  //NOT BEING USED YET
         //NOT BEING USED YET
 
-        store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
+        const state = store.getState();
+        // console.log(state, 'state!')
 
-        console.log(`status error: ${status} - ${message}`)
+
+        //if a modal is already visible and there's an error, show that error in the current modal
+        if(state.misc.modalVisible){
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: {
+                    ...state.misc.modalProps,
+                    isVisible: true,
+                    // title: 'Error',
+                    // isClosableOnBackgroundClick: true,
+                    errors: message
+                    // errors: `${message}\nError code: ${status}`
+                },
+                modalType: state.misc.modalType
+            })
+
+            return false;
+        }
+        // store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
+        store.dispatch({
+            type: TOGGLE_MODAL,
+            modalProps: {
+                isVisible: true,
+                title: 'Error',
+                isClosableOnBackgroundClick: true,
+
+                message: `${message}\nError code: ${status}`
+            },
+            modalType: 'alert'
+        })
+
+
         // alert(`status error: ${status} - ${message}`)
         return false;
     }
 
 
     if(status === 200){
-        return data;
+        return {data, message};
     }
 
 }

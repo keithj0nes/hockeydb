@@ -29,6 +29,9 @@ const players = require('./controllers/players');
 const teams = require('./controllers/teams');
 const games = require('./controllers/games');
 const locations = require('./controllers/locations');
+const seasons = require('./controllers/seasons');
+const divisions = require('./controllers/divisions');
+
 
 //Make sure to create a local postgreSQL db called hockeydb
 
@@ -46,23 +49,60 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 
 // return errors -  
 // {
-//     status: number,
-//     error: boolean,
-//     message: string
+//     status: number,
+//     error: boolean,
+//     message: string
 // }
 
 // return res.status(400).send({status: 400, error: true, message: 'Passwords must match'})
 
 // return success - 
 // {
-//     status: number,
-//     data: array/object
+//     status: number,
+//     data: array/object,
 //     message: string
 // }
 
 // return res.status(200).send({status: 200, data: user, message: 'You have successfully logged in'})
 
+
+
+// {
+//     "site": "hockeydb.com",
+//     "version": "1.2.3",
+//     "datetime": "2016-10-06T19:58:29Z",
+//     "timestamp": 1475783909566791977,
+//     "status": "success",
+//     "code": 200,
+//     "message": "OK",
+//     "data": {
+//         "routes": [
+//             {
+//                 "method": "GET",
+//                 "path": "/status",
+//                 "description": "check this service status"
+//             },
+//             {
+//                 "method": "GET",
+//                 "path": "/password",
+//                 "description": "returns a random passwords"
+//             }
+//         ]
+//     }
+// }
+
+// Examples
+// If the email field is missing, return a 400 .
+// If the password field is too short, return a 422 .
+// If the email field isn’t a valid email, return a 422 .
+// If the email is already taken, return a 409 .
+
+
 // ROUTES //
+
+// Teams
+app.get(`/api/seasons/`, seasons.getSeasons);
+app.get(`/api/seasons/:id`, seasons.getSeasonById);
 
 // Blog
 app.get(`/api/blog`, blogs.getBlogs);
@@ -98,6 +138,9 @@ app.get(`/api/about`)
 
 // Locations
 app.get(`/api/locations`, locations.getLocations)
+
+// Divisions
+app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
 
 
 // ⭐ ️ ADMIN  ⭐️

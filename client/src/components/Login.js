@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { login, logout } from '../../redux/actions/auth';
+import { Redirect } from 'react-router-dom';
+import { login, logout } from '../redux/actions/auth';
+import { loginFromCookie } from '../redux/actions/auth';
+
 // import '../../styles/login.scss';
 
 
@@ -10,11 +13,20 @@ class Login extends React.Component {
     // email: '',
     // password: ''
     email: 'test@test.test',
-    password: 'test'
+    password: 'test',
+
+    redirectToReferrer: false
   }
 
-  componentDidMount() {
-    return this.props.isUserLoggedIn && this.props.history.push('/dashboard');
+  // componentDidMount() {
+  //   return this.props.isUserLoggedIn && this.props.history.push('/dashboard');
+  // }
+
+  async componentDidMount() {
+    const redirectToReferrer = await this.props.loginFromCookie();
+    // if(redirectToReferrer)
+    // console.log(redirectToReferrer)
+    redirectToReferrer && this.setState({redirectToReferrer})
   }
 
   handleChange = e => {
@@ -35,6 +47,16 @@ class Login extends React.Component {
 
 
   render() {
+
+    // console.log('YOOOOOOOOO!!!!!!')
+
+    // console.log(this.props)
+
+    let { from } = this.props.location.state || { from: { pathname: "dashboard" } };
+    let { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer) return <Redirect to={from} />;
+
     return (
       <div>
         <div className="form">
@@ -78,7 +100,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   login: loginData => dispatch(login(loginData)),
-  logout: () => dispatch(logout())
+  logout: () => dispatch(logout()),
+  loginFromCookie: () => dispatch(loginFromCookie()),
+
 })
 
 

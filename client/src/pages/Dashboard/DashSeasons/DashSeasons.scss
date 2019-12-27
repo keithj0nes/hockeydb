@@ -7,6 +7,7 @@
     justify-content: space-between;
     font-size: 20px;
     padding: 16px;
+    min-height: 74px;
     border-bottom: 1px solid darken($gray_color, 3);
 
     .sort-section {
@@ -43,12 +44,27 @@
     }
 }
 
+.dashboard-add-container {
+    // background: yellow;
+    padding: 16px 16px;
+
+    input {
+        display: block;
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .dashboard-add-button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
 
 .dashboard-list-container {
     flex: 1;
     // background: red;
     width: 100%;
-    height: 70%;
+    // height: 70%;
     padding: 16px;
 
     .dashboard-list {
@@ -70,13 +86,35 @@
             box-shadow: 0 4px 10px 0 rgba(51,51,51,0.3);
 
 
+
         }
     }
 }
 
+.dashboard-body {
+    width: 100%;
+    padding: 10px;
+    background: $white_color;
+    box-shadow: 0 4px 10px 0 rgba(51,51,51,0.3);
+
+}
+
+// input[type=text] {
+//     // background: pink;
+//     border: 1px solid black;
+//     border-radius: 3px;
+//     padding: 5px;
+//     font-size: 16px;
+// }
+
 // border-bottom: 1px solid darken($gray_color, 3);
 
-
+.swiper {
+    width: 100%;
+    background: 'green';
+    // padding: 20px;
+    margin: 60px 0;
+}
 
 
 @media only screen and (min-width: 768px){
@@ -88,6 +126,38 @@
                 box-shadow: none;
                 border-bottom: 1px solid $gray_color;
             }
+        }
+    }
+
+    .dashboard-body {
+        box-shadow: none;
+    }
+
+
+    .dashboard-add-container {
+        background: $white_color;
+        margin: 16px;
+        padding: 16px 16px;
+        display: flex;
+    
+        input {
+            display: inline-block;
+            width: auto;
+            margin-bottom: auto;
+            height: 100%;
+            border: none;
+            margin-right: 20px;
+            width: 50%;
+            border-bottom: 1px solid $gray_color;
+        }
+    
+        .dashboard-add-button-container {
+            // display: flex;
+            // background: red;
+            align-self: flex-end;
+            width: 100%;
+            // padding: 10px;
+            // justify-content: flex-end;
         }
     }
 }
