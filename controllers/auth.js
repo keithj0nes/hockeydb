@@ -35,7 +35,12 @@ const loginFromCookie = async (req, res, next) => {
         req.user = user;
         console.log(req.user, 'USER!')
         const season = await db.seasons.findOne({is_active: true});
-        res.status(200).send({ status: 200, data: { user, season }, message: 'Welcome back! You\'re logged in on refresh!' })
+
+        // NEED TO CHANGE THIS TO BE OPTIMIZED
+        const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
+        // NEED TO CHANGE THIS TO BE OPTIMIZED
+
+        res.status(200).send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' })
     })(req, res)
 }
 
@@ -61,9 +66,14 @@ const login = async (req, res) => {
             console.log('logging in user: ', user)
             // const season = await db.query('SELECT * FROM seasons ORDER BY id DESC LIMIT 1')
             const season = await db.seasons.findOne({is_active: true});
-            // console.log(season, 'SEASON')
-            const access_token = jwt.sign({ user, season }, config.JWTSECRET)
-            res.status(200).send({ status: 200, data: { user, season, access_token }, message: 'Welcome! You\'re logged in!' })
+
+            // NEED TO CHANGE THIS TO BE OPTIMIZED
+            const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
+            // NEED TO CHANGE THIS TO BE OPTIMIZED
+
+            // console.log(seasons, 'SEASON')
+            const access_token = jwt.sign({ user, season, seasons }, config.JWTSECRET)
+            res.status(200).send({ status: 200, data: { user, season, seasons, access_token }, message: 'Welcome! You\'re logged in!' })
         })
     })(req, res)
 }

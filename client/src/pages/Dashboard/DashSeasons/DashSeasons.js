@@ -7,9 +7,7 @@ import { Button, Swiper } from '../../../components';
 import './DashSeasons.scss';
 // import ListItem from '../ListItem';
 import DashSeasonsListItem from './DashSeasonsListItem';
-
 import { toggleModal } from '../../../redux/actions/misc';
-
 import { slideTime } from '../../../helpers';
 
 
@@ -56,7 +54,6 @@ class DashSeasons extends Component {
             isVisible: true,
             title: 'Add Season',
             isClosableOnBackgroundClick: false,
-            // message: 'Are you sure you want to delete this season?',
             fields: [
                 {
                     title: 'Name',
@@ -71,20 +68,10 @@ class DashSeasons extends Component {
                     defaultValue: null,
                     listOfSelects: this.state.seasonTypes
                 },
-                // {
-                //     title: 'Set To Active Season',
-                //     type: 'checkbox',
-                //     name: 'is_active',
-                //     defaultValue: item.is_active
-                // }
             ],
             onChange: this.handleChange(),
             confirmActionTitle: 'Create Season',
-            // confirmAction: () => console.log(this.state, 'this.state'),
             confirmAction: () => { this.validation() && this.props.createSeason({ name: this.state.name, type: this.state.type }); this.setState(defaultState) },
-
-            // deleteActionTitle: 'Delete Season',
-            // deleteAction: () => console.log('dleting season'),
         }, 'prompt');
     }
 
@@ -97,9 +84,9 @@ class DashSeasons extends Component {
     handleDeleteSeason = (item) => {
         this.props.toggleModal({
             isVisible: true,
-            toBeDeleted: item,
             title: 'Delete Season',
-            message: 'Are you sure you want to delete this season?',
+            message: `Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
+            toBeDeleted: item,
             deleteAction: () => this.props.deleteSeason(item.id),
         }, 'delete');
     }
@@ -162,8 +149,6 @@ class DashSeasons extends Component {
             confirmActionTitle: 'Update Season',
             // confirmAction: () => console.log(this.state, 'this.state'),
             confirmAction: () => this.props.updateSeason(item.id, this.state.edit),
-            deleteActionTitle: 'Delete Season',
-            deleteAction: () => console.log('dleting season'),
         }, 'prompt');
     }
 
@@ -294,7 +279,6 @@ class DashSeasons extends Component {
                                             sections={{ 'name': 'two', 'type': 'one' }}
                                             onClick={() => this.handleDeleteSeason(item)}
                                             onEdit={() => this.handleEditSeason(item)}
-                                            locations={this.props.locations}
                                         />
                                     )
 

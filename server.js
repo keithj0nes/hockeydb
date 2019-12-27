@@ -140,7 +140,7 @@ app.get(`/api/about`)
 app.get(`/api/locations`, locations.getLocations)
 
 // Divisions
-app.get(`/api/divisions`, divisions.getAllDivisions);
+app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
 
 
 // ⭐ ️ ADMIN  ⭐️

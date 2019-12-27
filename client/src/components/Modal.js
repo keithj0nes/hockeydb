@@ -5,20 +5,77 @@ import { connect } from 'react-redux';
 import { toggleModal } from '../redux/actions/misc';
 import { Button } from '../components';
 
-const DeleteModal = ({data, isLoading}) => (
-    <div>
-        <p>{data.message}</p>
-        <br/> <br/>
-        <p>{data.toBeDeleted.name}</p>
-        <br/> <br/>
+class DeleteModal extends React.Component {
 
-        {isLoading && 'Loading...'}
+    handleChangeDelete = (e, name) => {
+        this.setState({shouldBeDeleted: e.target.value === this.props.data.toBeDeleted.name})
+    }
 
-        <br/> <br/>
+    state = {
+        shouldBeDeleted: false
+    }
 
-        <button onClick={data.deleteAction}>Delete</button>
-    </div>
-)
+    render(){
+        const { data, isLoading, toggleModal } = this.props;
+        return (
+            <div>
+                <p>{data.message}</p>
+                <br/>
+    
+                {isLoading && 'Loading...'}
+    
+
+                <div className="modal-field">
+                    <label htmlFor={'del'}>{data.toBeDeleted.name}</label>
+                    <input type="text" name={'del'} id={'del'} onChange={this.handleChangeDelete}/>
+                </div>
+    
+                {/* <button onClick={data.deleteAction} disabled={!this.state.shouldBeDeleted}>Delete</button> */}
+
+                <div className="modal-button-container">
+                    <Button title={'Cancel'} cancel onClick={toggleModal} />
+                    <Button title={'Delete'} danger onClick={data.deleteAction} disabled={!this.state.shouldBeDeleted} />
+                </div>
+            </div>
+        )
+    }
+
+}
+// const DeleteModal = ({data, isLoading}) => {
+//     // var mv = false
+
+//     // const handleChangeDelete = (e, name) => {
+//     //     console.log(e.target.value, 'valueeee')
+    
+//     //     if(e.target.value === name){
+//     //         console.log('IT MATCHES!')
+//     //         mv = true
+//     //         return 
+//     //     }
+//     //     return mv = false
+//     // }
+    
+
+//     return (
+
+//         <div>
+//             <p>{data.message}</p>
+//             <br/> <br/>
+//             <p>{data.toBeDeleted.name}</p>
+//             <br/> <br/>
+
+//             {isLoading && 'Loading...'}
+
+//             <br/>
+
+//             {/* <input type="text" onChange={e => handleChangeDelete(e, data.toBeDeleted.name)}/>     */}
+
+//             <br/>
+
+//             <button onClick={data.deleteAction}>Delete</button>
+//         </div>
+//     )
+// }
 
 const AlertModal = ({data, toggleModal}) => (
     <div>
@@ -47,34 +104,29 @@ const PromptModal = ({data, toggleModal}) => {
 
                         {field.type === 'input' && (
                             <div className="modal-field">
-                            <label htmlFor={field.name}>{field.title}</label>
-                            <input type="text" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}/>
+                                <label htmlFor={field.name}>{field.title}</label>
+                                <input type="text" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}/>
                             </div>
                         )}
 
                         {field.type === 'select' && (
                             <div className="modal-field">
-                            
-                            <label htmlFor={field.name}>{field.title}</label>
-                            <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
-                                {field.listOfSelects.map((item, ind) => (
-                                    <option key={ind} value={item}>{item}</option>
-                                ))}
-                            </select>
+                                <label htmlFor={field.name}>{field.title}</label>
+                                <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
+                                    {field.listOfSelects.map((item, ind) => (
+                                        <option key={ind} value={item}>{item}</option>
+                                    ))}
+                                </select>
                             </div>
 
                         )}
 
                         {field.type === 'checkbox' && (
                             <div className="modal-field">
-
                                 <div style={{display: 'flex'}}>
-
-
                                 {!field.hidden && (
                                     <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
                                 )}
-                                
                                 <label htmlFor={field.name}>{field.title}</label>
                             </div>
 

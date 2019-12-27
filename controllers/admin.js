@@ -269,9 +269,9 @@ const createDivision = async (req, res) => {
 
     const season = await db.divisions.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
-    console.log(season, 'season!')
+    console.log(season, 'DIVISION!')
     if (season) {
-        return res.status(400).send({ status: 400, error: true, message: 'Division already exists' })
+        return res.status(200).send({ status: 400, error: true, message: 'Division already exists' })
     }
 
     const data = await db.divisions.insert({ name, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))

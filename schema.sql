@@ -144,6 +144,7 @@ CREATE TABLE "seasons" (
 CREATE TABLE "divisions" (
   "id"  SERIAL PRIMARY KEY,
   "name" VARCHAR,
+  "season_id" INTEGER REFERENCES seasons(id)
   "created_date" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
   "updated_date" TIMESTAMP,

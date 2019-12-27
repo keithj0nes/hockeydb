@@ -25,22 +25,11 @@ class DashSeasonsListItem extends Component {
 
                 <div className="hide-desktop">
                     <div>
-                        {item.name}
+                        {item.name} - helo
                     </div>
                     <div>
                         {item.type}
                     </div>
-
-                {/* <div>
-                        {!this.state.isEditing ? item.location_name : (
-                        <select name="location" defaultValue={item.location_id} onChange={this.handleChange}>
-                            {this.props.locations.map(location => (
-                                <option key={location.id} value={location.id}>{location.name}</option>
-                            ))}
-                        </select>
-                        )}
-                    </div> */}
-
 
                     {/* <div onClick={()=>this.setState({isEditing: !this.state.isEditing})}>{'<edit>'}</div> */}
                     <div onClick={onEdit}>{'<edit>'}</div>
