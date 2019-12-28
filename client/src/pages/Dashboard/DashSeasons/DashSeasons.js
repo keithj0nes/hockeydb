@@ -162,48 +162,7 @@ class DashSeasons extends Component {
             return <div>Loading...</div>
         }
 
-        // const style = {
-        //     // container: {
-        //     //     margin: '60px 0',
-        //     //     overflow: 'hidden',
-        //     //     visibility: 'hidden',
-        //     //     width: '60%',
-        //     //     position: 'relative'
-        //     // },
-        //     // wrapper: {
-        //     //     width: '100%',
-        //     //     background: 'red',
-        //     //     // padding: '20px'
-        //     //     // display: 'flex',
-        //     //     overflow: 'hidden',
-        //     //     position: 'relative'
-        //     // },
-        //     // child: {
-        //     //     float: 'left',
-        //     //     padding: '100px',
-        //     //     background: 'green',
-        //     //     width: '10px'
-        //     // }
-
-
-        //     container: {
-        //         overflow: 'hidden',
-        //         visibility: 'hidden',
-        //         position: 'relative',
-        //         margin: '60px 0',
-        //         width: '50%'
-        //       },
-        //       wrapper: {
-        //         overflow: 'hidden',
-        //         position: 'relative'
-        //       },
-        //       child: {
-        //         float: 'left',
-        //         width: '100%',
-        //         position: 'relative',
-        //         transitionProperty: 'transform'
-        //     }
-        // }
+        const { seasons } = this.props;
 
         return (
             <div>
@@ -261,28 +220,38 @@ class DashSeasons extends Component {
 
                             <div className="dashboard-list">
 
-                                <div className="dashboard-list-item hide-mobile">
-                                    <div style={{ display: 'flex' }}>
-
-                                        <p className="flex-two">Name</p>
-                                        <p className="flex-one">Type</p>
-                                        <p className="flex-one">Manage</p>
+                                { seasons && seasons.length <= 0 ? (
+                                    <div>
+                                        Sorry, no seasons have been created. Start by adding a season above.
                                     </div>
-                                </div>
+                                ) : (
+                                    <>
 
-                                {this.props.seasons && this.props.seasons.map(item => {
+                                        <div className="dashboard-list-item hide-mobile">
+                                            <div style={{ display: 'flex' }}>
 
-                                    return (
-                                        <DashSeasonsListItem
-                                            key={item.id}
-                                            item={item}
-                                            sections={{ 'name': 'two', 'type': 'one' }}
-                                            onClick={() => this.handleDeleteSeason(item)}
-                                            onEdit={() => this.handleEditSeason(item)}
-                                        />
-                                    )
+                                                <p className="flex-two">Name</p>
+                                                <p className="flex-one">Type</p>
+                                                <p className="flex-one">Manage</p>
+                                            </div>
+                                        </div>
 
-                                })}
+                                        {seasons.map(item => {
+
+                                            return (
+                                                <DashSeasonsListItem
+                                                    key={item.id}
+                                                    item={item}
+                                                    sections={{ 'name': 'two', 'type': 'one' }}
+                                                    onClick={() => this.handleDeleteSeason(item)}
+                                                    onEdit={() => this.handleEditSeason(item)}
+                                                />
+                                            )
+
+                                        })}
+                                    </>
+                                )}
+
                             </div>
 
                         </div>
