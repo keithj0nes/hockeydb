@@ -177,6 +177,8 @@ class DashDivisions extends Component {
             return <div>Loading...</div>
         }
 
+        const { divisions } = this.props;
+
         console.log(this.props.currentSeason, 'currenseasons')
         return (
             <div>
@@ -223,28 +225,36 @@ class DashDivisions extends Component {
 
                     <div className="dashboard-list">
 
-                        <div className="dashboard-list-item hide-mobile">
-                            <div style={{ display: 'flex' }}>
-                                <p className="flex-three">Name</p>
-                                <p className="flex-one">Manage</p>
+                        {divisions && divisions.length <= 0 ? (
+                            <div>
+                                Sorry, no divisions for this season. Start by adding a division above.
                             </div>
-                        </div>
+                        ) : (
 
-                        {this.props.divisions && this.props.divisions.map(item => {
+                            <>
+                                <div className="dashboard-list-item hide-mobile">
+                                    <div style={{ display: 'flex' }}>
+                                        <p className="flex-three">Name</p>
+                                        <p className="flex-one">Manage</p>
+                                    </div>
+                                </div>
 
-                            return (
-                                <ListItem 
-                                    key={item.id} 
-                                    item={item} 
-                                    sections={{'name': 'three'}} 
-                                    onClick={() => this.handleDeleteSeason(item)}
-                                    onEdit={() => this.handleEditDivision(item)}
-                                />
-                            )
+                                {divisions.map(item => {
 
-                        })}
+                                    return (
+                                        <ListItem 
+                                            key={item.id} 
+                                            item={item} 
+                                            sections={{'name': 'three'}} 
+                                            onClick={() => this.handleDeleteSeason(item)}
+                                            onEdit={() => this.handleEditDivision(item)}
+                                        />
+                                    )
+
+                                })}
+                            </>
+                        )}
                     </div>
-
                 </div>
             </div>
         )
