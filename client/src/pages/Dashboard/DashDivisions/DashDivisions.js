@@ -51,6 +51,13 @@ class DashDivisions extends Component {
                     name: 'name',
                     defaultValue: null
                 },
+                {
+                    title: 'Season',
+                    type: 'input',
+                    name: 'season',
+                    disabled: true,
+                    defaultValue: this.state.currentSeasonSelected.name || this.props.currentSeason.name
+                },
                 // {
                 //     title: 'Type',
                 //     type: 'select',
@@ -61,7 +68,7 @@ class DashDivisions extends Component {
             ],
             onChange: this.handleChange(),
             confirmActionTitle: 'Create Division',
-            confirmAction: () => { this.validation() && this.props.createDivision({ name: this.state.name }); this.setState(defaultState) },
+            confirmAction: () => { this.validation() && this.props.createDivision({ name: this.state.name, season_id: this.state.currentSeasonSelected.id || this.props.currentSeason.id }); this.setState(defaultState) },
         }, 'prompt');
     }
 
