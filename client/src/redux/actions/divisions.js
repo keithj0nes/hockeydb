@@ -3,7 +3,7 @@ import { GET_DIVISIONS, TOGGLE_MODAL } from '../actionTypes';
 
 
 
-export const getDivisions = (season_id = 1) => async dispatch => {
+export const getDivisions = (season_id) => async dispatch => {
   // console.log(season_id, 'season ID!')
   const data = await request(`/api/divisions/${season_id}`, 'GET', {}, true)
   if (!data.data) return false;
@@ -25,7 +25,7 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
     modalProps: { isVisible: false }
   })
 
-  return dispatch(getDivisions())
+  return dispatch(getDivisions(divisionData.season_id))
 }
 
 export const updateDivision = (id, divisionData) => async (dispatch, getState) => {

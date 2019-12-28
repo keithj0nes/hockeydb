@@ -105,7 +105,7 @@ const PromptModal = ({data, toggleModal}) => {
                         {field.type === 'input' && (
                             <div className="modal-field">
                                 <label htmlFor={field.name}>{field.title}</label>
-                                <input type="text" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}/>
+                                <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
                             </div>
                         )}
 

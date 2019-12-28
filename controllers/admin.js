@@ -265,16 +265,18 @@ const deleteSeason = async (req, res) => {
 const createDivision = async (req, res) => {
     const db = app.get('db');
 
-    const { name } = req.body;
+    const { name, season_id } = req.body;
 
-    const season = await db.divisions.findOne({ name }).catch(err => console.log(err, 'error in create season'));
+    // const division = await db.divisions.findOne({ name, season_id }).catch(err => console.log(err, 'error in create season'));
+    const division = await db.divisions.where('lower(name) = $1 AND season_id = $2', [name.toLowerCase(), season_id]).catch(err => console.log(err, 'error in crete division'));
 
-    console.log(season, 'DIVISION!')
-    if (season) {
-        return res.status(200).send({ status: 400, error: true, message: 'Division already exists' })
+    // console.log(division, 'DIVISION! 🐶')
+    if (division.length > 0) {
+        // console.log('DIVISION EXISTSSSS')
+        return res.status(200).send({ status: 400, error: true, message: 'Division under this season already exists' })
     }
 
-    const data = await db.divisions.insert({ name, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))
+    const data = await db.divisions.insert({ name, season_id, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))
 
     return res.status(200).send({ status: 200, data, message: 'Division created' })
 

@@ -106,6 +106,9 @@ input[type=text] {
                 label {
                     padding-bottom: 5px;
                 }
+                input:disabled {
+                    background: #f1f1f1;
+                }
             }
 
 
