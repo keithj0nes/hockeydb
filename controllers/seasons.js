@@ -3,9 +3,39 @@ const app = require('../server.js');
 
 const getSeasons = async (req, res) => {
     const db = app.get('db');
-    // const data = await db.query('select blog.id, blog.message, blog.created_by, blog.created_date, users.id as user_id, users.first_name, users.last_name from blog JOIN users ON blog.created_by = users.id order by blog.id desc ');
-    const data = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
+
+    console.log(req.query, 'QUERYRYYY')
+    
+    if(Object.keys(req.query).length === 0){
+        console.log('NO QURY')
+
+        const data = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
+        return res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
+    }
+
+    // var fields = []
+    // for (const key in req.query) {
+    //     console.log(key, req.query[key])
+    //     fields.push(key)
+    // }
+
+    // const data = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
+    // return res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
+
+
+    const data = await db.seasons.find({
+        "deleted_date =": null,
+        type: req.query.type
+    }).catch(err => console.log(err));
+
+
+      console.log(data,' DAAATTTAAA')
+
     res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
+
+
+
+
 }
 
 
