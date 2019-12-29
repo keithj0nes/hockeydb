@@ -113,6 +113,7 @@ const PromptModal = ({data, toggleModal}) => {
                             <div className="modal-field">
                                 <label htmlFor={field.name}>{field.title}</label>
                                 <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
+                                    {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
                                     {field.listOfSelects.map((item, ind) => (
                                         <option key={ind} value={item}>{item}</option>
                                     ))}
@@ -255,7 +256,8 @@ Modal.propTypes = {
 //     type: PropTypes.string.isRequired, //'select', 'input', 'checkbox'
 //     name: PropTypes.string.isRequired,
 //     defaultValue: PropTypes.string.isRequired, 
-//     listOfSelects: PropTypes.array
+//     listOfSelects: PropTypes.array,
+//     hiddenValue: PropTypes.string
 // }
 
 
@@ -278,7 +280,8 @@ Modal.propTypes = {
 //             type: 'select',
 //             name: 'type',
 //             defaultValue: item.type,
-//             listOfSelects: this.state.seasonTypes
+//             listOfSelects: this.state.seasonTypes,
+//             hiddenValue: 'Please select a type'
 //         },
 //         {
 //             type: 'checkbox',

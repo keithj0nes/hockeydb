@@ -2,7 +2,7 @@ import { request } from './middleware';
 import { GET_DIVISIONS, TOGGLE_MODAL } from '../actionTypes';
 
 
-
+// GET DIVISIONS WORKING 🌟
 export const getDivisions = (season_id) => async dispatch => {
   // console.log(season_id, 'season ID!')
   const data = await request(`/api/divisions/${season_id}`, 'GET', {}, true)
@@ -10,14 +10,17 @@ export const getDivisions = (season_id) => async dispatch => {
   return dispatch({ type: GET_DIVISIONS, payload: data.data })
 }
 
+
+
+// CREATE DIVISIONS WORKING 🌟
 export const createDivision = (divisionData) => async (dispatch, getState) => {
-  console.log('create didivion before', divisionData);
+  // console.log('create didivion before', divisionData);
 
   //NEED TO ADD SEASON_ID HERE SOMEHWERE!!!!!
 
   const { user } = getState();
   const data = await request('/api/admin/divisions', 'POST', { data: divisionData, access_token: user.user.access_token })
-  console.log(data, 'DATA IN CREATE DIVISION')
+  // console.log(data, 'DATA IN CREATE DIVISION')
   if (!data) return false;
 
   dispatch({
@@ -28,6 +31,12 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
   return dispatch(getDivisions(divisionData.season_id))
 }
 
+
+
+
+
+
+// UPDATE DIVISIONS NOT WORKING 🚫🛑
 export const updateDivision = (id, divisionData) => async (dispatch, getState) => {
   const { user } = getState();
 
@@ -60,9 +69,11 @@ export const updateDivision = (id, divisionData) => async (dispatch, getState) =
 
 
 
+
+// DELETE DIVISIONS NOT WORKING 🚫🛑
 export const deleteDivision = id => async (dispatch, getState) => {
 
-  console.log('deleting season - NOT CONNECTED!!')
+  console.log('deleting division - NOT CONNECTED!!')
 
   // const { user } = getState();
 

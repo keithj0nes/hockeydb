@@ -11,19 +11,24 @@ import { toggleModal } from '../../../redux/actions/misc';
 import { slideTime } from '../../../helpers';
 
 
+import qs from 'query-string'
+
+
 const defaultState = {
-    isAddSeasonVisible: false,
     seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
     name: '',
     type: 'Regular Season',
     is_active: false,
-    edit: {}
+    edit: {},
+    filters: {
+        // type: ''
+    },
+    filterRequestSent: false
 }
 
 class DashSeasons extends Component {
 
     // state = {
-    //     isAddSeasonVisible: false,
     //     seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
 
     //     name: '',
@@ -43,10 +48,6 @@ class DashSeasons extends Component {
         // this.props.history.push({
         //     query: { someparam: 'MY PARAM!'}
         // })
-    }
-
-    toggleSeasonVisible = () => {
-        this.setState({ isAddSeasonVisible: !this.state.isAddSeasonVisible })
     }
 
     handleAddSeason = () => {
@@ -104,6 +105,26 @@ class DashSeasons extends Component {
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
+    handleFilterChange = e => {
+        console.log(e.target.name, e.target.value, 'CHANGED')
+
+        const copy = {...this.state.filters};
+        copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+        this.setState({filters: copy}, () => console.log(this.state.filters, 'FILTERS'))
+    }
+
+    handleFilterSubmit = () => {
+        console.log(this.state.filters, 'submitting')
+        this.props.getSeasons(qs.stringify(this.state.filters))
+        this.setState({filterRequestSent: true})
+    }
+
+    clearFilters = () => {
+        this.setState({filters: {}, filterRequestSent: false}, () => {
+            this.props.getSeasons(qs.stringify(this.state.filters))
+        })
+    }
     handleEditSeason = (item) => {
 
         console.log(item, 'edtinggggg item!');
@@ -114,9 +135,6 @@ class DashSeasons extends Component {
 
         // this.swiper.next();
 
-        // setTimeout(() => {
-        //     this.setState({isAddSeasonVisible: false})
-        // }, slideTime);
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -153,6 +171,41 @@ class DashSeasons extends Component {
     }
 
 
+    handleFilterSeason = () => {
+        console.log('filter clicked')
+
+        this.props.toggleModal({
+            isVisible: true,
+            isClosableOnBackgroundClick: false,
+            // toBeDeleted: item,
+            title: 'Filter Season',
+            // message: 'Are you sure you want to delete this season?',
+            fields: [
+                {
+                    title: 'Type',
+                    type: 'select',
+                    name: 'type',
+                    defaultValue: this.state.filters.type,
+                    listOfSelects: this.state.seasonTypes,
+                    hiddenValue: 'Select a type'
+                },
+                // {
+                //     title: item.is_active ? 'Active Season' : 'Set To Active Season',
+                //     type: 'checkbox',
+                //     name: 'is_active',
+                //     hidden: item.is_active,
+                //     defaultValue: item.is_active
+                // }
+            ],
+            onChange: this.handleFilterChange,
+            confirmActionTitle: 'Filter Season',
+            // confirmAction: () => console.log(this.state, 'this.state'),
+            confirmAction: () => this.handleFilterSubmit(),
+
+            // confirmAction: () => this.props.updateSeason(item.id, this.state.edit),
+        }, 'prompt');
+    }
+
 
     render() {
         // console.log(this.state.edit)
@@ -176,15 +229,21 @@ class DashSeasons extends Component {
 
 
                         <div className="dashboard-filter-header">
-                            <div>
-                                {this.state.isAddSeasonVisible ? (
-                                    <Button title="Cancel" danger onClick={this.toggleSeasonVisible} />
-                                ) : (
-                                        <Button title="Add Season" onClick={this.handleAddSeason} />
-                                    )}
+                            {/* <div> */}
+                                <Button title="Add Season" onClick={this.handleAddSeason} />
 
-                            </div>
+                                <div>
+                                    {
+                                        Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
+                                        <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
+                                    }
+                                    <Button title="Filter" onClick={this.handleFilterSeason} />
+                                </div>
 
+                            {/* </div> */}
+
+
+                                {/* FOR MOBILE */}
                             {/* <div className="sort-section hide-desktop" style={{background: 'red'}}>
                                 Sort By
                                 <div className="select-style">
@@ -196,24 +255,6 @@ class DashSeasons extends Component {
                             </div> */}
                         </div>
 
-                        {this.state.isAddSeasonVisible && (
-
-                            <div className="dashboard-add-container">
-                                <input type="text" name="name" placeholder="Season name" onChange={this.handleChange} />
-                                {/* <input type="text" placeholder="Select season type"/> */}
-                                <select name="type" defaultValue={this.state.type || null} onChange={this.handleChange}>
-                                    {this.state.seasonTypes.map((seasonType, ind) => (
-                                        <option key={ind} value={seasonType}>{seasonType}</option>
-                                    ))}
-                                </select>
-
-                                <div className="dashboard-add-button-container">
-                                    <Button title="Save Season" success onClick={this.toggleSeasonVisible} />
-                                </div>
-
-                            </div>
-
-                        )}
 
 
                         <div className="dashboard-list-container">
@@ -348,7 +389,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getSeasons: () => dispatch(getSeasons()),
+        getSeasons: (filters) => dispatch(getSeasons(filters)),
         createSeason: data => dispatch(createSeason(data)),
         deleteSeason: id => dispatch(deleteSeason(id)),
         updateSeason: (id, data) => dispatch(updateSeason(id, data)),

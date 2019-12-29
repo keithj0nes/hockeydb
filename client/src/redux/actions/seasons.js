@@ -4,12 +4,21 @@ import { GET_SEASONS_SUCCESS, CREATE_SEASON_SUCCESS, UPDATE_SEASON_SUCCESS, TOGG
 
 
 
-export const getSeasons = () => async dispatch => {
-    const data = await request('/api/seasons', 'GET', {}, true)
+export const getSeasons = (filter) => async dispatch => {
+
+    console.log(filter, 'FILTER GET SEASONS')
+
+    const data = await request(`/api/seasons?${filter}`, 'GET', {}, true)
 
     dispatch({
         type: GET_SEASONS_SUCCESS,
         payload: data.data
+    })
+
+
+    dispatch({
+        type: TOGGLE_MODAL,
+        modalProps: { isVisible: false }
     })
     
     //simulate db
@@ -100,7 +109,10 @@ export const deleteSeason = id => async (dispatch, getState) => {
         },
         modalType: 'alert'
     })
-    return data
+    // return data
+
+    return dispatch(getSeasons())
+
 }
 
 

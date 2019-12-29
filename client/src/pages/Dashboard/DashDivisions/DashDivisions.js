@@ -58,13 +58,6 @@ class DashDivisions extends Component {
                     disabled: true,
                     defaultValue: this.state.currentSeasonSelected.name || this.props.currentSeason.name
                 },
-                // {
-                //     title: 'Type',
-                //     type: 'select',
-                //     name: 'type',
-                //     defaultValue: null,
-                //     listOfSelects: this.state.seasonTypes
-                // },
             ],
             onChange: this.handleChange(),
             confirmActionTitle: 'Create Division',
@@ -115,6 +108,9 @@ class DashDivisions extends Component {
 
         return this.setState({currentSeasonSelected: editStateCopy}, () =>{
             console.log(this.state.currentSeasonSelected, 'edit!!')
+            // this.props.history.push({
+            //     search: `?season=${this.state.currentSeasonSelected.id}`
+            //   })
             // this.props.getDivisions(this.state.currentSeasonSelected.season);
             this.props.getDivisions(this.state.currentSeasonSelected.id)
         })
