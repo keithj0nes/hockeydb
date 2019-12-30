@@ -93,8 +93,6 @@ const AlertModal = ({data, toggleModal}) => (
 
 
 const PromptModal = ({data, toggleModal}) => {
-    console.log(data, 'data in propmpt modal')
-
     return (
         <div>
             {data.fields.map(field => {

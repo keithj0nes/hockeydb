@@ -29,6 +29,8 @@ export const getSeasons = (filter) => async dispatch => {
     //         payload: seasonData
     //     })
     // }, 2000);
+
+    return true;
 }
 
 export const createSeason = seasonData => async (dispatch, getState) => {

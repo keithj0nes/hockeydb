@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import ReactSwipe from 'react-swipe';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from '../../../redux/actions/seasons';
-import { Button, Swiper } from '../../../components';
+import { Button } from '../../../components';
 
 import './DashSeasons.scss';
 // import ListItem from '../ListItem';
 import DashSeasonsListItem from './DashSeasonsListItem';
 import { toggleModal } from '../../../redux/actions/misc';
-import { slideTime } from '../../../helpers';
-
 
 import qs from 'query-string'
-
 
 const defaultState = {
     seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
@@ -28,26 +24,28 @@ const defaultState = {
 
 class DashSeasons extends Component {
 
-    // state = {
-    //     seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
-
-    //     name: '',
-    //     type: 'Regular Season',
-    //     is_active: false,
-
-    //     edit: {}
-    // }
-
     state = defaultState;
 
     componentDidMount() {
-        if (this.props.seasons.length <= 0) {
-            this.props.getSeasons();
+
+        //check for query params
+
+        // console.log(this.props.location.search, 'SEraCh')
+
+        if(this.props.location.search.length > 0){
+            this.props.getSeasons(this.props.location.search.slice(1)).then(r => {
+                // console.log(r, 'ARREE')
+                if(r){
+                    this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
+                }
+            });
+
         }
 
-        // this.props.history.push({
-        //     query: { someparam: 'MY PARAM!'}
-        // })
+        if (this.props.seasons.length <= 0) {
+            console.log('therelajsdlas;dl;alsdg')
+            this.props.getSeasons();
+        }
     }
 
     handleAddSeason = () => {
@@ -78,7 +76,6 @@ class DashSeasons extends Component {
 
     validation = () => {
         if (!this.state.name) return false;
-
         return true;
     }
 
@@ -93,47 +90,44 @@ class DashSeasons extends Component {
     }
 
     handleChange = edit => e => {
-        console.log(edit, 'edit!')
         if(!!edit){
-            var editStateCopy = {...this.state.edit};
+            const editStateCopy = {...this.state.edit};
             editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-            return this.setState({edit: editStateCopy}, () =>{
-                console.log(this.state.edit)
-            })
+            return this.setState({edit: editStateCopy})
         }
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
     handleFilterChange = e => {
-        console.log(e.target.name, e.target.value, 'CHANGED')
-
         const copy = {...this.state.filters};
         copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-        this.setState({filters: copy}, () => console.log(this.state.filters, 'FILTERS'))
+        this.setState({filters: copy})
     }
 
     handleFilterSubmit = () => {
-        console.log(this.state.filters, 'submitting')
-        this.props.getSeasons(qs.stringify(this.state.filters))
+        // console.log(this.state.filters, 'submitting')
+        const filters = qs.stringify(this.state.filters);
+        console.log(filters, 'FILTERS')
+        this.props.getSeasons(filters)
         this.setState({filterRequestSent: true})
+        this.props.history.push({
+            search: filters
+        })
     }
 
     clearFilters = () => {
         this.setState({filters: {}, filterRequestSent: false}, () => {
             this.props.getSeasons(qs.stringify(this.state.filters))
+            this.props.history.push({
+                search: null
+            })
         })
     }
+
     handleEditSeason = (item) => {
+        // console.log(item, 'edtinggggg item!');
 
-        console.log(item, 'edtinggggg item!');
-
-        this.setState({ edit: item }, () => {
-            console.log(this.state.edit, 'edit!')
-        })
-
-        // this.swiper.next();
+        this.setState({ edit: item })
 
         this.props.toggleModal({
             isVisible: true,
@@ -172,14 +166,10 @@ class DashSeasons extends Component {
 
 
     handleFilterSeason = () => {
-        console.log('filter clicked')
-
         this.props.toggleModal({
             isVisible: true,
-            isClosableOnBackgroundClick: false,
-            // toBeDeleted: item,
+            isClosableOnBackgroundClick: true,
             title: 'Filter Season',
-            // message: 'Are you sure you want to delete this season?',
             fields: [
                 {
                     title: 'Type',
@@ -189,132 +179,56 @@ class DashSeasons extends Component {
                     listOfSelects: this.state.seasonTypes,
                     hiddenValue: 'Select a type'
                 },
-                // {
-                //     title: item.is_active ? 'Active Season' : 'Set To Active Season',
-                //     type: 'checkbox',
-                //     name: 'is_active',
-                //     hidden: item.is_active,
-                //     defaultValue: item.is_active
-                // }
             ],
             onChange: this.handleFilterChange,
             confirmActionTitle: 'Filter Season',
-            // confirmAction: () => console.log(this.state, 'this.state'),
             confirmAction: () => this.handleFilterSubmit(),
-
-            // confirmAction: () => this.props.updateSeason(item.id, this.state.edit),
         }, 'prompt');
     }
 
 
     render() {
-        // console.log(this.state.edit)
+        // console.log(this.props, 'propss')
 
         //this should be it's own loading icon component
         if (this.props.isLoading) {
             return <div>Loading...</div>
         }
-
         const { seasons } = this.props;
-
         return (
-            <div>
+            <>
+                <div className="dashboard-filter-header">
+                        <Button title="Add Season" onClick={this.handleAddSeason} />
 
-                <Swiper ref={el => this.swiper = el} options={{ speed: slideTime, loop: true }}>
-                    {/* <Content type="first" next={() => this.myyReff.nextSlide()}/> */}
-
-                    {/* PANE ONE */}
-
-                    <div style={{ width: '100%' }}>
-
-
-                        <div className="dashboard-filter-header">
-                            {/* <div> */}
-                                <Button title="Add Season" onClick={this.handleAddSeason} />
-
-                                <div>
-                                    {
-                                        Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
-                                        <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
-                                    }
-                                    <Button title="Filter" onClick={this.handleFilterSeason} />
-                                </div>
-
-                            {/* </div> */}
-
-
-                                {/* FOR MOBILE */}
-                            {/* <div className="sort-section hide-desktop" style={{background: 'red'}}>
-                                Sort By
-                                <div className="select-style">
-                                    <select name="" id="">
-                                        <option value="name">Name</option>
-                                        <option value="type">Type</option>
-                                    </select>
-                                </div>
-                            </div> */}
+                        <div>
+                            {
+                                Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
+                                <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
+                            }
+                            <Button title="Filter" onClick={this.handleFilterSeason} />
                         </div>
 
+                        {/* FOR MOBILE */}
+                    {/* <div className="sort-section hide-desktop" style={{background: 'red'}}>
+                        Sort By
+                        <div className="select-style">
+                            <select name="" id="">
+                                <option value="name">Name</option>
+                                <option value="type">Type</option>
+                            </select>
+                        </div>
+                    </div> */}
+                </div>
 
+                <div className="dashboard-list-container">
+                    <div className="dashboard-list">
 
-                        <div className="dashboard-list-container">
-
-                            <div className="dashboard-list">
-
-                                { seasons && seasons.length <= 0 ? (
-                                    <div>
-                                        Sorry, no seasons have been created. Start by adding a season above.
-                                    </div>
-                                ) : (
-                                    <>
-
-                                        <div className="dashboard-list-item hide-mobile">
-                                            <div style={{ display: 'flex' }}>
-
-                                                <p className="flex-two">Name</p>
-                                                <p className="flex-one">Type</p>
-                                                <p className="flex-one">Manage</p>
-                                            </div>
-                                        </div>
-
-                                        {seasons.map(item => {
-
-                                            return (
-                                                <DashSeasonsListItem
-                                                    key={item.id}
-                                                    item={item}
-                                                    sections={{ 'name': 'two', 'type': 'one' }}
-                                                    onClick={() => this.handleDeleteSeason(item)}
-                                                    onEdit={() => this.handleEditSeason(item)}
-                                                />
-                                            )
-
-                                        })}
-                                    </>
-                                )}
-
+                        { seasons && seasons.length <= 0 ? (
+                            <div>
+                                Sorry, no seasons have been created. Start by adding a season above.
                             </div>
-
-                        </div>
-                    </div>
-
-
-                    {/* PANE TWO */}
-
-
-                    <div style={{ width: '100%' }}>
-                        <div className="dashboard-filter-header">
-                            <div >
-
-                                EDIT
-                                {/* <Button title="Cancel" danger onClick={() => this.swiper.prev()}/> */}
-                            </div>
-                        </div>
-
-
-                        <div className="dashboard-list-container">
-
-                            <div className="dashboard-list">
+                        ) : (
+                            <>
 
                                 <div className="dashboard-list-item hide-mobile">
                                     <div style={{ display: 'flex' }}>
@@ -325,62 +239,30 @@ class DashSeasons extends Component {
                                     </div>
                                 </div>
 
-
-                                <div className="dashboard-list-item">
-                                    {/* <div style={{display: 'flex'}}>
-
-                                        <p className="flex-two">Name</p>
-                                        <p className="flex-one">Type</p>
-                                        <p className="flex-one">Manage</p>
-                                    </div> */}
-
-                                    <input type="text" name="name" defaultValue={this.state.edit.name} onChange={this.handleChange} />
-                                    <select name="type" value={this.state.edit.type || ''} onChange={this.handleChange}>
-                                        {this.state.seasonTypes.map((seasonType, ind) => (
-                                            <option key={ind} value={seasonType}>{seasonType}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                    <Button title="Cancel" danger onClick={() => this.swiper.prev()} />
-                                    <div style={{ width: 15 }} />
-                                    <Button title="Save" onClick={() => this.swiper.prev()} />
-                                </div>
-
-
-
-                                {/* {this.props.seasons && this.props.seasons.map(item => {
+                                {seasons.map(item => {
 
                                     return (
-                                        <DashSeasonsListItem 
-                                            key={item.id} 
-                                            item={item} 
-                                            sections={{'name': 'two', 'type': 'one'}}
-                                            onClick={() => this.handleDeleteSeason(item)} 
+                                        <DashSeasonsListItem
+                                            key={item.id}
+                                            item={item}
+                                            sections={{ 'name': 'two', 'type': 'one' }}
+                                            onClick={() => this.handleDeleteSeason(item)}
                                             onEdit={() => this.handleEditSeason(item)}
-                                            locations={this.props.locations}
                                         />
                                     )
 
-                                })} */}
-                            </div>
-
-                        </div>
-
-
+                                })}
+                            </>
+                        )}
                     </div>
-                    <div>PANE 2</div>
-                    {/* <Content  prev={() => this.myyReff.prevSlide()}></Content> */}
-                    <div>PANE 3</div>
-                </Swiper>
-            </div>
+                </div>
+
+            </>
         )
     }
 }
 
 const mapStateToProps = state => {
-    // console.log(state, 'state!')
     return {
         seasons: state.seasons.seasons,
         isLoading: state.seasons.isLoading
