@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from '../../../redux/actions/seasons';
-import { Button } from '../../../components';
+import { Button, Filter } from '../../../components';
 
 import './DashSeasons.scss';
 // import ListItem from '../ListItem';
 import DashSeasonsListItem from './DashSeasonsListItem';
-import { toggleModal } from '../../../redux/actions/misc';
+import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 
-import qs from 'query-string'
+import qs from 'query-string';
 
 const defaultState = {
     seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
@@ -19,7 +19,8 @@ const defaultState = {
     filters: {
         // type: ''
     },
-    filterRequestSent: false
+    filterRequestSent: false,
+    isFilterVisible: false
 }
 
 class DashSeasons extends Component {
@@ -33,6 +34,7 @@ class DashSeasons extends Component {
         // console.log(this.props.location.search, 'SEraCh')
 
         if(this.props.location.search.length > 0){
+            console.log('hitting)')
             this.props.getSeasons(this.props.location.search.slice(1)).then(r => {
                 // console.log(r, 'ARREE')
                 if(r){
@@ -42,10 +44,18 @@ class DashSeasons extends Component {
 
         }
 
-        if (this.props.seasons.length <= 0) {
-            console.log('therelajsdlas;dl;alsdg')
+        else {
+            console.log('hitting else')
             this.props.getSeasons();
+
         }
+
+        // if (this.props.seasons.length <= 0) {
+        // //     console.log('therelajsdlas;dl;alsdg')
+        // console.log(this.props.seasons.length, 'YO!')
+        // console.log(this.props.seasons)
+        //     this.props.getSeasons(null);
+        // }
     }
 
     handleAddSeason = () => {
@@ -186,11 +196,65 @@ class DashSeasons extends Component {
         }, 'prompt');
     }
 
+    checkFilters = () => {
+
+        const hi = [{
+                // title: 'Type',
+                //this is for checkboxes
+                // data: [...this.state.seasonTypes.map(n => {
+                //     return {
+                //         name: n,
+                //         value: n,
+                //         isChecked: false
+                //     }
+                // })]
+
+                // data: 
+
+                title: 'Type',
+                options: [{
+                    type: 'select',
+                    name: 'type',
+                    defaultValue: this.state.filters.type,
+                    listOfSelects: this.state.seasonTypes,
+                    hiddenValue: 'Select a type'
+                }]
+            },{
+                title: 'Other',
+                options: [{
+                    title: 'Hidden Seasons',
+                    name: 'show_hidden',
+                    // isChecked: false
+
+                    // title: item.is_active ? 'Active Season' : 'Set To Active Season',
+                    type: 'checkbox',
+                    // name: 'is_active',
+                    // hidden: item.is_active,
+                    defaultValue: false
+                }]
+
+        }]
+
+        // this.setState({isFilterVisible: !this.state.isFilterVisible,
+        //     data:hi
+        // })
+
+        this.setState({data: hi}, () => this.props.toggleFilter())
+
+        // {name, value, isChecked}
+        console.log(this.state.filters.type, 'tiler time')
+        console.log(this.state.seasonTypes, 'seasontimes')
+
+
+    }
+
 
     render() {
         // console.log(this.props, 'propss')
 
         //this should be it's own loading icon component
+        
+        console.log(this.state.data, 'DATA')
         if (this.props.isLoading) {
             return <div>Loading...</div>
         }
@@ -198,26 +262,38 @@ class DashSeasons extends Component {
         return (
             <>
                 <div className="dashboard-filter-header">
-                        <Button title="Add Season" onClick={this.handleAddSeason} />
+                    <div style={{width: '100%'}}>
 
-                        <div>
-                            {
-                                Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
-                                <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
-                            }
-                            <Button title="Filter" onClick={this.handleFilterSeason} />
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Button title="Add Season" onClick={this.handleAddSeason} />
+
+                            <div>
+                                {
+                                    Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
+                                    <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
+                                }
+                                {/* <Button title="Filter" onClick={this.handleFilterSeason} /> */}
+                                <Button title="Filter" onClick={this.checkFilters} />
+
+                            </div>
                         </div>
 
-                        {/* FOR MOBILE */}
-                    {/* <div className="sort-section hide-desktop" style={{background: 'red'}}>
-                        Sort By
-                        <div className="select-style">
+                            {/* FOR MOBILE */}
+                        {/* <div className="sort-section hide-desktop" style={{background: 'red'}}>
+                            Sort By
+                            <div className="select-style">
                             <select name="" id="">
-                                <option value="name">Name</option>
-                                <option value="type">Type</option>
+                            <option value="name">Name</option>
+                            <option value="type">Type</option>
                             </select>
-                        </div>
-                    </div> */}
+                            </div>
+                        </div> */}
+
+
+                        <Filter data={this.state.data} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
+
+                        {/* <Filter isVisible={this.state.isFilterVisible} data={this.state.data} filterType={'seasons'}/> */}
+                    </div>
                 </div>
 
                 <div className="dashboard-list-container">
@@ -275,7 +351,8 @@ const mapDispatchToProps = dispatch => {
         createSeason: data => dispatch(createSeason(data)),
         deleteSeason: id => dispatch(deleteSeason(id)),
         updateSeason: (id, data) => dispatch(updateSeason(id, data)),
-        toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType))
+        toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
+        toggleFilter: () => dispatch(toggleFilter('seasons'))
 
     }
 }
