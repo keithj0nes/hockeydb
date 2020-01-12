@@ -9,3 +9,6 @@ export { default as Button } from './Button';
 export { default as Modal } from './Modal';
 
 export { default as Swiper } from './Swiper';
+
+export { default as Filter } from './Filter';
+

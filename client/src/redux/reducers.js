@@ -32,44 +32,44 @@ export const blogs = (state = initialBlogState, { type, payload }) => {
 
 
 
-const initialSeasonState = {
-  isLoading: true,
-  seasons: [],
-  currentSeason: {}
-};
+// const initialSeasonState = {
+//   isLoading: true,
+//   seasons: [],
+//   currentSeason: {}
+// };
 
-export const seasons = (state = initialSeasonState, { type, payload }) => {
-  switch (type) {
-    case SET_CURRENT_SEASON:
-      return { ...state, currentSeason: payload }
-    case GET_SEASONS:
-      return { ...state, isLoading: true }
-    case GET_SEASONS_SUCCESS:
-      return { ...state, isLoading: false, seasons: payload }
-    case CREATE_SEASON_SUCCESS: 
-      // return { ...state, isLoading: false, seasons: [payload, ...state.seasons]}
-      return { ...state, isLoading: false, seasons: [...state.seasons, payload] }
-
-
-    case UPDATE_SEASON_SUCCESS:
-      const newSeasons = state.seasons.map(item => {
-        if(item.id === payload.id){
-          return payload
-        } else if(payload.is_active){
-          return {...item, is_active: false}
-        }
-        return item;
-      })
-
-      return  { ...state, isLoading: false, seasons: newSeasons }
+// export const seasons = (state = initialSeasonState, { type, payload }) => {
+//   switch (type) {
+//     case SET_CURRENT_SEASON:
+//       return { ...state, currentSeason: payload }
+//     case GET_SEASONS:
+//       return { ...state, isLoading: true }
+//     case GET_SEASONS_SUCCESS:
+//       return { ...state, isLoading: false, seasons: payload }
+//     case CREATE_SEASON_SUCCESS: 
+//       // return { ...state, isLoading: false, seasons: [payload, ...state.seasons]}
+//       return { ...state, isLoading: false, seasons: [...state.seasons, payload] }
 
 
+//     case UPDATE_SEASON_SUCCESS:
+//       const newSeasons = state.seasons.map(item => {
+//         if(item.id === payload.id){
+//           return payload
+//         } else if(payload.is_active){
+//           return {...item, is_active: false}
+//         }
+//         return item;
+//       })
 
-      // return { ...state, isLoading: false, seasons: state.seasons.map(item => item.id === payload.id ? payload : item) }
-    default:
-      return state;
-  }
-};
+//       return  { ...state, isLoading: false, seasons: newSeasons }
+
+
+
+//       // return { ...state, isLoading: false, seasons: state.seasons.map(item => item.id === payload.id ? payload : item) }
+//     default:
+//       return state;
+//   }
+// };
 
 
 

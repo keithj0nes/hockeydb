@@ -25,3 +25,10 @@ export const toggleModal = (modalProps, modalType) => {
         modalType
     }
 }
+
+export const toggleFilter = (section, bool) => {
+    return {
+        type: `${section}/FILTER_IS_VISIBLE`,
+        payload: bool
+    }
+}
