@@ -11,7 +11,17 @@ import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
 
 const defaultState = {
-    seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
+    // seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
+    seasonTypes: [{
+        name: 'View All', value: ''
+    },{
+        name: 'Regular Season', value: 'Regular Season'
+    },{
+        name: 'Playoffs', value: 'Playoffs'
+    },{
+        name: 'Tournament', value: 'Tournament'
+    }],
+
     name: '',
     type: 'Regular Season',
     is_active: false,
