@@ -4,41 +4,35 @@ import { toggleFilter } from '../redux/actions/misc';
 import qs from 'query-string';
 
 
-// const Filter = ({isVisible, data, filterType}) => {
-
 class Filter extends Component {
-
 
     state = {
         filters: {}
     }
     
     componentWillUnmount(){
-        console.log('toggle on dismount')
         this.props.toggleFilter(false);
     }
-    ya = () => {
-        this.props.history.push({
-            search: 'helloworkd'
-        })
-    }
-    
+
     handleChange = e => {
-        // console.log(e.target.type === 'checkbox' ? e.target.checked : e.target.value ,'hitting')
-        // this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
-
         const filters = {...this.state.filters};
-        filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        this.setState({filters})
         
-        const stringed = qs.stringify(filters)
+        //if no value, delete from the filters copy
+        if(e.target.value === '' || e.target.checked === false){
+            delete filters[e.target.name];
+        } else {
+            filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        }
+        
+        this.setState({filters}, () => console.log(this.state.filters, 'fitlers'))
+        const search = qs.stringify(filters)
+        this.props.getAction(search)
+        this.props.history.push({search})
+    }
 
-        this.props.getAction(stringed)
-
-        this.props.history.push({
-            search: stringed
-        })
-
+    handleClear = () => {
+        this.props.history.push({search: ''})
+        this.props.getAction()
     }
     
     render(){
@@ -49,105 +43,65 @@ class Filter extends Component {
 
         
         return (
-            <div style={{background: 'pink', display: 'flex', padding: '10px 0'}}>
+            <div style={{background: 'pink', display: 'flex', position: 'relative', padding: '10px 0'}}>
 
+                <div style={{position: 'absolute', top: 0, right: 0, display: 'flex'}}>
+                    <p onClick={this.handleClear}>clear filters</p>
+                    <p onClick={() => this.props.toggleFilter()}>close</p>
+                </div>
                {data.map(d => {
                 // console.log(d, 'd')
-                return (
-                    <div style={{flex: 1, marginRight: 10}} key={d.title}>
-                        <h3>{d.title}</h3>
-                        {d.options.map(field => {
-                            // console.log(field, 'field')
-                            return (
-                                <div key={field.name}>
+                    return (
+                        <div style={{flex: 1, marginRight: 10}} key={d.title}>
+                            <h3>{d.title}</h3>
+                            {d.options.map(field => {
+                                // console.log(field, 'field')
+                                return (
+                                    <div key={field.name}>
 
-                                    {field.type === 'input' && (
-                                        <div className="modal-field">
-                                            <label htmlFor={field.name}>{field.title}</label>
-                                            <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={this.handleChange}/>
-                                        </div>
-                                    )}
+                                        {field.type === 'input' && (
+                                            <div className="modal-field">
+                                                <label htmlFor={field.name}>{field.title}</label>
+                                                <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={this.handleChange}/>
+                                            </div>
+                                        )}
 
-                                    {field.type === 'select' && (
-                                        <div className="modal-field">
-                                            <label htmlFor={field.name}>{field.title}</label>
-                                            <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={this.handleChange}>
-                                                {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
-                                                {field.listOfSelects.map((item, ind) => (
-                                                    <option key={ind} value={item}>{item}</option>
-                                                ))}
-                                            </select>
-                                        </div>
+                                        {field.type === 'select' && (
+                                            <div className="modal-field">
+                                                <label htmlFor={field.name}>{field.title}</label>
+                                                <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={this.handleChange}>
+                                                    {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
+                                                    {field.listOfSelects.map((item, ind) => (
+                                                        <option key={ind} value={item.value}>{item.name}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
 
-                                    )}
+                                        )}
 
-                                    {field.type === 'checkbox' && (
-                                        <div className="modal-field">
-                                            <div style={{display: 'flex'}}>
-                                            {!field.hidden && (
-                                                <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={this.handleChange} />
-                                            )}
-                                            <label htmlFor={field.name}>{field.title}</label>
-                                        </div>
+                                        {field.type === 'checkbox' && (
+                                            <div className="modal-field">
+                                                <div style={{display: 'flex'}}>
+                                                {!field.hidden && (
+                                                    <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={this.handleChange} />
+                                                )}
+                                                <label htmlFor={field.name}>{field.title}</label>
+                                            </div>
 
-                                        </div>
+                                            </div>
 
-                                    )}
-
-
-                                </div>
-                            )
-                        })}     
-
-                        {/* <button onClick={ya}>click</button> */}
-                    </div>
-                )
-            })}
-
-             {/* {data.map(field => {
-                 console.log(field, 'field')
-                return (
-                    <div key={field.name}>
-
-                        {field.type === 'input' && (
-                            <div className="modal-field">
-                                <label htmlFor={field.name}>{field.title}</label>
-                                <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
-                            </div>
-                        )}
-
-                        {field.type === 'select' && (
-                            <div className="modal-field">
-                                <label htmlFor={field.name}>{field.title}</label>
-                                <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
-                                    {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
-                                    {field.listOfSelects.map((item, ind) => (
-                                        <option key={ind} value={item}>{item}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                        )}
-
-                        {field.type === 'checkbox' && (
-                            <div className="modal-field">
-                                <div style={{display: 'flex'}}>
-                                {!field.hidden && (
-                                    <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
-                                )}
-                                <label htmlFor={field.name}>{field.title}</label>
-                            </div>
-
-                            </div>
-
-                        )}
+                                        )}
 
 
-                    </div>
-                )
-            })} */}
-        </div>
-    )
+                                    </div>
+                                )
+                            })}     
+
+                        </div>
+                    )
+                })}
+            </div>
+        )
     }   
 
 }
@@ -166,12 +120,20 @@ const mapDispatchToProps = (dispatch, {filterType}) => {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
 
+
+// default value for chekcbox
+// add 'view all' for filtering selection
+
+// DONE/
+//make filter use dropdown instead of checkboxes for now 
 //use redux for state of isVisible
 //handle close (redux)
 //handle clear filters (redux)
 
-// DONE/
-//make filter use dropdown instead of checkboxes for now 
+
+
+
+
 
 ////////////////
 
