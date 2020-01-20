@@ -12,8 +12,8 @@ class Login extends React.Component {
   state = {
     // email: '',
     // password: ''
-    email: 'test@test.test',
-    password: 'test',
+    email: 'admin@hockeydb.com',
+    password: 'admin',
 
     redirectToReferrer: false
   }

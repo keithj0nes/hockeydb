@@ -265,9 +265,8 @@ class DashDivisions extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state, 'STATEEEE')
     return {
-        divisions: state.divisions.allDivisions,
+        divisions: state.divisions.divisions,
         seasons: state.seasons.seasons,
         currentSeason: state.seasons.currentSeason
     }

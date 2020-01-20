@@ -90,7 +90,6 @@ class ListItem extends Component {
 
     render(){
         const { onClick, item, sections, onEdit } = this.props;
-        // console.log(item, 'item!')
 
         const sectionKeys = Object.keys(sections);
         return ( 

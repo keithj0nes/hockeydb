@@ -11,7 +11,6 @@ import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
 
 const defaultState = {
-    // seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
     seasonTypes: [{
         name: 'View All', value: ''
     },{
@@ -85,7 +84,7 @@ class DashSeasons extends Component {
                     type: 'select',
                     name: 'type',
                     defaultValue: null,
-                    listOfSelects: this.state.seasonTypes
+                    listOfSelects: this.state.seasonTypes.splice(1)
                 },
             ],
             onChange: this.handleChange(),
