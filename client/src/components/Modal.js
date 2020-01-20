@@ -93,8 +93,13 @@ const AlertModal = ({data, toggleModal}) => (
 
 
 const PromptModal = ({data, toggleModal}) => {
+
+    console.log(data, 'MODAALLL')
     return (
         <div>
+            {/* <p>{data.message}</p> */}
+            {data.message && <p>{data.message}</p>}
+            <br/>
             {data.fields.map(field => {
 
                 return (
@@ -113,7 +118,7 @@ const PromptModal = ({data, toggleModal}) => {
                                 <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
                                     {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
                                     {field.listOfSelects.map((item, ind) => (
-                                        <option key={ind} value={item}>{item}</option>
+                                      ind !== 0 && <option key={ind} value={item.value}>{item.name}</option>
                                     ))}
                                 </select>
                             </div>
