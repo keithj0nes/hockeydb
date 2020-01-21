@@ -55,14 +55,20 @@ class DashSeasonsListItem extends Component {
             
                         <div className="flex-one hide-mobile">
                             {/* <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span> */}
-                            <span onClick={onEdit}>{'<edit>'}</span>
                             
                             {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
                             {/* {this.state.isEditing ? ( 
                                 <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
-
+                                
                             ): */}
+
+
+                            {!item.hidden_date && (
+                                <span onClick={onEdit}>{'<edit>'}</span>
+                            )}
+
+                            
                             
                             <span onClick={onDelete}>{'<delete>'}</span>
                             <span onClick={onHide}>{'<hide>'}</span>

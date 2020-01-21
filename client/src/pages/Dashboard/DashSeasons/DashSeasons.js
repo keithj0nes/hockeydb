@@ -1,36 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getSeasons, deleteSeason, createSeason, updateSeason, hideSeason } from '../../../redux/actions/seasons';
+import { getSeasons, deleteSeason, createSeason, updateSeason } from '../../../redux/actions/seasons';
 import { Button, Filter } from '../../../components';
-
-import './DashSeasons.scss';
 // import ListItem from '../ListItem';
 import DashSeasonsListItem from './DashSeasonsListItem';
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
-
 import qs from 'query-string';
+import './DashSeasons.scss';
+
 
 const defaultState = {
-    // seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
-    seasonTypes: [{
-        name: 'View All', value: ''
-    },{
-        name: 'Regular', value: 'Regular'
-    },{
-        name: 'Playoffs', value: 'Playoffs'
-    },{
-        name: 'Tournament', value: 'Tournament'
-    }],
+    seasonTypes: [
+        {name: 'View All',   value: ''},
+        {name: 'Regular',    value: 'Regular'},
+        {name: 'Playoffs',   value: 'Playoffs'},
+        {name: 'Tournament', value: 'Tournament'}
+    ],
 
     name: '',
-    type: 'Regular Season',
+    type: 'Regular',
     is_active: false,
     edit: {},
     filters: {
         // type: ''
     },
     filterRequestSent: false,
-    isFilterVisible: false
+    isFilterVisible: false,
+    filterData: []
 }
 
 class DashSeasons extends Component {
@@ -38,34 +34,16 @@ class DashSeasons extends Component {
     state = defaultState;
 
     componentDidMount() {
-
         //check for query params
-
-        // console.log(this.props.location.search, 'SEraCh')
-
         if(this.props.location.search.length > 0){
-            console.log('hitting)')
-            this.props.getSeasons(this.props.location.search.slice(1)).then(r => {
-                // console.log(r, 'ARREE')
-                if(r){
-                    this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
-                }
+            console.log('getting season with filter)')
+            this.props.getSeasons(this.props.location.search.slice(1)).then(res => {
+                   res && this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
             });
-
-        }
-
-        else {
-            console.log('hitting else')
+        } else {
+            console.log('no search params, getting seasons')
             this.props.getSeasons();
-
         }
-
-        // if (this.props.seasons.length <= 0) {
-        // //     console.log('therelajsdlas;dl;alsdg')
-        // console.log(this.props.seasons.length, 'YO!')
-        // console.log(this.props.seasons)
-        //     this.props.getSeasons(null);
-        // }
     }
 
     handleAddSeason = () => {
@@ -85,7 +63,7 @@ class DashSeasons extends Component {
                     type: 'select',
                     name: 'type',
                     defaultValue: null,
-                    listOfSelects: this.state.seasonTypes
+                    listOfSelects: this.state.seasonTypes.splice(1)
                 },
             ],
             onChange: this.handleChange(),
@@ -103,7 +81,7 @@ class DashSeasons extends Component {
         this.props.toggleModal({
             isVisible: true,
             title: 'Delete Season',
-            message: `Are you sure you want to hide this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
+            message: `Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
             toBeDeleted: item,
             deleteAction: () => this.props.deleteSeason(item.id),
         }, 'delete');
@@ -113,7 +91,7 @@ class DashSeasons extends Component {
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: true,
-            title: 'Hide Season',
+            title: `${item.hidden_date ? 'Unh': 'H'}ide Season`,
             message: item.hidden_date ? 
             `Are you sure you want to unhide this season? This will cause the selected season to be visible on the public page` 
             : 
@@ -163,18 +141,14 @@ class DashSeasons extends Component {
     }
 
     handleEditSeason = (item) => {
-        // console.log(item, 'edtinggggg item!');
-
         this.setState({ edit: item })
+        console.log(item, 'item in handleEditSeason')
 
-
-        console.log(item, 'item!')
+        console.log(this.state.seasonTypes, 'seasontipes!!')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
-            // toBeDeleted: item,
             title: 'Edit Season',
-            // message: 'Are you sure you want to delete this season?',
             fields: [
                 {
                     title: 'Name',
@@ -187,7 +161,9 @@ class DashSeasons extends Component {
                     type: 'select',
                     name: 'type',
                     defaultValue: item.type,
-                    listOfSelects: this.state.seasonTypes
+                    // listOfSelects: this.state.seasonTypes.splice(1)
+                    listOfSelects: [...this.state.seasonTypes].slice(1)
+
                 },
                 {
                     title: item.is_active ? 'Active Season' : 'Set To Active Season',
@@ -199,92 +175,44 @@ class DashSeasons extends Component {
             ],
             onChange: this.handleChange('editing'),
             confirmActionTitle: 'Update Season',
-            // confirmAction: () => console.log(this.state, 'this.state'),
-            confirmAction: () => this.props.updateSeason(item.id, this.state.edit),
-        }, 'prompt');
-    }
-
-
-    handleFilterSeason = () => {
-        this.props.toggleModal({
-            isVisible: true,
-            isClosableOnBackgroundClick: true,
-            title: 'Filter Season',
-            fields: [
-                {
-                    title: 'Type',
-                    type: 'select',
-                    name: 'type',
-                    defaultValue: this.state.filters.type,
-                    listOfSelects: this.state.seasonTypes,
-                    hiddenValue: 'Select a type'
-                },
-            ],
-            onChange: this.handleFilterChange,
-            confirmActionTitle: 'Filter Season',
-            confirmAction: () => this.handleFilterSubmit(),
+            confirmAction: () => this.validation() && this.props.updateSeason(item.id, this.state.edit),
         }, 'prompt');
     }
 
     checkFilters = () => {
 
-        const hi = [{
-                // title: 'Type',
-                //this is for checkboxes
-                // data: [...this.state.seasonTypes.map(n => {
-                //     return {
-                //         name: n,
-                //         value: n,
-                //         isChecked: false
-                //     }
-                // })]
+        // console.log(this.props.location.search, 'search!')
 
-                // data: 
-
-                title: 'Type',
-                options: [{
-                    type: 'select',
-                    name: 'type',
-                    defaultValue: this.state.filters.type,
-                    listOfSelects: this.state.seasonTypes,
-                    hiddenValue: 'Select a type'
-                }]
-            },{
-                title: 'Other',
-                options: [{
-                    title: 'Hidden Seasons',
-                    name: 'show_hidden',
-                    // isChecked: false
-
-                    // title: item.is_active ? 'Active Season' : 'Set To Active Season',
-                    type: 'checkbox',
-                    // name: 'is_active',
-                    // hidden: item.is_active,
-                    defaultValue: false
-                }]
-
+        const filterData = [{
+            title: 'Type',
+            options: [{
+                type: 'select',
+                name: 'type',
+                defaultValue: this.state.filters.type,
+                listOfSelects: this.state.seasonTypes,
+                hiddenValue: 'Select a type'
+            }]
+        },{
+            title: 'Other',
+            options: [{
+                title: 'Hidden Seasons',
+                name: 'show_hidden',
+                type: 'checkbox',
+                defaultValue: this.state.filters.show_hidden || false
+            }]
         }]
 
-        // this.setState({isFilterVisible: !this.state.isFilterVisible,
-        //     data:hi
-        // })
-
-        this.setState({data: hi}, () => this.props.toggleFilter())
-
-        // {name, value, isChecked}
-        console.log(this.state.filters.type, 'tiler time')
-        console.log(this.state.seasonTypes, 'seasontimes')
-
+        this.setState({filterData}, () => this.props.toggleFilter())
 
     }
 
 
     render() {
         // console.log(this.props, 'propss')
-
-        //this should be it's own loading icon component
         
-        console.log(this.state.data, 'DATA')
+        // console.log(this.state.filterData, 'DATA')
+        
+        //this should be it's own loading icon component
         if (this.props.isLoading) {
             return <div>Loading...</div>
         }
@@ -302,7 +230,6 @@ class DashSeasons extends Component {
                                     Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
                                     <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
                                 }
-                                {/* <Button title="Filter" onClick={this.handleFilterSeason} /> */}
                                 <Button title="Filter" onClick={this.checkFilters} />
 
                             </div>
@@ -320,7 +247,7 @@ class DashSeasons extends Component {
                         </div> */}
 
 
-                        <Filter data={this.state.data} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
+                        <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
 
                         {/* <Filter isVisible={this.state.isFilterVisible} data={this.state.data} filterType={'seasons'}/> */}
                     </div>
@@ -331,7 +258,7 @@ class DashSeasons extends Component {
 
                         { seasons && seasons.length <= 0 ? (
                             <div>
-                                Sorry, no seasons have been created. Start by adding a season above.
+                                {this.props.location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                             </div>
                         ) : (
                             <>

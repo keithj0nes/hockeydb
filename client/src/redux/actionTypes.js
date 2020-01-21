@@ -24,8 +24,6 @@ export const NEW_LOCATION = 'NEW_LOCATION';
 
 // Seasons 
 export const SET_CURRENT_SEASON = 'SET_CURRENT_SEASON';
-export const GET_SEASONS = 'GET_SEASONS';
-export const GET_SEASONS_SUCCESS = 'GET_SEASONS_SUCCESS';
 // export const CREATE_SEASON_SUCCESS = 'CREATE_SEASON_SUCCESS';
 export const UPDATE_SEASON_SUCCESS = 'UPDATE_SEASON_SUCCESS';
 
@@ -34,7 +32,7 @@ export const GET_DIVISIONS = 'GET_DIVISIONS';
 
 
 
-
+export const GET_INIT = 'GET_INIT';
 export const GET_SUCCESS = 'GET_SUCCESS';
 export const CREATE_SUCCESS = 'CREATE_SUCCESS';
 export const UPDATE_SUCCESS = 'UPDATE_SUCCESS';

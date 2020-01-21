@@ -1,6 +1,6 @@
 // SEASONS REDUCER!!
 
-import { GET_SEASONS, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, SET_CURRENT_SEASON } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, SET_CURRENT_SEASON } from '../actionTypes';
 
 const initialSeasonState = {
     isLoading: true,
@@ -17,7 +17,7 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
     switch (type) {
     case SET_CURRENT_SEASON:
         return { ...state, currentSeason: payload }
-    case 'seasons/GET_SEASONS':
+    case `seasons/${GET_INIT}`: //not being used yet
         return { ...state, isLoading: true }
     case `seasons/${GET_SUCCESS}`:
         return { ...state, isLoading: false, seasons: payload }

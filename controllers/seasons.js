@@ -30,6 +30,8 @@ const getSeasons = async (req, res) => {
         console.log('yo')
         delete newOne.show_hidden;
         newOne['hidden_date !='] = null;
+    } else {
+        newOne['hidden_date ='] = null;
     }
     
 

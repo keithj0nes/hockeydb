@@ -107,9 +107,9 @@ class Filter extends Component {
 }
 
 const mapStateToProps = (state, {filterType}) => {
-    console.log(state, 'STATE')
+    // console.log(state, 'STATE')
     return {
-        isVisible: state.seasons.isVisible
+        isVisible: state[filterType].isVisible
     }
 }
 
