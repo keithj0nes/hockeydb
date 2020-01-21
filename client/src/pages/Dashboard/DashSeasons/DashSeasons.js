@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getSeasons, deleteSeason, createSeason, updateSeason } from '../../../redux/actions/seasons';
+import { getSeasons, deleteSeason, createSeason, updateSeason, hideSeason } from '../../../redux/actions/seasons';
 import { Button, Filter } from '../../../components';
 
 import './DashSeasons.scss';
@@ -15,7 +15,7 @@ const defaultState = {
     seasonTypes: [{
         name: 'View All', value: ''
     },{
-        name: 'Regular Season', value: 'Regular Season'
+        name: 'Regular', value: 'Regular'
     },{
         name: 'Playoffs', value: 'Playoffs'
     },{
@@ -103,10 +103,28 @@ class DashSeasons extends Component {
         this.props.toggleModal({
             isVisible: true,
             title: 'Delete Season',
-            message: `Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
+            message: `Are you sure you want to hide this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
             toBeDeleted: item,
             deleteAction: () => this.props.deleteSeason(item.id),
         }, 'delete');
+    }
+
+    handleHideSeason = (item) => {
+        this.props.toggleModal({
+            isVisible: true,
+            isClosableOnBackgroundClick: true,
+            title: 'Hide Season',
+            message: item.hidden_date ? 
+            `Are you sure you want to unhide this season? This will cause the selected season to be visible on the public page` 
+            : 
+            `Are you sure you want to hide this season?\nThis will hide the season from both the admin dashboard and from the public page. You can view all hidden seasons using the filter. This does NOT delete the season`,
+            fields: [],
+            confirmActionTitle: 'Hide Season',
+            // confirmAction: () => console.log(this.state, 'this.state'),
+            // confirmAction: () => console.log(item, 'clicked to hide'),
+            confirmAction: () => this.props.updateSeason(item.id, {is_hidden: !!item.hidden_date ? false : true}),
+
+        }, 'prompt');
     }
 
     handleChange = edit => e => {
@@ -149,6 +167,8 @@ class DashSeasons extends Component {
 
         this.setState({ edit: item })
 
+
+        console.log(item, 'item!')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -332,8 +352,9 @@ class DashSeasons extends Component {
                                             key={item.id}
                                             item={item}
                                             sections={{ 'name': 'two', 'type': 'one' }}
-                                            onClick={() => this.handleDeleteSeason(item)}
+                                            onDelete={() => this.handleDeleteSeason(item)}
                                             onEdit={() => this.handleEditSeason(item)}
+                                            onHide={() => this.handleHideSeason(item)}
                                         />
                                     )
 

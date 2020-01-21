@@ -16,7 +16,7 @@ class DashSeasonsListItem extends Component {
     }
 
     render(){
-        const { onClick, item, sections, onEdit } = this.props;
+        const { onDelete, item, sections, onEdit, onHide } = this.props;
         // console.log(item, 'item!')
 
         const sectionKeys = Object.keys(sections);
@@ -59,13 +59,15 @@ class DashSeasonsListItem extends Component {
                             
                             {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
-                            {this.state.isEditing ? ( 
-                            <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
+                            {/* {this.state.isEditing ? ( 
+                                <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
 
-                            ):
+                            ): */}
                             
-                            <span onClick={onClick}>{'<delete>'}</span>
-                            }
+                            <span onClick={onDelete}>{'<delete>'}</span>
+                            <span onClick={onHide}>{'<hide>'}</span>
+
+                         {/* } */}
                         
                         </div>
                     </div>
@@ -76,7 +78,9 @@ class DashSeasonsListItem extends Component {
 }
 
 DashSeasonsListItem.propTypes = {
-    onClick: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onHide: PropTypes.func.isRequired,
     item: PropTypes.object.isRequired,
     sections: PropTypes.object.isRequired
 }

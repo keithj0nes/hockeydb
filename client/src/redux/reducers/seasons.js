@@ -6,7 +6,7 @@ const initialSeasonState = {
     isLoading: true,
     seasons: [],
     currentSeason: {},
-    seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
+    seasonTypes: ['Regular', 'Playoffs', 'Tournament'],
 
     //filter
     isVisible: false,

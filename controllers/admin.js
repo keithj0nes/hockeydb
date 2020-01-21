@@ -194,7 +194,7 @@ const createSeason = async (req, res) => {
 const updateSeason = async (req, res) => {
     const db = app.get('db');
 
-    const { type, name, is_active } = req.body;
+    const { type, name, is_active, is_hidden } = req.body;
 
     console.log(req.body, 'BODYDY')
     const { id } = req.params;
@@ -206,19 +206,32 @@ const updateSeason = async (req, res) => {
     }
 
     // const nameExists = await db.seasons.findOne({ name }).catch(err => console.log(err));
-    const nameExists = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
 
+    if(name){
 
-    console.log(nameExists[0].id, season.id, 'aheedsasldkg')
-    // console.log(nameExists.name.toUpperCase(), name.toUpperCase())
-
-    if(nameExists.length > 0 &&  (nameExists[0].id !== season.id )){
-        console.log('already ecists')
-        return res.status(200).send({ status: 409, data: [], message: 'Season already exists' })
-    } else {
-        console.log('working')
-        // return res.status(200).send({ status: 409, data: [], message: 'IT WORKS!!!' })
+        const nameExists = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
+    
+    
+        console.log(nameExists[0].id, season.id, 'aheedsasldkg')
+        // console.log(nameExists.name.toUpperCase(), name.toUpperCase())
+    
+        if(nameExists.length > 0 &&  (nameExists[0].id !== season.id )){
+            console.log('already ecists')
+            return res.status(200).send({ status: 409, data: [], message: 'Season already exists' })
+        }
     }
+
+    console.log(is_hidden, 'IS HIDDEEEEN')
+    if(is_hidden){
+        const data = await db.seasons.update({ id }, { hidden_date: new Date(), hidden_by: 1 }).catch(err => console.log(err, 'update season error'))
+
+        console.log(data, 'hiddeennn data')
+        return res.status(200).send({ status: 200, data: [], message: 'Season hidden' })
+
+    }
+
+    return res.status(200).send({ status: 200, data: [], message: 'Season visible' })
+
     console.log(is_active, 'isactuveeeee1')
     if(is_active){
         //search current is_active seasons -> set to false

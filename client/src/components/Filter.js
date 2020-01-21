@@ -23,7 +23,7 @@ class Filter extends Component {
         } else {
             filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         }
-        
+
         this.setState({filters}, () => console.log(this.state.filters, 'fitlers'))
         const search = qs.stringify(filters)
         this.props.getAction(search)
@@ -37,7 +37,7 @@ class Filter extends Component {
     
     render(){
         
-        const { isVisible, data, filterType } = this.props;
+        const { isVisible, data } = this.props;
         if(!isVisible) return null;
         console.log(this.state.filters, 'state.filtersss')
 
@@ -45,9 +45,9 @@ class Filter extends Component {
         return (
             <div style={{background: 'pink', display: 'flex', position: 'relative', padding: '10px 0'}}>
 
-                <div style={{position: 'absolute', top: 0, right: 0, display: 'flex'}}>
+                <div style={{position: 'absolute', top: 0, right: 0, display: 'flex', background: 'yellow'}}>
                     <p onClick={this.handleClear}>clear filters</p>
-                    <p onClick={() => this.props.toggleFilter()}>close</p>
+                    <p style={{marginLeft: 10}}onClick={() => this.props.toggleFilter()}>close</p>
                 </div>
                {data.map(d => {
                 // console.log(d, 'd')
@@ -121,14 +121,14 @@ const mapDispatchToProps = (dispatch, {filterType}) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
 
 
-// default value for chekcbox
-// add 'view all' for filtering selection
+//default value for checkbox
 
 // DONE/
 //make filter use dropdown instead of checkboxes for now 
 //use redux for state of isVisible
 //handle close (redux)
 //handle clear filters (redux)
+//add 'view all' for filtering selection
 
 
 
