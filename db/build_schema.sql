@@ -96,6 +96,8 @@ CREATE TABLE "seasons" (
   "updated_by" INTEGER,        -- REFERENCES users(id),
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER,        -- REFERENCES users(id),
+  "hidden_date" TIMESTAMP,
+  "hidden_by" INTEGER,        -- REFERENCES users(id),
   "is_active" BOOLEAN
 );
 
@@ -200,6 +202,8 @@ ALTER TABLE "player_stats" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id")
 ALTER TABLE "seasons" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "seasons" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 ALTER TABLE "seasons" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
+ALTER TABLE "seasons" ADD FOREIGN KEY ("hidden_by") REFERENCES "users" ("id");
+
 
 ALTER TABLE "divisions" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
 ALTER TABLE "divisions" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");

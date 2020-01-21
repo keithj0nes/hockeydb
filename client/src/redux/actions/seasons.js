@@ -1,17 +1,16 @@
 import { request } from './middleware';
-// import { GET_SEASONS, GET_SEASONS_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SET_CURRENT_SEASON } from '../actionTypes';
 
 
 
 export const getSeasons = (filter) => async dispatch => {
 
-    console.log(filter, 'FILTER GET SEASONS')
+    // console.log(filter, 'FILTER GET SEASONS')
 
     //use filter variable or empty string if null/undefined
     const data = await request(`/api/seasons?${filter || ''}`, 'GET', {}, true)
 
-    console.log(data,' DATA')
+    console.log(data,' DATA from getSeasons actions')
 
     dispatch({
         type: `seasons/${GET_SUCCESS}`,
@@ -23,15 +22,6 @@ export const getSeasons = (filter) => async dispatch => {
         type: TOGGLE_MODAL,
         modalProps: { isVisible: false }
     })
-
-            //simulate db
-    
-    // setTimeout(() => {
-    //     dispatch({
-    //         type: GET_SEASONS_SUCCESS,
-    //         payload: seasonData
-    //     })
-    // }, 2000);
 
     return true;
 }

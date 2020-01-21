@@ -38,7 +38,7 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
 
 // UPDATE DIVISIONS NOT WORKING 🚫🛑
 export const updateDivision = (id, divisionData) => async (dispatch, getState) => {
-  const { user } = getState();
+  // const { user } = getState();
 
   console.log(id, divisionData, 'UPDATE DIVISOINS NOT CONNECTED!!!')
 
