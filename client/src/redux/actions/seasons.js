@@ -10,7 +10,7 @@ export const getSeasons = (filter) => async dispatch => {
     //use filter variable or empty string if null/undefined
     const data = await request(`/api/seasons?${filter || ''}`, 'GET', {}, true)
 
-    console.log(data,' DATA from getSeasons actions')
+    // console.log(data,' DATA from getSeasons actions')
 
     dispatch({
         type: `seasons/${GET_SUCCESS}`,
@@ -50,6 +50,8 @@ export const createSeason = seasonData => async (dispatch, getState) => {
 }
 
 export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
+
+    console.log(id, seasonData, 'SEASON DATA')
     const { user } = getState();
 
     const data = await request(`/api/admin/seasons/${id}`, 'PUT', {access_token: user.access_token, data: seasonData})
@@ -58,13 +60,16 @@ export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
     if(!data) return;
 
 
-
-    //NOT CONNNECTED YET
     dispatch({
         type: `seasons/${UPDATE_SUCCESS}`,
         payload: data.data
     })
-
+    
+    dispatch({
+        type: TOGGLE_MODAL,
+        modalProps: { isVisible: false }
+    })
+    
     if(data.data.updateCurrentSeasonGlobally){
         console.log('setting globally!')
         dispatch({
@@ -72,13 +77,11 @@ export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
             payload: data.data
         })
     }
-
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: { isVisible: false }
-    })
-
     
+    if(data.message === 'Season hidden' || data.message === 'Season unhidden'){
+        // after hiding/unhiding, getSeasons again with filters
+        return 'getSeasons';
+    }
 }
 
 export const deleteSeason = id => async (dispatch, getState) => {

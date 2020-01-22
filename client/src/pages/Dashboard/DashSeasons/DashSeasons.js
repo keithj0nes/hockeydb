@@ -88,6 +88,7 @@ class DashSeasons extends Component {
     }
 
     handleHideSeason = (item) => {
+        // console.log(this.state.filters, 'filters before toggle modal')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: true,
@@ -97,10 +98,12 @@ class DashSeasons extends Component {
             : 
             `Are you sure you want to hide this season?\nThis will hide the season from both the admin dashboard and from the public page. You can view all hidden seasons using the filter. This does NOT delete the season`,
             fields: [],
-            confirmActionTitle: 'Hide Season',
-            // confirmAction: () => console.log(this.state, 'this.state'),
-            // confirmAction: () => console.log(item, 'clicked to hide'),
-            confirmAction: () => this.props.updateSeason(item.id, {is_hidden: !!item.hidden_date ? false : true}),
+            confirmActionTitle: `${item.hidden_date ? 'Unh': 'H'}ide Season`,
+            confirmAction: () => {
+                return this.props.updateSeason(item.id, {is_hidden: !!item.hidden_date ? false : true}).then((d) => {
+                    d === 'getSeasons' && this.props.getSeasons(this.props.location.search.slice(1))
+                })
+            },
 
         }, 'prompt');
     }
@@ -120,16 +123,16 @@ class DashSeasons extends Component {
         this.setState({filters: copy})
     }
 
-    handleFilterSubmit = () => {
-        // console.log(this.state.filters, 'submitting')
-        const filters = qs.stringify(this.state.filters);
-        console.log(filters, 'FILTERS')
-        this.props.getSeasons(filters)
-        this.setState({filterRequestSent: true})
-        this.props.history.push({
-            search: filters
-        })
-    }
+    // handleFilterSubmit = () => {
+    //     // console.log(this.state.filters, 'submitting')
+    //     const filters = qs.stringify(this.state.filters);
+    //     console.log(filters, 'FILTERS')
+    //     this.props.getSeasons(filters)
+    //     this.setState({filterRequestSent: true})
+    //     this.props.history.push({
+    //         search: filters
+    //     })
+    // }
 
     clearFilters = () => {
         this.setState({filters: {}, filterRequestSent: false}, () => {
@@ -211,7 +214,7 @@ class DashSeasons extends Component {
         // console.log(this.props, 'propss')
         
         // console.log(this.state.filterData, 'DATA')
-        
+        // console.log(this.state.filters, 'filters in render')
         //this should be it's own loading icon component
         if (this.props.isLoading) {
             return <div>Loading...</div>
@@ -248,8 +251,6 @@ class DashSeasons extends Component {
 
 
                         <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
-
-                        {/* <Filter isVisible={this.state.isFilterVisible} data={this.state.data} filterType={'seasons'}/> */}
                     </div>
                 </div>
 

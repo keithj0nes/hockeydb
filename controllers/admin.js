@@ -199,13 +199,17 @@ const updateSeason = async (req, res) => {
     console.log(req.body, 'BODYDY')
     const { id } = req.params;
 
-    const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
+    // const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
 
-    if (!season) {
-        return res.status(200).send({ status: 404, error: true, message: 'Season not found' })
+    // if (!season) {
+    //     return res.status(200).send({ status: 404, error: true, message: 'Season not found' })
+    // }
+    
+    if(req.body.hasOwnProperty('is_hidden')){
+        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: 1 } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update season error'))
+        console.log(data, 'NOT HIDING NAYMORE data')
+        return res.status(200).send({ status: 200, data: [], message: is_hidden ? 'Season hidden' : 'Season unhidden' })
     }
-
-    // const nameExists = await db.seasons.findOne({ name }).catch(err => console.log(err));
 
     if(name){
 
@@ -220,17 +224,11 @@ const updateSeason = async (req, res) => {
             return res.status(200).send({ status: 409, data: [], message: 'Season already exists' })
         }
     }
+    
 
-    console.log(is_hidden, 'IS HIDDEEEEN')
-    if(is_hidden){
-        const data = await db.seasons.update({ id }, { hidden_date: new Date(), hidden_by: 1 }).catch(err => console.log(err, 'update season error'))
 
-        console.log(data, 'hiddeennn data')
-        return res.status(200).send({ status: 200, data: [], message: 'Season hidden' })
 
-    }
-
-    return res.status(200).send({ status: 200, data: [], message: 'Season visible' })
+    // return res.status(200).send({ status: 200, data: [], message: 'Season visible' })
 
     console.log(is_active, 'isactuveeeee1')
     if(is_active){
