@@ -25,7 +25,7 @@ const loginFromCookie = async (req, res, next) => {
     const db = app.get('db');
 
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
-        console.log(user, err, info)
+        // console.log(user, err, info)
         if (err || !user) {
             // return res.status(200).send({ status: 401, error: true, message: err || "Unauthorized" })
             console.log(err)
@@ -33,7 +33,8 @@ const loginFromCookie = async (req, res, next) => {
 
         }
         req.user = user;
-        console.log(req.user, 'USER!')
+        // console.log(req.user, 'USER!')
+        console.log('logged in from cookie')
         const season = await db.seasons.findOne({is_active: true});
 
         // NEED TO CHANGE THIS TO BE OPTIMIZED
@@ -52,7 +53,7 @@ const login = async (req, res) => {
     const db = app.get('db');
     passport.authenticate('local-login', async (err, user, info) => {
         if (err || !user) {
-            console.log(err, user, info, 'error')
+            // console.log(err, user, info, 'error')
             // return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
             return res.send({ status: 404, error: true, message: info.message || 'Incorrect email or password.' })
 
@@ -63,7 +64,9 @@ const login = async (req, res) => {
                 console.log(errr, 'errr')
                 return res.status(500).send({ status: 500, error: true, message: `An error occurred: ${errr}` })
             }
-            console.log('logging in user: ', user)
+            // console.log('logging in user: ', user)
+            console.log('logged in from sign in')
+
             // const season = await db.query('SELECT * FROM seasons ORDER BY id DESC LIMIT 1')
             const season = await db.seasons.findOne({is_active: true});
 

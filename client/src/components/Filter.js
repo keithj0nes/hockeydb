@@ -14,6 +14,11 @@ class Filter extends Component {
         this.props.toggleFilter(false);
     }
 
+    // componentDidUpdate(prevProps){
+    //     console.log(prevProps.data[1], 'prev');
+    //     console.log(this.props.data[1], 'current');
+    // }
+
     handleChange = e => {
         const filters = {...this.state.filters};
         
@@ -24,22 +29,23 @@ class Filter extends Component {
             filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         }
 
-        this.setState({filters}, () => console.log(this.state.filters, 'fitlers'))
-        const search = qs.stringify(filters)
-        this.props.getAction(search)
-        this.props.history.push({search})
+        this.setState({filters}, () => console.log(this.state.filters, 'fitlers'));
+        const search = qs.stringify(filters);
+        this.props.getAction(search);
+        this.props.history.push({search});
     }
 
     handleClear = () => {
-        this.props.history.push({search: ''})
-        this.props.getAction()
+        this.props.history.push({search: ''});
+        this.props.getAction();
+        this.setState({filters: {}});
     }
     
     render(){
         
         const { isVisible, data } = this.props;
         if(!isVisible) return null;
-        console.log(this.state.filters, 'state.filtersss')
+        console.log(this.state.filters, 'state.filtersss');
 
         
         return (

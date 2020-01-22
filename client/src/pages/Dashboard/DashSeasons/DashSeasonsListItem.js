@@ -71,7 +71,7 @@ class DashSeasonsListItem extends Component {
                             
                             
                             <span onClick={onDelete}>{'<delete>'}</span>
-                            <span onClick={onHide}>{'<hide>'}</span>
+                            {!item.is_active && <span onClick={onHide}>{'<hide>'}</span>}
 
                          {/* } */}
                         
