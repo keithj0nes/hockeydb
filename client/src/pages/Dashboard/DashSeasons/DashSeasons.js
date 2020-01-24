@@ -16,7 +16,6 @@ const defaultState = {
         {name: 'Playoffs',   value: 'Playoffs'},
         {name: 'Tournament', value: 'Tournament'}
     ],
-
     name: '',
     type: 'Regular',
     is_active: false,
@@ -34,16 +33,19 @@ class DashSeasons extends Component {
     state = defaultState;
 
     componentDidMount() {
-        //check for query params
+        //check for query params on page load
         if(this.props.location.search.length > 0){
-            console.log('getting season with filter)')
-            this.props.getSeasons(this.props.location.search.slice(1)).then(res => {
-                   res && this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
+            return this.props.getSeasons(this.props.location.search.slice(1)).then(res => {
+                   return res && this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
             });
-        } else {
-            console.log('no search params, getting seasons')
-            this.props.getSeasons();
         }
+
+
+        console.log('getting here')
+        
+            return this.props.getSeasons();
+        
+
     }
 
     handleAddSeason = () => {
@@ -63,7 +65,7 @@ class DashSeasons extends Component {
                     type: 'select',
                     name: 'type',
                     defaultValue: null,
-                    listOfSelects: this.state.seasonTypes.splice(1)
+                    listOfSelects: [...this.state.seasonTypes].splice(1)
                 },
             ],
             onChange: this.handleChange(),
@@ -88,7 +90,6 @@ class DashSeasons extends Component {
     }
 
     handleHideSeason = (item) => {
-        // console.log(this.state.filters, 'filters before toggle modal')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: true,
@@ -104,7 +105,6 @@ class DashSeasons extends Component {
                     d === 'getSeasons' && this.props.getSeasons(this.props.location.search.slice(1))
                 })
             },
-
         }, 'prompt');
     }
 
@@ -117,11 +117,11 @@ class DashSeasons extends Component {
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
-    handleFilterChange = e => {
-        const copy = {...this.state.filters};
-        copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        this.setState({filters: copy})
-    }
+    // handleFilterChange = e => {
+    //     const copy = {...this.state.filters};
+    //     copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    //     this.setState({filters: copy})
+    // }
 
     // handleFilterSubmit = () => {
     //     // console.log(this.state.filters, 'submitting')
@@ -145,9 +145,7 @@ class DashSeasons extends Component {
 
     handleEditSeason = (item) => {
         this.setState({ edit: item })
-        console.log(item, 'item in handleEditSeason')
-
-        console.log(this.state.seasonTypes, 'seasontipes!!')
+        // console.log(item, 'item in handleEditSeason')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -164,9 +162,7 @@ class DashSeasons extends Component {
                     type: 'select',
                     name: 'type',
                     defaultValue: item.type,
-                    // listOfSelects: this.state.seasonTypes.splice(1)
                     listOfSelects: [...this.state.seasonTypes].slice(1)
-
                 },
                 {
                     title: item.is_active ? 'Active Season' : 'Set To Active Season',
@@ -183,9 +179,7 @@ class DashSeasons extends Component {
     }
 
     checkFilters = () => {
-
-        // console.log(this.props.location.search, 'search!')
-
+        //set filter data and toggle filter component
         const filterData = [{
             title: 'Type',
             options: [{
@@ -206,15 +200,10 @@ class DashSeasons extends Component {
         }]
 
         this.setState({filterData}, () => this.props.toggleFilter())
-
     }
 
 
     render() {
-        // console.log(this.props, 'propss')
-        
-        // console.log(this.state.filterData, 'DATA')
-        // console.log(this.state.filters, 'filters in render')
         //this should be it's own loading icon component
         if (this.props.isLoading) {
             return <div>Loading...</div>
@@ -306,13 +295,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getSeasons: (filters) => dispatch(getSeasons(filters)),
+        getSeasons: filters => dispatch(getSeasons(filters)),
         createSeason: data => dispatch(createSeason(data)),
         deleteSeason: id => dispatch(deleteSeason(id)),
         updateSeason: (id, data) => dispatch(updateSeason(id, data)),
         toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
         toggleFilter: () => dispatch(toggleFilter('seasons'))
-
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(DashSeasons) 
