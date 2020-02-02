@@ -1,76 +1,27 @@
 const app = require('../server.js');
 
+const filter = (query) => {
+    const q = {...query};
+    if(q.show_hidden){
+        delete q.show_hidden;
+        q['hidden_date !='] = null;
+    } else {
+        q['hidden_date ='] = null;
+    }
+    q["deleted_date ="] = null;
+    return q;
+  }
 
 const getSeasons = async (req, res) => {
     const db = app.get('db');
 
     console.log(req.query, 'QUERYRYYY')
-    
-    if(Object.keys(req.query).length === 0){
-        console.log('NO QURY')
 
-        const data = await db.seasons.find({"deleted_date =": null, "hidden_date": null}).catch(err => console.log(err));
-        return res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
-    }
+    const query = filter(req.query);
 
-    var fields = []
-    for (const key in req.query) {
-        console.log(key, req.query[key])
-        fields.push(key)
-    }
-
-    console.log(fields, 'fields!')
-    // const data = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
-    // return res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
-
-    let newOne = {...req.query}
-
-    console.log(newOne, 'NEW ONE BEORRREEE')
-    if(newOne.show_hidden){
-        console.log('yo')
-        delete newOne.show_hidden;
-        newOne['hidden_date !='] = null;
-    } else {
-        newOne['hidden_date ='] = null;
-    }
-    
-
-    console.log(newOne, 'NEW ONE AFTER')
-    // const whatev = !req.query.show_hidden && null;
-    // let whatev;
-    // if(!req.query.show_hidden){
-    //     whatev = null;
-    // }
-
-    // let obj = {
-    //     // ...req.query.type && {type: req.query.type} ,
-    //     // ...!req.query.show_hidden && {'hidden_date =': null} ,
-
-    //     'hidden_date !=': null
-    // }
-
-
-    // console.log(whatev,' whatever')
-    const data = await db.seasons.find({
-        "deleted_date =": null,
-        ...newOne
-        // ...obj
-        // type: req.query.type,
-        // ...req.query.type && {type: req.query.type} ,
-        // ...!req.query.show_hidden && {'hidden_date =': null} ,
-        // "hidden_date": whatev
-        // "hidden_date =": !req.query.show_hidden && null 
-        // ...req.query
-    }).catch(err => console.log(err));
-
-
-      console.log(data,' DAAATTTAAA')
+    const data = await db.seasons.find({...query}).catch(err => console.log(err));
 
     res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
-
-
-
-
 }
 
 
