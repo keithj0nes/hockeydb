@@ -40,12 +40,7 @@ class DashSeasons extends Component {
             });
         }
 
-
-        console.log('getting here')
-        
-            return this.props.getSeasons();
-        
-
+        return this.props.getSeasons();
     }
 
     handleAddSeason = () => {
@@ -74,7 +69,10 @@ class DashSeasons extends Component {
         }, 'prompt');
     }
 
-    validation = () => {
+    validation = (edit) => {
+        if(!!edit){
+            return !this.state.edit.name ? false : true;
+        }
         if (!this.state.name) return false;
         return true;
     }
@@ -145,7 +143,7 @@ class DashSeasons extends Component {
 
     handleEditSeason = (item) => {
         this.setState({ edit: item })
-        // console.log(item, 'item in handleEditSeason')
+        console.log(item, 'itemss')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -174,7 +172,7 @@ class DashSeasons extends Component {
             ],
             onChange: this.handleChange('editing'),
             confirmActionTitle: 'Update Season',
-            confirmAction: () => this.validation() && this.props.updateSeason(item.id, this.state.edit),
+            confirmAction: () => this.validation('edit') && this.props.updateSeason(item.id, this.state.edit),
         }, 'prompt');
     }
 

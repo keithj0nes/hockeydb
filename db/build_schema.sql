@@ -178,10 +178,6 @@ CREATE TABLE "games" (
 );
 
 
---==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
---==--==--==--==--==--==--       Add Foreign Keys       --==--==--==--==--==--==--
---==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
-
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
 --==--==--==--==--==--     Add Foreign Keys     --==--==--==--==--==--
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
@@ -203,7 +199,6 @@ ALTER TABLE "seasons" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "seasons" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 ALTER TABLE "seasons" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 ALTER TABLE "seasons" ADD FOREIGN KEY ("hidden_by") REFERENCES "users" ("id");
-
 
 ALTER TABLE "divisions" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
 ALTER TABLE "divisions" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
