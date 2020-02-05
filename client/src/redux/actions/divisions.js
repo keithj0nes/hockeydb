@@ -1,14 +1,50 @@
 import { request } from './middleware';
-import { GET_DIVISIONS, TOGGLE_MODAL } from '../actionTypes';
+import { GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 
 
 // GET DIVISIONS WORKING 🌟
 export const getDivisions = (season_id) => async dispatch => {
-  // console.log(season_id, 'season ID!')
+  console.log(season_id, 'season ID!')
   const data = await request(`/api/divisions/${season_id}`, 'GET', {}, true)
+  console.log(data, 'dataaa')
   if (!data.data) return false;
-  return dispatch({ type: GET_DIVISIONS, payload: data.data })
+
+  dispatch({
+      type: `divisions/${GET_SUCCESS}`,
+      payload: data.data.divisions
+  })
+
+  dispatch({
+    type: `seasons/${GET_SUCCESS}`,
+    payload: data.data.seasons
+  })
+
+  dispatch({
+      type: TOGGLE_MODAL,
+      modalProps: { isVisible: false }
+  })
+
+  return true;
 }
+
+
+// export const getSeasons = (filter) => async dispatch => {
+
+//   //use filter variable or empty string if null/undefined
+//   const data = await request(`/api/seasons?${filter || ''}`, 'GET', {}, true)
+
+//   dispatch({
+//       type: `seasons/${GET_SUCCESS}`,
+//       payload: data.data
+//   })
+
+//   dispatch({
+//       type: TOGGLE_MODAL,
+//       modalProps: { isVisible: false }
+//   })
+
+//   return true;
+// }
 
 
 

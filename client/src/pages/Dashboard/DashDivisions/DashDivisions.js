@@ -10,26 +10,17 @@ import { toggleModal } from '../../../redux/actions/misc';
 
 const defaultState = {
     isAddDivisionVisible: false,
-    // seasonTypes: ['Regular Season', 'Playoffs', 'Tournament'],
     name: '',
-    // type: 'Regular Season',
-    // is_active: false,
     edit: {},
     currentSeasonSelected: ''
 }
 
-
 class DashDivisions extends Component {
-
-    // state = {
-    //     isAddDivisionVisible: false,
-    //     newDivisionName: '',
-    // }    
     
     state = defaultState;
 
     componentDidMount() {
-        console.log(this.props, 'PROPS!!')
+        console.log(this.props, 'DID MOUNT DASH DIVVVVV')
         // if (this.props.divisions.length <= 0) {
             this.props.getDivisions(this.props.currentSeason.id);
         // }
@@ -182,7 +173,8 @@ class DashDivisions extends Component {
 
         const { divisions } = this.props;
 
-        console.log(this.props.currentSeason, 'currenseasons')
+console.log(divisions, 'div')
+        // console.log(this.props.currentSeason, 'currenseasons')
         return (
             <div>
 
@@ -243,7 +235,6 @@ class DashDivisions extends Component {
                                 </div>
 
                                 {divisions.map(item => {
-
                                     return (
                                         <ListItem 
                                             key={item.id} 
@@ -265,6 +256,7 @@ class DashDivisions extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state.divisions, 'dffef')
     return {
         divisions: state.divisions.divisions,
         seasons: state.seasons.seasons,

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getTeams, createTeam } from '../../../redux/actions/teamsActions';
+import { getDivisions } from '../../../redux/actions/divisions';
+
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import { Button, Filter } from '../../../components';
 import ListItem from '../ListItem';
-import qs from 'query-string';
+// import qs from 'query-string';
 
 const defaultState = {
-    divison_id: null,
+    division_id: null,
     name: '',
     colors: '',
     filters: {
@@ -19,13 +21,18 @@ const defaultState = {
 
 class DashTeams extends Component {
 
-   state = defaultState
+   state = defaultState;
 
     componentDidMount() {
         this.props.getTeams();
+        if(!this.props.divisions.length){
+            this.props.getDivisions(1);
+            // this.props.getDivisions(this.props.currentSeason.id);
+        }
     }
 
     handleChange = e => {
+        console.log(e.target.name, e.target.value,  'aye')
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
@@ -44,9 +51,11 @@ class DashTeams extends Component {
                 {
                     title: 'Division',
                     type: 'select',
-                    name: 'division',
+                    name: 'division_id',
                     defaultValue: null,
-                    listOfSelects: [{name: 'select', value: null}, ...this.props.divisions]
+                    // listOfSelects: [{name: 'select', value: null}, ...this.props.divisions]
+                    listOfSelects: this.props.divisions
+
                 },
                 {
                     title: 'Team Colors',
@@ -58,7 +67,7 @@ class DashTeams extends Component {
             ],
             onChange: this.handleChange,
             confirmActionTitle: 'Create Season',
-            confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.divison_id, colors: this.state.colors  }); this.setState(defaultState) },
+            confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors  }); this.setState(defaultState) },
         }, 'prompt');
     }
 
@@ -75,7 +84,9 @@ class DashTeams extends Component {
                     type: 'select',
                     name: 'division',
                     defaultValue: this.state.filters.division,
-                    listOfSelects: this.props.divisions,
+                    // listOfSelects: this.props.divisions,
+                    listOfSelects: [{name: 'View All', value: ''}, ...this.props.divisions],
+
                     hiddenValue: 'Select a Division'
                 }]
             },{
@@ -96,46 +107,46 @@ class DashTeams extends Component {
         this.setState({data: teamFilterData}, () => this.props.toggleFilter())
 
         // {name, value, isChecked}
-        console.log(this.state.filters.type, 'tiler time')
-        console.log(this.state.seasonTypes, 'seasontimes')
+        // console.log(this.state.filters.type, 'tiler time')
+        // console.log(this.state.seasonTypes, 'seasontimes')
 
 
     }
 
-    handleFilterChange = e => {
-        const copy = {...this.state.filters};
-        copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        this.setState({filters: copy})
-    }
+    // handleFilterChange = e => {
+    //     const copy = {...this.state.filters};
+    //     copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    //     this.setState({filters: copy})
+    // }
 
-    handleFilterSubmit = () => {
-        // console.log(this.state.filters, 'submitting')
-        const filters = qs.stringify(this.state.filters);
-        console.log(filters, 'FILTERS')
-        this.props.getTeams(filters)
-        this.setState({filterRequestSent: true})
-        this.props.history.push({
-            search: filters
-        })
-    }
+    // handleFilterSubmit = () => {
+    //     // console.log(this.state.filters, 'submitting')
+    //     const filters = qs.stringify(this.state.filters);
+    //     // console.log(filters, 'FILTERS')
+    //     this.props.getTeams(filters)
+    //     this.setState({filterRequestSent: true})
+    //     this.props.history.push({
+    //         search: filters
+    //     })
+    // }
 
-    clearFilters = () => {
-        this.setState({filters: {}, filterRequestSent: false}, () => {
-            this.props.getTeams(qs.stringify(this.state.filters))
-            this.props.history.push({
-                search: null
-            })
-        })
-    }
+    // clearFilters = () => {
+    //     this.setState({filters: {}, filterRequestSent: false}, () => {
+    //         this.props.getTeams(qs.stringify(this.state.filters))
+    //         this.props.history.push({
+    //             search: null
+    //         })
+    //     })
+    // }
 
-    getDivisionNameById = (id) => {
-        const { divisions } = this.props;
-        for(let div in divisions){
-            if(divisions[div].id === id){
-                return divisions[div].name
-            }
-        }
-    }
+    // getDivisionNameById = (id) => {
+    //     const { divisions } = this.props;
+    //     for(let div in divisions){
+    //         if(divisions[div].id === id){
+    //             return divisions[div].name
+    //         }
+    //     }
+    // }
 
     render() {
         const { teams } = this.props
@@ -151,14 +162,14 @@ class DashTeams extends Component {
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Button title="Add Team" onClick={this.handleAddTeam} />
 
-                        <div>
+                        {/* <div>
                             {
                                 Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
                                 <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
                             }
-                            <Button title="Filter" onClick={this.checkFilters} />
-
-                        </div>
+                            
+                        </div> */}
+                        <Button title="Filter" onClick={this.checkFilters} />
                     </div>
                     <Filter data={this.state.data} getAction={this.props.getTeams} history={this.props.history} filterType={'teams'}/>
                 </div>
@@ -184,8 +195,8 @@ class DashTeams extends Component {
                             </div>
 
                             {teams.map(item => {
-                                item.division_name = this.getDivisionNameById(item.division_id)
-                                console.log(item, 'hiiiiiiiii')
+                                // console.log(item, 'item!')
+                                // item.division_name = this.getDivisionNameById(item.division_id)
                                 return (
                                     <ListItem
                                         key={item.id}
@@ -208,7 +219,7 @@ class DashTeams extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('state:::', state)
+    // console.log('state:::', state)
     return {
         teams: state.teams.teams,
         isLoading: state.teams.isLoading,
@@ -219,6 +230,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getTeams: (filters) => dispatch(getTeams(filters)),
+        getDivisions: (season_id) => dispatch(getDivisions(season_id)),
         createTeam: data => dispatch(createTeam(data)),
         // deleteTeam: id => dispatch(deleteSeason(id)),
         // updateTeams: (id, data) => dispatch(updateTeams(id, data)),

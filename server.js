@@ -5,7 +5,7 @@ const cors = require('cors');
 const config = require('./config');
 
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 
 
@@ -16,7 +16,7 @@ require('dotenv').config();
 const app = module.exports = express();
 const port = process.env.PORT || config.PORT;
 
-const version = 'v1';
+// const version = 'v1';
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -141,6 +141,7 @@ app.get(`/api/locations`, locations.getLocations)
 
 // Divisions
 app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
+// app.get(`/api/divisions/:season_id`, divisions.getDivisionById);
 
 
 // ⭐ ️ ADMIN  ⭐️
