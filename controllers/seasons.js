@@ -10,7 +10,7 @@ const filter = (query) => {
     }
     q["deleted_date ="] = null;
     return q;
-  }
+}
 
 const getSeasons = async (req, res) => {
     const db = app.get('db');
