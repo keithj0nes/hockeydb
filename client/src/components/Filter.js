@@ -39,6 +39,7 @@ class Filter extends Component {
         this.props.history.push({search: ''});
         this.props.getAction();
         this.setState({filters: {}});
+        this.props.toggleFilter();
     }
     
     render(){
