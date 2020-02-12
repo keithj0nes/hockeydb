@@ -14,7 +14,7 @@ export const divisions = (state = initialDivisionState, { type, payload }) => {
     case 'divisions/GET':
         return { ...state, isLoading: true }
     case `divisions/${GET_SUCCESS}`:
-        console.log('payload:::', payload)
+        console.log('reducer payload:::', payload)
         return { ...state, isLoading: false, divisions: payload }
     case `divisions/${CREATE_SUCCESS}`:
         // return { ...state, isLoading: false, divisions: [payload, ...state.divisions]}

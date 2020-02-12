@@ -33,7 +33,7 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
   
   console.log(filter, 'FILTER GET SEASONS')
   
-  console.log(getState(), 'ha!')
+  // console.log(getState(), 'ha!')
   
   const { seasons: { currentSeason } } = getState();
   // const s = filter.season ? filter.season : currentSeason.id;
@@ -44,10 +44,11 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
   
   if(!filter){
     console.log('hitting no filter')
-    filter = {
-      name: currentSeason.name
-    }
-    filter = qs.stringify(filter);
+    filter = `season_name=${currentSeason.name}`
+    // filter = {
+    //   name: currentSeason.name
+    // }
+    // filter = qs.stringify(filter);
   } 
   filter = filter.replace(/season_/g, '')
   // else { 
@@ -74,7 +75,6 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
     type: `seasons/${GET_SUCCESS}`,
     payload: data.data.seasons
   })
-
 
   dispatch({
       type: TOGGLE_MODAL,
@@ -122,7 +122,9 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
   })
 
   // return dispatch(getDivisions(divisionData.season_id))
-  return dispatch(getDivisions({season_name: divisionData.season_name}));
+  // return dispatch(getDivisions({season_name: divisionData.season_name}));
+  return dispatch(getDivisions(`season_name=${divisionData.season_name}`));
+
 
 }
 
