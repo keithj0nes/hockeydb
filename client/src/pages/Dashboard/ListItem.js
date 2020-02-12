@@ -17,7 +17,7 @@
 
 //     render(){
 //         const { onClick, item, sections, onEdit } = this.props;
-//         return ( 
+//         return (
 //             <div className="dashboard-list-item">
 //                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
 
@@ -41,19 +41,19 @@
 
 //                     <div className="flex-one hide-mobile">
 //                         {/* <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span> */}
-                        
+
 //                         <span onClick={onEdit}>{'<edit>'}</span>
 
 //                         {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
-//                         {this.state.isEditing ? ( 
+//                         {this.state.isEditing ? (
 //                         <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
 
 //                         ):
-                        
+
 //                         <span onClick={onClick}>{'<delete>'}</span>
 //                         }
-                    
+
 //                     </div>
 //                 </div>
 //             </div>
@@ -75,6 +75,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 
+import Edit from '../../assets/icons/edit_icon.svg';
+import Delete from '../../assets/icons/delete_icon.svg';
+
 
 class ListItem extends Component {
 
@@ -92,7 +95,7 @@ class ListItem extends Component {
         const { onClick, item, sections, onEdit } = this.props;
 
         const sectionKeys = Object.keys(sections);
-        return ( 
+        return (
             <div className="dashboard-list-item">
 
                 <div className="hide-desktop">
@@ -109,14 +112,14 @@ class ListItem extends Component {
 
                 </div>
 
-               <div className="hide-mobile">
+                <div className="hide-mobile">
 
                     <div style={{display: 'flex', justifyContent: 'space-between'}} >
 
-                  
+
 
                         {sectionKeys.map(section => {
-                            
+
                             return !this.state.isEditing ? (
                                 <p key={section} className={`flex-${sections[section]}`}>{item[section]} {item.is_active && section === sectionKeys[0] && '- (current)'}</p>
                             ) : (
@@ -124,21 +127,21 @@ class ListItem extends Component {
                             )
                         })}
 
-            
+
                         <div className="flex-one hide-mobile">
                             {/* <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span> */}
-                            <span onClick={onEdit}>{'<edit>'}</span>
-                            
+                            <span style={{cursor: "pointer", paddingRight: 10}} onClick={onEdit}><img src={Edit} width="25px" alt=""/></span>
+
                             {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
-                            {this.state.isEditing ? ( 
-                            <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
+                            {this.state.isEditing ? (
+                                    <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
 
-                            ):
-                            
-                            <span onClick={onClick}>{'<delete>'}</span>
+                                ):
+
+                                <span style={{cursor: "pointer"}} onClick={onClick}><img src={Delete} width="25px" alt=""/></span>
                             }
-                        
+
                         </div>
                     </div>
                 </div>
