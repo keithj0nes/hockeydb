@@ -100,7 +100,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 
 // ROUTES //
 
-// Teams
+// Seasons
 app.get(`/api/seasons/`, seasons.getSeasons);
 app.get(`/api/seasons/:id`, seasons.getSeasonById);
 
@@ -140,7 +140,9 @@ app.get(`/api/about`)
 app.get(`/api/locations`, locations.getLocations)
 
 // Divisions
-app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
+// app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
+app.get(`/api/divisions/`, divisions.getAllDivisions);
+
 // app.get(`/api/divisions/:season_id`, divisions.getDivisionById);
 
 

@@ -97,7 +97,7 @@ CREATE TABLE "seasons" (
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER,        -- REFERENCES users(id),
   "hidden_date" TIMESTAMP,
-  "hidden_by" INTEGER,        -- REFERENCES users(id),
+  "hidden_by" INTEGER,         -- REFERENCES users(id),
   "is_active" BOOLEAN
 );
 
@@ -110,7 +110,9 @@ CREATE TABLE "divisions" (
   "updated_date" TIMESTAMP,
   "updated_by" INTEGER,        -- REFERENCES users(id),
   "deleted_date" TIMESTAMP,
-  "deleted_by" INTEGER         -- REFERENCES users(id),
+  "deleted_by" INTEGER,        -- REFERENCES users(id),
+  "hidden_date" TIMESTAMP,
+  "hidden_by" INTEGER          -- REFERENCES users(id),
 );
 
 CREATE TABLE "teams" (
@@ -204,6 +206,7 @@ ALTER TABLE "divisions" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id"
 ALTER TABLE "divisions" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "divisions" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 ALTER TABLE "divisions" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
+ALTER TABLE "divisions" ADD FOREIGN KEY ("hidden_by") REFERENCES "users" ("id");
 
 ALTER TABLE "teams" ADD FOREIGN KEY ("division_id") REFERENCES "divisions" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");

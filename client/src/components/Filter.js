@@ -61,7 +61,7 @@ class Filter extends Component {
                         <div style={{flex: 1, marginRight: 10}} key={d.title}>
                             <h3>{d.title}</h3>
                             {d.options.map(field => {
-                                // console.log(field, 'field')
+                                console.log(field, 'field')
                                 return (
                                     <div key={field.name}>
 
