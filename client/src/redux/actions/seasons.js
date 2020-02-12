@@ -5,7 +5,7 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SET_CURRENT_
 
 export const getSeasons = (filter) => async dispatch => {
 
-    // console.log(filter, 'FILTER GET SEASONS')
+    console.log(filter, 'FILTER GET SEASONS')
 
     //use filter variable or empty string if null/undefined
     const data = await request(`/api/seasons?${filter || ''}`, 'GET', {}, true)

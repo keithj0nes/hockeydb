@@ -3,6 +3,7 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
 const initialDivisionState = {
     isLoading: true,
     divisions: [],
+    selectedSeasonName: '',
     //filter
     isVisible: false,
     
