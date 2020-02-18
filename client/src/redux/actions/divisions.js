@@ -1,6 +1,6 @@
 import { request } from './middleware';
 import { GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-import qs from 'query-string';
+// import qs from 'query-string';
 
 // GET DIVISIONS WORKING 🌟
 // export const getDivisions = (season_id) => async dispatch => {
@@ -31,33 +31,14 @@ import qs from 'query-string';
 export const getDivisions = (filter) => async (dispatch, getState) => {
 
   
-  console.log(filter, 'FILTER GET SEASONS')
-  
-  // console.log(getState(), 'ha!')
-  
-  const { seasons: { currentSeason } } = getState();
-  // const s = filter.season ? filter.season : currentSeason.id;
-  // filter.season = filter.season || currentSeason.id;
-  // console.log(s, 's')
-  //   console.log(filter[s])
-  //   filter[s] = s;
+  // console.log(filter, 'FILTER GET SEASONS')
   
   if(!filter){
+    const { seasons: { currentSeason } } = getState();
     console.log('hitting no filter')
-    filter = `season_name=${currentSeason.name}`
-    // filter = {
-    //   name: currentSeason.name
-    // }
-    // filter = qs.stringify(filter);
+    filter = `season=${currentSeason.name}`
   } 
-  filter = filter.replace(/season_/g, '')
-  // else { 
-  //   console.log('there is a filter')
-  //   filter = {
-  //     season_id: filter
-  //   }
-  // }
-  console.log(filter, 'YOOOO');
+  // console.log(filter, 'YOOOO');
 
   //use filter variable or empty string if null/undefined
   // const data = await request(`/api/divisions/${season_id}`, 'GET', {}, true)

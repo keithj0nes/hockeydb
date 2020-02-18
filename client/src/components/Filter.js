@@ -14,25 +14,26 @@ class Filter extends Component {
         this.props.toggleFilter(false);
     }
 
-    // componentDidUpdate(prevProps){
-    //     console.log(prevProps.data[1], 'prev');
-    //     console.log(this.props.data[1], 'current');
-    // }
-
     handleChange = e => {
         const filters = {...this.state.filters};
         
-        //if no value, delete from the filters copy
+        // if no value, delete from the filters copy
         if(e.target.value === '' || e.target.checked === false){
             delete filters[e.target.name];
         } else {
             filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         }
 
-        this.setState({filters}, () => console.log(this.state.filters, 'fitlers'));
-        const search = qs.stringify(filters);
-        this.props.getAction(search);
-        this.props.history.push({search});
+        this.setState(prevState => {
+            // delete the divisions key off filters when the props.reloadOn of state.filters is changed
+            if(prevState.filters[this.props.reloadOn] !== filters[this.props.reloadOn]){
+                delete filters['division'];
+            }
+            const search = qs.stringify(filters);
+            this.props.getAction(search);
+            this.props.history.push({search});
+            return {filters}
+        })
     }
 
     handleClear = () => {
@@ -46,7 +47,7 @@ class Filter extends Component {
         
         const { isVisible, data } = this.props;
         if(!isVisible) return null;
-        console.log(this.state.filters, 'state.filtersss');
+        console.log(this.state.filters, 'state.filters in FILTER component');
 
         
         return (
@@ -54,7 +55,7 @@ class Filter extends Component {
 
                 <div style={{position: 'absolute', top: 0, right: 0, display: 'flex', background: 'yellow'}}>
                     <p onClick={this.handleClear}>clear filters</p>
-                    <p style={{marginLeft: 10}}onClick={() => this.props.toggleFilter()}>close</p>
+                    {/* <p style={{marginLeft: 10}} onClick={() => this.props.toggleFilter()}>close</p> */}
                 </div>
                {data.map(d => {
                 // console.log(d, 'd')
@@ -62,7 +63,7 @@ class Filter extends Component {
                         <div style={{flex: 1, marginRight: 10}} key={d.title}>
                             <h3>{d.title}</h3>
                             {d.options.map(field => {
-                                console.log(field, 'field')
+                                // console.log(field, 'field')
                                 return (
                                     <div key={field.name}>
 
@@ -99,7 +100,6 @@ class Filter extends Component {
 
                                         )}
 
-
                                     </div>
                                 )
                             })}     
@@ -126,20 +126,6 @@ const mapDispatchToProps = (dispatch, {filterType}) => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
-
-
-//default value for checkbox
-
-// DONE/
-//make filter use dropdown instead of checkboxes for now 
-//use redux for state of isVisible
-//handle close (redux)
-//handle clear filters (redux)
-//add 'view all' for filtering selection
-
-
-
-
 
 
 ////////////////

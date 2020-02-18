@@ -1,31 +1,43 @@
 import { request } from './middleware';
-import { GET_TEAMS, GET_SUCCESS, TOGGLE_MODAL, CREATE_SUCCESS } from '../actionTypes';
+import { GET_SUCCESS, TOGGLE_MODAL, CREATE_SUCCESS } from '../actionTypes';
 
 
 
-export const sendTeams = data => ({ type: GET_TEAMS, payload: data })
 
 export const getTeams = (filter) => async (dispatch, getState) => {
   const { seasons: { currentSeason }  } = getState();
 
-  //use filter variable or empty string if null/undefined
+  // console.log(filter, 'filter!')
+  //use filter variable if empty string or null/undefined
 
-  // filter = 'division_id=1';
+  if(!filter){
+      filter = `season=${currentSeason.name}`;
+  } else {
+    if(!filter.includes('season')){
+      filter += `&season=${currentSeason.name}`;
+    }
+  }
+
+  // console.log(filter, 'filter TWOOOOOO')
+
   const data = await request(`/api/teams?${filter || ''}`, 'GET', {}, true);
-  // const divisions = await request(`/api/divisions/${currentSeason.id}`, 'GET', {}, true);
 
-  console.log(data, 'DATA IN TEAMSACITON!!!')
-  // console.log(divisions, 'divison')
   if (!data.data) return false;
+
   dispatch({
       type: `teams/${GET_SUCCESS}`,
-      payload: data.data
+      payload: data.data.teams
   })
-  // if(!divisions) return;
-  // dispatch({
-  //   type: `divisions/${GET_SUCCESS}`,
-  //   payload: divisions.data.divisions
-  // })
+
+  dispatch({
+    type: `divisions/${GET_SUCCESS}`,
+    payload: data.data.divisions
+  })
+
+  dispatch({
+    type: `seasons/${GET_SUCCESS}`,
+    payload: data.data.seasons
+  })
 
   dispatch({
       type: TOGGLE_MODAL,
