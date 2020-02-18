@@ -30,7 +30,6 @@ export const teams = (state = initialteamstate, { type, payload }) => {
             })
         return  { ...state, isLoading: false, teams: newteams }
     case 'teams/FILTER_IS_VISIBLE':
-        console.log('in here')
         //if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)
         //otherwise just set it to the opposite of what it's currently set to
         return { ...state, isVisible: typeof(payload) !== 'undefined' ? payload : !state.isVisible }

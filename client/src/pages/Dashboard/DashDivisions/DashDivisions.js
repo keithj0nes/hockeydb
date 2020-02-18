@@ -60,7 +60,7 @@ class DashDivisions extends Component {
 
         // const m = qs.parse(this.props.location.search) || this.props.currentSeason.name;
 
-        const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season_name : this.props.currentSeason.name;
+        const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
 
 
         console.log(m, 'MMMM SERACH')
@@ -209,7 +209,7 @@ class DashDivisions extends Component {
             title: 'Season',
             options: [{
                 type: 'select',
-                name: 'season_name',
+                name: 'season',
                 defaultValue: m,
                 // defaultValue: JSON.stringify(this.props.currentSeason),
 

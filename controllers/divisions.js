@@ -38,13 +38,13 @@ const getAllDivisions = async (req, res) => {
 
   console.log(req.query, 'QUERYRYYY')
 
-  const query = filter(req.query);
+  // const query = filter(req.query);
 
-  const season_id = await db.seasons.findOne({name: req.query.name})
+  const season_id = await db.seasons.findOne({name: req.query.season, 'deleted_date =': null})
   console.log(season_id, ' seasonid')
 
   const data = await db.divisions.find({season_id: season_id.id,}).catch(err => console.log(err));
-  console.log(data,' DATAY IN GETALLDIVISIONS')
+  // console.log(data,' DATAY IN GETALLDIVISIONS')
   const seasons = await db.seasons.find({'hidden_date =': null, 'deleted_date =': null}).catch(err => console.log(err));
   res.status(200).send({ status: 200, data: {divisions: data, seasons}, message: 'Retrieved list of Divisions' });
 
