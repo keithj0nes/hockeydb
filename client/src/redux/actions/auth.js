@@ -2,7 +2,6 @@
 import { request } from './middleware';
 import cookie from 'react-cookies';
 // import jwt from 'jsonwebtoken';
-// import { JWTSECRET } from '../../client_config';
 import { AUTH_SET_USER, SET_CURRENT_SEASON } from '../actionTypes';
 // import { AUTH_SET_USER, SET_CURRENT_SEASON, GET_SUCCESS } from '../actionTypes';
 
