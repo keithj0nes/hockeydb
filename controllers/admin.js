@@ -253,15 +253,15 @@ const deleteSeason = async (req, res) => {
 const createDivision = async (req, res) => {
     const db = app.get('db');
 
-    const { name, season_name } = req.body;
+    const { name, season } = req.body;
 
     console.log(req.body, 'BODY')
-    const seasonName = season_name.replace(/season_/g, '')
+    // const seasonName = season_name.replace(/season_/g, '')
 
-    const season = await db.seasons.findOne({name: seasonName});
+    const season_id = await db.seasons.findOne({name: season});
 
     // const division = await db.divisions.findOne({ name, season_id }).catch(err => console.log(err, 'error in create season'));
-    const division = await db.divisions.where('lower(name) = $1 AND season_id = $2', [name.toLowerCase(), season.id]).catch(err => console.log(err, 'error in crete division'));
+    const division = await db.divisions.where('lower(name) = $1 AND season_id = $2', [name.toLowerCase(), season_id.id]).catch(err => console.log(err, 'error in crete division'));
 
     // console.log(division, 'DIVISION! 🐶')
     if (division.length > 0) {
@@ -271,7 +271,7 @@ const createDivision = async (req, res) => {
 
 
 
-    const data = await db.divisions.insert({ name, season_id: season.id, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))
+    const data = await db.divisions.insert({ name, season_id: season_id.id, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))
 
     return res.status(200).send({ status: 200, data, message: 'Division created' })
 
