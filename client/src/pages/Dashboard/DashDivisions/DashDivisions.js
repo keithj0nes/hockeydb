@@ -85,7 +85,7 @@ class DashDivisions extends Component {
             ],
             onChange: this.handleChange(),
             confirmActionTitle: 'Create Division',
-            confirmAction: () => { this.validation() && this.props.createDivision({ name: this.state.name, season_name: m }); this.setState(defaultState) },
+            confirmAction: () => { this.validation() && this.props.createDivision({ name: this.state.name, season: m }); this.setState(defaultState) },
 
             // confirmAction: () => { this.validation() && this.props.createDivision({ name: this.state.name, season_id: this.state.currentSeasonSelected.id || this.props.currentSeason.id }); this.setState(defaultState) },
         }, 'prompt');

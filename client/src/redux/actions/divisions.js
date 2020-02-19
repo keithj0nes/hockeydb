@@ -35,7 +35,7 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
   
   if(!filter){
     const { seasons: { currentSeason } } = getState();
-    console.log('hitting no filter')
+    // console.log('hitting no filter')
     filter = `season=${currentSeason.name}`
   } 
   // console.log(filter, 'YOOOO');
@@ -45,7 +45,7 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
 
   const data = await request(`/api/divisions?${filter || ''}`, 'GET', {}, true)
 
-  console.log(data,' DATA from getSeasons actions')
+  // console.log(data,' DATA from getSeasons actions')
 
   dispatch({
       type: `divisions/${GET_SUCCESS}`,
@@ -102,10 +102,7 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
     modalProps: { isVisible: false }
   })
 
-  // return dispatch(getDivisions(divisionData.season_id))
-  // return dispatch(getDivisions({season_name: divisionData.season_name}));
-  return dispatch(getDivisions(`season_name=${divisionData.season_name}`));
-
+  return dispatch(getDivisions(`season=${divisionData.season}`));
 
 }
 
