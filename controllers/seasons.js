@@ -19,7 +19,7 @@ const getSeasons = async (req, res) => {
 
     const query = filter(req.query);
 
-    const data = await db.seasons.find({...query}).catch(err => console.log(err));
+    const data = await db.seasons.find({...query}, { order: [ {field: 'id', direction: 'desc'}]}).catch(err => console.log(err));
 
     res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
 }

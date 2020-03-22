@@ -196,8 +196,14 @@ const updateSeason = async (req, res) => {
     console.log(req.body, 'updateSeason BODY')
     const { id } = req.params;
     
+
+    // Manage hidden request
     if(req.body.hasOwnProperty('is_hidden')){
-        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: 1 } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update season error'))
+        const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
+        if(season.is_active) {
+            return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season' })
+        }
+        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: 1 } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
         console.log(data, 'NOT HIDING NAYMORE data')
         return res.status(200).send({ status: 200, data: [], message: is_hidden ? 'Season hidden' : 'Season unhidden' })
     }
@@ -324,11 +330,14 @@ const createLocation = async (req, res) => {
 
     const { name, address } = req.body;
 
-    const location = await db.locations.findOne({ name }).catch(err => console.log(err, 'error in create season'));
+    const location = await db.locations.where('lower(name) = $1 AND deleted_date IS null', [name.toLowerCase()]).catch(err => console.log(err));
+
+
+    // const location = await db.locations.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
     console.log(location, 'location!')
-    if (location) {
-        return res.status(400).send({ status: 400, error: true, message: 'Location already exists.' })
+    if (location.length > 0) {
+        return res.status(200).send({ status: 400, error: true, message: 'Location already exists.' })
     }
 
     const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create location error'))
@@ -350,9 +359,16 @@ const updateLocation = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
     }
 
+    if(name) {
+        const nameExists = await db.locations.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
+        if(nameExists.length > 0 && (nameExists[0].id !== location.id )){
+            return res.status(200).send({ status: 409, data: [], message: 'Location already exists' })
+        }
+    }
+
     const data = await db.locations.update({ id }, { name, address, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update location error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Location updated' })
+    return res.status(200).send({ status: 200, data: data[0], message: 'Location updated' })
 
 }
 
