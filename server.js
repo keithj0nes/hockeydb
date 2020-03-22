@@ -6,12 +6,7 @@ const config = require('./config');
 
 
 // const jwt = require('jsonwebtoken');
-
-
-
-
-
-require('dotenv').config();
+// require('dotenv').config();
 
 const app = module.exports = express();
 const port = process.env.PORT || config.PORT;
@@ -47,6 +42,10 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 });
 
 
+/*
+    current data return implimentation
+*/
+
 // return errors -  
 // {
 //     status: number,
@@ -66,6 +65,10 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 // return res.status(200).send({status: 200, data: user, message: 'You have successfully logged in'})
 
 
+
+/*
+    possible data ruturn implimentation
+*/
 
 // {
 //     "site": "hockeydb.com",
@@ -101,7 +104,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 // ROUTES //
 
 // Seasons
-app.get(`/api/seasons/`, seasons.getSeasons);
+app.get(`/api/seasons/`, seasons.getSeasons);                   // Postman Docs
 app.get(`/api/seasons/:id`, seasons.getSeasonById);
 
 // Blog
@@ -109,7 +112,7 @@ app.get(`/api/blog`, blogs.getBlogs);
 app.get(`/api/blog/:id`, blogs.getBlogById)
 
 // Schedule
-app.get(`/api/schedule`)
+// app.get(`/api/schedule`)
 
 // Games
 app.get(`/api/games`, games.getGames);
@@ -125,36 +128,35 @@ app.get(`/api/players/:id`, players.getPlayerById);
 
 
 // Standings 
-app.get(`/api/standings`)
+// app.get(`/api/standings`)
 
 // Leaders 
-app.get(`/api/leaders`)
+// app.get(`/api/leaders`)
 
 // Suspensions
-app.get(`/api/suspensions`)
+// app.get(`/api/suspensions`)
 
 // About
-app.get(`/api/about`)
+// app.get(`/api/about`)
 
 // Locations
 app.get(`/api/locations`, locations.getLocations)
 
 // Divisions
+app.get(`/api/divisions/`, divisions.getAllDivisions);          // Postman Docs
 // app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
-app.get(`/api/divisions/`, divisions.getAllDivisions);
-
 // app.get(`/api/divisions/:season_id`, divisions.getDivisionById);
 
 
 // ⭐ ️ ADMIN  ⭐️
 
 // Create seasons
-app.post(`/api/admin/seasons`, admin.createSeason);
-app.put(`/api/admin/seasons/:id`, admin.updateSeason);
-app.delete(`/api/admin/seasons/:id`, admin.deleteSeason);
+app.post(`/api/admin/seasons`, admin.createSeason);             // Postman Docs
+app.put(`/api/admin/seasons/:id`, admin.updateSeason);          // Postman Docs
+app.delete(`/api/admin/seasons/:id`, admin.deleteSeason);       // Postman Docs
 
 // Create division
-app.post(`/api/admin/divisions`, admin.createDivision);
+app.post(`/api/admin/divisions`, admin.createDivision);         // Postman Docs
 app.put(`/api/admin/divisions/:id`, admin.updateDivision);
 app.delete(`/api/admin/divisions/:id`, admin.deleteDivision);
 

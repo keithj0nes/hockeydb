@@ -87,21 +87,6 @@ export const games = (state = initialGameState, { type, payload }) => {
   }
 }
 
-const initialLocationsState = {
-  allLocations: [],
-  selectedlocation: null,
-};
-
-export const locations = (state = initialLocationsState, { type, payload }) => {
-  switch (type) {
-    case GET_LOCATIONS:
-      return { ...state, allLocations: payload };
-    case NEW_LOCATION:
-      return { ...state, allLocations: [...state.allLocations, payload] }
-    default:
-      return state;
-  }
-}
 
 const initialTeamsState = {
   allTeams: [],

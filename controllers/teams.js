@@ -9,9 +9,9 @@ const getAllTeams = async (req, res) => {
   
 
   const season_id = await db.seasons.findOne({name: req.query.season, 'deleted_date =': null}).catch(err => console.log(err, 'ERROR!!!'))
-  console.log(season_id.id, ' seasonid 0000000000');
+  // console.log(season_id.id, ' seasonid 0000000000');
 
-  const divisions = await db.divisions.find({season_id: season_id.id,}).catch(err => console.log(err));
+  const divisions = await db.divisions.find({season_id: season_id.id,}).catch(err => console.log(err, 'error in getTeams divisions'));
   const seasons = await db.seasons.find({'hidden_date =': null, 'deleted_date =': null}).catch(err => console.log(err));
 
 

@@ -33,6 +33,9 @@ class DashboardNav extends Component {
                         <h2>HockeyDB</h2>
                     </div>
 
+                    <p style={{textAlign: 'center'}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+
+
                     <ul>
                         <li>
                             <NavLink to={`${match.url}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
@@ -113,10 +116,9 @@ class DashboardNav extends Component {
 
 const mapStateToProps = state => {
     return {
-
+        currentSeason: state.seasons.currentSeason
     }
 }
-
 const mapDispatchToProps = dispatch => {
     return {
         logout: () => dispatch(logout())
