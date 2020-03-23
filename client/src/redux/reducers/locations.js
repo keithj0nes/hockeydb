@@ -24,10 +24,8 @@ export const locations = (state = initialLocationsState, { type, payload }) => {
                 return payload
             }
             return item;
-            })
-
+        })
         return  { ...state, isLoading: false, locations: newLocations }
-
     case 'locations/FILTER_IS_VISIBLE':
         //if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)
         //otherwise just set it to the opposite of what it's currently set to

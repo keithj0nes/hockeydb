@@ -151,11 +151,13 @@ export class DashGames extends Component {
 
                     {this.props.games && this.props.games.map(item => {
 
-                        // console.log(item, 'befroe')
-                        item.date = dateFormat(item.start_date, 'MM/DD/YYYY');
-                        item.start_time = dateFormat(item.start_date, 'h:mm A')
-                        // console.log(item, 'after')
+                        const mydate = dateFormat(item.start_date, 'MM/DD/YYYY h:mmA').split(' ');
 
+                        item.date = mydate[0];
+                        item.start_time = mydate[1];
+                        
+                        // this should work below, but not
+                        // [ item.date, item.start_time ] = dateFormat(item.start_date, 'MM/DD/YYYY h:mm A').split(' ');
                         return (
 
                             <div key={item.id}>
@@ -216,7 +218,7 @@ const mapStateToProps = state => {
     // console.log(state, "our state in dashNav!s");
 
     return {
-        locations: state.locations.allLocations,
+        locations: state.locations.locations,
         teams: state.teams.allTeams,
         games: state.games.allGames
     };

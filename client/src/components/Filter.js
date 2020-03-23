@@ -29,9 +29,14 @@ class Filter extends Component {
             if(prevState.filters[this.props.reloadOn] !== filters[this.props.reloadOn]){
                 delete filters['division'];
             }
+
             const search = qs.stringify(filters);
+            // console.log(search,' FILTERS!')
+
+            // console.log(search.replace('%20', '_'))
             this.props.getAction(search);
-            this.props.history.push({search});
+            this.props.history.push({ search });
+            // this.props.history.push({search: search.replace('%20', '_')});
             return {filters}
         })
     }

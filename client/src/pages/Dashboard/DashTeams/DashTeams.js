@@ -75,6 +75,17 @@ class DashTeams extends Component {
         }, 'prompt');
     }
 
+    // handleDeleteTeam = (item) => {
+    //     this.props.toggleModal({
+    //         isVisible: true,
+    //         title: 'Delete Season',
+    //         message: `Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
+    //         toBeDeleted: item,
+    //         deleteAction: () => this.props.deleteSeason(item.id),
+    //     }, 'delete');
+    // }
+
+
     validation = () => {
         // console.log(!this.state.name, !Number(this.state.division_id), 'state!!!')
         if (!this.state.name || !Number(this.state.division_id)) return false;

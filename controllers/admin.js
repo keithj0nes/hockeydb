@@ -287,18 +287,26 @@ const createDivision = async (req, res) => {
 const updateDivision = async (req, res) => {
     const db = app.get('db');
 
-    const { type, name } = req.body;
+    const { name } = req.body;
     const { id } = req.params;
 
-    const season = await db.divisions.findOne({ id }).catch(err => console.log(err));
+    const division = await db.divisions.findOne({ id }).catch(err => console.log(err));
 
-    if (!season) {
-        return res.status(404).send({ status: 404, error: true, message: 'Division not found' })
+    if (!division) {
+        return res.status(200).send({ status: 404, error: true, message: 'Division not found' })
+    }
+
+
+    if(name) {
+        const nameExists = await db.divisions.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
+        if(nameExists.length > 0 && (nameExists[0].id !== division.id )){
+            return res.status(200).send({ status: 409, data: [], message: 'Division already exists' })
+        }
     }
 
     const data = await db.divisions.update({ id }, { name, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update Division error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Division updated' })
+    return res.status(200).send({ status: 200, data: data[0], message: 'Division updated' })
 
 }
 
@@ -307,10 +315,15 @@ const deleteDivision = async (req, res) => {
 
     const { id } = req.params;
 
-    const season = await db.divisions.findOne({ id }).catch(err => console.log(err));
+    const division = await db.divisions.findOne({ id }).catch(err => console.log(err));
 
-    if (!season) {
-        return res.status(404).send({ status: 404, error: true, message: 'Division not found' })
+    if (!division) {
+        return res.status(200).send({ status: 404, error: true, message: 'Division not found' })
+    }
+
+    const divisionHasTeams = await db.teams.findOne({division_id: division.id});
+    if(divisionHasTeams){
+        return res.status(200).send({ status: 409, error: true, message: 'Division cannot be deleted, there are teams under this division' })
     }
 
     const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete Division error'))
@@ -383,11 +396,11 @@ const deleteLocation = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
     }
 
-    const gameWithLocation = await db.games.findOne({location_id: location.id});
-
-    if(gameWithLocation){
-        return res.status(200).send({ status: 409, error: true, message: 'Location cannot be deleted, a game is using this location' })
-    }
+    // currently set up to where deleting location will not effect the game played
+    // const gameWithLocation = await db.games.findOne({location_id: location.id});
+    // if(gameWithLocation){
+    //     return res.status(200).send({ status: 409, error: true, message: 'Location cannot be deleted, a game is using this location' })
+    // }
 
     const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete location error'))
 

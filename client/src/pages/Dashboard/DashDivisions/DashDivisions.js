@@ -9,7 +9,6 @@ import qs from 'query-string';
 import ListItem from '../ListItem';
 
 
-
 const defaultState = {
     isAddDivisionVisible: false,
     name: '',
@@ -97,14 +96,6 @@ class DashDivisions extends Component {
 
     }
 
-    // sendNewDivision = () => {
-    //     const { newDivisionName } = this.state;
-    //     this.state.newDivisionName.length > 1 && (this.props.newDivision({ newDivisionName }));
-    //     this.toggleSeasonVisible();
-    // }
-
-
-
 
     handleChange = edit => e => {
         console.log(edit, 'edit!')
@@ -152,9 +143,7 @@ class DashDivisions extends Component {
 
         console.log(item, 'edtinggggg item!');
 
-        this.setState({ edit: item }, () => {
-            console.log(this.state.edit, 'edit!')
-        })
+        this.setState({ edit: item });
 
         this.props.toggleModal({
             isVisible: true,
@@ -166,21 +155,7 @@ class DashDivisions extends Component {
                     type: 'input',
                     name: 'name',
                     defaultValue: item.name
-                },
-                // {
-                //     title: 'Type',
-                //     type: 'select',
-                //     name: 'type',
-                //     defaultValue: item.type,
-                //     listOfSelects: this.state.seasonTypes
-                // },
-                // {
-                //     title: item.is_active ? 'Active Season' : 'Set To Active Season',
-                //     type: 'checkbox',
-                //     name: 'is_active',
-                //     hidden: item.is_active,
-                //     defaultValue: item.is_active
-                // }
+                }
             ],
             onChange: this.handleChange('editing'),
             confirmActionTitle: 'Update Division',
@@ -188,13 +163,17 @@ class DashDivisions extends Component {
         }, 'prompt');
     }
 
-    handleDeleteSeason = (item) => {
+    handleDeleteDivision = (item) => {
+
+        const seasonName = Object.keys(qs.parse(this.props.location.search)).length > 0 && qs.parse(this.props.location.search).season;
+
         this.props.toggleModal({
+            isClosableOnBackgroundClick: true,
             isVisible: true,
             title: 'Delete Division',
             message: `Are you sure you want to delete this division?\nThis cannot be undone and you will lose any information saved within this division.\n\nPlease type in the name of the division below to delete.`,
             toBeDeleted: item,
-            deleteAction: () => this.props.deleteDivision(item.id),
+            deleteAction: () => this.props.deleteDivision(item.id, seasonName),
         }, 'delete');
     }
 
@@ -203,7 +182,7 @@ class DashDivisions extends Component {
     checkFilters = () => {
         //set filter data and toggle filter component
 
-        const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season_name : this.props.currentSeason.name;
+        const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
 
         const filterData = [{
             title: 'Season',
@@ -315,7 +294,7 @@ class DashDivisions extends Component {
                                             key={item.id} 
                                             item={item} 
                                             sections={{'name': 'three'}} 
-                                            onClick={() => this.handleDeleteSeason(item)}
+                                            onClick={() => this.handleDeleteDivision(item)}
                                             onEdit={() => this.handleEditDivision(item)}
                                         />
                                     )
@@ -341,11 +320,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        // getDivisions: (season_id) => dispatch(getDivisions(season_id)),
         getDivisions: filters => dispatch(getDivisions(filters)),
-
         createDivision: (name) => dispatch(createDivision(name)),
-        deleteDivision: id => dispatch(deleteDivision(id)),
+        deleteDivision: (id, seasonName) => dispatch(deleteDivision(id, seasonName)),
         updateDivision: (id, data) => dispatch(updateDivision(id, data)),
         toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
         toggleFilter: () => dispatch(toggleFilter('divisions'))
