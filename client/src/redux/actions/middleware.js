@@ -4,8 +4,7 @@ import { ROOT } from '../../client_config';
 import { TOGGLE_MODAL } from '../actionTypes';
 
 
-
-// the request function calls to serverside - if errors occur, they will be caught and handled here
+// the request function calls to serverside - if errors occur, they will be caught and handled here as an error modal
 export const request = async (route, method, session, noAuth) => {
     if(!session){
         return alert('no session, please include a session object')

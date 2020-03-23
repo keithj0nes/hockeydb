@@ -64,7 +64,7 @@ export const deleteLocation = id => async (dispatch, getState) => {
 
   console.log(data, 'DATA!')
 
-  if(!data) return
+  if(!data) return false;
   //Close Delete Modal
   // dispatch({
   //     type: TOGGLE_MODAL,

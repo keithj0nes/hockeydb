@@ -6,7 +6,6 @@ const initialDivisionState = {
     selectedSeasonName: '',
     //filter
     isVisible: false,
-    
   };
   
 export const divisions = (state = initialDivisionState, { type, payload }) => {
@@ -23,11 +22,9 @@ export const divisions = (state = initialDivisionState, { type, payload }) => {
         const newDivisions = state.divisions.map(item => {
             if(item.id === payload.id){
                 return payload
-            } else if(payload.is_active){
-                return {...item, is_active: false}
             }
             return item;
-            })
+        })
         return  { ...state, isLoading: false, divisions: newDivisions }
     case 'divisions/FILTER_IS_VISIBLE':
         //if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)

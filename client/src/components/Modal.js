@@ -32,6 +32,10 @@ class DeleteModal extends React.Component {
     
                 {/* <button onClick={data.deleteAction} disabled={!this.state.shouldBeDeleted}>Delete</button> */}
 
+                {data.errors && (
+                    <p className={'modal-error'}>{data.errors}</p>
+                )}
+
                 <div className="modal-button-container">
                     <Button title={'Cancel'} cancel onClick={toggleModal} />
                     <Button title={'Delete'} danger onClick={data.deleteAction} disabled={!this.state.shouldBeDeleted} />

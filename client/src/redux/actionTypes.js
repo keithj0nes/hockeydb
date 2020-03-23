@@ -18,10 +18,6 @@ export const GET_GAMES = 'GET_GAMES';
 // Teams
 export const GET_TEAMS = 'GET_TEAMS';
 
-// Locations
-export const GET_LOCATIONS = 'GET_LOCATIONS';
-export const NEW_LOCATION = 'NEW_LOCATION';
-
 // Seasons 
 export const SET_CURRENT_SEASON = 'SET_CURRENT_SEASON';
 // export const CREATE_SEASON_SUCCESS = 'CREATE_SEASON_SUCCESS';

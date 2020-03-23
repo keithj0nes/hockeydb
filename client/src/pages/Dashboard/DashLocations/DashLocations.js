@@ -125,6 +125,7 @@ export class DashGames extends Component {
 
     handleDeleteLocation = (item) => {
         this.props.toggleModal({
+            isClosableOnBackgroundClick: true,
             isVisible: true,
             toBeDeleted: item,
             title: 'Delete Location',
@@ -132,18 +133,6 @@ export class DashGames extends Component {
             deleteAction: () => this.props.deleteLocation(item.id),
         }, 'delete');
     }
-
-
-    handleDeleteSeason = (item) => {
-        this.props.toggleModal({
-            isVisible: true,
-            title: 'Delete Season',
-            message: `Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
-            toBeDeleted: item,
-            deleteAction: () => this.props.deleteSeason(item.id),
-        }, 'delete');
-    }
-
 
     render() {
         if (this.props.isLoading) {
@@ -192,7 +181,6 @@ export class DashGames extends Component {
                                         <p className="flex-three">Address</p>
                                         <p className="flex-one">Manage</p>
 
-
                                     </div>
                                 </div>
 
@@ -204,7 +192,6 @@ export class DashGames extends Component {
                                     // console.log(item, 'after')
 
                                     return (
-
                                         <ListItem 
                                             key={item.id} 
                                             item={item} 
@@ -213,11 +200,8 @@ export class DashGames extends Component {
                                             onEdit={() => this.handleEditSeason(item)}
                                             // onHide={() => this.handleHideSeason(item)} 
                                         />
-
                                     )
-
                                 })}
-
                             </>
                         )}
                     </div>
@@ -230,8 +214,6 @@ export class DashGames extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state, "our state in dashNav!s");
-
     return {
         locations: state.locations.locations,
     };
