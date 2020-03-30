@@ -23,9 +23,27 @@ export const request = async (route, method, session, noAuth) => {
         headers: {
             Authorization: noAuth ? null : `Bearer ${session.access_token}`
         }
-    }).catch(err => console.log(err, 'error in responseRaw'))
+    }).catch(err => {
+        console.log(err, 'error in responseRaw')
+    
+        store.dispatch({
+            type: TOGGLE_MODAL,
+            modalProps: {
+                isVisible: true,
+                title: 'Error',
+                isClosableOnBackgroundClick: true,
+                message: `Cannot connect to the server \n Confirm server is running \n Error code: 500`
+            },
+            modalType: 'alert'
+        })
+
+        return false;
+    })
+
+    // console.log(responseRaw, 'resproaw')
 
     // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
+    if(!responseRaw) return false;
     const { status, data, message } = responseRaw.data;
 
     // const status = 243;

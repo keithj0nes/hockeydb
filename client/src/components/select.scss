@@ -1,0 +1,34 @@
+.custom-select {
+    position: relative;
+}
+
+.custom-select select {
+    border: 2px solid #7E92A3 !important;
+    // border: 4px solid red;
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    // padding: 5px;
+    // padding: 10px;
+    padding: 8px 10px !important;
+
+    background: white;
+    outline: none;
+}
+
+.custom-select .arrow {
+    position: absolute;
+    // z-index: 1000;
+    right: 16px;
+    top: 11px;
+    // height: 20px;
+    // width: 20px;
+    // background: red;
+
+    border: solid #7E92A3;
+    border-width: 0 2px 2px 0;
+    padding: 5px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}

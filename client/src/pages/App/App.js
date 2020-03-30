@@ -9,6 +9,7 @@ import Login from '../../components/Login';
 import Players from '../Players/Players';
 import Games from '../Games/Games';
 import { Modal } from '../../components';
+import { Styleguide } from '../../components/Styleguide';
 
 // import Routes from './Routes';
 
@@ -33,10 +34,11 @@ class App extends Component {
       <Router>
         {/* <Routes /> */}
         <div>
-          <Route exact path="/"   component={Home} />
-          <Route path='/login'    component={Login} />
-          <Route path='/players'  component={Players} />
-          <Route path='/games'    component={Games} />
+          <Route exact path="/"     component={Home} />
+          <Route path='/login'      component={Login} />
+          <Route path='/players'    component={Players} />
+          <Route path='/games'      component={Games} />
+          <Route path='/styleguide' component={Styleguide} />
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />
         </div>

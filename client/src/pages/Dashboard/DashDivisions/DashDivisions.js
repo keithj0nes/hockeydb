@@ -206,6 +206,7 @@ class DashDivisions extends Component {
             }]
         }]
 
+        console.log(this.props.seasons)
         this.setState({filterData}, () => this.props.toggleFilter())
     }
 
@@ -223,7 +224,6 @@ class DashDivisions extends Component {
         // console.log(this.props.currentSeason, 'currenseasons')
         return (
             <div>
-
                 <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
 

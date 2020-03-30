@@ -11,6 +11,8 @@ export const getSeasons = (filter) => async dispatch => {
     const data = await request(`/api/seasons?${filter || ''}`, 'GET', {}, true)
 
     // console.log(data,' DATA from getSeasons actions')
+    if(!data) return false;
+
 
     dispatch({
         type: `seasons/${GET_SUCCESS}`,
@@ -35,7 +37,7 @@ export const createSeason = seasonData => async (dispatch, getState) => {
 
     console.log(data, 'DATA CREATE SEASON!!')
 
-    if(!data) return;
+    if(!data) return false;
 
 
     dispatch({
@@ -57,7 +59,7 @@ export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
     const data = await request(`/api/admin/seasons/${id}`, 'PUT', {access_token: user.access_token, data: seasonData})
 
     console.log(data, 'DATA IN UPDATE SEASON ACTIONS')
-    if(!data) return;
+    if(!data) return false;
 
 
     dispatch({
@@ -91,6 +93,7 @@ export const deleteSeason = id => async (dispatch, getState) => {
     const data = await request(`/api/admin/seasons/${id}`, 'DELETE', {access_token: user.access_token})
 
     console.log(data, 'DATA!')
+    if(!data) return false;
 
     //Close Delete Modal
     // dispatch({
