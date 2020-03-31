@@ -69,15 +69,21 @@ const deletePlayer = async (req, res) => {
 const createTeam = async (req, res) => {
     const db = app.get('db')
 
-
-    const { name, division_id, colors } = req.body;
+    const { name, division_id, season_name, colors } = req.body;
     const team = await db.teams.findOne({ name }).catch(err => console.log(err, 'error'));
 
     if (team) {
-        return res.status(400).send({ status: 400, data: [], message: 'team already exists' });
+        return res.status(200).send({ status: 400, data: [], message: 'team already exists' });
     }
 
-    const data = await db.teams.insert({ name, division_id, colors, created_date: new Date(), created_by: 1 });
+    const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in createTeam season'));
+
+    if(!season) {
+        return res.status(200).send({ status: 400, data: [], message: 'season does not exist' });
+    }
+
+    const data = await db.teams.insert({ name, colors, created_date: new Date(), created_by: 1 });
+    await db.team_season_division.insert({team_id: data.id, season_id: season.id, division_id});
     return res.status(200).send({ status: 200, data, message: 'Team created' });
 
 

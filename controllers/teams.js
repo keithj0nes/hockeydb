@@ -14,7 +14,7 @@ const getAllTeams = async (req, res) => {
 
 
   // This needs to get cleaned up - but template literals wont work for division.name
-  let data;
+  // let data;
 
   // if(!!division){
   //   data = await db.query(`
@@ -37,8 +37,6 @@ const getAllTeams = async (req, res) => {
   // }
 
 
-
-
   // if(!!division){
   //   console.log(division, 'there is a divsion!!!!!!!')
   //   data = await db.query(`
@@ -49,36 +47,55 @@ const getAllTeams = async (req, res) => {
   //     WHERE divisions.name = $1 AND season_id = ${season_id.id};
   //   `, [division]).catch(err => console.log(err));
   // } 
-  if(!!division){
-    console.log(division, 'there is a divsion!!!!!!!')
-    data = await db.query(`
+  // else {
+    //   console.log('else query! *******************')
+    //   data = await db.query(`
+    //     SELECT teams.*, divisions.name AS division_name, divisions.season_id
+    //     FROM teams 
+    //     JOIN divisions ON teams.division_id = divisions.id 
+    //     JOIN seasons ON divisions.season_id = seasons.id
+    //     WHERE divisions.name IS NOT NULL AND season_id = ${season_id.id};
+    //   `).catch(err => console.log(err));
+    // }
+
+    // USING TEAM_SEASON_DIVISION TABLE
+  // if(!!division){
+  //   console.log(division, 'there is a divsion!!!!!!!')
+  //   data = await db.query(`
+  //   select teams.*, seasons.name as season_name, divisions.name as division_name from team_season_division tsd 
+  //   join teams on teams.id = tsd.team_id
+  //   join seasons on seasons.id = tsd.season_id
+  //   join divisions on divisions.id = tsd.division_id
+  //   where tsd.season_id = ${season_id.id} and divisions.name = $1;
+  //   `, [division]).catch(err => console.log(err));
+  // } 
+  // else {
+  //   console.log('else query! *******************')
+  //   data = await db.query(`
+  //     select teams.*, seasons.name as season_name, divisions.name as division_name from team_season_division tsd 
+  //     join teams on teams.id = tsd.team_id
+  //     join seasons on seasons.id = tsd.season_id
+  //     join divisions on divisions.id = tsd.division_id
+  //     where tsd.season_id = ${season_id.id} and tsd.division_id is not null;
+  //   `).catch(err => console.log(err));
+  // }
+
+  // const d = 'Cee';
+  const query = `
     select teams.*, seasons.name as season_name, divisions.name as division_name from team_season_division tsd 
     join teams on teams.id = tsd.team_id
     join seasons on seasons.id = tsd.season_id
     join divisions on divisions.id = tsd.division_id
-    where tsd.season_id = ${season_id.id} and divisions.name = $1;
-    `, [division]).catch(err => console.log(err));
-  } 
-  // else {
-  //   console.log('else query! *******************')
-  //   data = await db.query(`
-  //     SELECT teams.*, divisions.name AS division_name, divisions.season_id
-  //     FROM teams 
-  //     JOIN divisions ON teams.division_id = divisions.id 
-  //     JOIN seasons ON divisions.season_id = seasons.id
-  //     WHERE divisions.name IS NOT NULL AND season_id = ${season_id.id};
-  //   `).catch(err => console.log(err));
-  // }
-  else {
-    console.log('else query! *******************')
-    data = await db.query(`
-      select teams.*, seasons.name as season_name, divisions.name as division_name from team_season_division tsd 
-      join teams on teams.id = tsd.team_id
-      join seasons on seasons.id = tsd.season_id
-      join divisions on divisions.id = tsd.division_id
-      where tsd.season_id = ${season_id.id} and tsd.division_id is not null;
-    `).catch(err => console.log(err));
-  }
+    
+    where tsd.season_id = ${season_id.id} and ${!!division ? 'divisions.name = $1': 'tsd.division_id is not null'};
+  `;
+  // where tsd.season_id = ${season_id.id} and divisions.name = "${d}";
+
+  const data = await db.query(query, [division]);
+  // console.log(newDatat, 'NEW DATA************')
+
+  
+  
   
     // WHERE division_id ${division_id ? '=' + division_id : 'IS NOT NULL'};
   

@@ -118,7 +118,6 @@ CREATE TABLE "divisions" (
 
 CREATE TABLE "teams" (
   "id" SERIAL PRIMARY KEY,
-  "division_id" INTEGER,
   "name" VARCHAR,
   "colors" VARCHAR,
   "created_date" TIMESTAMP,
@@ -216,7 +215,6 @@ ALTER TABLE "divisions" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id")
 ALTER TABLE "divisions" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 ALTER TABLE "divisions" ADD FOREIGN KEY ("hidden_by") REFERENCES "users" ("id");
 
-ALTER TABLE "teams" ADD FOREIGN KEY ("division_id") REFERENCES "divisions" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");

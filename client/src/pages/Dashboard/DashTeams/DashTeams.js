@@ -37,6 +37,7 @@ class DashTeams extends Component {
             editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
             return this.setState({edit: editStateCopy})
         }
+        console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
@@ -78,9 +79,9 @@ class DashTeams extends Component {
                     defaultValue: null
                 }
             ],
-            onChange: this.handleChange,
+            onChange: this.handleChange(),
             confirmActionTitle: 'Create Season',
-            confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors  }); this.setState(defaultState) },
+            confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors, season_name: defaultValue  }); this.setState(defaultState) },
         }, 'prompt');
     }
 
@@ -142,16 +143,17 @@ class DashTeams extends Component {
     }
 
 
-    validation = () => {
-        // console.log(!this.state.name, !Number(this.state.division_id), 'state!!!')
-        if (!this.state.name || !Number(this.state.division_id)) return false;
-        return true;
-    }
+    // validation = () => {
+    //     // console.log(!this.state.name, !Number(this.state.division_id), 'state!!!')
+    //     if (!this.state.name || !Number(this.state.division_id)) return false;
+    //     return true;
+    // }
 
     validation = (edit) => {
         if(!!edit){
             return !this.state.edit.name || !Number(this.state.division_id) ? false : true;
         }
+        console.log(this.state.name, Number(this.state.division_id))
         if (!this.state.name|| !Number(this.state.division_id)) return false;
         return true;
     }
