@@ -27,7 +27,16 @@ class DashTeams extends Component {
         this.props.getTeams();
     }
 
-    handleChange = e => {
+    // handleChange = e => {
+    //     this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
+    // }
+
+    handleChange = edit => e => {
+        if(!!edit){
+            const editStateCopy = {...this.state.edit};
+            editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+            return this.setState({edit: editStateCopy})
+        }
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
@@ -85,10 +94,65 @@ class DashTeams extends Component {
     //     }, 'delete');
     // }
 
+    handleEditTeam = (item) => {
+        this.setState({ edit: item })
+        console.log(item, 'itemss')
+
+        const defaultValue = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
+
+        this.props.toggleModal({
+            isVisible: true,
+            isClosableOnBackgroundClick: false,
+            title: 'Edit Team',
+            fields: [
+                {
+                    title: 'Name',
+                    type: 'input',
+                    name: 'name',
+                    defaultValue: item.name
+                },
+                {
+                    title: 'Season',
+                    type: 'input',
+                    name: 'season',
+                    defaultValue,
+                    disabled: true
+                    // listOfSelects: [...this.state.seasonTypes].slice(1)
+                },
+                {
+                    title: 'Division',
+                    type: 'select',
+                    name: 'division_id',
+                    defaultValue: item.division_id,
+                    listOfSelects: [{name: 'Select Division', value: null}, ...this.props.divisions]
+                    // listOfSelects: this.props.divisions
+                },
+                {
+                    title: 'Team Colors',
+                    type: 'input',
+                    name: 'colors',
+                    defaultValue: item.colors
+                }
+            ],
+            onChange: this.handleChange('editing'),
+            confirmActionTitle: 'Update Team',
+            confirmAction: () => console.log('edit team confirmation')
+            // confirmAction: () => this.validation('edit') && this.props.updateSeason(item.id, this.state.edit),
+        }, 'prompt');
+    }
+
 
     validation = () => {
         // console.log(!this.state.name, !Number(this.state.division_id), 'state!!!')
         if (!this.state.name || !Number(this.state.division_id)) return false;
+        return true;
+    }
+
+    validation = (edit) => {
+        if(!!edit){
+            return !this.state.edit.name || !Number(this.state.division_id) ? false : true;
+        }
+        if (!this.state.name|| !Number(this.state.division_id)) return false;
         return true;
     }
 
@@ -148,6 +212,7 @@ class DashTeams extends Component {
 
     render() {
         const { teams } = this.props
+        console.log( teams, 'teams!')
         if (this.props.isLoading) {
             return <div>Loading...</div>
         }
@@ -193,7 +258,7 @@ class DashTeams extends Component {
                                         item={item}
                                         sections={{ 'name': 'two', 'division_name': 'one' }}
                                         onClick={() => this.handleDeleteSeason(item)}
-                                        onEdit={() => this.handleEditSeason(item)}
+                                        onEdit={() => this.handleEditTeam(item)}
                                     />
                                 )
 
