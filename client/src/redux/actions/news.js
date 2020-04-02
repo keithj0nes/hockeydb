@@ -6,16 +6,18 @@ import { GET_BLOGS } from '../actionTypes';
 
 export const sendBlogs = data => ({ type: GET_BLOGS, payload: data })
 
-export const getBlogs = () => async dispatch => {
-  const data = await request('/api/blog', 'GET', {}, true)
+export const getNews = () => async dispatch => {
+  const data = await request('/api/news', 'GET', {}, true)
   if (!data.data) return false;
   dispatch(sendBlogs(data.data))
   return true;
 }
 
-export const newBlogPost = (data) => async (dispatch, getState) => {
+export const createNewsPost = (data) => async (dispatch, getState) => {
   const { user } = getState();
-  const post = await request('/api/admin/blog', 'POST', { data: { message: data }, access_token: user.user.access_token })
+  console.log(data, 'data!')
+  const post = await request('/api/admin/news', 'POST', { data, access_token: user.user.access_token });
+  console.log(post.data, 'POST DOT DATA')
   if (!post.data) return false;
   dispatch(sendBlogs(post.data))
   return true;

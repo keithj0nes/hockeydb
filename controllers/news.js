@@ -2,15 +2,15 @@
 const app = require('../server.js');
 
 
-const getBlogs = async (req, res) => {
+const getNews = async (req, res) => {
     const db = app.get('db');
-    const data = await db.query('select blog.id, blog.message, blog.created_by, blog.created_date, users.id as user_id, users.first_name, users.last_name from blog JOIN users ON blog.created_by = users.id order by blog.id desc ');
-    res.status(200).send({ status: 200, data, message: 'Retrieved list of blogs' })
+    const data = await db.query('select news.id, news.title, news.allow_collapse, news.tag, news.body, news.created_by, news.created_date, users.id as user_id, users.first_name, users.last_name from news JOIN users ON news.created_by = users.id order by news.id desc ');
+    res.status(200).send({ status: 200, data, message: 'Retrieved list of news' })
 }
 
 
 
-const getBlogById = async (req, res) => {
+const getNewsById = async (req, res) => {
     const db = app.get('db');
     const { id } = req.params;
     const data = await db.query('select * from blog where id = $1', [id]);
@@ -23,6 +23,6 @@ const getBlogById = async (req, res) => {
 
 
 module.exports = {
-    getBlogs,
-    getBlogById
+    getNews,
+    getNewsById
 }

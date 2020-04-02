@@ -91,14 +91,17 @@ const createTeam = async (req, res) => {
 
 const updateTeam = async (req, res) => {
     const db = app.get('db');
-    const { name, division_id, colors } = req.body;
+    const { name, division_id, colors, season_name } = req.body;
     const { id } = req.params;
 
     const team = await db.teams.findOne({ id }).catch(err => console.log(err));
     if (!team) {
-        return res.status(404).send({ status: 404, error: true, message: 'Team not found' })
+        return res.status(200).send({ status: 404, error: true, message: 'Team not found' })
     }
-    const updatedTeam = await db.teams.update({ id }, { name, division_id, colors, next_game, previous_game, updated_date: new Date(), updated_by: 1 });
+
+    const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in season updateTeam'));
+    const updatedTeam = await db.teams.update({ id }, { name, colors, updated_date: new Date(), updated_by: 1 });
+    await db.team_season_division.update({ season_id: season.id, team_id: id }, { division_id });
     return res.status(200).send({ status: 200, data: updatedTeam, message: 'Team updated' });
 }
 
@@ -119,53 +122,52 @@ const deleteTeam = async (req, res) => {
 
 
 
-// ⭐️  Blog ⭐️
+// ⭐️  News ⭐️
 
-const createBlog = async (req, res) => {
+const createNews = async (req, res) => {
     const db = app.get('db');
 
-    const { message } = req.body;
+    const { title, body, allow_collapse, tag } = req.body;
     console.log(req.user, 'ussser');
-
 
     let currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
 
-    const data = await db.blog.insert({ message, created_date: currentDate, created_by: req.user.id }).catch(err => console.log(err, 'create blog error'))
+    const data = await db.news.insert({ title, body, allow_collapse, tag, created_date: currentDate, created_by: req.user.id }).catch(err => console.log(err, 'create blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Blog post created' })
 }
 
 
-const updateBlog = async (req, res) => {
+const updateNews = async (req, res) => {
     const db = app.get('db');
 
-    const { message } = req.body;
+    const { body } = req.body;
     const { id } = req.params;
 
-    const blogPost = await db.blog.findOne({ id }).catch(err => console.log(err));
+    const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
 
-    if (!blogPost) {
-        return res.status(404).send({ status: 404, error: true, message: 'Blog post not found' })
+    if (!newsPost) {
+        return res.status(200).send({ status: 404, error: true, message: 'News post not found' })
     }
 
-    const data = await db.blog.update({ id }, { message, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update blog error'))
+    const data = await db.news.update({ id }, { body, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update blog error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Blog post updated' })
+    return res.status(200).send({ status: 200, data, message: 'News post updated' })
 
 }
 
-const deleteBlog = async (req, res) => {
+const deleteNews = async (req, res) => {
     const db = app.get('db');
 
     const { id } = req.params;
 
-    const blogPost = await db.blog.findOne({ id }).catch(err => console.log(err));
+    const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
 
-    if (!blogPost) {
-        return res.status(404).send({ status: 404, error: true, message: 'Blog post not found' })
+    if (!newsPost) {
+        return res.status(200).send({ status: 404, error: true, message: 'Blog post not found' })
     }
 
-    const data = await db.blog.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete blog error'))
+    const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Blog post deleted' })
 
@@ -327,7 +329,7 @@ const deleteDivision = async (req, res) => {
         return res.status(200).send({ status: 404, error: true, message: 'Division not found' })
     }
 
-    const divisionHasTeams = await db.teams.findOne({division_id: division.id});
+    const divisionHasTeams = await db.team_season_division.findOne({division_id: division.id});
     if(divisionHasTeams){
         return res.status(200).send({ status: 409, error: true, message: 'Division cannot be deleted, there are teams under this division' })
     }
@@ -426,9 +428,9 @@ module.exports = {
     updateTeam,
     deleteTeam,
 
-    createBlog,
-    updateBlog,
-    deleteBlog,
+    createNews,
+    updateNews,
+    deleteNews,
 
     createSeason,
     updateSeason,

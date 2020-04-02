@@ -48,7 +48,7 @@ class DashboardNav extends Component {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={`${match.url}/blogs`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                            <NavLink to={`${match.url}/news`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                 <div className="nav-icon-container">
                                     <News alt="news icon" />
                                 </div>

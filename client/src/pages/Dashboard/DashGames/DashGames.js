@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 
-import { Button } from '../../../components';
+import { Button, Input } from '../../../components';
 import DashGamesListItem from './DashGamesListItem';
 import ListItem from '../ListItem';
 
@@ -15,6 +15,9 @@ import { getGames, newGame } from '../../../redux/actions/gamesActions';
 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+
+import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
+
 
 
 
@@ -37,7 +40,9 @@ export class DashGames extends Component {
     }
 
     handleDateChange = date => {
-        this.setState({ start_date: date });
+        console.log(date, 'date')
+        console.log(this.state.start_date)
+        this.setState({ start_date: date }, () => this.handleAddGame());
     }
 
     handleHomeTeamChange = e => {
@@ -50,6 +55,75 @@ export class DashGames extends Component {
 
     handleGameLocationChange = e => {
         this.setState({ location_id: e.target.value })
+    }
+
+    handleChange = edit => e => {
+        console.log(edit, e)
+        if(!!edit){
+            const editStateCopy = {...this.state.edit};
+            editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+            return this.setState({edit: editStateCopy})
+        }
+        // console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
+        this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
+    }
+
+    handleAddGame = () => {
+
+        // this variable sets the default disabled value to the season name
+        // const defaultValue = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
+
+        const {start_date} = this.state;
+
+        this.props.toggleModal({
+            isVisible: true,
+            title: 'Add Game',
+            isClosableOnBackgroundClick: false,
+            fields: [
+                {
+                    title: 'Home Team',
+                    type: 'select',
+                    name: 'home_team',
+                    defaultValue: null,
+                    listOfSelects: [{name: 'Select Home Team', value: null}, ...this.props.teams]
+
+                },
+                {                    
+                    title: 'Away Team',
+                    type: 'select',
+                    name: 'away_team',
+                    defaultValue: null,
+                    listOfSelects: [{name: 'Select Away Team', value: null}, ...this.props.teams]
+                },
+                {
+                    title: 'Location',
+                    type: 'select',
+                    name: 'location_id',
+                    defaultValue: null,
+                    listOfSelects: [{name: 'Select Location', value: null}, ...this.props.locations]
+                    // listOfSelects: this.props.divisions
+                },
+                {
+                    title: 'Date',
+                    name: 'start_date',
+                    customComponent: <DatePicker
+                                        selected={start_date}
+                                        // onChange={start_date => this.setState({start_date})}
+                                        onChange={this.handleDateChange}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        dateFormat="MMMM d, yyyy h:mm aa"
+                                        timeCaption="time"
+                                        withPortal
+                                    />
+                }
+            ],
+            onChange: this.handleChange(),
+            confirmActionTitle: 'Create Game',
+            confirmAction: () => console.log({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date})
+            // confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors, season_name: defaultValue  }); this.setState(defaultState) },
+        }, 'prompt');
     }
 
     handleNewGameSubmit = (e) => {
@@ -71,13 +145,20 @@ export class DashGames extends Component {
     }
 
     render() {
+        // console.log(this.props.teams, 'teams');
+        // console.log(this.props.locations, 'locations')
         return (
             <div>
 
                 <div className="dashboard-filter-header">
-                    <div>
-                        <Button title="Add Game" onClick={this.toggleGameVisible}/>
-                    </div>
+                    {/* <div> */}
+                        {/* <Button title="Add Game" onClick={this.toggleGameVisible}/> */}
+                        <Button title="Add Game" onClick={this.handleAddGame} />
+
+                        <Input name='name' label='Name'/>
+
+
+                    {/* </div> */}
                 </div>
 
 
@@ -215,12 +296,14 @@ export class DashGames extends Component {
 }
 
 const mapStateToProps = state => {
-    // console.log(state, "our state in dashNav!s");
+    console.log(state, "our state in dashNav!s");
 
     return {
         locations: state.locations.locations,
-        teams: state.teams.allTeams,
-        games: state.games.allGames
+        teams: state.teams.teams,
+        games: state.games.allGames,
+        isLoading: state.games.isLoading,
+
     };
 };
 
@@ -231,6 +314,8 @@ const mapDispatchToProps = dispatch => ({
     getTeams: () => dispatch(getTeams()),
     getGames: () => dispatch(getGames()),
     newGame: (home, away, location, date) => dispatch(newGame(home, away, location, date)),
+    toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
+
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashGames);

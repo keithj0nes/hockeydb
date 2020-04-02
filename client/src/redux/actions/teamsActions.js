@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_SUCCESS, TOGGLE_MODAL, CREATE_SUCCESS } from '../actionTypes';
+import { GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 
 
 
@@ -54,11 +54,37 @@ export const createTeam = teamData => async (dispatch, getState) => {
   console.log('daatgaa,', data)
   if(!data) return;
 
+  // dispatch({
+  //     type: `teams/${CREATE_SUCCESS}`,
+  //     payload: data.data
+  // })
+
+  dispatch(getTeams(`season=${teamData.season_name}`))
+
   dispatch({
-      type: `teams/${CREATE_SUCCESS}`,
-      payload: data.data
+      type: TOGGLE_MODAL,
+      modalProps: { isVisible: false }
   })
 
+
+}
+
+
+
+export const updateTeam = (id, teamData) => async (dispatch, getState) => {
+  const { user } = getState();
+
+  console.log(teamData, 'update team')
+  const data = await request(`/api/admin/teams/${id}`, 'PUT', {access_token: user.access_token, data: teamData});
+  console.log('updateteam data response,', data)
+  if(!data) return;
+
+  // dispatch({
+  //     type: `teams/${CREATE_SUCCESS}`,
+  //     payload: data.data
+  // })
+
+  dispatch(getTeams(`season=${teamData.season_name}`))
 
   dispatch({
       type: TOGGLE_MODAL,

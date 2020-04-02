@@ -6,7 +6,6 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../ac
 
 export const getLocations = () => async dispatch => {
   const data = await request('/api/locations', 'GET', {}, true);
-  console.log(data, 'data')
   if (!data.data) return false;
   dispatch({ type: `locations/${GET_SUCCESS}`, payload: data.data })
   return true;
@@ -15,7 +14,6 @@ export const getLocations = () => async dispatch => {
 export const createLocation = (data) => async (dispatch, getState) => {
   const { user } = getState();
   const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token });
-  console.log(post, 'CREcreateLocation')
   if (!post.data) return false;
 
   dispatch({ type: `locations/${CREATE_SUCCESS}`, payload: post.data });
@@ -28,15 +26,9 @@ export const createLocation = (data) => async (dispatch, getState) => {
 }
 
 export const updateLocation = (id, locationData) => async (dispatch, getState) => {
-
-  console.log(id, locationData, 'SEASON DATA')
   const { user } = getState();
-
   const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.access_token, data: locationData})
-
-  console.log(data, 'DATA IN UPDATE LOCATION ACTIONS')
   if(!data) return false;
-
 
   dispatch({
       type: `locations/${UPDATE_SUCCESS}`,
@@ -54,16 +46,9 @@ export const updateLocation = (id, locationData) => async (dispatch, getState) =
   // }
 }
 
-
-
 export const deleteLocation = id => async (dispatch, getState) => {
-
   const { user } = getState();
-
   const data = await request(`/api/admin/locations/${id}`, 'DELETE', {access_token: user.access_token})
-
-  console.log(data, 'DATA!')
-
   if(!data) return false;
   //Close Delete Modal
   // dispatch({
