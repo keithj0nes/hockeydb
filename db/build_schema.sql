@@ -5,6 +5,7 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS passwords CASCADE;
 DROP TABLE IF EXISTS blog CASCADE;
+DROP TABLE IF EXISTS news CASCADE;
 DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS player_stats CASCADE;
 DROP TABLE IF EXISTS teams CASCADE;
@@ -48,7 +49,7 @@ CREATE TABLE "news" (
   "id" SERIAL PRIMARY KEY,
   "title" VARCHAR,
   "allow_collapse" BOOLEAN,
-  "tag": VARCHAR,
+  "tag" VARCHAR,
   "body" VARCHAR,
   "created_date" TIMESTAMP,
   "created_by" INTEGER,        -- REFERENCES users(id),
