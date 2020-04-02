@@ -3,89 +3,25 @@ const app = require('../server.js');
 const getAllTeams = async (req, res) => {
   const db = app.get('db');
 
+  console.log(req.session, 'req.user')
   console.log(req.query, 'getting teams!')
   let { division_id, division, season } = req.query;
   // console.log(division_id, 'divid')
   
 
-  const season_id = await db.seasons.findOne({name: req.query.season, 'deleted_date =': null}).catch(err => console.log(err, 'ERROR!!!'))
+  const season_id = await db.seasons.findOne({name: season, 'deleted_date =': null}).catch(err => console.log(err, 'ERROR!!!'))
   const divisions = await db.divisions.find({season_id: season_id.id,}).catch(err => console.log(err, 'error in getTeams divisions'));
   const seasons = await db.seasons.find({'hidden_date =': null, 'deleted_date =': null}).catch(err => console.log(err));
 
-
-  // This needs to get cleaned up - but template literals wont work for division.name
-  let data;
-
-  // if(!!division){
-  //   data = await db.query(`
-  //     SELECT teams.*, divisions.name AS division_name 
-  //     FROM teams 
-  //     JOIN divisions 
-  //     ON teams.division_id = divisions.id 
-  //     WHERE divisions.name = $1;
-  
-  //   `, [division]).catch(err => console.log(err));
-  // } else {
-  //   data = await db.query(`
-  //     SELECT teams.*, divisions.name AS division_name 
-  //     FROM teams 
-  //     JOIN divisions 
-  //     ON teams.division_id = divisions.id 
-  //     WHERE divisions.name IS NOT NULL;
-  
-  //   `).catch(err => console.log(err));
-  // }
-
-
-
-
-  // if(!!division){
-  //   console.log(division, 'there is a divsion!!!!!!!')
-  //   data = await db.query(`
-  //     SELECT teams.*, divisions.name AS division_name, divisions.season_id
-  //     FROM teams 
-  //     JOIN divisions ON teams.division_id = divisions.id 
-  //     JOIN seasons ON divisions.season_id = seasons.id
-  //     WHERE divisions.name = $1 AND season_id = ${season_id.id};
-  //   `, [division]).catch(err => console.log(err));
-  // } 
-  if(!!division){
-    console.log(division, 'there is a divsion!!!!!!!')
-    data = await db.query(`
-    select teams.*, seasons.name as season_name, divisions.name as division_name from team_season_division tsd 
-    join teams on teams.id = tsd.team_id
-    join seasons on seasons.id = tsd.season_id
-    join divisions on divisions.id = tsd.division_id
-    where tsd.season_id = ${season_id.id} and divisions.name = $1;
-    `, [division]).catch(err => console.log(err));
-  } 
-  // else {
-  //   console.log('else query! *******************')
-  //   data = await db.query(`
-  //     SELECT teams.*, divisions.name AS division_name, divisions.season_id
-  //     FROM teams 
-  //     JOIN divisions ON teams.division_id = divisions.id 
-  //     JOIN seasons ON divisions.season_id = seasons.id
-  //     WHERE divisions.name IS NOT NULL AND season_id = ${season_id.id};
-  //   `).catch(err => console.log(err));
-  // }
-  else {
-    console.log('else query! *******************')
-    data = await db.query(`
-      select teams.*, seasons.name as season_name, divisions.name as division_name from team_season_division tsd 
-      join teams on teams.id = tsd.team_id
-      join seasons on seasons.id = tsd.season_id
-      join divisions on divisions.id = tsd.division_id
-      where tsd.season_id = ${season_id.id} and tsd.division_id is not null;
-    `).catch(err => console.log(err));
-  }
-  
-    // WHERE division_id ${division_id ? '=' + division_id : 'IS NOT NULL'};
-  
-  // res.status(200).send({ status: 200, data, message: 'Retrieved list of teams' })
-
+  const query = `
+    SELECT teams.*, seasons.name AS season_name, divisions.name AS division_name, divisions.id AS division_id FROM team_season_division tsd 
+    JOIN teams ON teams.id = tsd.team_id
+    JOIN seasons ON seasons.id = tsd.season_id
+    JOIN divisions ON divisions.id = tsd.division_id
+    WHERE tsd.season_id = ${season_id.id} AND ${!!division ? 'divisions.name = $1': 'tsd.division_id is not null'};
+  `;
+  const data = await db.query(query, [division]);
   res.status(200).send({ status: 200, data: {teams: data, divisions, seasons}, message: 'Retrieved list of teams' });
-
 }
 
 

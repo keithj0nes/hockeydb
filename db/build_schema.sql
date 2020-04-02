@@ -44,9 +44,12 @@ CREATE TABLE "passwords" (
   "pw" VARCHAR
 );
 
-CREATE TABLE "blog" (
+CREATE TABLE "news" (
   "id" SERIAL PRIMARY KEY,
-  "message" VARCHAR,
+  "title" VARCHAR,
+  "allow_collapse" BOOLEAN,
+  "tag": VARCHAR,
+  "body" VARCHAR,
   "created_date" TIMESTAMP,
   "created_by" INTEGER,        -- REFERENCES users(id),
   "updated_date" TIMESTAMP,
@@ -118,7 +121,6 @@ CREATE TABLE "divisions" (
 
 CREATE TABLE "teams" (
   "id" SERIAL PRIMARY KEY,
-  "division_id" INTEGER,
   "name" VARCHAR,
   "colors" VARCHAR,
   "created_date" TIMESTAMP,
@@ -194,9 +196,9 @@ CREATE TABLE "games" (
 
 ALTER TABLE "passwords" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
-ALTER TABLE "blog" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
-ALTER TABLE "blog" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
-ALTER TABLE "blog" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
+ALTER TABLE "news" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
+ALTER TABLE "news" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
+ALTER TABLE "news" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 
 ALTER TABLE "players" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "players" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
@@ -216,7 +218,6 @@ ALTER TABLE "divisions" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id")
 ALTER TABLE "divisions" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 ALTER TABLE "divisions" ADD FOREIGN KEY ("hidden_by") REFERENCES "users" ("id");
 
-ALTER TABLE "teams" ADD FOREIGN KEY ("division_id") REFERENCES "divisions" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 ALTER TABLE "teams" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");

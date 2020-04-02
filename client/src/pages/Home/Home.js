@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import Blog from './Blog';
+import News from './News';
 
 export class Home extends Component {
   render() {
@@ -13,7 +13,7 @@ export class Home extends Component {
           Admin
         </Link>
 
-        <Blog />
+        <News />
       </div>
     )
   }

@@ -111,6 +111,7 @@ const PromptModal = ({data, toggleModal}) => {
                                 <label htmlFor={field.name}>{field.title}</label>
                                 <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
                             </div>
+                            // <Input name={field.name} label={field.title} disabled={field.disabled} onChange={data.onChange} />
                         )}
 
                         {field.type === 'select' && (
@@ -139,6 +140,12 @@ const PromptModal = ({data, toggleModal}) => {
 
                         )}
 
+                        { !!field.customComponent && (
+                            <div className="modal-field">
+                                <label htmlFor="">{field.title}</label>
+                                {field.customComponent}
+                            </div>
+                        ) }
 
                     </div>
                 )
@@ -262,6 +269,7 @@ Modal.propTypes = {
 //     defaultValue: PropTypes.string.isRequired, 
 //     listOfSelects: PropTypes.array,
 //     hiddenValue: PropTypes.string
+//     customComponent: PropTypes.func
 // }
 
 

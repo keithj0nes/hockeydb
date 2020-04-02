@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getTeams, createTeam } from '../../../redux/actions/teamsActions';
+import { getTeams, createTeam, updateTeam } from '../../../redux/actions/teamsActions';
 
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import { Button, Filter } from '../../../components';
@@ -24,12 +24,14 @@ class DashTeams extends Component {
    state = defaultState;
 
     componentDidMount() {
-        this.props.getTeams();
-    }
+        if(this.props.location.search.length > 0){
+            return this.props.getTeams(this.props.location.search.slice(1)).then(res => {
+                   return res && this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
+            });
+        }
 
-    // handleChange = e => {
-    //     this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
-    // }
+        return this.props.getTeams();
+    }
 
     handleChange = edit => e => {
         if(!!edit){
@@ -37,6 +39,7 @@ class DashTeams extends Component {
             editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
             return this.setState({edit: editStateCopy})
         }
+        // console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
@@ -78,9 +81,9 @@ class DashTeams extends Component {
                     defaultValue: null
                 }
             ],
-            onChange: this.handleChange,
+            onChange: this.handleChange(),
             confirmActionTitle: 'Create Season',
-            confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors  }); this.setState(defaultState) },
+            confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors, season_name: defaultValue  }); this.setState(defaultState) },
         }, 'prompt');
     }
 
@@ -136,22 +139,24 @@ class DashTeams extends Component {
             ],
             onChange: this.handleChange('editing'),
             confirmActionTitle: 'Update Team',
-            confirmAction: () => console.log('edit team confirmation')
-            // confirmAction: () => this.validation('edit') && this.props.updateSeason(item.id, this.state.edit),
+            // confirmAction: () => console.log('edit team confirmation')
+            confirmAction: () => this.validation('edit') && this.props.updateTeam(item.id, this.state.edit),
         }, 'prompt');
     }
 
 
-    validation = () => {
-        // console.log(!this.state.name, !Number(this.state.division_id), 'state!!!')
-        if (!this.state.name || !Number(this.state.division_id)) return false;
-        return true;
-    }
+    // validation = () => {
+    //     // console.log(!this.state.name, !Number(this.state.division_id), 'state!!!')
+    //     if (!this.state.name || !Number(this.state.division_id)) return false;
+    //     return true;
+    // }
 
     validation = (edit) => {
         if(!!edit){
-            return !this.state.edit.name || !Number(this.state.division_id) ? false : true;
+            console.log(this.state.edit, 'edit')
+            return !this.state.edit.name || !Number(this.state.edit.division_id) ? false : true;
         }
+        console.log(this.state.name, Number(this.state.division_id))
         if (!this.state.name|| !Number(this.state.division_id)) return false;
         return true;
     }
@@ -211,11 +216,10 @@ class DashTeams extends Component {
 
 
     render() {
-        const { teams } = this.props
-        console.log( teams, 'teams!')
         if (this.props.isLoading) {
             return <div>Loading...</div>
         }
+        const { teams } = this.props
 
         return (
             <>
@@ -288,6 +292,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getTeams: (filters) => dispatch(getTeams(filters)),
         createTeam: data => dispatch(createTeam(data)),
+        updateTeam: (id, data) => dispatch(updateTeam(id, data)),
         // deleteTeam: id => dispatch(deleteSeason(id)),
         // updateTeams: (id, data) => dispatch(updateTeams(id, data)),
         toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),

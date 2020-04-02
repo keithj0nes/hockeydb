@@ -8,7 +8,7 @@ import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
-import DashBlogs from './DashBlogs/DashBlogs';
+import DashNews from './DashNews/DashNews';
 import DashLocations from './DashLocations/DashLocations';
 
 import '../../assets/styles/dashboard.scss';
@@ -35,7 +35,7 @@ class Dashboard extends Component {
                     <Route path={`${match.path}/teams`}     component={DashTeams} />
                     <Route path={`${match.path}/players`}   component={DashPlayers} />
                     <Route path={`${match.path}/games`}     component={DashGames} />
-                    <Route path={`${match.path}/blogs`}     component={DashBlogs} />
+                    <Route path={`${match.path}/news`}      component={DashNews} />
                     <Route path={`${match.path}/locations`} component={DashLocations} />
                 </div>
             </div>

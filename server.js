@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const admin = require('./controllers/admin');
-const blogs = require('./controllers/blogs');
+const news = require('./controllers/news');
 const auth = require('./controllers/auth');
 const players = require('./controllers/players');
 const teams = require('./controllers/teams');
@@ -108,8 +108,8 @@ app.get(`/api/seasons/`, seasons.getSeasons);                   // Postman Docs
 app.get(`/api/seasons/:id`, seasons.getSeasonById);
 
 // Blog
-app.get(`/api/blog`, blogs.getBlogs);
-app.get(`/api/blog/:id`, blogs.getBlogById)
+app.get(`/api/news`, news.getNews);
+app.get(`/api/news/:id`, news.getNewsById)
 
 // Schedule
 // app.get(`/api/schedule`)
@@ -177,9 +177,9 @@ app.delete(`/api/admin/players/:id`, admin.deletePlayer)
 
 // Create blog post
 // auth.authorizeAccessToken, -- middleware for authorizing admin blog post
-app.post(`/api/admin/blog`, auth.authorizeAccessToken, admin.createBlog)
-app.put(`/api/admin/blog/:id`, admin.updateBlog)
-app.delete(`/api/admin/blog/:id`, admin.deleteBlog)
+app.post(`/api/admin/news`, auth.authorizeAccessToken, admin.createNews)
+app.put(`/api/admin/news/:id`, admin.updateNews)
+app.delete(`/api/admin/news/:id`, admin.deleteNews)
 
 // Update about 
 app.post(`/api/admin/about`)

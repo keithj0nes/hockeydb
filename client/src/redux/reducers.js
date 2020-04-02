@@ -17,14 +17,14 @@ export const user = (state = initialAuthState, { type, payload }) => {
 };
 
 
-const initialBlogState = {
-  blogs: [],
+const initialNewsState = {
+  news: [],
 }
 
-export const blogs = (state = initialBlogState, { type, payload }) => {
+export const news = (state = initialNewsState, { type, payload }) => {
   switch (type) {
     case GET_BLOGS:
-      return { ...state, blogs: payload }
+      return { ...state, news: payload }
     default:
       return state;
   }

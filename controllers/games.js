@@ -3,7 +3,7 @@ const app = require('../server.js');
 const getGames = async (req, res) => {
   const db = app.get('db');
   const data = await db.get_games();
-  console.log(data, 'GAMES!')
+  // console.log(data, 'GAMES!')
   res.status(200).send({ status: 200, data, message: 'Retrieved list of games' })
 }
 
