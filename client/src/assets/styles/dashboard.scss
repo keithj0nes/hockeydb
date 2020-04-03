@@ -1,9 +1,9 @@
 @import './variables';
 
 .dashboard-container {
-    background: $gray_color;
+    background: $body_background_color;
     // font-family: $main_font;
-    height: 100vh;
+    // height: 100vh;
 
     a {
         color: $nav_link;

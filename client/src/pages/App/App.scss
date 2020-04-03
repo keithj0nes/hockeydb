@@ -17,12 +17,21 @@ a {
 }
 
 p, a, h1, h2, h3, h4, h5, h6, input, select, option, label, button {
-    font-family: $main-font;
+    font-family: $main_font;
+    color: $main_color;
 }
 
-// h1 {
-//     font-size: //TBD
-// }
+h1, h2, h3, h4, h5, h6 {
+    font-family: $heading_font;
+    color: $heading_color;
+}
+
+h1 {
+    // font-size: 32px;
+    // font: Bold 32px/40px;
+    line-height: 40px;
+    // letter-spacing: 10px;
+}
 
 select, input, label {
     display: block;
@@ -33,12 +42,22 @@ select, input {
     // background: $white_color !important;
 }
 
+.muted {
+    color: $muted_color;
+}
+
 
 input[type=text] {
     border: 1px solid $dark_gray_color;
     border-radius: 3px;
     padding: 5px 10px;
     width: 100%;
+}
+
+.site-body {
+    background: $body_background_color;
+    flex: 1;
+    min-height: 100vh;
 }
 
 
