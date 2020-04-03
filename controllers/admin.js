@@ -132,7 +132,7 @@ const createNews = async (req, res) => {
 
     let currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
 
-    const data = await db.news.insert({ title, body, allow_collapse, tag, created_date: currentDate, created_by: req.user.id }).catch(err => console.log(err, 'create blog error'))
+    const data = await db.news.insert({ title, body, allow_collapse, tag, created_date: currentDate, created_by: 1}).catch(err => console.log(err, 'create blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Blog post created' })
 }

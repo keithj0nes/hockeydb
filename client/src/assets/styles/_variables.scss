@@ -16,9 +16,11 @@ $dark_gray_color: #BFC1C3;
 $accent_blue_color: #50C0F0;
 
 
+
 //FONTS
-$main_font: 'KoHo', sans-serif;
-$heading_font: $main_font;
+// $main_font: 'KoHo', sans-serif;
+
+// $heading_font: $main_font;
 
 // $button_font: 'Poppins', sans-serif;
 
@@ -30,3 +32,18 @@ $heading_font: $main_font;
 // #DEDEDE - Main font color
 // #6F6F6F - Nav Link (unselected)
 
+
+// use these new format
+//FONTS
+
+$main_font: 'Open Sans', sans-serif;
+$main_color: #333333;
+$heading_font: 'Nunito Sans', sans-serif;
+$heading_color: #0C1D40;
+
+// $body_background_color: red;
+$body_background_color: #F0F0F0;    // off white
+$muted_color: #7E92A3;              // light gray
+
+$max_container_width: 1640px;
+// $media-query-

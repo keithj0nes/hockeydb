@@ -177,7 +177,10 @@ app.delete(`/api/admin/players/:id`, admin.deletePlayer)
 
 // Create blog post
 // auth.authorizeAccessToken, -- middleware for authorizing admin blog post
-app.post(`/api/admin/news`, auth.authorizeAccessToken, admin.createNews)
+// auth.authorizaccestoken timing out after short period of time
+// app.post(`/api/admin/news`, auth.authorizeAccessToken, admin.createNews)
+app.post(`/api/admin/news`, admin.createNews)
+
 app.put(`/api/admin/news/:id`, admin.updateNews)
 app.delete(`/api/admin/news/:id`, admin.deleteNews)
 
