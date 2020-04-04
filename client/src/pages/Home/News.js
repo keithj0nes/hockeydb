@@ -70,21 +70,38 @@ class NewsPost extends Component {
     return (
       <div className="news-container-card">
 
-        <div className="headline-container">
+      {/* Layout for Mobile */}
+        <div className="hide-desktop">
+          <div className="headline-container">
+            <h1>{title}</h1>
+            {/* <h1>This will be the headline of the article</h1> */}
+            {tag && <div className="tag" style={{background: '#E3BA4A'}}>{icon} <span className="hide-mobile">&nbsp;{tag}</span></div> }
+          </div>
+          <div className="posted-date-container">
+            <h6 className="posted-date">{dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
+            {/* <p className="posted-date">Updated on: {dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</p> */}
+            {updated_date && <p className="posted-date">Updated on: {dateFormat(updated_date, 'MM/DD/YYYY hh:mm:ss')}</p> }
+          </div>
+          <p className="posted-by">{first_name} {last_name} </p>
+        </div>
+
+
+      {/* Layout for Desktop */}
+        <div className="hide-mobile">
           <h1>{title}</h1>
-          {/* <h1>This will be the headline of the article</h1> */}
-          {tag && <div className="tag" style={{background: '#E3BA4A'}}>{icon} <span className="hide-mobile">&nbsp;{tag}</span></div> }
-          {/* <div className="hide-mobile">HELLO</div> */}
+          <div className="posted-date-container">
+            <div>
+              <h6 className="posted-date">{dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
+              <h6 className="posted-date">Updated on: {dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
+            </div>
+            <div>
+              {tag && <div className="tag" style={{background: '#E3BA4A'}}>{icon} <span className="hide-mobile">&nbsp;{tag}</span></div> }
+              <p className="posted-by">{first_name} {last_name} </p>
+            </div>
+          </div>
         </div>
 
-        <div className="posted-date-container">
-          <h6 className="posted-date">{dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
-          {/* <p className="posted-date">Updated on: {dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</p> */}
-          {updated_date && <p className="posted-date">Updated on: {dateFormat(updated_date, 'MM/DD/YYYY hh:mm:ss')}</p> }
-        </div>
 
-
-        <p className="posted-by">{first_name} {last_name} </p>
 
         <hr />
 

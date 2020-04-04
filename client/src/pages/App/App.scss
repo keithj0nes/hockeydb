@@ -60,6 +60,12 @@ input[type=text] {
     min-height: 100vh;
 }
 
+.site-container {
+    max-width: 1200px;
+    // background-color: yellow;
+    margin: 0 auto;
+}
+
 
 // Modal
 .modal-container {

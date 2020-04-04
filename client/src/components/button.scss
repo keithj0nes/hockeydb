@@ -1,15 +1,17 @@
+@import '../assets/styles/variables';
+
 button {
     padding: 10px 20px;
     min-width: 150px;
     min-height: 40px;
     font-size: 15px;
     font-family: 'Poppins', sans-serif;
-    letter-spacing: 1;
+    letter-spacing: 1px;
     border-radius: 3px;
     border: none;
     cursor: pointer;
-    color: #FFFFFF;
-    background: #19AEC0
+    color: #FFFFFF !important;
+    background: #19AEC0; 
 }
 
 button.disabled {
@@ -27,6 +29,19 @@ button.danger {
     background: #D62B2B;
 }
 
+button.outline {
+    border: 1px solid $muted_color;
+    color: $muted_color !important;
+    text-transform: uppercase;
+    border-radius: 3px;
+    padding: 10px 20px;
+    outline: none;
+    // cursor: pointer;
+    font-family: $heading_font;
+    // font-weight: bold;
+    letter-spacing: 1.4px;
+    background: transparent;
+}
 // button.success {
 
 // }
@@ -41,3 +56,19 @@ button:not(.disabled):not(.cancel):hover {
     // background: lighten(#19AEC0, 10%);
     opacity: 0.8;
 }
+
+
+
+
+// input[type=button] {
+//     border: 1px solid $muted_color;
+//     color: $muted_color;
+//     text-transform: uppercase;
+//     border-radius: 3px;
+//     padding: 10px 20px;
+//     outline: none;
+//     cursor: pointer;
+//     font-family: $heading_font;
+//     // font-weight: bold;
+//     letter-spacing: 1.4px;
+// }
