@@ -49,7 +49,9 @@
 import React from 'react';
 import './button.scss';
 
-const Button = ({title, onClick, cancel, danger, success, disabled, opa}) => {
+//opa (opacity) is for the site.com/styleguide page to perminaently be in the 'hover' state
+
+const Button = ({title, onClick, cancel, danger, success, disabled, opa, outline}) => {
     // let color = '#FFFFFF';
     // let background = '#19AEC0';
     // if(cancel){
@@ -92,7 +94,9 @@ const Button = ({title, onClick, cancel, danger, success, disabled, opa}) => {
         classNames = 'danger';
     } else if (success) {
         classNames = 'success';
-    } 
+    }  else if (outline) {
+        classNames = 'outline'
+    }
     // else if (disabled) {
     //     classNames = 'disabled';
     // }

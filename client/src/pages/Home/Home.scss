@@ -1,0 +1,39 @@
+@import '../../assets/styles/variables';
+
+.home-container {
+    // background: green;
+    display: flex;
+    // padding: 20px 10px;
+    padding: 30px 10px;
+}
+
+.todays-games-toggle-button {
+    box-shadow: 0 5px 15px rgba(25, 174, 192,0.5);
+    cursor: pointer;
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: 80px;
+    border-radius: 100%;
+    background-color: $highlite_color;
+    color: #FFFFFF;
+    font-family: $main_font;
+}
+
+
+
+
+@media only screen and (min-width: 768px){
+    // .home-container {
+    //     padding: 30px 0;
+    // }
+
+    .todays-games-toggle-button {
+        display: none;
+    }
+}

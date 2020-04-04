@@ -1,0 +1,64 @@
+@import '../assets/styles/variables';
+
+.todays-games-container {
+    // background: blue;
+    background: white;
+    padding: 20px;
+    margin: 0 auto;
+    // this max width should be for  the desktop view
+    max-width: 396px;
+    border-radius: 3px;
+
+    h2 {
+        letter-spacing: 2.4px;
+        text-align: center;
+        text-transform: uppercase;
+        padding: 20px 0;
+    }
+
+    .todays-games-game {
+        // background: green;
+        padding: 20px;
+        border-bottom: 2px solid #f1f1f1;
+        display: flex;
+        justify-content: space-between;
+
+        .todays-game-section {
+            // background: yellow;
+            // display: flex;
+            // flex-direction: column;
+
+            &:nth-child(2) {
+                text-align: right;
+            }
+
+            p {
+                font-family: $heading_font;
+                letter-spacing: 1.2px;
+                margin: -3px 0;
+                text-transform: uppercase;
+                color: $muted_color;
+                font-size: 13px;
+            }
+
+            p.team-name {
+                font-weight: bold;
+                color: $highlite_color;
+            }
+        }
+
+    }
+}
+
+
+@media only screen and (min-width: 768px){
+
+
+    .todays-games-container {
+        min-width: 350px;
+        // margin-left: 20px; 
+        margin-left: 30px; 
+    }
+
+
+}

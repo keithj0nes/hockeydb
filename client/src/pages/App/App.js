@@ -34,11 +34,13 @@ class App extends Component {
       <Router>
         {/* <Routes /> */}
         <div className="site-body">
-          <Route exact path="/"     component={Home} />
-          <Route path='/login'      component={Login} />
-          <Route path='/players'    component={Players} />
-          <Route path='/games'      component={Games} />
-          <Route path='/styleguide' component={Styleguide} />
+          <div className="site-container">
+            <Route exact path="/"     component={Home} />
+            <Route path='/login'      component={Login} />
+            <Route path='/players'    component={Players} />
+            <Route path='/games'      component={Games} />
+            <Route path='/styleguide' component={Styleguide} />
+          </div>
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />
         </div>
