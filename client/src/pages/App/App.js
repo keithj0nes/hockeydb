@@ -8,7 +8,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/Login';
 import Players from '../Players/Players';
 import Games from '../Games/Games';
-import { Modal } from '../../components';
+import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
 // import Routes from './Routes';
@@ -34,6 +34,7 @@ class App extends Component {
       <Router>
         {/* <Routes /> */}
         <div className="site-body">
+          <Header />
           <div className="site-container">
             <Route exact path="/"     component={Home} />
             <Route path='/login'      component={Login} />

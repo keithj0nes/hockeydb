@@ -51,7 +51,7 @@ import './button.scss';
 
 //opa (opacity) is for the site.com/styleguide page to perminaently be in the 'hover' state
 
-const Button = ({title, onClick, cancel, danger, success, disabled, opa, outline}) => {
+const Button = ({title, onClick, cancel, danger, success, disabled, opa, outline, style}) => {
     // let color = '#FFFFFF';
     // let background = '#19AEC0';
     // if(cancel){
@@ -101,8 +101,15 @@ const Button = ({title, onClick, cancel, danger, success, disabled, opa, outline
     //     classNames = 'disabled';
     // }
 
+    const _style = {
+        opacity: opa ? 0.8 : 1,
+        background: cancel && 'transparent',
+        color: cancel && 'black',
+        ...style // props.style
+    }
+
     return (
-        <button className={classNames} style={opa && {opacity: 0.8}} onClick={onClick} disabled={disabled}>{title}</button>
+        <button className={classNames} style={_style} onClick={onClick} disabled={disabled}>{title}</button>
     )
 }
 

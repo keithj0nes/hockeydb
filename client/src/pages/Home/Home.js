@@ -22,7 +22,7 @@ export class Home extends Component {
     const { leftSliderVisible } = this.state;
     let visibility = leftSliderVisible ? "show" : "hide";
 
-    console.log(this.state.leftSliderVisible, 'toggleLeftSlider')
+    // console.log(this.state.leftSliderVisible, 'toggleLeftSlider')
 
     return (
       <div>

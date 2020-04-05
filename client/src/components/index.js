@@ -9,6 +9,7 @@ export { default as Modal } from './Modal';
 export { default as Swiper } from './Swiper';
 
 export { default as Filter } from './Filter';
+export { default as Header } from './Header';
 
 export { Input } from './Input';
 export { Select } from './Select';
