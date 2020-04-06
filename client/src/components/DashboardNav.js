@@ -25,6 +25,8 @@ class DashboardNav extends Component {
 
     render() {
         const { match } = this.props;
+
+        console.log(match, 'match in dashboard')
         return (
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>

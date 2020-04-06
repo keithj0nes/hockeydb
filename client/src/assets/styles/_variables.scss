@@ -37,14 +37,15 @@ $accent_blue_color: #50C0F0;
 //FONTS
 
 $main_font:     'Open Sans', sans-serif;
-$main_color:    #333333;
+$main_color:    #333333;            // near black
 $heading_font:  'Nunito Sans', sans-serif;
-$heading_color: #0C1D40;
+$heading_color: #0C1D40;            // dark blue
 
 // $body_background_color: red;
 $body_background_color: #F0F0F0;    // off white
 $muted_color:           #7E92A3;    // light gray
 $highlite_color:        #19AEC0;    // light blue
+$white_color:           #FFFFFF;    // white
 
 $max_container_width: 1640px;
 // $media-query-
