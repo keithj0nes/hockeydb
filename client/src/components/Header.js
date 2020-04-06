@@ -17,44 +17,122 @@ const navLinks = [
 
 class Header extends Component {
 
+    state = {
+        mobileSliderVisible: false
+    }
+    
+    
+    toggleMobileSlider = () => {
+        this.setState({mobileSliderVisible: !this.state.mobileSliderVisible})
+    }
+
+    
+
+
+
     render() {
         const { match, location } = this.props;
         if(location.pathname.includes('/dashboard')) return null;
+
+        const { mobileSliderVisible } = this.state;
+        let visibility = mobileSliderVisible ? "show" : "hide";
+
         return (
             <header>
-                <div className="site-container">
 
-                <div className="logo">
-                    <LeagueLogo />
+            {/* DESKTOP HEADER */}
+
+                <div className="hide-mobile">
+                    <div className="site-container">
+
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <div className="logo">
+                                <LeagueLogo />
+                            </div>
+
+                            <nav>
+                                <ul>
+                                    {navLinks.map(link => (
+                                        <li key={link.to}>
+                                            <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`link pressed to ${link.to}`)}>
+                                                {link.name}
+                                            </NavLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <div className="login">
+                            <Button 
+                                title="Player Register"
+                                onClick={() => console.log('clicekd player register')}
+                                style={{textTransform: 'uppercase'}}
+                            />
+
+                            <Button 
+                                title="Login"
+                                onClick={() => console.log('clicekd login')}
+                                cancel
+                                style={{minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', paddingRight: 10}}
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <nav>
-                    <ul>
-                        {navLinks.map(link => (
-                            <li key={link.to}>
-                                <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`link pressed to ${link.to}`)}>
-                                    {link.name}
-                                </NavLink>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
 
+            {/* MOBILE HEADER */}
+                <div className="hide-desktop">
+                    <div className="hamburger-menu" onClick={this.toggleMobileSlider}>
+                        <div className="line"></div>
+                        <div className="line"></div>
+                        <div className="line"></div>
+                    </div>
 
-                <div className="login">
-                    <Button 
-                        title="Player Register"
-                        onClick={() => console.log('clicekd player register')}
-                    />
+                    <div className="logo">
+                        <LeagueLogo />
+                    </div>
+
 
                     <Button 
                         title="Login"
                         onClick={() => console.log('clicekd login')}
                         cancel
-                        style={{minWidth: 'auto', color: '#FFFFFF'}}
+                        style={{minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', padding: 10}}
                     />
+
+
+                    <div className={`dashboard-nav-container dashboard-nav-container-${visibility}`}>
+                        <div className={`dashboard-nav-background fade-in-${visibility}`} />
+                        <div className={`dashboard-nav-sliding-container dashboard-nav-${visibility}`}>
+                            <div className={"dashboard-nav bluebg"}>
+                                <div className={"hide-desktop bluebg close"} onClick={this.toggleMobileSlider}>&times;</div>
+
+                                    <div className="logo">
+                                        <div><LeagueLogo /></div>
+                                        <h2>HockeyDB</h2>
+                                    </div>
+
+                                    <nav>
+                                        <ul>
+                                            {navLinks.map(link => (
+                                                <li key={link.to}>
+                                                    <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.toggleMobileSlider}>
+                                                        <div style={{height: 30, width: 30, background: 'white'}}/>{link.name}
+                                                    </NavLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </nav>
+
+                                </div>
+                            <div className={"dashboard-nav-close"} onClick={this.toggleMobileSlider} />
+                        </div>
+                    </div>
                 </div>
-                </div>
+
+
+
             </header>
         )
     }
