@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
+import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -41,7 +41,7 @@ const initialMiscState = {
   modalProps: {},
   modalType: '',
   isLoading: false, 
-  errors: ''
+  errors: '',
 }
 
 export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading }) => {
@@ -76,12 +76,15 @@ export const players = (state = initialPlayersState, { type, payload }) => {
 const initialGameState = {
   allGames: [],
   selectedGame: null,
+  todaysGames: []
 };
 
 export const games = (state = initialGameState, { type, payload }) => {
   switch (type) {
     case GET_GAMES:
       return { ...state, allGames: payload };
+    case `todaysgames/${GET_SUCCESS}`:
+      return {...state, todaysGames: payload}
     default:
       return state;
   }

@@ -1,6 +1,6 @@
 // import axios from 'axios';
 import { request } from './middleware';
-import { GET_BLOGS } from '../actionTypes';
+import { GET_BLOGS, GET_SUCCESS} from '../actionTypes';
 
 
 
@@ -8,8 +8,14 @@ export const sendBlogs = data => ({ type: GET_BLOGS, payload: data })
 
 export const getNews = () => async dispatch => {
   const data = await request('/api/news', 'GET', {}, true)
-  if (!data.data) return false;
-  dispatch(sendBlogs(data.data))
+  console.log(data,'data')
+  if (!data.data.news) return false;
+  dispatch(sendBlogs(data.data.news));
+  dispatch({
+    type: `todaysgames/${GET_SUCCESS}`,
+    payload: data.data.todays_games
+  })
+
   return true;
 }
 
