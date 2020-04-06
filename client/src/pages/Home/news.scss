@@ -70,7 +70,11 @@
             align-self: flex-start;
             display: flex;
             color: white;
-            font-size: 18px;
+            font-size: 12px;
+            font-family: $heading_font;
+            font-weight: bold;
+
+
         }
 
         .news-body {

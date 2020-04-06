@@ -9,7 +9,7 @@ export const sendBlogs = data => ({ type: GET_BLOGS, payload: data })
 export const getNews = () => async dispatch => {
   const data = await request('/api/news', 'GET', {}, true)
   console.log(data,'data')
-  if (!data.data.news) return false;
+  if (!data.data) return false;
   dispatch(sendBlogs(data.data.news));
   dispatch({
     type: `todaysgames/${GET_SUCCESS}`,
