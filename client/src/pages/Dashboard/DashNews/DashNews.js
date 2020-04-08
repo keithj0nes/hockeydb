@@ -1,149 +1,162 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from '../../../components';
+import DashNewsCreate from './DashNewsCreate';
 
-import { createNewsPost } from '../../../redux/actions/news';
-import './dashnews.scss';
-
-
-const tags = [
-  {name: 'IMPORTANT', icon: '!'},
-  {name: 'ALERT',     icon: '!i!'}
-]
+import { getNews, updateNewsPostOrder } from '../../../redux/actions/news';
 
 
-export class DashBlogs extends Component {
+class DashNews extends Component {
+
   state = {
-    // message: '',
-    title: '',
-    body: '',
-    allow_collapse: false,
-    tag: ''
+    newsPosts: []
   }
 
-  quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-      // ['link', 'image'],
-      ['clean']
-    ],
-    imageHandler: this.imageHandler
+  static getDerivedStateFromProps(props, state) {
+    if(props.news.length !== state.newsPosts.length) {
+      return {
+        newsPosts: props.news
+      }
+    }
+    return null;
+  }
+  
+  componentDidMount() {
+    this.props.getNews();
   }
 
-  quillFormats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ]
+  onDragEnd = result => {
+    const { destination, source } = result;
 
-
-
-  // imageHandler = (image, callback) => {
-  //   var IMGUR_CLIENT_ID = 'bcab3ce060640ba';
-  //   var IMGUR_API_URL = 'https://api.imgur.com/3/image';
-  //   var data = new FormData();
-  //   data.append('image', image);
-
-  //   var xhr = new XMLHttpRequest();
-  //   xhr.open('POST', IMGUR_API_URL, true);
-  //   xhr.setRequestHeader('Authorization', 'Client-ID ' + IMGUR_CLIENT_ID);
-  //   xhr.onreadystatechange = function () {
-  //     if (xhr.readyState === 4) {
-  //       var response = JSON.parse(xhr.responseText);
-  //       if (response.status === 200 && response.success) {
-  //         callback(response.data.link);
-  //       } else {
-  //         var reader = new FileReader();
-  //         reader.onload = function (e) {
-  //           callback(e.target.result);
-  //         };
-  //         reader.readAsDataURL(image);
-  //       }
-  //     }
-  //   }
-  //   xhr.send(data);
-  // }
-
-  // handleChange = e => {
-  //   this.setState({ [e.target.name]: e.target.value })
-  //   console.log(this.state.message);
-
-  // }
-  // handleSubmit = e => {
-  //   e.preventDefault();
-  //   this.props.newBlogPost(this.state.message)
-  // }
-
-  handleQuillChange = body => {
-    this.setState({ body })
-    // console.log(this.state.text);
-  }
-
-  handleQuillSubmit = () => {
-    // console.log(this.state, 'right herrr')
-    this.props.createNewsPost(this.state)
-  }
-
-  handleChange = e => {
-      this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
+    if(!destination) return; // if dropped outside of droppable area
+    if(destination.droppableId === source.droppableId && destination.index === source.index) return; // if dropped in the same spot
+    
+    const newPostsArr = [...this.state.newsPosts];
+    const [ removed ] = newPostsArr.splice(source.index, 1);
+    newPostsArr.splice(destination.index, 0, removed);
+    this.setState({newsPosts: newPostsArr}, () => {
+      // console.log({movedId: removed.id, toIndex:destination.index + 1, fromIndex:source.index + 1, move: destination.index + 1 > source.index + 1 ? 'down' : 'up'})
+      const { id } = removed;
+      const data = {toIndex:destination.index + 1, fromIndex:source.index + 1, move: destination.index + 1 > source.index + 1 ? 'down' : 'up'}
+      this.props.updateNewsPostOrder(data, id);
+    })
   }
 
   render() {
     return (
       <div className="dashnews-container">
-        <h1>News</h1>
-        <br />
-        <br />
 
-        <label htmlFor="title">Title</label>
-        <input type="text" id="title" name="title" onChange={this.handleChange}/>
+      <DashNewsCreate />
 
-        <br />
-        <br />
+        <div style={{background: 'yellow', width: '60%', padding: 20}}>
+          <DragDropContext
+            // onDragStart={this.onDragStart}
+            // onDragUpdate={this.onDragUpdate}
+            onDragEnd={this.onDragEnd}
+          >
+            <Droppable droppableId="news-dnd-container">
+            {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    // isDraggingOver={snapshot.isDraggingOver}
+                >
+                    {this.state.newsPosts.map((post, index) => {
+                      return (
+                        <Draggable draggableId={post.id} index={index} key={post.id}>
+                            {(provided, snapshot) => (
+                                <div
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    ref={provided.innerRef}
+                                    // isDragging={snapshot.isDragging}
+                                >
+                                    <p style={{padding: 20, background: 'white', marginBottom: 10, border: '1px solid red'}} key={post.id}>{post.id} | {post.title} | {post.first_name}</p>
+                                </div>
+                            )}
+                        </Draggable>
+                      )
+                    })}
 
-        <div className="rte-container">
-          <ReactQuill value={this.state.body} onChange={this.handleQuillChange} formats={this.quillFormats} modules={this.quillModules} />
+                    {provided.placeholder}
+                </div>
+            )}
+            </Droppable>
+          </DragDropContext>
         </div>
-
-        <br />
-        <br />
-
-        <label htmlFor="allow_collapse">Allow Collapse</label>
-        <input type="checkbox" id="allow_collapse" name="allow_collapse" onChange={this.handleChange}/>
-        <br />
-        <br />
-
-        <select name="tag" id="tag" onChange={this.handleChange}>
-          <option value="">{'Select A Tag'}</option>
-          {tags.map(tag => {
-            return <option key={tag.name}>{tag.name}</option>
-          })}
-        </select>
-        <br />
-        <br />
-
-        <Button title="Post" onClick={this.handleQuillSubmit} />
-      </div >
+        {/* {this.props.news.map(post => {
+          return (<p key={post.id}>{post.id} | {post.title} | {post.first_name}</p>)
+        })} */}
+      </div>
     )
   }
 }
-// const mapStateToProps = state => {
-//   console.log(state, "our state in dashNav!s");
 
-//   return {
-//     blogs: state.blogs.blogs
-//   };
-// };
+const mapStateToProps = state => {
+  // console.log(state, "our state in DASH NEWS");
+  return {
+    news: state.news.news
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
-  createNewsPost: data => dispatch(createNewsPost(data))
+  getNews: () => dispatch(getNews()),
+  updateNewsPostOrder: (data, id) => dispatch(updateNewsPostOrder(data, id))
 })
+export default connect(mapStateToProps, mapDispatchToProps)(DashNews);
 
-export default connect(null, mapDispatchToProps)(DashBlogs);
 
 
+
+// // onDragStart
+// const start = {
+//   draggingOver: 'task-1',
+//   type: 'TYPE',
+//   source: {
+//     droppableId: 'column-1',
+//     index: 0
+//   }
+// }
+
+// // onDragUpdate
+// const update = {
+//   draggingOver: 'task-1',
+//   type: 'TYPE',
+//   source: {
+//     droppableId: 'column-1',
+//     index: 0
+//   },
+//   destination: {
+//     droppableId: 'column-1',
+//     index: 1
+//   },
+// }
+
+// // onDragEnd (result) returned
+// const result = {
+//   draggablId: 'task-1',
+//   type: 'TYPE',
+//   reason: 'DROP',
+//   source: {
+//     droppableId: 'column-1',
+//     index: 0
+//   },
+//   destination: {
+//     droppableId: 'column-1',
+//    index: 1
+//  },
+//   destination: null // when droped outside of droppable area
+// }
+
+// // Draggable
+// const draggableSnapshot = {
+//   isDragging: true,
+//   draggingOver: 'column-1'
+// }
+
+// // Droppable
+// const droppableSnapshot = {
+//   isDraggingOver: true,
+//   draggingOverWith: 'task-1'
+// }

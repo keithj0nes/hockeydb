@@ -131,9 +131,20 @@ const createNews = async (req, res) => {
     console.log(req.user, 'ussser');
 
     let currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
+    const query = `UPDATE news SET display_order = (display_order + 1)
+                   WHERE display_order >= 1`;
 
-    const data = await db.news.insert({ title, body, allow_collapse, tag, created_date: currentDate, created_by: 1}).catch(err => console.log(err, 'create blog error'))
+    await db.query(query);
 
+
+    const inserted = await db.news.insert({ title, display_order: 1, body, allow_collapse, tag, created_date: currentDate, created_by: 1}).catch(err => console.log(err, 'create blog error'))
+    const { id, display_order, created_by, created_date } = inserted;
+    
+    const user = await db.users.findOne({id: created_by})
+    const { user_id, first_name, last_name } = user;
+
+    const data = {id, display_order, title, allow_collapse, tag, body, created_by, created_date, user_id, first_name, last_name};
+ 
     return res.status(200).send({ status: 200, data, message: 'Blog post created' })
 }
 
@@ -141,18 +152,61 @@ const createNews = async (req, res) => {
 const updateNews = async (req, res) => {
     const db = app.get('db');
 
-    const { body } = req.body;
+    const { body, fromIndex, toIndex, move } = req.body;
     const { id } = req.params;
 
-    const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
+    console.log(req.body, req.params.id, 'UPDATE NEWS*****')
 
-    if (!newsPost) {
-        return res.status(200).send({ status: 404, error: true, message: 'News post not found' })
+    // down
+    // "UPDATE todos
+    // SET display_order = (display_order - 1)
+    // WHERE display_order > :current_position
+    // AND display_order <= :desired_position
+    // AND user_id = :user_id";
+
+
+    // up
+    // $query = "UPDATE todos
+    // SET display_order = (display_order + 1)
+    // WHERE display_order >= :desired_position
+    // AND display_order < :current_position
+    // AND user_id = :user_id";
+
+    if( !!move ) {
+        if(move === 'down') {
+            const query = `UPDATE news SET display_order = (display_order - 1)
+                           WHERE display_order > $1 
+                           AND display_order <= $2`;
+            
+            const updateDown = await db.query(query, [fromIndex, toIndex]);
+            console.log(updateDown, 'UPDATE DOWN!')
+        }
+    
+        if(move === 'up') {
+            const query = `UPDATE news SET display_order = (display_order + 1)
+                           WHERE display_order >= $1 
+                           AND display_order < $2`;
+    
+            const updateUp = await db.query(query, [toIndex, fromIndex]);
+            console.log(updateUp, 'UPDATE UP!')
+        }
+    
+        const updateMove = await db.news.update({ id }, { display_order: toIndex }).catch(err => console.log(err, 'update blog error'));
+
+        return res.status(200).send({ status: 200, data: updateMove, message: 'News post order updated'})
     }
 
-    const data = await db.news.update({ id }, { body, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update blog error'))
+    
 
-    return res.status(200).send({ status: 200, data, message: 'News post updated' })
+    // const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
+
+    // if (!newsPost) {
+    //     return res.status(200).send({ status: 404, error: true, message: 'News post not found' })
+    // }
+
+    // const data = await db.news.update({ id }, { body, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update blog error'))
+
+    return res.status(200).send({ status: 200, data: [], message: 'News post updated' })
 
 }
 
