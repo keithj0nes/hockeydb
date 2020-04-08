@@ -51,6 +51,7 @@ CREATE TABLE "news" (
   "allow_collapse" BOOLEAN,
   "tag" VARCHAR,
   "body" VARCHAR,
+  "display_order" INTEGER,
   "created_date" TIMESTAMP,
   "created_by" INTEGER,        -- REFERENCES users(id),
   "updated_date" TIMESTAMP,

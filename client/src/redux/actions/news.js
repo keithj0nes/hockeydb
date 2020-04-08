@@ -1,6 +1,6 @@
 // import axios from 'axios';
 import { request } from './middleware';
-import { GET_BLOGS, GET_SUCCESS} from '../actionTypes';
+import { GET_BLOGS, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS } from '../actionTypes';
 
 
 
@@ -8,7 +8,6 @@ export const sendBlogs = data => ({ type: GET_BLOGS, payload: data })
 
 export const getNews = () => async dispatch => {
   const data = await request('/api/news', 'GET', {}, true)
-  console.log(data,'data')
   if (!data.data) return false;
   dispatch(sendBlogs(data.data.news));
   dispatch({
@@ -25,6 +24,27 @@ export const createNewsPost = (data) => async (dispatch, getState) => {
   const post = await request('/api/admin/news', 'POST', { data, access_token: user.user.access_token });
   console.log(post.data, 'POST DOT DATA')
   if (!post.data) return false;
-  dispatch(sendBlogs(post.data))
+  // dispatch(sendBlogs(post.data))
+  // dispatch(getNews())
+  dispatch({
+    type: `news/${CREATE_SUCCESS}`,
+    payload: post.data
+  })
   return true;
+}
+
+
+export const updateNewsPostOrder = (data, newsPostId) => async (dispatch, getState) => {
+  const { user } = getState();
+
+  const post = await request(`/api/admin/news/${newsPostId}`, 'PUT', {data, access_token: user.user.access_token})
+  if (!post.data) return false;
+
+  dispatch(getNews())
+  // dispatch({
+  //   type: `news/${UPDATE_SUCCESS}/order`,
+  //   payload: post.data[0]
+  // })
+  return true;
+  
 }

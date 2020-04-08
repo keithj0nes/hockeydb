@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
+import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -24,16 +24,34 @@ const initialNewsState = {
 export const news = (state = initialNewsState, { type, payload }) => {
   switch (type) {
     case GET_BLOGS:
-      return { ...state, news: payload }
+      return { ...state, news: payload };
+    case `news/${CREATE_SUCCESS}`:
+        return  { ...state, news: [payload, ...state.news]};
+
+    // case `news/${UPDATE_SUCCESS}`:
+    //     // update item without getting whole list again
+    //     const newNews = state.news.map(item => {
+    //         if(item.id === payload.id){
+    //             return payload
+    //         }
+    //         return item;
+
+    //       })
+    //     return  { ...state, news: newNews }
     default:
       return state;
   }
 }
 
-
-
-
-
+// case `locations/${UPDATE_SUCCESS}`:
+//         // update item without getting whole list again
+//         const newLocations = state.locations.map(item => {
+//             if(item.id === payload.id){
+//                 return payload
+//             }
+//             return item;
+//         })
+//         return  { ...state, isLoading: false, locations: newLocations }
 
 const initialMiscState = {
   navSliderVisible: false,
