@@ -15,6 +15,17 @@ import { ReactComponent as News } from '../assets/icons/news.svg';
 
 import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 
+const navLinks = [
+    { name: 'Home',       to: '',            svg: <Home alt="home icon" />            },
+    { name: 'News',       to: '/news',        svg: <News alt="news icon" />           },
+    { name: 'Seasons',    to: '/seasons',     svg: <Seasons alt="season icon" />      },
+    { name: 'Divisions',  to: '/divisions',   svg: <Divisions alt="divisions icon" /> },
+    { name: 'Teams',      to: '/teams',       svg: <Teams alt="teams icon" />         },
+    { name: 'Players',    to: '/players',     svg: <Players alt="players icon" />     },
+    { name: 'Locations',  to: '/locations',   svg: <Players alt="players icon" />     },
+    { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         }
+]
+
 class DashboardNav extends Component {
 
     handleLogout = () => {
@@ -26,7 +37,6 @@ class DashboardNav extends Component {
     render() {
         const { match } = this.props;
 
-        console.log(match, 'match in dashboard')
         return (
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
@@ -39,77 +49,23 @@ class DashboardNav extends Component {
 
 
                     <ul>
-                        <li>
-                            <NavLink to={`${match.url}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
-
-                                <div className="nav-icon-container">
-                                    <Home alt="home icon" />
-                                </div>
-                                Home
-
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/news`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <News alt="news icon" />
-                                </div>
-                                News
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/seasons`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <Seasons alt="season icon" />
-                                </div>
-                                Seasons
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/divisions`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <Divisions alt="divisions icon" />
-                                </div>
-                                Divisions
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/teams`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <Teams alt="teams icon" />
-                                </div>
-                                Teams
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/players`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <Players alt="players icon" />
-                                </div>
-                                Players
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/locations`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <Players alt="players icon" />
-                                </div>
-                                Locations
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={`${match.url}/games`} activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                <div className="nav-icon-container">
-                                    <Games alt="games icon" />
-                                </div>
-                                Games
-                            </NavLink>
-                        </li>
+                        {navLinks.map(link => (
+                            <li key={link.to}>
+                                <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <div className="nav-icon-container">
+                                        {link.svg}
+                                    </div>
+                                    {link.name}
+                                </NavLink>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
                 <div style={{ marginBottom: 30, textAlign: 'center' }}>
                     <Button title={'Logout'} onClick={this.handleLogout} />
+                    <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
+
                 </div>
             </div>
         )

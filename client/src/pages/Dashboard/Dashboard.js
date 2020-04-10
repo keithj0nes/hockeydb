@@ -37,7 +37,7 @@ class Dashboard extends Component {
                     <Route path={`${match.path}/teams`}     component={DashTeams} />
                     <Route path={`${match.path}/players`}   component={DashPlayers} />
                     <Route path={`${match.path}/games`}     component={DashGames} />
-                    <Route path={`${match.path}/news`}   exact   component={DashNews} />
+                    <Route path={`${match.path}/news`}      component={DashNews} exact />
                     <Route path={`${match.path}/news/:id`}  component={DashNewsCreate} />
                     <Route path={`${match.path}/locations`} component={DashLocations} />
                 </div>

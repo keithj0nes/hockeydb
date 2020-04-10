@@ -27,7 +27,6 @@ class DashNews extends Component {
   }
   
   componentDidMount() {
-    console.log('mounting news dash')
     this.props.news.length === 0 && this.props.getNews();
   }
 
@@ -86,7 +85,7 @@ class DashNews extends Component {
               </div>
           </div>
 
-          <div style={{background: 'yellow', width: '100%'}}>
+          <div style={{background: 'white', width: '100%'}}>
             <DragDropContext
               // onDragStart={this.onDragStart}
               // onDragUpdate={this.onDragUpdate}
