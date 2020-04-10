@@ -18,6 +18,35 @@ export const getNews = () => async dispatch => {
   return true;
 }
 
+export const getNewsPostById = newsPostId => async (dispatch, getState) => {
+  // const { user } = getState();
+  const post = await request(`/api/news/${newsPostId}`, 'GET', {}, true);
+  if(!post.data) return;
+  dispatch({
+    type: `newsById/${GET_SUCCESS}`,
+    payload: post.data
+  })
+
+  return true;
+}
+
+export const updateNewsPostById = (data, newsPostId) => async (dispatch, getState) => {
+  const { user } = getState();
+  const post = await request(`/api/admin/news/${newsPostId}`, 'PUT', {data, access_token: user.user.access_token});
+  if(!post.data) return;
+
+  console.log(post.data, 'NEWS DATA IN NEWS ACTION AFTER UPDATE')
+  dispatch({
+    type: `news/${UPDATE_SUCCESS}`,
+    payload: post.data
+  })
+
+  // dispatch(getNews())
+
+
+  return true;
+}
+
 export const createNewsPost = (data) => async (dispatch, getState) => {
   const { user } = getState();
   console.log(data, 'data!')

@@ -19,25 +19,32 @@ export const user = (state = initialAuthState, { type, payload }) => {
 
 const initialNewsState = {
   news: [],
+  newsById: {},
+  newsNum: 0
 }
 
 export const news = (state = initialNewsState, { type, payload }) => {
   switch (type) {
     case GET_BLOGS:
-      return { ...state, news: payload };
+      // console.log(payload, 'PAYLOAD')
+      return { ...state, news: payload,  newsNum: state.newsNum +1 };
     case `news/${CREATE_SUCCESS}`:
-        return  { ...state, news: [payload, ...state.news]};
+      // console.log(state.newsNum, 'state.newsnum')
+        return  { ...state, news: [payload, ...state.news],  newsNum: state.newsNum +1};
 
-    // case `news/${UPDATE_SUCCESS}`:
-    //     // update item without getting whole list again
-    //     const newNews = state.news.map(item => {
-    //         if(item.id === payload.id){
-    //             return payload
-    //         }
-    //         return item;
+    case `news/${UPDATE_SUCCESS}`:
+        // update item without getting whole list again
+        const newNews = state.news.map(item => {
+            if(item.id === payload.id){
+                return payload
+            }
+            return item;
 
-    //       })
-    //     return  { ...state, news: newNews }
+          })
+        return  { ...state, news: newNews, newsNum: state.newsNum +1 }
+
+    case `newsById/${GET_SUCCESS}`:
+        return  { ...state, newsById: payload};
     default:
       return state;
   }

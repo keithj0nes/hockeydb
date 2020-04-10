@@ -64,18 +64,7 @@
             }
         }
 
-        .tag {
-            border-radius: 3px;
-            padding: 5px 10px;
-            align-self: flex-start;
-            display: flex;
-            color: white;
-            font-size: 12px;
-            font-family: $heading_font;
-            font-weight: bold;
 
-
-        }
 
         .news-body {
             
@@ -105,6 +94,17 @@
         }
 
     }
+}
+
+.tag {
+    border-radius: 3px;
+    padding: 5px 10px;
+    align-self: flex-start;
+    display: flex;
+    color: white;
+    font-size: 12px;
+    font-family: $heading_font;
+    font-weight: bold;
 }
 
 
