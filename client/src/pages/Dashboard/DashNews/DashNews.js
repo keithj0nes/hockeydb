@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from '../../../components';
-import DashNewsCreate from './DashNewsCreate';
+// import DashNewsCreate from './DashNewsCreate';
+import DashNewsListItem from './DashNewsListItem';
 
 import { getNews, updateNewsPostOrder } from '../../../redux/actions/news';
 
@@ -10,20 +11,24 @@ import { getNews, updateNewsPostOrder } from '../../../redux/actions/news';
 class DashNews extends Component {
 
   state = {
-    newsPosts: []
+    newsPosts: [],
+    newsNum: null
   }
 
   static getDerivedStateFromProps(props, state) {
-    if(props.news.length !== state.newsPosts.length) {
+    // if(props.news.length !== state.newsPosts.length || props.newsNum !== state.newsNum) {
+    if(props.newsNum !== state.newsNum) {
       return {
-        newsPosts: props.news
+        newsPosts: props.news,
+        newsNum: props.newsNum
       }
     }
     return null;
   }
   
   componentDidMount() {
-    this.props.getNews();
+    console.log('mounting news dash')
+    this.props.news.length === 0 && this.props.getNews();
   }
 
   onDragEnd = result => {
@@ -43,60 +48,137 @@ class DashNews extends Component {
     })
   }
 
+  handleAddNewsPost = () => {
+    this.props.history.push(`${this.props.location.pathname}/create`);
+  }
+
+  handleEditNewsPost = post => {
+    this.props.history.push(`${this.props.location.pathname}/${post.id}`, post);
+  }
+
   render() {
     return (
-      <div className="dashnews-container">
 
-      <DashNewsCreate />
+      <>
+        {/* <div className="dashnews-container"> */}
 
-        <div style={{background: 'yellow', width: '60%', padding: 20}}>
-          <DragDropContext
-            // onDragStart={this.onDragStart}
-            // onDragUpdate={this.onDragUpdate}
-            onDragEnd={this.onDragEnd}
-          >
-            <Droppable droppableId="news-dnd-container">
-            {(provided, snapshot) => (
-                <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    // isDraggingOver={snapshot.isDraggingOver}
-                >
-                    {this.state.newsPosts.map((post, index) => {
-                      return (
-                        <Draggable draggableId={post.id} index={index} key={post.id}>
-                            {(provided, snapshot) => (
-                                <div
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    ref={provided.innerRef}
-                                    // isDragging={snapshot.isDragging}
-                                >
-                                    <p style={{padding: 20, background: 'white', marginBottom: 10, border: '1px solid red'}} key={post.id}>{post.id} | {post.title} | {post.first_name}</p>
-                                </div>
-                            )}
-                        </Draggable>
-                      )
-                    })}
-
-                    {provided.placeholder}
+        <div className="dashboard-filter-header">
+            <div style={{width: '100%'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Button title="Add Post" onClick={this.handleAddNewsPost} />
                 </div>
-            )}
-            </Droppable>
-          </DragDropContext>
+            </div>
+
         </div>
-        {/* {this.props.news.map(post => {
-          return (<p key={post.id}>{post.id} | {post.title} | {post.first_name}</p>)
-        })} */}
-      </div>
+
+        {/* <DashNewsCreate /> */}
+        <div className="dashboard-list-container">
+
+        <div className="dashboard-list">
+
+          <div className="dashboard-list-item hide-mobile">
+              <div style={{ display: 'flex' }}>
+
+                  <p className="flex-four">&nbsp;Move&nbsp;&nbsp;Post</p>
+                  {/* <p className="flex-four">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Post</p> */}
+
+                  <p className="flex-one">Manage</p>
+              </div>
+          </div>
+
+          <div style={{background: 'yellow', width: '100%'}}>
+            <DragDropContext
+              // onDragStart={this.onDragStart}
+              // onDragUpdate={this.onDragUpdate}
+              onDragEnd={this.onDragEnd}
+            >
+              <Droppable droppableId="news-dnd-container">
+                {(provided, snapshot) => (
+                  <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      // isDraggingOver={snapshot.isDraggingOver}
+                  >
+                      {this.state.newsPosts.map((post, index) => {
+
+                        // const {tag} = post;
+                        // const icon = post.tag ? '!' : '';
+
+                        return (
+                          <DashNewsListItem 
+                            key={post.id}
+                            item={post} 
+                            sections={{'name': 'four'}} 
+                            onDelete={() => console.log('clicked delete')}
+                            onEdit={() => this.handleEditNewsPost(post)}
+                            onHide={() => console.log('on hide clicekd')}
+                            index={index}
+                          />
+                        )
+
+                        // return (
+                        //   <Draggable draggableId={post.id} index={index} key={post.id}>
+                        //       {(provided, snapshot) => (
+                        //           <div
+                        //               {...provided.draggableProps}
+                                      
+                        //               ref={provided.innerRef}
+                        //               // isDragging={snapshot.isDragging}
+                        //           >
+                        //             <div style={{padding: 10, display: 'flex', alignItems: 'center', background: 'white', marginBottom: 10, border: '1px solid red'}} >
+
+                        //               <div style={{height: 16, width: 30, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: '#f1f1f1', marginRight: 15}} {...provided.dragHandleProps}>
+                        //                 <div style={{height: 2, width: '100%', backgroundColor: 'black'}}></div>
+                        //                 <div style={{height: 2, width: '100%', backgroundColor: 'black'}}></div>
+                        //                 <div style={{height: 2, width: '100%', backgroundColor: 'black'}}></div>
+                        //               </div>
+
+                        //               <div style={{display: 'flex'}}>
+                        //                 <p  key={post.id}>{post.title} | {post.first_name}</p>
+                        //                 {tag && <div className="tag" style={{background: '#E3BA4A'}}>{icon} <span className="hide-mobile">&nbsp;{tag}</span></div> }
+                        //               </div>
+                        //             </div>
+                        //           </div>
+                        //       )}
+                        //   </Draggable>
+                        // )
+                      })}
+
+                      {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </div>
+          </div>
+
+          {/* {this.props.news.map(post => {
+            return (<p key={post.id}>{post.id} | {post.title} | {post.first_name}</p>)
+          })} */}
+        </div>
+      </>
     )
   }
 }
 
+// {divisions.map(item => {
+//   return (
+//       <ListItem 
+//           key={item.id} 
+//           item={item} 
+//           sections={{'name': 'three'}} 
+//           onClick={() => this.handleDeleteDivision(item)}
+//           onEdit={() => this.handleEditDivision(item)}
+//       />
+//   )
+
+// })}
+
 const mapStateToProps = state => {
   // console.log(state, "our state in DASH NEWS");
   return {
-    news: state.news.news
+    news: state.news.news,
+    newsNum: state.news.newsNum
   };
 };
 
