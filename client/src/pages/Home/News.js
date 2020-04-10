@@ -24,7 +24,7 @@ export class News extends Component {
 
           // const view = 'View More'
 
-          console.log(view, 'view!')
+          // console.log(view, 'view!')
           // const icon = item.tag ? '!' : '';
           return (
             <NewsPost key={item.id} newsPost={item} />
@@ -35,8 +35,6 @@ export class News extends Component {
   }
 }
 const mapStateToProps = state => {
-  console.log(state, "our state in news");
-
   return {
     news: state.news.news
   };
@@ -100,14 +98,10 @@ class NewsPost extends Component {
             </div>
           </div>
         </div>
-
-
-
+        
         <hr />
 
         <div className={`news-body ${!allow_collapse && this.state.showLess && 'show-less'}`} dangerouslySetInnerHTML={{ __html: body }}></div>
-        {/* <div className="news-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent varius, elit id interdum egestas, eros justo cursus ligula, in egestas risus lorem tempus ipsum.</p></div> */}
-
 
         {/* {allow_collapse && (
           <div className="view-more-container">

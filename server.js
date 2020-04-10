@@ -70,6 +70,20 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
     possible data ruturn implimentation
 */
 
+// function sendFormat({status, code, message, data}) {
+//     const date = new Date();
+//     return {
+//         "site": config.SITE_URL,
+//         "version": config.API_VERSION,
+//         "datetime": date,
+//         "timestamp": date.getTime(),
+//         "status": status,
+//         "code": code,
+//         "message": message,
+//         "data": data
+//     }
+// }
+
 // {
 //     "site": "hockeydb.com",
 //     "version": "1.2.3",

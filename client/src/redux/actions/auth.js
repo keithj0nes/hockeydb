@@ -15,7 +15,7 @@ export const login = loginData => async dispatch => {
   const data = await request('/api/auth/login', 'POST', {data: loginData}, true)
   if(!data) return false;
   // console.log(data, 'data!')
-  cookie.save('auth', data.data.access_token);
+  cookie.save('hockeydb_auth', data.data.access_token);
   dispatch(setUser( data.data.user ))
   dispatch({type: SET_CURRENT_SEASON, payload: data.data.season})
   // dispatch({type: `seasons/${GET_SUCCESS}`, payload: data.data.seasons})
@@ -24,13 +24,15 @@ export const login = loginData => async dispatch => {
 }
 
 export const logout = () => (dispatch, getState) => {
-  cookie.remove('auth');
+  cookie.remove('hockeydb_auth');
   dispatch(setUser({}))
 }
 
 
 export const loginFromCookie = () => async dispatch => {
-  const access_token = cookie.load('auth');
+  // console.log('logging in from cookie!')
+  const access_token = cookie.load('hockeydb_auth');
+  // console.log(access_token)
   if(!access_token) return false;
 
   //USE THIS FOR SERVER SIDE TOKEN AUTH

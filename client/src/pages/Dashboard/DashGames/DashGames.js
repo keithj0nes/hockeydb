@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 
-import { Button, Input } from '../../../components';
+import { Button } from '../../../components';
 import DashGamesListItem from './DashGamesListItem';
 import ListItem from '../ListItem';
 
@@ -16,7 +16,7 @@ import { getGames, newGame } from '../../../redux/actions/gamesActions';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
+import { toggleModal } from '../../../redux/actions/misc';
 
 
 
@@ -155,9 +155,6 @@ export class DashGames extends Component {
                         {/* <Button title="Add Game" onClick={this.toggleGameVisible}/> */}
                         <Button title="Add Game" onClick={this.handleAddGame} />
 
-                        <Input name='name' label='Name'/>
-
-
                     {/* </div> */}
                 </div>
 
@@ -295,18 +292,15 @@ export class DashGames extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    console.log(state, "our state in dashNav!s");
 
+const mapStateToProps = state => {
     return {
         locations: state.locations.locations,
         teams: state.teams.teams,
         games: state.games.allGames,
         isLoading: state.games.isLoading,
-
     };
 };
-
 
 
 const mapDispatchToProps = dispatch => ({

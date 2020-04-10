@@ -11,7 +11,9 @@
         module.exports = {
             PORT: 8010,   // must match client_config.js ROOT key below 
             JWTSECRET: 'some_secret_key_that_you_want',
-            DB_URI: 'postgres://YOURUSERNAME:YOURPASSWORD@localhost/hockeydb'
+            DB_URI: 'postgres://YOURUSERNAME:YOURPASSWORD@localhost/hockeydb',
+            SITE_URL: 'localhost', // any fake url
+            API_VERSION: '0.0.1'   // any fake version
         }
 
 + cd /client/src, create a &nbsp; `client_config.js` &nbsp; file that looks like: 

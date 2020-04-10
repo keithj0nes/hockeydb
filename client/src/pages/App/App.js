@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';
-// import { loginFromCookie } from '../../redux/actions/auth';
+import { loginFromCookie } from '../../redux/actions/auth';
 
 import Home from '../Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
@@ -21,9 +21,9 @@ import './App.scss';
 
 class App extends Component {
 
-  // async componentDidMount() {
-  //   await this.props.loginFromCookie();
-  // }
+  async componentDidMount() {
+    await this.props.loginFromCookie();
+  }
 
   //{/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
 
@@ -90,7 +90,7 @@ const mapStateToProps = state => ({
 // }
 
 const mapDispatchToProps = dispatch => ({
-  // loginFromCookie: () => dispatch(loginFromCookie()),
+  loginFromCookie: () => dispatch(loginFromCookie()),
   // toggleModal: () => dispatch(toggleModal(200, 'opening from app.js'))
 })
 

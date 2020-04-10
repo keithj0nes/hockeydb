@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 import { Button } from './';
@@ -26,7 +27,9 @@ class Header extends Component {
         this.setState({mobileSliderVisible: !this.state.mobileSliderVisible})
     }
 
-    
+    linkTo = path => {
+        this.props.history.push(path);
+    }
 
 
 
@@ -64,15 +67,19 @@ class Header extends Component {
                         </div>
 
                         <div className="login">
-                            <Button 
-                                title="Player Register"
-                                onClick={() => console.log('clicekd player register')}
-                                style={{textTransform: 'uppercase'}}
-                            />
+
+                            {!this.props.isUserLoggedIn && (
+
+                                <Button 
+                                    title="Player Register"
+                                    onClick={() => console.log('clicekd player register')}
+                                    style={{textTransform: 'uppercase'}}
+                                />
+                            )}
 
                             <Button 
-                                title="Login"
-                                onClick={() => console.log('clicekd login')}
+                                title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
+                                onClick={() => this.linkTo(this.props.isUserLoggedIn ? '/dashboard' : '/login')}
                                 cancel
                                 style={{minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', paddingRight: 10}}
                             />
@@ -95,7 +102,7 @@ class Header extends Component {
 
 
                     <Button 
-                        title="Login"
+                        title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
                         onClick={() => console.log('clicekd login')}
                         cancel
                         style={{minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', padding: 10}}
@@ -138,4 +145,10 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+const mapStateToProps = state => {
+    // console.log(state, 'state in header!')
+    return {
+        isUserLoggedIn: state.user.isUserLoggedIn
+    }
+}
+export default withRouter(connect(mapStateToProps)(Header));
