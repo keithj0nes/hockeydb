@@ -13,7 +13,7 @@ const selectData = [
 export const Styleguide = () => {
     
     return (
-        <div style={{width: '100%', height: '100vh', background: '#ccc', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <div style={{padding: 50, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 
             <div style={{width: 500, padding: 20, background: 'white', textAlign: 'center'}}>
                 <h1>Style Guide</h1>
@@ -22,6 +22,7 @@ export const Styleguide = () => {
 
                 <h3>Select</h3>
                 <Select name='demo' hiddenValue='Select Season' listOfSelects={selectData} onChange={(e) => console.log(e.target.value,'changed!')}/>
+                <Select name='demo' title="Demo" hiddenValue='Select Season' listOfSelects={selectData} onChange={(e) => console.log(e.target.value,'changed!')}/>
 
                 <br/>
 

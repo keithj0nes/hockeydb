@@ -8,6 +8,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/Login';
 import Players from '../Players/Players';
 import Games from '../Games/Games';
+import Schedule from '../Schedule/Schedule';
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
@@ -37,6 +38,7 @@ class App extends Component {
           <Header />
           <div className="site-container">
             <Route exact path="/"     component={Home} />
+            <Route path='/schedule'   component={Schedule} />
             <Route path='/login'      component={Login} />
             <Route path='/players'    component={Players} />
             <Route path='/games'      component={Games} />

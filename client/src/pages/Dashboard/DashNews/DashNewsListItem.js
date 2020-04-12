@@ -51,7 +51,7 @@ class DashNewsListItem extends Component {
                                     {...provided.draggableProps}
                                     ref={provided.innerRef}
                                     // isDragging={snapshot.isDragging}
-                                    style={{...provided.draggableProps.style, display: 'flex', alignItems: 'center', backgroundColor: snapshot.isDragging && '#f1f1f1'}}
+                                    style={{...provided.draggableProps.style, display: 'flex', alignItems: 'center', backgroundColor: snapshot.isDragging && '#e4e4e4'}}
 
                                     // style={{display: 'flex', flexWrap: 'wrap'}}
                                 >

@@ -20,7 +20,7 @@ export class News extends Component {
 
           // console.log(item, 'item!')
 
-          const view = item.open ? 'View More' : 'View Less'
+          // const view = item.open ? 'View More' : 'View Less'
 
           // const view = 'View More'
 

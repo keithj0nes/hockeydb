@@ -1,5 +1,11 @@
 .custom-select {
     position: relative;
+
+    label {
+        text-align: left;
+        font-size: 14px;
+        letter-spacing: 1.2px;
+    }
 }
 
 .custom-select select {
@@ -22,6 +28,8 @@
     // z-index: 1000;
     right: 16px;
     top: 11px;
+    // top: 33px;
+
     // height: 20px;
     // width: 20px;
     // background: red;
