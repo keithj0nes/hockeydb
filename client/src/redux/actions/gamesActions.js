@@ -10,10 +10,7 @@ export const getGames = filter => async (dispatch, getState) => {
     filter = `season=${currentSeason.name}`
   } 
 
-  console.log(filter, 'filter!')
   const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
-
-  console.log(data.data, 'Resopnse in getGames');
   if (!data.data) return false;
 
   dispatch({ 
@@ -24,6 +21,7 @@ export const getGames = filter => async (dispatch, getState) => {
   dispatch({ type: GET_GAMES, payload: data.data.games })
   return true;
 }
+
 
 export const newGame = (data) => async (dispatch, getState) => {
   const { user } = getState();
