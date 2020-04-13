@@ -10,21 +10,17 @@ const getGames1 = async (req, res) => {
 const getGames = async (req, res) => {
   const db = app.get('db');
 
-  console.log(req.query, 'getGames Query');
-
   const { season, division, team } = req.query;
 
   let division_id;
   let team_id;
   let season_id;
 
-  if(season === 'undefined'){
+  if(!season || season === 'undefined'){
     season_id = await db.seasons.findOne({is_active: true});
   } else {
     season_id = await db.seasons.findOne({name: season});
   }
-
-  // console.log(season_id, 'SEAOSN _ ID')
 
   let query = `
     SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
@@ -40,11 +36,7 @@ const getGames = async (req, res) => {
     JOIN divisions ON divisions.id = gsd.division_id
     JOIN locations ON locations.id = g.location_id
     WHERE gsd.season_id = ${season_id.id}
-    ORDER BY g.start_date
   `;
-
-  // let divisionTeams = await db.team_season_division.find({division_id: 1});
-  // console.log(divisionTeams, 'DIVISION TEAMSSSS')
 
   if(division) {
     division_id = await db.divisions.findOne({name: division})
@@ -56,9 +48,12 @@ const getGames = async (req, res) => {
     query += ' AND (h.id = $2 OR a.id = $2)';
   }
 
+  query += 'ORDER BY g.start_date';
+
   const games = await db.query(query,[division_id && division_id.id, team_id && team_id.id]);
 
-  const seasons = await db.seasons.find();
+  // const seasons = await db.seasons.find();
+  const seasons = await db.query('select id, name from seasons;');
 
   const divisions = await db.query(`
     select distinct d.id, d.name
@@ -68,16 +63,16 @@ const getGames = async (req, res) => {
     order by id;
   `,[season_id.id]);
 
-  let newQ = `
+  let queryForTeams = `
     select d.name AS division_name, t.name
     FROM team_season_division tsd
     JOIN divisions d ON d.id = tsd.division_id
     JOIN teams t ON t.id = tsd.team_id
-    ${division_id ? 'WHERE tsd.division_id = $1' : ''}
+    ${division_id ? 'WHERE tsd.season_id = $1 AND tsd.division_id = $2' : 'WHERE tsd.season_id = $1'}
     order by name;
   `;
 
-  const teams = await db.query(newQ,[division_id && division_id.id]);
+  const teams = await db.query(queryForTeams,[season_id.id, division_id && division_id.id]);
 
   res.status(200).send({ status: 200, data: {games, seasons, divisions, teams}, message: 'Retrieved list of games' })
 }
