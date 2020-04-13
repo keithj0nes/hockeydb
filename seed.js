@@ -115,9 +115,15 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
                 home_team = divisionTeams[randomizer(divisionTeams)].team_id;
                 away_team = divisionTeams[randomizer(divisionTeams)].team_id;
             }
-            await db.games.insert({ home_team, away_team, location_id, start_date, has_been_played: false });
+            const game = await db.games.insert({ home_team, away_team, location_id, start_date, has_been_played: false });
+            await db.game_season_division.insert({ game_id: game.id, season_id: season.id, division_id: Number(div) + 1})
         }
     }
+
+    for(var id = 1; id <= 4; id++) {
+        await db.games.update({ id }, { has_been_played: true, home_score: Math.floor(Math.random() * 10), away_score:  Math.floor(Math.random() * 10)});
+    }
+
 
     console.log('done!')
 

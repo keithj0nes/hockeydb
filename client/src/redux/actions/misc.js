@@ -32,3 +32,7 @@ export const toggleFilter = (section, bool) => {
         payload: bool
     }
 }
+
+// export const getFilters = () => dispatch => {
+//     console.log('getting all filters!')
+// }

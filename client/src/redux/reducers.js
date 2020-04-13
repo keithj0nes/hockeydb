@@ -67,9 +67,14 @@ const initialMiscState = {
   modalType: '',
   isLoading: false, 
   errors: '',
+  scheduleFilters: {
+    seasons: [],
+    divisions: [],
+    teams: []
+  }
 }
 
-export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading }) => {
+export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading, payload }) => {
   switch (type) {
     case TOGGLE_NAV_SLIDER:
       return { ...state, navSliderVisible: !state.navSliderVisible }
@@ -79,6 +84,8 @@ export const misc = (state = initialMiscState, { type, modalProps, modalType, is
         return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors}
 
       // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
+    case 'SCHEDULE_FILTERS':
+      return { ...state, scheduleFilters: payload };
     default:
       return state;
   }
