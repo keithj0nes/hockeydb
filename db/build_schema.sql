@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS teams CASCADE;
 DROP TABLE IF EXISTS seasons CASCADE;
 DROP TABLE IF EXISTS divisions CASCADE;
 DROP TABLE IF EXISTS team_season_division CASCADE;
+DROP TABLE IF EXISTS game_season_division CASCADE;
 DROP TABLE IF EXISTS referees CASCADE;
 DROP TABLE IF EXISTS referees_games CASCADE;
 DROP TABLE IF EXISTS players_teams CASCADE;
@@ -140,6 +141,14 @@ CREATE TABLE "team_season_division" (
   "division_id" INTEGER        -- REFERENCES divisions(id)
 );
 
+CREATE TABLE "game_season_division" (
+  "id" SERIAL PRIMARY KEY,
+  "game_id" INTEGER,           -- REFERENCES games(id)
+  "season_id" INTEGER,         -- REFERENCES seasons(id)
+  "division_id" INTEGER        -- REFERENCES divisions(id)
+);
+
+
 CREATE TABLE "players_teams" (
   "id" SERIAL PRIMARY KEY,
   "player_id" INTEGER,        -- REFERENCES players(id)
@@ -227,6 +236,10 @@ ALTER TABLE "teams" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 ALTER TABLE "team_season_division" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
 ALTER TABLE "team_season_division" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
 ALTER TABLE "team_season_division" ADD FOREIGN KEY ("division_id") REFERENCES "divisions" ("id");
+
+ALTER TABLE "game_season_division" ADD FOREIGN KEY ("game_id") REFERENCES "games" ("id");
+ALTER TABLE "game_season_division" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
+ALTER TABLE "game_season_division" ADD FOREIGN KEY ("division_id") REFERENCES "divisions" ("id");
 
 ALTER TABLE "players_teams" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 ALTER TABLE "players_teams" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
