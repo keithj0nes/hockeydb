@@ -31,6 +31,7 @@ CREATE TABLE "users" (
   "first_name" VARCHAR,
   "last_name" VARCHAR,
   "email" VARCHAR,
+  "admin_type" VARCHAR,
   "is_suspended" BOOLEAN,
   "suspended_date" TIMESTAMP,
   "is_admin" BOOLEAN,
