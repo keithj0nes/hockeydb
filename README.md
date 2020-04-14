@@ -27,6 +27,13 @@
 + Create a database called &nbsp; `hockeydb`
 + From the project's root level, run &nbsp; `npm run seed`
 + If any errors occur, rerun the seed command
++ You can input your own counts for teams, players, and games by editing the variables in the seed file:
+        
+        const counts = {
+                teams:   { min: 4,  max: 10, exact: null },
+                players: { min: 12, max: 16, exact: 5 },
+                games:   { min: 5,  max: 8,  exact: null },  
+        }
 
 ### Launch
 + From the project's root level, run &nbsp; `npm start` (this launches nodemon on the server side)
