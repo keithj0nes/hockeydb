@@ -26,6 +26,7 @@
 + Make sure PostgreSQL is installed on your computer https://www.postgresql.org/
 + Create a database called &nbsp; `hockeydb`
 + From the project's root level, run &nbsp; `npm run seed`
++ If any errors occur, rerun the seed command
 
 ### Launch
 + From the project's root level, run &nbsp; `npm start` (this launches nodemon on the server side)
@@ -36,3 +37,9 @@
         
         email: admin@hockeydb.com
         password: admin
+
+        email: scorekeeper@hockeydb.com
+        password: scorekeeper
+
+        email: teammanager@hockeydb.com
+        password: manager
