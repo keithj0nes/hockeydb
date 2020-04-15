@@ -4,18 +4,21 @@ import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import qs from 'query-string';
 import { getGames } from '../../redux/actions/gamesActions';
-import { Select } from '../../components/';
+import { Select, Button } from '../../components/';
 import './schedule.scss';
 
 
 class Schedule extends Component {
 
     state = {
-        filters: {}
+        filters: {
+            page: 1,
+            fromLoadMore: false
+        }
     }
 
     componentDidMount() {
-        this.props.getGames()
+        this.props.getGames('page=1')
     }
 
     handleChange = e => {
@@ -37,17 +40,31 @@ class Schedule extends Component {
         if(name === 'division') {
             delete filters['team'];
         }
+        // delete to not put it in the URL params
+        delete filters['page']
+        delete filters['fromLoadMore'];
 
         this.setState(() => {
             const search = qs.stringify(filters);
             this.props.getGames(search)
             this.props.history.push({ search });
+            filters.page = 1;
             // this.props.history.push({search: search.replace('%20', '_')});
             return {filters}
         })
     }
 
+    handleLoadMore = () => {
+        this.setState({filters: {...this.state.filters, page: this.state.filters.page + 1, fromLoadMore: true}}, () => {
+            const search = qs.stringify(this.state.filters);
+            this.props.getGames(search)
+        });
+    }
+
     render() {
+
+        console.log(this.props.totalGamesCount, this.props.games.length, 'COMPARING')
+
         return (
             <div className="schedule-container">
                 <div className="white-bg">
@@ -151,6 +168,9 @@ class Schedule extends Component {
                             )
                         })}
                     </div>
+                    {(!this.state.filters.division && !this.state.filters.team && Number(this.props.totalGamesCount) !== this.props.games.length) && (
+                        <Button title={'Load more'} onClick={this.handleLoadMore}/>
+                    )}
                 </div>
 
             </div>
@@ -160,6 +180,7 @@ class Schedule extends Component {
 
 const mapStateToProps = state => {
     return {
+        totalGamesCount: state.games.totalGamesCount,
         games: state.games.allGames,
         scheduleFilters: state.misc.scheduleFilters
     }
