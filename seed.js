@@ -19,7 +19,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     // hard variables
     const typesOfSeasons = ['Regular', 'Playoffs', 'Tournament'];
     const seedSeasons = ['Summer 2016', 'Fall 2016'];        
-    const divisionList = [['A', 'B', 'C'], ['AAA', 'AA', 'A']];
+    const divisionList = [['1A', '2B', '3C'], ['AAA', 'AA', 'A']];
     const locationsList = ['Kingsgate Arena', 'Showare Stadium', 'Key Arena', 'Center Ice Arena', 'The Cooler', 'The Igloo', 'The Coliseum'];
     const counts = {
         teams:   { min: 4,  max: 10, exact: null },         // teams per division - exact has priority
@@ -52,7 +52,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     const createSeason = async (insertedAdmin) => {
         return Promise.all( seedSeasons.map( async (seedSeason, idx ) => {
                 const type = typesOfSeasons[randomr(typesOfSeasons.length)];
-                const insertedSeason = await db.seasons.insert({ name: seedSeason, type, is_active: idx === 0 ? true : false, created_date: new Date(), created_by: insertedAdmin.id }).catch(err => console.log(err, 'create season error'))
+                const insertedSeason = await db.seasons.insert({ name: seedSeason, type, is_active: false, created_date: new Date(), created_by: insertedAdmin.id }).catch(err => console.log(err, 'create season error'))
                 return createDivisions(idx, insertedSeason, insertedAdmin);
             })
         )
@@ -167,6 +167,8 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     // update games to played
     const setGamesPlayed = async num => {
         const games = await db.query('select * from games order by start_date limit $1', [num || 5]);
+
+        await db.season.update({ id: 1 }, { is_active: true });
 
         return Promise.all(
             Array(games.length).fill().map(async (_, i) => {
