@@ -9,6 +9,10 @@ import Login from '../../components/Login';
 import Players from '../Players/Players';
 import Games from '../Games/Games';
 import Schedule from '../Schedule/Schedule';
+
+import SingleTeam from '../SingleTeam/SingleTeam';
+import Boxscore from '../Boxscore/Boxscore';
+
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
@@ -37,12 +41,14 @@ class App extends Component {
         <div className="site-body">
           <Header />
           <div className="site-container">
-            <Route exact path="/"     component={Home} />
-            <Route path='/schedule'   component={Schedule} />
-            <Route path='/login'      component={Login} />
-            <Route path='/players'    component={Players} />
-            <Route path='/games'      component={Games} />
-            <Route path='/styleguide' component={Styleguide} />
+            <Route exact path="/"       component={Home} />
+            <Route path='/schedule'     component={Schedule} />
+            <Route path='/teams/:id'    component={SingleTeam} />
+            <Route path='/boxscore/:id' component={Boxscore} />
+            <Route path='/login'        component={Login} />
+            <Route path='/players'      component={Players} />
+            <Route path='/games'        component={Games} />
+            <Route path='/styleguide'   component={Styleguide} />
           </div>
           <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
           <Modal />

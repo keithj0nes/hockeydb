@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import qs from 'query-string';
 import { getGames } from '../../redux/actions/gamesActions';
-import { Select } from '../../components/';
+import { Select, Button } from '../../components/';
 import './schedule.scss';
 
 
 class Schedule extends Component {
 
     state = {
-        filters: {}
+        filters: {
+            page: 1,
+            fromLoadMore: false
+        }
     }
 
     componentDidMount() {
-        this.props.getGames()
+        this.props.getGames('page=1')
     }
 
     handleChange = e => {
@@ -36,17 +40,31 @@ class Schedule extends Component {
         if(name === 'division') {
             delete filters['team'];
         }
+        // delete to not put it in the URL params
+        delete filters['page']
+        delete filters['fromLoadMore'];
 
         this.setState(() => {
             const search = qs.stringify(filters);
             this.props.getGames(search)
             this.props.history.push({ search });
+            filters.page = 1;
             // this.props.history.push({search: search.replace('%20', '_')});
             return {filters}
         })
     }
 
+    handleLoadMore = () => {
+        this.setState({filters: {...this.state.filters, page: this.state.filters.page + 1, fromLoadMore: true}}, () => {
+            const search = qs.stringify(this.state.filters);
+            this.props.getGames(search)
+        });
+    }
+
     render() {
+
+        console.log(this.props.totalGamesCount, this.props.games.length, 'COMPARING')
+
         return (
             <div className="schedule-container">
                 <div className="white-bg">
@@ -60,43 +78,101 @@ class Schedule extends Component {
                         <div></div>
                     </div>
 
-                    <h2>APRIL</h2>
+                    {/* <h2>APRIL</h2> */}
+                    {/* <div className="overflow-scroll">
 
-                    <div className="schedule-headings">
+                        <div className="schedule-list-container">
 
-                        <p className="flex-two">Date</p>
-                        <p className="flex-one">Time</p>
-                        <p className="flex-three">Location</p>
-                        <p className="flex-three">Home</p>
-                        <p className="flex-three">Away</p>
-                        <p className="flex-one">Score</p>
-                        <p className="flex-one">Scoresheet</p>
+                            <div className="schedule-headings">
 
-                    </div>
+                                <p className="flex-two">Date</p>
+                                <p className="flex-one">Time</p>
+                                <p className="flex-three">Location</p>
+                                <p className="flex-three">Home</p>
+                                <p className="flex-three">Away</p>
+                                <p className="flex-one">Score</p>
+                                <p className="flex-one">Scoresheet</p>
 
-                    {this.props.games.map(game => {
-
-                        const mydate = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
-
-                        game.date = `${mydate[0]} ${mydate[1]} ${mydate[2]}`;
-                        game.start_time = `${mydate[3]} ${mydate[4]}`;
-
-                        return (
-                            <div className="schedule-list-item" key={game.id}>
-
-                                <p className="flex-two">{game.date}</p>
-                                <p className="flex-one">{game.start_time}</p>
-                                <p className="flex-three">{game.location_name}</p>
-                                <p className="flex-three">{game.home_team}</p>
-                                <p className="flex-three">{game.away_team}</p>
-                                <p className="flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
-                                <p className="flex-one">{game.has_been_played && 'Boxscore'}</p>
-    
                             </div>
-                        )
-                    })}
 
+
+                            {this.props.games.map(game => {
+                                
+                                const mydate = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
+                                
+                                game.date = `${mydate[0]} ${mydate[1]} ${mydate[2]}`;
+                                game.start_time = `${mydate[3]} ${mydate[4]}`;
+                                
+                                return (
+                                    <div className="schedule-list-item" key={game.id}>
+
+                                        <p className="flex-two">{game.date}</p>
+                                        <p className="flex-one">{game.start_time}</p>
+                                        <p className="flex-three">{game.location_name}</p>
+                                        <p className="flex-three">{game.home_team}</p>
+                                        <p className="flex-three">{game.away_team}</p>
+                                        <p className="flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
+                                        <p className="flex-one">{game.has_been_played && 'Boxscore'}</p>
+            
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div> */}
                 </div>
+
+
+                <div className="ot-container">
+                    <div className="ot-table" style={{minWidth: null}}>
+                        <div className="ot-row-header">
+                            <p className="ot-header ot-flex-two">Date</p>
+                            <p className="ot-header ot-flex-one">Time</p>
+                            <p className="ot-header ot-flex-three">Location</p>
+                            <p className="ot-header ot-flex-three">Home</p>
+                            <p className="ot-header ot-flex-three">Away</p>
+                            <p className="ot-header ot-flex-one">Score</p>
+                            <p className="ot-header ot-flex-one">Scoresheet</p>
+                        </div>
+
+                        {this.props.games.map(game => {
+                            
+                            const d = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
+                            
+                            game.date = `${d[0]} ${d[1]} ${d[2]}`;
+                            game.start_time = `${d[3]} ${d[4]}`;
+                            
+                            return (
+                                <div className="ot-row" key={game.id}>
+                                    <p className="ot-cell ot-flex-two">{game.date}</p>
+                                    <p className="ot-cell ot-flex-one">{game.start_time}</p>
+                                    <p className="ot-cell ot-flex-three">{game.location_name}</p>
+                                    <p className="ot-cell ot-flex-three">
+                                        <Link to={{pathname:`/teams/${game.home_team_id}`, state: {name:game.home_team}}}>
+                                            {game.home_team}
+                                        </Link>
+                                    </p>
+                                    <p className="ot-cell ot-flex-three">
+                                        <Link to={{pathname:`/teams/${game.away_team_id}`, state: {name:game.away_team}}}>
+                                            {game.away_team}
+                                        </Link>
+                                    </p>
+                                    <p className="ot-cell ot-flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
+                                    <p className="ot-cell ot-flex-one">
+                                        {game.has_been_played && (
+                                            <Link to={`/boxscore/${game.id}`}>
+                                                Boxscore
+                                            </Link>
+                                        )}
+                                    </p>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    {(!this.state.filters.division && !this.state.filters.team && Number(this.props.totalGamesCount) !== this.props.games.length) && (
+                        <Button title={'Load more'} onClick={this.handleLoadMore}/>
+                    )}
+                </div>
+
             </div>
         )
     }
@@ -104,6 +180,7 @@ class Schedule extends Component {
 
 const mapStateToProps = state => {
     return {
+        totalGamesCount: state.games.totalGamesCount,
         games: state.games.allGames,
         scheduleFilters: state.misc.scheduleFilters
     }

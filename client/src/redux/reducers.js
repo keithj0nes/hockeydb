@@ -108,13 +108,20 @@ export const players = (state = initialPlayersState, { type, payload }) => {
 const initialGameState = {
   allGames: [],
   selectedGame: null,
-  todaysGames: []
+  todaysGames: [],
+  fromLoadMore: false,
+  totalGamesCount: 0
 };
 
 export const games = (state = initialGameState, { type, payload }) => {
   switch (type) {
     case GET_GAMES:
-      return { ...state, allGames: payload };
+      const { games, fromLoadMore, totalGamesCount } = payload;
+
+      if(fromLoadMore) {
+        return { ...state, totalGamesCount, allGames: [...state.allGames, ...games] };
+      }
+      return { ...state, totalGamesCount, allGames: games };
     case `todaysgames/${GET_SUCCESS}`:
       return {...state, todaysGames: payload}
     default:

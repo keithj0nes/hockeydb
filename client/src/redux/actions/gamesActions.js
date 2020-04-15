@@ -5,10 +5,10 @@ import { GET_GAMES } from '../actionTypes';
 
 export const getGames = filter => async (dispatch, getState) => {
 
-  if(!filter){
-    const { seasons: { currentSeason } } = getState();
-    filter = `season=${currentSeason.name}`
-  } 
+  // if(!filter){
+  //   const { seasons: { currentSeason } } = getState();
+  //   filter = `season=${currentSeason.name}`
+  // } 
 
   const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
   if (!data.data) return false;
@@ -18,7 +18,7 @@ export const getGames = filter => async (dispatch, getState) => {
     payload: {seasons: data.data.seasons, divisions: data.data.divisions, teams: data.data.teams}
   })
   
-  dispatch({ type: GET_GAMES, payload: data.data.games })
+  dispatch({ type: GET_GAMES, payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games} })
   return true;
 }
 
