@@ -2,31 +2,32 @@
 
 .schedule-container {
     // background: green;
-    display: flex;
+    // display: flex;
     // padding: 20px 10px;
     padding: 30px 10px 50px;
-
+    
     a {
         color: $highlite_color;
     }
-
+    
     .white-bg {
         background: white;
         width: 100%;
-        padding: 40px 20px;
+        padding: 40px 20px 0;
 
         h2 {
             font-size: 32px;
-            margin-bottom: 20px;
+            // margin-bottom: 20px;
             padding-left: 10px;
         }
     }
 
     .schedule-filters {
         // background: yellow;
-        margin: 20px 0;
-        display: flex;
-        align-items: center;
+        // margin: 20px 0;
+        padding-bottom: 20px;
+        // display: flex;
+        // align-items: center;
 
         // .custom-select {
         //     margin-right: 20px;
@@ -34,10 +35,17 @@
         // }
 
         & > * {
-            margin-right: 30px;
+            // margin-right: 30px;
+            margin-top: 10px;
             width: 100%;
 
         }
+    }
+
+    .overflow-scroll {
+        // background: blue;
+        padding: 20px;
+        overflow: scroll;
     }
 
     .schedule-headings {
@@ -49,9 +57,14 @@
             font-family: $heading_font;
             text-transform: uppercase;
             font-size: 12px;
-            letter-spacing: 1.2px;
+            // letter-spacing: 1.2px;
             color: #7E92A3;
         }
+    }
+
+    .schedule-list-container {
+        // background: yellow;
+        min-width: 900px;
     }
 
     .schedule-list-item {
@@ -73,3 +86,47 @@
         }
     }
 }
+
+
+@media only screen and (min-width: 768px){
+
+
+    .schedule-container {
+        // background: green;
+        // display: flex;
+        // padding: 20px 10px;
+        // padding: 30px 10px 50px;
+    
+        // a {
+        //     color: $highlite_color;
+        // }
+    
+        // .white-bg {
+        //     background: white;
+        //     width: 100%;
+        //     padding: 40px 20px;
+    
+        //     h2 {
+        //         font-size: 32px;
+        //         margin-bottom: 20px;
+        //         padding-left: 10px;
+        //     }
+        // }
+    
+        .schedule-filters {
+            // background: pink;
+            // margin: 20px 0;
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+    
+            & > * {
+                margin-right: 30px;
+                margin-top: 0;
+                width: 100%;
+            }
+        }
+    }
+}
+
+
