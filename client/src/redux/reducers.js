@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
+import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_GAMES, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
   user: {},
@@ -106,6 +106,7 @@ export const players = (state = initialPlayersState, { type, payload }) => {
 }
 
 const initialGameState = {
+  isLoading: true,
   allGames: [],
   selectedGame: null,
   todaysGames: [],
@@ -115,13 +116,16 @@ const initialGameState = {
 
 export const games = (state = initialGameState, { type, payload }) => {
   switch (type) {
-    case GET_GAMES:
+    case `games/${GET_INIT}`:
+      console.log('init!!!')
+      return { ...state, isLoading: true }
+    case `games/${GET_SUCCESS}`:
       const { games, fromLoadMore, totalGamesCount } = payload;
 
       if(fromLoadMore) {
-        return { ...state, totalGamesCount, allGames: [...state.allGames, ...games] };
+        return { ...state, isLoading: false, totalGamesCount, allGames: [...state.allGames, ...games] };
       }
-      return { ...state, totalGamesCount, allGames: games };
+      return { ...state, isLoading: false, totalGamesCount, allGames: games };
     case `todaysgames/${GET_SUCCESS}`:
       return {...state, todaysGames: payload}
     default:

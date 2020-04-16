@@ -237,11 +237,33 @@ input[type=text] {
             margin-top: 10px;
             border-radius: 3px;
             box-shadow: 0px 5px 15px #5C636929;
+
             // .ot-cell {
-            //     // display: table-cell;
-            //     // display: flex;
-            //     // background: pink;
+                // display: table-cell;
+                // display: flex;
+                // background: pink;
+
             // }
+
+            .shimmer {
+                position: relative;
+
+                &:after {
+                    content: '';
+                    // position: absolute;
+                    display: flex;
+                    width: 75%;
+                    height: 18px;
+                    background: #ccc;
+                    animation: shimmer 1.25s infinite;
+                }
+            }
+
+            @keyframes shimmer {
+                0% { background: #ccc; }
+                50% { background: #aaa; }
+                100% { background: #ccc; }
+            }
 
             &:hover {
                 background: #f0f0f0;

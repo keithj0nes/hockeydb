@@ -22,8 +22,8 @@ const getGames = async (req, res) => {
     season_id = await db.seasons.findOne({name: season});
   }
   
-  const limit = 5;
-  const offset = page <= 1 ? 0 : (page-1) * limit;
+  const limit = 15;
+  const offset = (!page || page <= 1) ? 0 : (page-1) * limit;
   // console.log(req.query, 'query!')
   // console.log({page, limit, offset}, '🌟🌟🌟🌟🌟🌟🌟')
 
