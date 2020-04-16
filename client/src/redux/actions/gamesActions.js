@@ -1,14 +1,20 @@
 import { request } from './middleware';
-import { GET_GAMES } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS } from '../actionTypes';
 
-
+// function timeout(ms) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }
 
 export const getGames = filter => async (dispatch, getState) => {
 
-  // if(!filter){
-  //   const { seasons: { currentSeason } } = getState();
-  //   filter = `season=${currentSeason.name}`
-  // } 
+  // if it's from loadmore, dont GET_INIT the whole games data
+  if(!filter.includes('fromLoadMore')) {
+    dispatch({ 
+      type: `games/${GET_INIT}`
+    })
+  }
+
+  // await timeout(2000); // wait 2 seconds
 
   const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
   if (!data.data) return false;
@@ -18,7 +24,7 @@ export const getGames = filter => async (dispatch, getState) => {
     payload: {seasons: data.data.seasons, divisions: data.data.divisions, teams: data.data.teams}
   })
   
-  dispatch({ type: GET_GAMES, payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games} })
+  dispatch({ type: `games/${GET_SUCCESS}`, payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games} })
   return true;
 }
 

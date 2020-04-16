@@ -18,7 +18,9 @@ class Schedule extends Component {
     }
 
     componentDidMount() {
-        this.props.getGames('page=1')
+        if(this.props.games.length <= 0) {
+            this.props.getGames('page=1')
+        }
     }
 
     handleChange = e => {
@@ -56,14 +58,70 @@ class Schedule extends Component {
 
     handleLoadMore = () => {
         this.setState({filters: {...this.state.filters, page: this.state.filters.page + 1, fromLoadMore: true}}, () => {
+
+            console.log(this.state.filters, 'haha filters1')
             const search = qs.stringify(this.state.filters);
-            this.props.getGames(search)
+            this.props.getGames(search).then(() => this.setState({filters: {...this.state.filters, fromLoadMore: false}}))
         });
     }
 
-    render() {
 
-        console.log(this.props.totalGamesCount, this.props.games.length, 'COMPARING')
+    renderTableData = () => {
+
+        const { isLoading, games } = this.props;
+
+        if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
+        if( games.length <= 0 ) return <h3 style={{textAlign: 'center', marginTop: 50}}>No games fit that search criteria :(</h3>
+
+        return games.map(game => {
+                            
+            const d = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
+            
+            game.date = `${d[0]} ${d[1]} ${d[2]}`;
+            game.start_time = `${d[3]} ${d[4]}`;
+            
+            return (
+                <div className="ot-row" key={game.id}>
+                    <p className="ot-cell ot-flex-two">{game.date}</p>
+                    <p className="ot-cell ot-flex-two">{game.start_time}</p>
+                    <p className="ot-cell ot-flex-three">{game.location_name}</p>
+                    <p className="ot-cell ot-flex-four">
+                        <Link to={{pathname:`/teams/${game.home_team_id}`, state: {name:game.home_team}}}>
+                            {game.home_team}
+                        </Link>
+                    </p>
+                    <p className="ot-cell ot-flex-four">
+                        <Link to={{pathname:`/teams/${game.away_team_id}`, state: {name:game.away_team}}}>
+                            {game.away_team}
+                        </Link>
+                    </p>
+                    <p className="ot-cell ot-flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
+                    <p className="ot-cell ot-flex-one">
+                        {game.has_been_played && (
+                            <Link to={`/boxscore/${game.id}`}>
+                                Boxscore
+                            </Link>
+                        )}
+                    </p>
+                </div>
+            )
+        })
+    }
+
+    renderLoadMore = () => {
+        const { division, team } = this.state.filters;
+        const { totalGamesCount, games, isLoading } = this.props;
+
+        if(!isLoading && Number(totalGamesCount) !== games.length && !division && !team) {
+            return (
+                <div style={{paddingTop: 40, textAlign: 'center'}}>
+                    <Button title={'Load more'} onClick={this.handleLoadMore}/>
+                </div>
+            )
+        }
+    }
+
+    render() {
 
         return (
             <div className="schedule-container">
@@ -78,47 +136,8 @@ class Schedule extends Component {
                         <div></div>
                     </div>
 
+
                     {/* <h2>APRIL</h2> */}
-                    {/* <div className="overflow-scroll">
-
-                        <div className="schedule-list-container">
-
-                            <div className="schedule-headings">
-
-                                <p className="flex-two">Date</p>
-                                <p className="flex-one">Time</p>
-                                <p className="flex-three">Location</p>
-                                <p className="flex-three">Home</p>
-                                <p className="flex-three">Away</p>
-                                <p className="flex-one">Score</p>
-                                <p className="flex-one">Scoresheet</p>
-
-                            </div>
-
-
-                            {this.props.games.map(game => {
-                                
-                                const mydate = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
-                                
-                                game.date = `${mydate[0]} ${mydate[1]} ${mydate[2]}`;
-                                game.start_time = `${mydate[3]} ${mydate[4]}`;
-                                
-                                return (
-                                    <div className="schedule-list-item" key={game.id}>
-
-                                        <p className="flex-two">{game.date}</p>
-                                        <p className="flex-one">{game.start_time}</p>
-                                        <p className="flex-three">{game.location_name}</p>
-                                        <p className="flex-three">{game.home_team}</p>
-                                        <p className="flex-three">{game.away_team}</p>
-                                        <p className="flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
-                                        <p className="flex-one">{game.has_been_played && 'Boxscore'}</p>
-            
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </div> */}
                 </div>
 
 
@@ -134,45 +153,14 @@ class Schedule extends Component {
                             <p className="ot-header ot-flex-one">Scoresheet</p>
                         </div>
 
-                        {this.props.games.map(game => {
-                            
-                            const d = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
-                            
-                            game.date = `${d[0]} ${d[1]} ${d[2]}`;
-                            game.start_time = `${d[3]} ${d[4]}`;
-                            
-                            return (
-                                <div className="ot-row" key={game.id}>
-                                    <p className="ot-cell ot-flex-two">{game.date}</p>
-                                    <p className="ot-cell ot-flex-one">{game.start_time}</p>
-                                    <p className="ot-cell ot-flex-three">{game.location_name}</p>
-                                    <p className="ot-cell ot-flex-three">
-                                        <Link to={{pathname:`/teams/${game.home_team_id}`, state: {name:game.home_team}}}>
-                                            {game.home_team}
-                                        </Link>
-                                    </p>
-                                    <p className="ot-cell ot-flex-three">
-                                        <Link to={{pathname:`/teams/${game.away_team_id}`, state: {name:game.away_team}}}>
-                                            {game.away_team}
-                                        </Link>
-                                    </p>
-                                    <p className="ot-cell ot-flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
-                                    <p className="ot-cell ot-flex-one">
-                                        {game.has_been_played && (
-                                            <Link to={`/boxscore/${game.id}`}>
-                                                Boxscore
-                                            </Link>
-                                        )}
-                                    </p>
-                                </div>
-                            )
-                        })}
+                        {this.renderTableData()}
+                        {this.state.filters.fromLoadMore && (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />)}
+                        
                     </div>
-                    {(!this.state.filters.division && !this.state.filters.team && Number(this.props.totalGamesCount) !== this.props.games.length) && (
-                        <Button title={'Load more'} onClick={this.handleLoadMore}/>
-                    )}
-                </div>
 
+                    {this.renderLoadMore()}
+
+                </div>
             </div>
         )
     }
@@ -180,8 +168,11 @@ class Schedule extends Component {
 
 const mapStateToProps = state => {
     return {
+        isLoading: state.games.isLoading,
+        // isLoading: false,
         totalGamesCount: state.games.totalGamesCount,
         games: state.games.allGames,
+        // games: [],
         scheduleFilters: state.misc.scheduleFilters
     }
 }
@@ -193,3 +184,37 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
+
+
+
+
+const TableLoader = ({count = 5, format}) => {
+    return Array(count).fill().map( (_, idx) => {
+        return (
+            <div className="ot-row" key={idx}>
+                {format.map((flexNum, fidx) => (
+                    <p key={fidx} className={`ot-cell ot-flex-${flexNum} shimmer`}></p>
+                ))}
+            </div>
+        )
+    })
+}
+
+
+
+
+{/* {Array(10).fill().map(_ => {
+
+    return (
+
+        <div className="ot-row">
+            <p className="ot-cell ot-flex-two shimmer"></p>
+            <p className="ot-cell ot-flex-one shimmer"></p>
+            <p className="ot-cell ot-flex-three shimmer"></p>
+            <p className="ot-cell ot-flex-three shimmer"> </p>
+            <p className="ot-cell ot-flex-three shimmer"></p>
+            <p className="ot-cell ot-flex-one shimmer"></p>
+            <p className="ot-cell ot-flex-one shimmer"></p>
+        </div>
+        )
+})} */}
