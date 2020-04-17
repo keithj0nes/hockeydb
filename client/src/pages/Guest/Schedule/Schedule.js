@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import qs from 'query-string';
-import { getGames } from '../../redux/actions/gamesActions';
-import { Select, Button } from '../../components/';
+import { getGames } from '../../../redux/actions/gamesActions';
+import { Select, Button } from '../../../components/';
 import './schedule.scss';
 
 
@@ -58,8 +58,6 @@ class Schedule extends Component {
 
     handleLoadMore = () => {
         this.setState({filters: {...this.state.filters, page: this.state.filters.page + 1, fromLoadMore: true}}, () => {
-
-            console.log(this.state.filters, 'haha filters1')
             const search = qs.stringify(this.state.filters);
             this.props.getGames(search).then(() => this.setState({filters: {...this.state.filters, fromLoadMore: false}}))
         });
@@ -68,9 +66,9 @@ class Schedule extends Component {
 
     renderTableData = () => {
 
-        const { isLoading, games } = this.props;
+        const { games } = this.props;
 
-        if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
+        // if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
         if( games.length <= 0 ) return <h3 style={{textAlign: 'center', marginTop: 50}}>No games fit that search criteria :(</h3>
 
         return games.map(game => {
@@ -168,11 +166,9 @@ class Schedule extends Component {
 
 const mapStateToProps = state => {
     return {
-        isLoading: state.games.isLoading,
-        // isLoading: false,
+        // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,
         games: state.games.allGames,
-        // games: [],
         scheduleFilters: state.misc.scheduleFilters
     }
 }
@@ -199,22 +195,3 @@ const TableLoader = ({count = 5, format}) => {
         )
     })
 }
-
-
-
-
-{/* {Array(10).fill().map(_ => {
-
-    return (
-
-        <div className="ot-row">
-            <p className="ot-cell ot-flex-two shimmer"></p>
-            <p className="ot-cell ot-flex-one shimmer"></p>
-            <p className="ot-cell ot-flex-three shimmer"></p>
-            <p className="ot-cell ot-flex-three shimmer"> </p>
-            <p className="ot-cell ot-flex-three shimmer"></p>
-            <p className="ot-cell ot-flex-one shimmer"></p>
-            <p className="ot-cell ot-flex-one shimmer"></p>
-        </div>
-        )
-})} */}
