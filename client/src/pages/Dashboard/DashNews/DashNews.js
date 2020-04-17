@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button } from '../../../components';
 // import DashNewsCreate from './DashNewsCreate';
 import DashNewsListItem from './DashNewsListItem';

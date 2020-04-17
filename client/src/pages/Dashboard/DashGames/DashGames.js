@@ -1,21 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
-
+import qs from 'query-string';
 import { Button } from '../../../components';
 import DashGamesListItem from './DashGamesListItem';
 import ListItem from '../ListItem';
-
-
-
 import { getLocations } from '../../../redux/actions/locationsActions';
 import { getTeams } from '../../../redux/actions/teamsActions';
 import { getGames, newGame } from '../../../redux/actions/gamesActions';
-
-
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-
 import { toggleModal } from '../../../redux/actions/misc';
 
 
@@ -25,18 +19,19 @@ import { toggleModal } from '../../../redux/actions/misc';
 export class DashGames extends Component {
 
     state = {
-        isAddGameVisible: false,
-
         start_date: new Date(),
         home_team: null,
         away_team: null,
         location_id: null,
 
+        page: 1,
+        fromLoadMore: false
+
     }
     componentDidMount() {
         this.props.locations.length <= 0 && this.props.getLocations();
         this.props.getTeams();
-        this.props.getGames();
+        this.props.getGames('page=1');
     }
 
     handleDateChange = date => {
@@ -55,6 +50,13 @@ export class DashGames extends Component {
 
     handleGameLocationChange = e => {
         this.setState({ location_id: e.target.value })
+    }
+
+    handleLoadMore = () => {
+        this.setState({page: this.state.page + 1, fromLoadMore: true}, () => {
+            const search = qs.stringify({page: this.state.page, fromLoadMore: this.state.fromLoadMore});
+            this.props.getGames(search).then(() => this.setState({fromLoadMore: false}))
+        });
     }
 
     handleChange = edit => e => {
@@ -121,8 +123,8 @@ export class DashGames extends Component {
             ],
             onChange: this.handleChange(),
             confirmActionTitle: 'Create Game',
-            confirmAction: () => console.log({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date})
-            // confirmAction: () => { this.validation() && this.props.createTeam({ name: this.state.name, division_id: this.state.division_id, colors: this.state.colors, season_name: defaultValue  }); this.setState(defaultState) },
+            // confirmAction: () => console.log({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date})
+            confirmAction: () => { this.props.newGame({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date});}, //this.setState(defaultState) },
         }, 'prompt');
     }
 
@@ -140,153 +142,74 @@ export class DashGames extends Component {
         this.props.newGame({ home_team, away_team, location_id, start_date });
     }
 
-    toggleGameVisible = () => {
-        this.setState({isAddGameVisible: !this.state.isAddGameVisible})
-    }
-
     render() {
         // console.log(this.props.teams, 'teams');
         // console.log(this.props.locations, 'locations')
         return (
             <div>
-
                 <div className="dashboard-filter-header">
-                    {/* <div> */}
-                        {/* <Button title="Add Game" onClick={this.toggleGameVisible}/> */}
-                        <Button title="Add Game" onClick={this.handleAddGame} />
-
-                    {/* </div> */}
+                    <Button title="Add Game" onClick={this.handleAddGame} />
                 </div>
 
-
-
-                {this.state.isAddGameVisible && (
-              
-                    <div className="dashboard-add-container">
-                        {/* <form onSubmit={this.handleNewGameSubmit}> */}
-                            {/* <label> Home Team: */}
-                                <select name="Home" onChange={this.handleHomeTeamChange}>
-                                    <option value="">Home Team</option>
-                                    {this.props.teams.map(item => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))}
-                                </select>
-                            {/* </label> */}
-
-                            {/* <label> Away Team: */}
-                                <select name="Home" onChange={this.handleAwayTeamChange}>
-                                    <option value="">Away Team</option>
-                                    {this.props.teams.map(item => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))}
-                                </select>
-                            {/* </label> */}
-
-                            {/* <label> Location: */}
-                                <select name="Home" onChange={this.handleGameLocationChange}>
-                                    <option value="">Location</option>
-                                    {this.props.locations.map(item => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))}
-                                </select>
-                            {/* </label> */}
-                            <DatePicker
-                                selected={this.state.start_date}
-                                onChange={this.handleDateChange}
-                                showTimeSelect
-                                timeFormat="HH:mm"
-                                timeIntervals={15}
-                                dateFormat="MMMM d, yyyy h:mm aa"
-                                timeCaption="time"
-                                withPortal
-                            />
-                            <div className="dashboard-add-button-container">
-                                <Button title="Save Game" success onClick={this.handleNewGameSubmit} />
-                            </div>
-                        {/* </form> */}
-
-                    </div>
-                )}
-
-
                 <div className="dashboard-list-container">
-
                     <div className="dashboard-list">
-
                         <div className="dashboard-list-item hide-mobile">
                             <div style={{display: 'flex'}}>
 
                                 <p className="flex-one">Date</p>
-                                <p className="flex-one">Home</p>
-                                <p className="flex-one">Away</p>
-                                <p className="flex-one">Location</p>
+                                <p className="flex-two">Home</p>
+                                <p className="flex-two">Away</p>
+                                <p className="flex-two">Location</p>
                                 <p className="flex-one">Time</p>
                                 <p className="flex-one">Manage</p>
-
 
                             </div>
                         </div>
 
-                    {this.props.games && this.props.games.map(item => {
+                        {this.props.games && this.props.games.map(item => {
 
-                        const mydate = dateFormat(item.start_date, 'MM/DD/YYYY h:mmA').split(' ');
+                            const mydate = dateFormat(item.start_date, 'MM/DD/YYYY h:mmA').split(' ');
 
-                        item.date = mydate[0];
-                        item.start_time = mydate[1];
-                        
-                        // this should work below, but not
-                        // [ item.date, item.start_time ] = dateFormat(item.start_date, 'MM/DD/YYYY h:mm A').split(' ');
-                        return (
+                            item.date = mydate[0];
+                            item.start_time = mydate[1];
+                            
+                            // this should work below, but not
+                            // [ item.date, item.start_time ] = dateFormat(item.start_date, 'MM/DD/YYYY h:mm A').split(' ');
+                            return (
 
-                            <div key={item.id}>
-                                <div className="hide-desktop">
-                                    <DashGamesListItem 
-                                        key={item.id} 
-                                        item={item} 
-                                        sections={{'date': 'one', 'home_team': 'one', 'away_team': 'one', 'location_name': 'one', 'start_time': 'one'}} 
-                                        onClick={() => this.props.deleteSeason(item.id)} 
-                                        locations={this.props.locations}
-                                    />
+                                <div key={item.id}>
+                                    <div className="hide-desktop">
+                                        <DashGamesListItem 
+                                            key={item.id} 
+                                            item={item} 
+                                            sections={{'date': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two', 'start_time': 'one'}} 
+                                            onClick={() => console.log('delete item!')} 
+                                            locations={this.props.locations}
+                                        />
 
+                                    </div>
+
+                                    <div className="hide-mobile">
+                                        <ListItem 
+                                            key={item.id} 
+                                            item={item} 
+                                            sections={{'date': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two', 'start_time': 'one'}} 
+                                            onClick={() => console.log('delete item!')} 
+                                            locations={this.props.locations}
+                                        />
+                                    </div>
                                 </div>
-
-                                <div className="hide-mobile">
-                                    <ListItem 
-                                        key={item.id} 
-                                        item={item} 
-                                        sections={{'date': 'one', 'home_team': 'one', 'away_team': 'one', 'location_name': 'one', 'start_time': 'one'}} 
-                                        onClick={() => this.props.deleteSeason(item.id)} 
-                                        locations={this.props.locations}
-                                    />
-
-                                </div>
-
-                            </div>
-
-
-                        )
-
-                    })}
-
-                    {/* <div className="dashboard-list-item"></div>
-                    <div className="dashboard-list-item"></div> */}
-
-
-                        {/* <div>Name</div>
-                        <div>Type</div>
-                        <div>Manage/Edit</div> */}
+                            )
+                        })}
                     </div>
 
+                    { Number(this.props.totalGamesCount) !== this.props.games.length && (
+                        <div style={{padding: '20px 0', textAlign: 'center'}}>
+                            <Button title={'Load more'} onClick={this.handleLoadMore}/>
+                        </div>
+                    )}
                 </div>
-                
 
-                    {/* <div>
-                        {this.props.games.map(item => (
-                            <div key={item.id}>
-                                <p>{dateFormat(item.start_date, 'MM/DD/YYYY')} {item.away_team} at {item.home_team}  {item.location_name}  {dateFormat(item.start_date, 'h:mm A')} {item.has_been_played && `${item.away_score} : ${item.home_score}`}</p>
-                            </div>
-                        ))}
-                    </div> */}
             </div>
         )
     }
@@ -296,6 +219,7 @@ export class DashGames extends Component {
 const mapStateToProps = state => {
     return {
         locations: state.locations.locations,
+        totalGamesCount: state.games.totalGamesCount,
         teams: state.teams.teams,
         games: state.games.allGames,
         isLoading: state.games.isLoading,
@@ -306,7 +230,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     getLocations: () => dispatch(getLocations()),
     getTeams: () => dispatch(getTeams()),
-    getGames: () => dispatch(getGames()),
+    getGames: filter => dispatch(getGames(filter)),
     newGame: (home, away, location, date) => dispatch(newGame(home, away, location, date)),
     toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
 

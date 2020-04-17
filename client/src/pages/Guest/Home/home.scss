@@ -1,7 +1,7 @@
-@import '../../assets/styles/variables';
+@import '../../../assets/styles/variables';
 
 .home-container {
-    background: green;
+    // background: green;
     display: flex;
     // padding: 20px 10px;
     padding: 30px 10px;
@@ -30,8 +30,6 @@
     color: #FFFFFF;
     font-family: $main_font;
 }
-
-
 
 
 @media only screen and (min-width: 768px){

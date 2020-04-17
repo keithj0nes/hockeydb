@@ -8,7 +8,7 @@ import { GET_INIT, GET_SUCCESS } from '../actionTypes';
 export const getGames = filter => async (dispatch, getState) => {
 
   // if it's from loadmore, dont GET_INIT the whole games data
-  if(!filter.includes('fromLoadMore')) {
+  if(filter && !filter.includes('fromLoadMore')) {
     dispatch({ 
       type: `games/${GET_INIT}`
     })

@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginFromCookie } from '../../redux/actions/auth';
 
-import Home from '../Home/Home';
+import Home from '../Guest/Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/Login';
-import Players from '../Players/Players';
-import Games from '../Games/Games';
-import Schedule from '../Schedule/Schedule';
+import Players from '../Guest/Players/Players';
+import Games from '../Guest/Games/Games';
+import Schedule from '../Guest/Schedule/Schedule';
 
-import SingleTeam from '../SingleTeam/SingleTeam';
-import Boxscore from '../Boxscore/Boxscore';
+import SingleTeam from '../Guest/SingleTeam/SingleTeam';
+import Boxscore from '../Guest/Boxscore/Boxscore';
 
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';

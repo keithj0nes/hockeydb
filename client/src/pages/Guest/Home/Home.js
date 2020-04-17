@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 // import { DashboardSidebarNav } from '../../components'; // maybe add a 'right' prop 
-import TodaysGames from '../../components/TodaysGames';
-import './home1.scss';
+import TodaysGames from '../../../components/TodaysGames';
+import './home.scss';
 
 import News from './News';
 

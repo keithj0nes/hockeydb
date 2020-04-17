@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { getNews } from '../../redux/actions/news';
 import dateFormat from 'date-fns/format';
+import { getNews } from '../../../redux/actions/news';
 
 import './news.scss';
 
