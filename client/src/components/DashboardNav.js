@@ -45,8 +45,8 @@ class DashboardNav extends Component {
                         <h2>HockeyDB</h2>
                     </div>
 
-                    <p style={{textAlign: 'center'}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
-
+                    <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
+                    <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
 
                     <ul>
                         {navLinks.map(link => (

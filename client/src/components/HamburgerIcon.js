@@ -16,7 +16,7 @@ export const HamburgerIcon = ({onClick}) => {
 const styles = {
     container: {
         cursor: 'pointer',
-        marginLeft: 20,
+        // marginLeft: 20,
         height: 21,
         width: 36,
         display: 'flex',

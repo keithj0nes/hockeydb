@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import { toggleNavSlider } from '../../redux/actions/misc';
+import { logout } from '../../redux/actions/auth'
 import { DashboardSidebarNav, DashboardNav, HamburgerIcon } from '../../components';
 import DashSeasons from './DashSeasons/DashSeasons';
 import DashDivisions from './DashDivisions/DashDivisions';
@@ -15,7 +16,28 @@ import DashLocations from './DashLocations/DashLocations';
 
 import '../../assets/styles/dashboard.scss';
 
+const navLinks = [
+    {name: 'Profile', to: '/dashboard/profile' },
+    {name: 'Notifications', to: '/dashboard/notifications' },
+    {name: 'Settings', to: '/dashboard/settings' },
+    // {name: 'Logout', to: '/dashboard/logout' },
+]
+
 class Dashboard extends Component {
+
+    state = {
+        showProfile: false
+        // showProfile: true
+    }
+
+    handleLogout = () => {
+        this.props.logout();
+        this.props.history.push('/');
+    }
+
+    toggleShowProfile = () => {
+        this.setState({showProfile: !this.state.showProfile})
+    }
 
     render() {
         const { match } = this.props;
@@ -28,8 +50,43 @@ class Dashboard extends Component {
 
                 <div className="dashboard-content">
                     <div className="dashboard-header">
-                        <p>{this.props.user.first_name}</p>
                         <HamburgerIcon onClick={this.props.toggleNavSlider} />
+                        <div style={{textAlign: 'center'}}>
+                            <p style={{textAlign: 'center', fontSize:13}}>CURRENT SEASON</p>
+                            <p style={{textAlign: 'center'}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+
+                        </div>
+
+                        <div className="dashboard-header-img" onClick={this.toggleShowProfile}></div>
+
+                            {/* profile slide down */}
+
+                        <div className={`dashboard-settings-container ${this.state.showProfile && 'slide-down'}`}>
+                            <p style={{position: 'absolute', top: 10, right: 10}} onClick={this.toggleShowProfile}>CLOSE!!!</p>
+
+                            <div className="profile-image">
+                                <h4 className="name">{this.props.user.first_name} {this.props.user.last_name}</h4>
+                                <p className="admin-type">{this.props.user.admin_type}</p>
+                            </div>
+
+                            <div className="profile-links-container">
+
+                                <ul>
+                                    {navLinks.map(link => {
+                                        return (
+                                            <li key={link.to}> <NavLink to={link.to} activeClassName="selected" onClick={() => console.log('clicked to ' + link.name)}>{link.name}</NavLink> </li>
+                                        )
+                                    })}
+
+                                    <li><a onClick={this.handleLogout}>Logout</a></li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+
+
+
                     </div>
 
                     <Route path={`${match.path}/seasons`}   component={DashSeasons} />
@@ -54,7 +111,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    toggleNavSlider: () => dispatch(toggleNavSlider())
+    toggleNavSlider: () => dispatch(toggleNavSlider()),
+    logout: () => dispatch(logout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
