@@ -38,7 +38,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     const createAdmins = async () => {
         return Promise.all( admins.map(async admin => {
 
-            const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), is_admin: admin.is_admin, email: admin.email});
+            const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: admin.admin_type, is_admin: admin.is_admin, email: admin.email});
             const password = admin.admin_type;
             const hash = await bcrypt.hash(password, 10);
             await db.passwords.insert({ user_id: insertedAdmin.id, pw: hash });
