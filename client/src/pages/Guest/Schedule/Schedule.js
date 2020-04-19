@@ -18,9 +18,31 @@ class Schedule extends Component {
     }
 
     componentDidMount() {
-        if(this.props.games.length <= 0) {
-            this.props.getGames('page=1')
+        const { games, location, getGames } = this.props;
+        if(games.length <= 0) {
+            if(location.search.length > 0){
+                const [filters, filterString] = this.getQuery();
+                return getGames(filterString).then(res => {
+                       return res && this.setState({filters}) //this adds filters to default values
+                });
+            }
+            return getGames('page=1')
         }
+    }
+
+    setQuery = (q, cb) => {
+        if(!q) return;
+        const search = qs.stringify(q);
+        this.props.history.push({search});
+        return search;
+        // return cb ? cb(search) : search;
+    }
+
+    getQuery = (q) => {
+        if(!q) q = this.props.location.search.slice(1);
+        const parsed = qs.parse(q);
+        // console.log(parsed, 'getQuery');
+        return [parsed, q];
     }
 
     handleChange = e => {
@@ -47,11 +69,14 @@ class Schedule extends Component {
         delete filters['fromLoadMore'];
 
         this.setState(() => {
-            const search = qs.stringify(filters);
+            const search = this.setQuery(filters);
+
+            // console.log(search, 'search in setstate!')
+            // const search = qs.stringify(filters);
             this.props.getGames(search)
-            this.props.history.push({ search });
+            // this.props.history.push({ search });
             filters.page = 1;
-            // this.props.history.push({search: search.replace('%20', '_')});
+            // // this.props.history.push({search: search.replace('%20', '_')});
             return {filters}
         })
     }
