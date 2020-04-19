@@ -30,12 +30,11 @@ class Schedule extends Component {
         }
     }
 
-    setQuery = (q, cb) => {
+    setQuery = (q) => {
         if(!q) return;
         const search = qs.stringify(q);
         this.props.history.push({search});
         return search;
-        // return cb ? cb(search) : search;
     }
 
     getQuery = (q) => {
@@ -48,6 +47,8 @@ class Schedule extends Component {
     handleChange = e => {
         const filters = { ...this.state.filters };
         const { name, value, checked, type } = e.target
+
+        console.log({name, value})
 
         if(value === '' || checked === false){
             delete filters[name];
@@ -70,13 +71,8 @@ class Schedule extends Component {
 
         this.setState(() => {
             const search = this.setQuery(filters);
-
-            // console.log(search, 'search in setstate!')
-            // const search = qs.stringify(filters);
             this.props.getGames(search)
-            // this.props.history.push({ search });
             filters.page = 1;
-            // // this.props.history.push({search: search.replace('%20', '_')});
             return {filters}
         })
     }
@@ -145,6 +141,7 @@ class Schedule extends Component {
     }
 
     render() {
+        console.log(this.props.scheduleFilters, 'chckit')
 
         return (
             <div className="schedule-container">
@@ -152,9 +149,9 @@ class Schedule extends Component {
                     <h1>Schedule</h1>
 
                     <div className="schedule-filters"> 
-                        <Select name='season'   title="Season"   listOfSelects={this.props.scheduleFilters.seasons}                                  onChange={this.handleChange}  defaultValue={this.state.filters.season || ''} />
-                        <Select name='division' title="Division" listOfSelects={[{name: 'All', value: ''}, ...this.props.scheduleFilters.divisions]} onChange={this.handleChange}  defaultValue={this.state.filters.division || ''} />
-                        <Select name='team'     title="Team"     listOfSelects={[{name: 'All', value: ''}, ...this.props.scheduleFilters.teams]}     onChange={this.handleChange}  defaultValue={this.state.filters.team || ''} />
+                        <Select name='season'   title="Season"   listOfSelects={this.props.scheduleFilters.seasons}                                  onChange={this.handleChange}  defaultValue={this.state.filters.season || ''}   useKey="id" />
+                        <Select name='division' title="Division" listOfSelects={[{name: 'All', value: ''}, ...this.props.scheduleFilters.divisions]} onChange={this.handleChange}  defaultValue={this.state.filters.division || ''} useKey="id" />
+                        <Select name='team'     title="Team"     listOfSelects={[{name: 'All', value: ''}, ...this.props.scheduleFilters.teams]}     onChange={this.handleChange}  defaultValue={this.state.filters.team || ''}     useKey="id" />
                         {/* <a>Clear Filters</a> */}
                         <div></div>
                     </div>

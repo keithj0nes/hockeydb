@@ -12,22 +12,24 @@ const getGames = async (req, res) => {
 
   const { season, division, team, page, fromLoadMore } = req.query;
 
-  let division_id;
-  let team_id;
+  // let division_id;
+  // let team_id;
   let season_id;
+
 
   if(!season || season === 'undefined'){
     season_id = await db.seasons.findOne({is_active: true});
-  } else {
-    season_id = await db.seasons.findOne({name: season});
   }
+  //  else {
+  //   season_id = await db.seasons.findOne({name: season});
+  // }
   
   const limit = 15;
   const offset = (!page || page <= 1) ? 0 : (page-1) * limit;
   // console.log(req.query, 'query!')
   // console.log({page, limit, offset}, '🌟🌟🌟🌟🌟🌟🌟')
 
-  const games_count = await db.query('SELECT count(*) FROM game_season_division where season_id = $1', [season_id.id]);
+  const games_count = await db.query('SELECT count(*) FROM game_season_division where season_id = $1', [season || season_id.id]);
 
   let query = `
     SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
@@ -42,16 +44,16 @@ const getGames = async (req, res) => {
     JOIN seasons ON seasons.id = gsd.season_id
     JOIN divisions ON divisions.id = gsd.division_id
     JOIN locations ON locations.id = g.location_id
-    WHERE gsd.season_id = ${season_id.id}
+    WHERE gsd.season_id = ${season || season_id.id}
   `;
 
   if(division) {
-    division_id = await db.divisions.findOne({name: division})
+    // division_id = await db.divisions.findOne({name: division})
     query +=  'AND (gsd.division_id = $1)';
   }
 
   if(team) {
-    team_id = await db.teams.findOne({name: team})
+    // team_id = await db.teams.findOne({name: team})
     query += ' AND (h.id = $2 OR a.id = $2)';
   }
 
@@ -61,7 +63,8 @@ const getGames = async (req, res) => {
     query += `LIMIT $3 OFFSET $4`;
   }
 
-  const games = await db.query(query,[division_id && division_id.id, team_id && team_id.id, limit, offset]);
+  // const games = await db.query(query,[division_id && division_id.id, team_id && team_id.id, limit, offset]);
+  const games = await db.query(query,[division, team, limit, offset]);
 
   // const seasons = await db.seasons.find();
   const seasons = await db.query('select id, name from seasons;');
@@ -72,18 +75,18 @@ const getGames = async (req, res) => {
     JOIN divisions d ON d.id = tsd.division_id
     where tsd.season_id = $1
     order by id;
-  `,[season_id.id]);
+  `,[season || season_id.id]);
 
   let queryForTeams = `
-    select d.name AS division_name, t.name
+    select d.name AS division_name, t.name, t.id
     FROM team_season_division tsd
     JOIN divisions d ON d.id = tsd.division_id
     JOIN teams t ON t.id = tsd.team_id
-    ${division_id ? 'WHERE tsd.season_id = $1 AND tsd.division_id = $2' : 'WHERE tsd.season_id = $1'}
+    ${division ? 'WHERE tsd.season_id = $1 AND tsd.division_id = $2' : 'WHERE tsd.season_id = $1'}
     order by name;
   `;
 
-  const teams = await db.query(queryForTeams,[season_id.id, division_id && division_id.id]);
+  const teams = await db.query(queryForTeams,[season || season_id.id, division]);
 
   res.status(200).send({ status: 200, data: {games, games_count: games_count[0].count, seasons, divisions, teams, fromLoadMore}, message: 'Retrieved list of games' })
 }
