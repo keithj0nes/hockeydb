@@ -27,6 +27,9 @@ class Schedule extends Component {
                 });
             }
             return getGames('page=1')
+        } else {
+            const [filters] = this.getQuery();
+            this.setState({filters})
         }
     }
 
@@ -141,8 +144,6 @@ class Schedule extends Component {
     }
 
     render() {
-        console.log(this.props.scheduleFilters, 'chckit')
-
         return (
             <div className="schedule-container">
                 <div className="white-bg">

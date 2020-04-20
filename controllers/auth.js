@@ -9,10 +9,8 @@ const config = require('../config');
 
 const authorizeAccessToken = async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
-        console.log(user, 'server user');
-
         if (err || !user) {
-            return res.status(401).send({ status: 401, error: true, message: err || "Unauthorized" })
+            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized" });
         }
         req.user = user;
         return next();
@@ -21,27 +19,22 @@ const authorizeAccessToken = async (req, res, next) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const loginFromCookie = async (req, res, next) => {
+const loginFromCookie = async (req, res) => {
     const db = app.get('db');
 
     passport.authenticate('jwt', { session: false }, async (err, user, info) => {
-        // console.log(user, err, info)
         if (err || !user) {
-            // return res.status(200).send({ status: 401, error: true, message: err || "Unauthorized" })
-            console.log(err)
-            return res.status(200).send({ status: 401, error: true, message: info.message || "Unauthorized" })
-
+            console.log(err, 'error in passport.authenticate jwt');
+            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized" });
         }
-        req.user = user;
-        // console.log(req.user, 'USER!')
-        console.log('logged in from cookie')
+        console.log('logged in from cookie');
         const season = await db.seasons.findOne({is_active: true});
 
         // NEED TO CHANGE THIS TO BE OPTIMIZED
         const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
         // NEED TO CHANGE THIS TO BE OPTIMIZED
 
-        res.status(200).send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' })
+        res.status(200).send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' });
     })(req, res)
 }
 
@@ -55,7 +48,7 @@ const login = async (req, res) => {
         if (err || !user) {
             // console.log(err, user, info, 'error')
             // return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
-            return res.send({ status: 404, error: true, message: info.message || 'Incorrect email or password.' })
+            return res.status(200).send({ status: info.status || 404, error: true, message: info.message || 'Incorrect email or password.' })
 
         }
 
@@ -67,7 +60,6 @@ const login = async (req, res) => {
             // console.log('logging in user: ', user)
             console.log('logged in from sign in')
 
-            // const season = await db.query('SELECT * FROM seasons ORDER BY id DESC LIMIT 1')
             const season = await db.seasons.findOne({is_active: true});
 
             // NEED TO CHANGE THIS TO BE OPTIMIZED
@@ -173,7 +165,8 @@ passport.use('local-login', new LocalStrategy({
     }
 
     if(user.is_suspended){
-        return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
+        // return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
+        return done(null, false, { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', internal_message: 'USER_SUSPENDED' })
     }
 
     const pw = await db.passwords.findOne({ user_id: user.id })
@@ -249,8 +242,11 @@ passport.use('jwt', new JWTStrategy({
 const checkSuspended = async (id) => {
     const db = app.get('db');
     const user = await db.users.findOne({ id })
+    if(!user){
+        return { status: 404, message: 'User could not be found'}
+    }
     if(user.is_suspended){
-        return { message: 'User has been suspended' }
+        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.' }
     }
     return false;
 }
