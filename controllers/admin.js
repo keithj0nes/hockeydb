@@ -137,7 +137,7 @@ const createNews = async (req, res) => {
     await db.query(query);
 
 
-    const inserted = await db.news.insert({ title, display_order: 1, body, allow_collapse, tag, created_date: currentDate, created_by: 1}).catch(err => console.log(err, 'create blog error'))
+    const inserted = await db.news.insert({ title, display_order: 1, body, allow_collapse, tag, created_date: currentDate, created_by: (req.user && req.user.id) || 1}).catch(err => console.log(err, 'create blog error'))
     const { id, display_order, created_by, created_date } = inserted;
     
     const user = await db.users.findOne({id: created_by})
