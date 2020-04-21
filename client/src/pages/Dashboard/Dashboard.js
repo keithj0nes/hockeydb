@@ -51,9 +51,13 @@ class Dashboard extends Component {
                 <div className="dashboard-content">
                     <div className="dashboard-header">
                         <HamburgerIcon onClick={this.props.toggleNavSlider} />
-                        <div style={{textAlign: 'center'}}>
+                        <div style={{textAlign: 'center'}} className="hide-desktop">
                             <p style={{textAlign: 'center', fontSize:13}}>CURRENT SEASON</p>
                             <p style={{textAlign: 'center'}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+                        </div>
+
+                        <div className="hide-mobile">
+                            <p style={{textAlign: 'center'}}>{this.props.user && `${this.props.user.first_name} ${this.props.user.last_name}`}</p>
 
                         </div>
 
