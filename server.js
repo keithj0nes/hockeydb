@@ -4,7 +4,7 @@ const massive = require('massive');
 const cors = require('cors');
 
 let config;
-if(!process.env.NODE_ENV) {
+if(process.env.NODE_ENV !== 'production') {
     config = require('./config');
 }
 
