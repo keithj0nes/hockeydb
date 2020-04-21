@@ -74,7 +74,7 @@ const login = async (req, res) => {
             // NEED TO CHANGE THIS TO BE OPTIMIZED
 
             // console.log(seasons, 'SEASON')
-            const access_token = jwt.sign({ user, season, seasons }, config.JWTSECRET)
+            const access_token = jwt.sign({ user, season, seasons }, JWTSECRET)
             res.status(200).send({ status: 200, data: { user, season, seasons, access_token }, message: 'Welcome! You\'re logged in!' })
         })
     })(req, res)
@@ -106,7 +106,7 @@ const invite = async (req, res) => {
     }
 
     //set invite token with expiry
-    const invite_token = jwt.sign({ email, first_name, last_name }, config.JWTSECRET, { expiresIn: '8h' })
+    const invite_token = jwt.sign({ email, first_name, last_name }, JWTSECRET, { expiresIn: '8h' })
     //add user by email
     //add user names
     //add invite_token
@@ -129,7 +129,7 @@ const reinvite = async (req, res) => {
     }
 
     //set invite token with expiry
-    const invite_token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name }, config.JWTSECRET, { expiresIn: '8h' })
+    const invite_token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name }, JWTSECRET, { expiresIn: '8h' })
     //update invite_token
     //update reinvite_date
     const reInvitedUser = await db.users.update({ id }, { invite_token, reinvite_date: new Date() })
@@ -227,7 +227,7 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 passport.use('jwt', new JWTStrategy({
-    secretOrKey: config.JWTSECRET,
+    secretOrKey: JWTSECRET,
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
     console.log(token.user, 'OKEN>USER')
