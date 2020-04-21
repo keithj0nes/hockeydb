@@ -13,7 +13,7 @@ export const getLocations = () => async dispatch => {
 
 export const createLocation = (data) => async (dispatch, getState) => {
   const { user } = getState();
-  const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token });
+  const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.user.access_token });
   if (!post.data) return false;
 
   dispatch({ type: `locations/${CREATE_SUCCESS}`, payload: post.data });
@@ -27,7 +27,7 @@ export const createLocation = (data) => async (dispatch, getState) => {
 
 export const updateLocation = (id, locationData) => async (dispatch, getState) => {
   const { user } = getState();
-  const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.access_token, data: locationData})
+  const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.user.access_token, data: locationData})
   if(!data) return false;
 
   dispatch({
@@ -48,7 +48,7 @@ export const updateLocation = (id, locationData) => async (dispatch, getState) =
 
 export const deleteLocation = id => async (dispatch, getState) => {
   const { user } = getState();
-  const data = await request(`/api/admin/locations/${id}`, 'DELETE', {access_token: user.access_token})
+  const data = await request(`/api/admin/locations/${id}`, 'DELETE', {access_token: user.user.access_token})
   if(!data) return false;
   //Close Delete Modal
   // dispatch({

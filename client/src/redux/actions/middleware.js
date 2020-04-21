@@ -18,6 +18,10 @@ export const request = async (route, method, session, noAuth) => {
         return alert('no route, please include a route string')
     }
 
+    if(!noAuth && !session.access_token) {
+        return alert('no access token for auth route')
+    }
+
     const responseRaw = await axios({
         method,
         url: `${ROOT}${route}`,

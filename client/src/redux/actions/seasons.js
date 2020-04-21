@@ -31,9 +31,10 @@ export const getSeasons = (filter) => async dispatch => {
 export const createSeason = seasonData => async (dispatch, getState) => {
     const { user } = getState();
 
-    console.log(seasonData, 'SEASON DATA!')
+    console.log(user,' USERRRRR!!!!!')
+    // console.log(seasonData, 'SEASON DATA!')
 
-    const data = await request(`/api/admin/seasons`, 'POST', {access_token: user.access_token, data: seasonData})
+    const data = await request(`/api/admin/seasons`, 'POST', {access_token: user.user.access_token, data: seasonData})
 
     console.log(data, 'DATA CREATE SEASON!!')
 
@@ -56,7 +57,7 @@ export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
     console.log(id, seasonData, 'SEASON DATA')
     const { user } = getState();
 
-    const data = await request(`/api/admin/seasons/${id}`, 'PUT', {access_token: user.access_token, data: seasonData})
+    const data = await request(`/api/admin/seasons/${id}`, 'PUT', {access_token: user.user.access_token, data: seasonData})
 
     console.log(data, 'DATA IN UPDATE SEASON ACTIONS')
     if(!data) return false;
@@ -90,7 +91,7 @@ export const deleteSeason = id => async (dispatch, getState) => {
 
     const { user } = getState();
 
-    const data = await request(`/api/admin/seasons/${id}`, 'DELETE', {access_token: user.access_token})
+    const data = await request(`/api/admin/seasons/${id}`, 'DELETE', {access_token: user.user.access_token})
 
     console.log(data, 'DATA!')
     if(!data) return false;
@@ -115,22 +116,3 @@ export const deleteSeason = id => async (dispatch, getState) => {
     return dispatch(getSeasons())
 
 }
-
-
-// const seasonData = [
-//     {
-//         id: 1,
-//         type: 'Regular',
-//         name: 'Summer 2019'
-//     },
-//     {
-//         id: 2,
-//         type: 'Playoffs',
-//         name: 'Fall/Winter Playoffs 2019'
-//     },
-//     {
-//         id: 3,
-//         type: 'Regular',
-//         name: 'Fall/Winter 2019'
-//     }
-// ]
