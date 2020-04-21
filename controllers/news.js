@@ -1,6 +1,6 @@
 
 const app = require('../server.js');
-const config = require('../config.js');
+// const config = require('../config.js');
 
 // function sendFormat({res, status, code, message, data}) {
 //     const date = new Date();

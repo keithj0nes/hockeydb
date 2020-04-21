@@ -3,7 +3,13 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+// const config = require('../config');
+let config;
+if(process.env.NODE_ENV !== 'production') {
+    config = require('../config');
+}
+
+const JWTSECRET = process.env.JWTSECRET || config.JWTSECRET;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
