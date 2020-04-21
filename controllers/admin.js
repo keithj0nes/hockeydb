@@ -17,7 +17,7 @@ const createPlayer = async (req, res) => {
         return res.status(400).send({ status: 400, error: true, message: 'Player already exists' })
     }
 
-    const createdPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: 1 });
+    const createdPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: req.user.id });
     const createdStats = await db.player_stats.insert({ player_id: createdPlayer.id, team_id: null, season: null, games_played: 0, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0, assists_per_game: 0, points_per_game: 0 })
     console.log('saved players and stats');
 
@@ -36,7 +36,7 @@ const updatePlayer = async (req, res) => {
     if (!player) {
         return res.status(404).send({ status: 404, error: true, message: 'Player not found' })
     }
-    const data = await db.players.update({ id }, { first_name, last_name, email, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update player error'));
+    const data = await db.players.update({ id }, { first_name, last_name, email, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update player error'));
 
 
     return res.status(200).send({ status: 200, data, message: 'Player updated' });
@@ -55,7 +55,7 @@ const deletePlayer = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Player not found' })
     }
 
-    const data = await db.players.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete player error'))
+    const data = await db.players.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete player error'))
 
     return res.status(200).send({ status: 200, data, message: 'Player deleted' })
 
@@ -82,7 +82,7 @@ const createTeam = async (req, res) => {
         return res.status(200).send({ status: 400, data: [], message: 'season does not exist' });
     }
 
-    const data = await db.teams.insert({ name, colors, created_date: new Date(), created_by: 1 });
+    const data = await db.teams.insert({ name, colors, created_date: new Date(), created_by: req.user.id });
     await db.team_season_division.insert({team_id: data.id, season_id: season.id, division_id});
     return res.status(200).send({ status: 200, data, message: 'Team created' });
 
@@ -100,7 +100,7 @@ const updateTeam = async (req, res) => {
     }
 
     const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in season updateTeam'));
-    const updatedTeam = await db.teams.update({ id }, { name, colors, updated_date: new Date(), updated_by: 1 });
+    const updatedTeam = await db.teams.update({ id }, { name, colors, updated_date: new Date(), updated_by: req.user.id });
     await db.team_season_division.update({ season_id: season.id, team_id: id }, { division_id });
     return res.status(200).send({ status: 200, data: updatedTeam, message: 'Team updated' });
 }
@@ -114,7 +114,7 @@ const deleteTeam = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Team not found' })
     }
     // 🚨 🚨  not sure what deleted_by should be just copied how you had it in posts, not exactly sure how you want to delete teams
-    const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'error'))
+    const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'error'))
     return res.status(200).send({ status: 200, data, message: 'Team deleted' })
 }
 
@@ -155,6 +155,7 @@ const updateNews = async (req, res) => {
     const { title, body, allow_collapse, tag, fromIndex, toIndex, move } = req.body;
     const { id } = req.params;
 
+    console.log(req.user, 'req.user!!')
     console.log(req.body, req.params.id, 'UPDATE NEWS*****')
 
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
@@ -189,7 +190,7 @@ const updateNews = async (req, res) => {
     }
 
     
-    const data = await db.news.update({ id }, { title, body, allow_collapse, tag, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update blog error'))
+    const data = await db.news.update({ id }, { title, body, allow_collapse, tag, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update blog error'))
 
     return res.status(200).send({ status: 200, data: data[0], message: 'News post updated' })
 
@@ -206,7 +207,7 @@ const deleteNews = async (req, res) => {
         return res.status(200).send({ status: 404, error: true, message: 'Blog post not found' })
     }
 
-    const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete blog error'))
+    const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Blog post deleted' })
 
@@ -229,7 +230,7 @@ const createSeason = async (req, res) => {
         return res.status(200).send({ status: 400, data: [], message: 'Season already exists' })
     }
 
-    const data = await db.seasons.insert({ name, type, is_active: false, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create blog error'))
+    const data = await db.seasons.insert({ name, type, is_active: false, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create blog error'))
 
     return res.status(200).send({ status: 200, data, message: 'Season created' })
 }
@@ -250,7 +251,7 @@ const updateSeason = async (req, res) => {
         if(season.is_active) {
             return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season' })
         }
-        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: 1 } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
+        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
         console.log(data, 'NOT HIDING NAYMORE data')
         return res.status(200).send({ status: 200, data: [], message: is_hidden ? 'Season hidden' : 'Season unhidden' })
     }
@@ -277,7 +278,7 @@ const updateSeason = async (req, res) => {
         await db.seasons.update({ id: findIsActive.id }, {is_active: false}).catch(err => console.log(err, 'updatedIsActive error'))
     }
 
-    const data = await db.seasons.update({ id }, { name, type, is_active, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update season error'))
+    const data = await db.seasons.update({ id }, { name, type, is_active, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update season error'))
     return res.status(200).send({ status: 200, data: {...data[0], updateCurrentSeasonGlobally: is_active}, message: 'Season updated' })
 }
 
@@ -293,7 +294,7 @@ const deleteSeason = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Season not found' })
     }
 
-    const data = await db.seasons.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete season error'))
+    const data = await db.seasons.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete season error'))
 
     return res.status(200).send({ status: 200, data, message: 'Season deleted' })
 
@@ -324,7 +325,7 @@ const createDivision = async (req, res) => {
 
 
 
-    const data = await db.divisions.insert({ name, season_id: season_id.id, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create division error'))
+    const data = await db.divisions.insert({ name, season_id: season_id.id, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create division error'))
 
     return res.status(200).send({ status: 200, data, message: 'Division created' })
 
@@ -351,7 +352,7 @@ const updateDivision = async (req, res) => {
         }
     }
 
-    const data = await db.divisions.update({ id }, { name, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update Division error'))
+    const data = await db.divisions.update({ id }, { name, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update Division error'))
 
     return res.status(200).send({ status: 200, data: data[0], message: 'Division updated' })
 
@@ -373,7 +374,7 @@ const deleteDivision = async (req, res) => {
         return res.status(200).send({ status: 409, error: true, message: 'Division cannot be deleted, there are teams under this division' })
     }
 
-    const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete Division error'))
+    const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete Division error'))
 
     return res.status(200).send({ status: 200, data, message: 'Division deleted' })
 
@@ -400,7 +401,7 @@ const createLocation = async (req, res) => {
         return res.status(200).send({ status: 400, error: true, message: 'Location already exists.' })
     }
 
-    const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: 1 }).catch(err => console.log(err, 'create location error'))
+    const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create location error'))
 
     return res.status(200).send({ status: 200, data, message: 'Location created' })
 
@@ -426,7 +427,7 @@ const updateLocation = async (req, res) => {
         }
     }
 
-    const data = await db.locations.update({ id }, { name, address, updated_date: new Date(), updated_by: 1 }).catch(err => console.log(err, 'update location error'))
+    const data = await db.locations.update({ id }, { name, address, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update location error'))
 
     return res.status(200).send({ status: 200, data: data[0], message: 'Location updated' })
 
@@ -449,7 +450,7 @@ const deleteLocation = async (req, res) => {
     //     return res.status(200).send({ status: 409, error: true, message: 'Location cannot be deleted, a game is using this location' })
     // }
 
-    const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: 1 }).catch(err => console.log(err, 'delete location error'))
+    const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete location error'))
 
     return res.status(200).send({ status: 200, data, message: 'Location deleted' })
 

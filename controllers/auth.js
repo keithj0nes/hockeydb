@@ -8,9 +8,10 @@ const config = require('../config');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const authorizeAccessToken = async (req, res, next) => {
+    console.log('authoriszeaccestoken!')
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err || !user) {
-            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized" });
+            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized", ...info });
         }
         req.user = user;
         return next();
@@ -223,7 +224,7 @@ passport.use('jwt', new JWTStrategy({
     secretOrKey: config.JWTSECRET,
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
 }, async (token, done) => {
-    // console.log(token.user, 'OKEN>USER')
+    console.log(token.user, 'OKEN>USER')
     try {
         const isSuspended = await checkSuspended(token.user.id);
         if(!!isSuspended){
@@ -246,7 +247,7 @@ const checkSuspended = async (id) => {
         return { status: 404, message: 'User could not be found'}
     }
     if(user.is_suspended){
-        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.' }
+        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true }
     }
     return false;
 }

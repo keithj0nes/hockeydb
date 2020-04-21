@@ -54,7 +54,7 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
 export const updateDivision = (id, divisionData) => async (dispatch, getState) => {
   const { user } = getState();
 
-  const data = await request(`/api/admin/divisions/${id}`, 'PUT', {access_token: user.access_token, data: divisionData})
+  const data = await request(`/api/admin/divisions/${id}`, 'PUT', {access_token: user.user.access_token, data: divisionData})
 
   console.log(data, 'DATA IN UPDATE SEASON ACTIONS')
   if(!data) return false;
@@ -77,7 +77,7 @@ export const deleteDivision = (id, season) => async (dispatch, getState) => {
 
   const { user } = getState();
 
-  const data = await request(`/api/admin/divisions/${id}`, 'DELETE', {access_token: user.access_token})
+  const data = await request(`/api/admin/divisions/${id}`, 'DELETE', {access_token: user.user.access_token})
 
   if(!data) return false;
 

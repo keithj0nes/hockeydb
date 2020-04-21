@@ -165,37 +165,37 @@ app.get(`/api/divisions/`, divisions.getAllDivisions);          // Postman Docs
 // ⭐ ️ ADMIN  ⭐️
 
 // Create seasons
-app.post(`/api/admin/seasons`, admin.createSeason);             // Postman Docs
-app.put(`/api/admin/seasons/:id`, admin.updateSeason);          // Postman Docs
-app.delete(`/api/admin/seasons/:id`, admin.deleteSeason);       // Postman Docs
+app.post(`/api/admin/seasons`, auth.authorizeAccessToken, admin.createSeason);             // Postman Docs
+app.put(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.updateSeason);          // Postman Docs
+app.delete(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.deleteSeason);       // Postman Docs
 
 // Create division
-app.post(`/api/admin/divisions`, admin.createDivision);         // Postman Docs
-app.put(`/api/admin/divisions/:id`, admin.updateDivision);
-app.delete(`/api/admin/divisions/:id`, admin.deleteDivision);
+app.post(`/api/admin/divisions`, auth.authorizeAccessToken, admin.createDivision);         // Postman Docs
+app.put(`/api/admin/divisions/:id`, auth.authorizeAccessToken, admin.updateDivision);
+app.delete(`/api/admin/divisions/:id`, auth.authorizeAccessToken, admin.deleteDivision);
 
 // Create location
-app.post(`/api/admin/locations`, admin.createLocation);
-app.put(`/api/admin/locations/:id`, admin.updateLocation);
-app.delete(`/api/admin/locations/:id`, admin.deleteLocation);
+app.post(`/api/admin/locations`, auth.authorizeAccessToken, admin.createLocation);
+app.put(`/api/admin/locations/:id`, auth.authorizeAccessToken, admin.updateLocation);
+app.delete(`/api/admin/locations/:id`, auth.authorizeAccessToken, admin.deleteLocation);
 
 // Create team
-app.post(`/api/admin/teams`, admin.createTeam);
-app.put(`/api/admin/teams/:id`, admin.updateTeam);
-app.delete(`/api/admin/teams/:id`, admin.deleteTeam);
+app.post(`/api/admin/teams`, auth.authorizeAccessToken, admin.createTeam);
+app.put(`/api/admin/teams/:id`, auth.authorizeAccessToken, admin.updateTeam);
+app.delete(`/api/admin/teams/:id`, auth.authorizeAccessToken, admin.deleteTeam);
 
 // Create player
-app.post(`/api/admin/players`, admin.createPlayer);
-app.put(`/api/admin/players/:id`, admin.updatePlayer)
-app.delete(`/api/admin/players/:id`, admin.deletePlayer)
+app.post(`/api/admin/players`, auth.authorizeAccessToken, admin.createPlayer);
+app.put(`/api/admin/players/:id`, auth.authorizeAccessToken, admin.updatePlayer)
+app.delete(`/api/admin/players/:id`, auth.authorizeAccessToken, admin.deletePlayer)
 
 // Create blog post
 // auth.authorizeAccessToken, -- middleware for authorizing admin blog post
 // auth.authorizaccestoken timing out after short period of time
 // app.post(`/api/admin/news`, auth.authorizeAccessToken, admin.createNews)
 app.post(`/api/admin/news`, auth.authorizeAccessToken, admin.createNews)
-app.put(`/api/admin/news/:id`, admin.updateNews)
-app.delete(`/api/admin/news/:id`, admin.deleteNews)
+app.put(`/api/admin/news/:id`, auth.authorizeAccessToken, admin.updateNews)
+app.delete(`/api/admin/news/:id`, auth.authorizeAccessToken, admin.deleteNews)
 
 // Update about 
 app.post(`/api/admin/about`)

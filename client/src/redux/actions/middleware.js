@@ -3,6 +3,8 @@ import store from '../store';
 import { ROOT } from '../../client_config';
 import { TOGGLE_MODAL } from '../actionTypes';
 
+import { logout } from '../actions/auth';
+
 
 // the request function calls to serverside - if errors occur, they will be caught and handled here as an error modal
 export const request = async (route, method, session, noAuth) => {
@@ -14,6 +16,10 @@ export const request = async (route, method, session, noAuth) => {
     }
     if(!route){
         return alert('no route, please include a route string')
+    }
+
+    if(!noAuth && !session.access_token) {
+        return alert('no access token for auth route')
     }
 
     const responseRaw = await axios({
@@ -44,7 +50,7 @@ export const request = async (route, method, session, noAuth) => {
 
     // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     if(!responseRaw) return false;
-    const { status, data, message } = responseRaw.data;
+    const { status, data, message, shouldLogOut } = responseRaw.data;
 
     // const status = 243;
     // const message = 'fake message lol';
@@ -68,8 +74,9 @@ export const request = async (route, method, session, noAuth) => {
                     isVisible: true,
                     // title: 'Error',
                     // isClosableOnBackgroundClick: true,
-                    errors: message
+                    errors: message,
                     // errors: `${message}\nError code: ${status}`
+                    confirmAction: shouldLogOut ? () => store.dispatch(logout()) : null
                 },
                 modalType: state.misc.modalType
             })
@@ -82,9 +89,8 @@ export const request = async (route, method, session, noAuth) => {
             modalProps: {
                 isVisible: true,
                 title: 'Error',
-                isClosableOnBackgroundClick: true,
-
-                message: `${message}\nError code: ${status}`
+                message: `${message}\n\nError code: ${status}`,
+                confirmAction: shouldLogOut ? () => store.dispatch(logout()) : null
             },
             modalType: 'alert'
         })

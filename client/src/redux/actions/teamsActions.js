@@ -50,7 +50,7 @@ export const createTeam = teamData => async (dispatch, getState) => {
   const { user } = getState();
 
   console.log(teamData, 'teamd')
-  const data = await request(`/api/admin/teams`, 'POST', {access_token: user.access_token, data: teamData});
+  const data = await request(`/api/admin/teams`, 'POST', {access_token: user.user.access_token, data: teamData});
   console.log('daatgaa,', data)
   if(!data) return;
 
@@ -75,7 +75,7 @@ export const updateTeam = (id, teamData) => async (dispatch, getState) => {
   const { user } = getState();
 
   console.log(teamData, 'update team')
-  const data = await request(`/api/admin/teams/${id}`, 'PUT', {access_token: user.access_token, data: teamData});
+  const data = await request(`/api/admin/teams/${id}`, 'PUT', {access_token: user.user.access_token, data: teamData});
   console.log('updateteam data response,', data)
   if(!data) return;
 
