@@ -10,7 +10,7 @@ const config = require('../config');
 const authorizeAccessToken = async (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err || !user) {
-            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized" });
+            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized", ...info });
         }
         req.user = user;
         return next();
@@ -246,7 +246,7 @@ const checkSuspended = async (id) => {
         return { status: 404, message: 'User could not be found'}
     }
     if(user.is_suspended){
-        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.' }
+        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true }
     }
     return false;
 }

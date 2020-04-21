@@ -90,7 +90,7 @@ const AlertModal = ({data, toggleModal}) => (
 
         <div className="modal-button-container">
                 {/* <Button title={'Cancel'} cancel onClick={toggleModal} /> */}
-                <Button title={'Close'} onClick={toggleModal} />
+                <Button title={'Close'} onClick={() => data.confirmAction ? (data.confirmAction(), toggleModal()): toggleModal()} />
             </div>
     </div>
 )
