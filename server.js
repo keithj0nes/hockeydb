@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const massive = require('massive');
 const cors = require('cors');
+const path = require('path');
 
 let config;
 if(process.env.NODE_ENV !== 'production') {
