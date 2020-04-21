@@ -2,16 +2,24 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const massive = require('massive');
 const cors = require('cors');
-const config = require('./config');
+
+let config;
+if(!process.env.NODE_ENV) {
+    config = require('./config');
+}
 
 
 // const jwt = require('jsonwebtoken');
 // require('dotenv').config();
 
+console.log('running in herooku')
+
 const app = module.exports = express();
 const port = process.env.PORT || config.PORT;
 
 // const version = 'v1';
+
+console.log(process.env.NODE_ENV, 'port')
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -31,7 +39,7 @@ const divisions = require('./controllers/divisions');
 //Make sure to create a local postgreSQL db called hockeydb
 
 // const connectionInfo = process.env.DATA_BASE_URL || "postgres://@localhost/hockeydb";
-const connectionInfo = config.DB_URI
+const connectionInfo = process.env.DB_URI || config.DB_URI
 
 let db = null;
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {
@@ -266,6 +274,16 @@ app.get('/topsecretroute', auth.authorizeAccessToken, (req, res, next) => {
 
 
 app.post('/api/auth/login/cookie', auth.loginFromCookie)
+
+
+if (process.env.NODE_ENV === 'production') {
+    // Serve any static files
+    app.use(express.static(path.join(__dirname, 'client/build')));
+  // Handle React routing, return all requests to React app
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+}
 
 
 app.listen(port, () => console.log(`Server running on port ${port}`))

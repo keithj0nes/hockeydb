@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '../store';
-import { ROOT } from '../../client_config';
+// import { ROOT } from '../../client_config';
 import { TOGGLE_MODAL } from '../actionTypes';
 
 import { logout } from '../actions/auth';
@@ -24,7 +24,8 @@ export const request = async (route, method, session, noAuth) => {
 
     const responseRaw = await axios({
         method,
-        url: `${ROOT}${route}`,
+        // url: `${ROOT}${route}`,
+        url: `${route}`,
         data: session.data,
         headers: {
             Authorization: noAuth ? null : `Bearer ${session.access_token}`
