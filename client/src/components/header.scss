@@ -18,6 +18,7 @@ header {
     .dashboard-nav { 
         .logo {
             padding: 30px;
+            height: auto;
         }
     }
 
@@ -64,7 +65,8 @@ header {
         flex-direction: column;
         // justify-content: center;
         align-items: center;
-        padding-left: 30px;
+        padding-left: 40px;
+        height: 40px;
         // padding: 30px;
         // color: $main_font_color;
 
@@ -132,6 +134,7 @@ header {
 
         .logo {
             padding: 2px 20px 2px 10px;
+            height: auto;
         }
         
         ul {

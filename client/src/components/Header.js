@@ -7,7 +7,7 @@ import { Button } from './';
 import './header.scss';
 
 const navLinks = [
-    { name: 'News',       to: '' },
+    { name: 'Home',       to: '' },
     { name: 'Schedule',   to: 'schedule' },
     { name: 'Teams',      to: 'teams' },
     { name: 'Standings',  to: 'standings' },
@@ -103,9 +103,9 @@ class Header extends Component {
 
                     <Button 
                         title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
-                        onClick={() => console.log('clicekd login')}
+                        onClick={() => this.linkTo(this.props.isUserLoggedIn ? '/dashboard' : '/login')}
                         cancel
-                        style={{minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', padding: 10}}
+                        style={{minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', padding: '10px 0 10px 10px'}}
                     />
 
 

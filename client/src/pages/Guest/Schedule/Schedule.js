@@ -166,10 +166,10 @@ class Schedule extends Component {
                     <div className="ot-table" style={{minWidth: null}}>
                         <div className="ot-row-header">
                             <p className="ot-header ot-flex-two">Date</p>
-                            <p className="ot-header ot-flex-one">Time</p>
+                            <p className="ot-header ot-flex-two">Time</p>
                             <p className="ot-header ot-flex-three">Location</p>
-                            <p className="ot-header ot-flex-three">Home</p>
-                            <p className="ot-header ot-flex-three">Away</p>
+                            <p className="ot-header ot-flex-four">Home</p>
+                            <p className="ot-header ot-flex-four">Away</p>
                             <p className="ot-header ot-flex-one">Score</p>
                             <p className="ot-header ot-flex-one">Scoresheet</p>
                         </div>
