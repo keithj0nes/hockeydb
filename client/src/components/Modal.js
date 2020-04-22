@@ -188,7 +188,8 @@ const renderModalType = (modalType, modalProps, isLoading, toggleModal) => {
 const Modal = ({modalVisible, toggleModal, modalProps, modalType, isLoading}) => {
 
     let body = document.getElementsByTagName('body')[0].style;
-    body.overflow = 'auto'
+    body.overflow = 'auto';
+    body.position = 'auto';
 
     // console.log(bodyStyle)
 
@@ -198,7 +199,8 @@ const Modal = ({modalVisible, toggleModal, modalProps, modalType, isLoading}) =>
         return e.currentTarget === e.target && toggleModal();
     }
 
-    body.overflow = 'hidden'
+    body.overflow = 'hidden';
+    body.position = 'relative';
     // console.log(modalProps, 'modalProps')
 
     return (
