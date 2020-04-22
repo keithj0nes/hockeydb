@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import dateFormat from 'date-fns/format';
 import { Button } from '../../../components';
 
 import { createNewsPost, getNewsPostById, updateNewsPostById } from '../../../redux/actions/news';
@@ -139,7 +140,8 @@ export class DashBlogs extends Component {
   }
 
   handleGoBack = () => {
-    this.props.history.push('/dashboard/news');
+    // this.props.history.push('/dashboard/news');
+    this.props.history.goBack();
     // this.props.history.push(`${this.props.location.pathname}/create`);
   }
 
@@ -158,7 +160,12 @@ export class DashBlogs extends Component {
             <div className="dashnews-container">
                 <h1>{isEditing ? 'Edit' : 'Create'} News Post</h1>
                 <br />
-                {isEditing && <p> Created By: {this.state.first_name} {this.state.last_name}</p>}
+                {isEditing && (
+                  <>
+                  <p> Created By: {this.state.first_name} {this.state.last_name}</p>
+                  <p> Created Date: {dateFormat(this.state.created_date, 'MM/DD/YYYY h:mmA')}</p>
+                  </>
+                )}
                 <br />
 
                 <label htmlFor="title">Title</label>
@@ -174,10 +181,10 @@ export class DashBlogs extends Component {
                 <br />
                 <br />
 
-                <label htmlFor="allow_collapse">Allow Collapse</label>
+                {/* <label htmlFor="allow_collapse">Allow Collapse</label>
                 <input type="checkbox" id="allow_collapse" checked={this.state.allow_collapse} name="allow_collapse" onChange={this.handleChange}/>
                 <br />
-                <br />
+                <br /> */}
 
                 <select name="tag" id="tag" value={this.state.tag} onChange={this.handleChange}>
                 <option value="">{'Select A Tag'}</option>

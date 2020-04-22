@@ -25,6 +25,7 @@ export const login = loginData => async dispatch => {
 export const logout = () => (dispatch, getState) => {
   console.log('logout --------- ')
   cookie.remove('hockeydb_auth');
+  console.log(cookie.load('hockeydb_auth'), 'load cookie after logout')
   dispatch(setUser({}))
 }
 

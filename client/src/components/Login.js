@@ -12,7 +12,7 @@ class Login extends React.Component {
   state = {
     // email: '',
     // password: ''
-    email: '@hockeydb.com',
+    email: 'admin@hockeydb.com',
     password: 'admin',
 
     redirectToReferrer: false
@@ -35,7 +35,7 @@ class Login extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const loggedIn = await this.props.login(this.state)
+    const loggedIn = await this.props.login({email: this.state.email.toLowerCase(), password: this.state.password})
     return loggedIn && this.props.history.push('/dashboard');
   };
 
