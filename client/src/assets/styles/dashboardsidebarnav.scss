@@ -12,12 +12,12 @@
 .dashboard-nav-container {
     display: flex;
     width: 100vw;
-    // height: 100vh;
-    min-height: 100vh;
+    height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
+    overflow: scroll;
     // font-size: 20px;
     // background: blue;
     
