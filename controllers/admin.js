@@ -458,6 +458,31 @@ const deleteLocation = async (req, res) => {
 
 
 
+const createGame = async (req, res) => {
+    console.log('creating game!!')
+    const db = app.get('db');
+
+    const { home_team, away_team, location_id, start_date, season_id } = req.body;
+
+    // let outOfDivision = false;
+    // if(home_team.division_id !== away_team.division_id) {
+    //     outOfDivision = true;
+    //     // if outofdivision is true, we need to add both divisions to the game_season_division's table
+    // }
+
+    // console.log(req.body, 'REQ DOT BODY')
+
+    const game = await db.games.insert({ home_team:home_team.home_team, away_team:away_team.away_team, location_id, start_date, has_been_played: false }).catch(err => console.log(err, 'error in games insert'))
+    await db.game_season_division.insert({ game_id: game.id, season_id, division_id: home_team.division_id}).catch(err => console.log(err, 'error in GSD insert'))
+
+    // console.log(game, 'GAME!!!')
+
+    return res.status(200).send({ status: 200, data: game, message: 'Game created' })
+
+}
+
+
+
 
 module.exports = {
     createPlayer,
@@ -482,5 +507,7 @@ module.exports = {
 
     createLocation,
     updateLocation,
-    deleteLocation
+    deleteLocation,
+
+    createGame,
 }

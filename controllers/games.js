@@ -67,7 +67,7 @@ const getGames = async (req, res) => {
   const games = await db.query(query,[division, team, limit, offset]);
 
   // const seasons = await db.seasons.find();
-  const seasons = await db.query('select id, name from seasons;');
+  const seasons = await db.query('select id, name, is_active from seasons order by id;');
 
   const divisions = await db.query(`
     select distinct d.id, d.name

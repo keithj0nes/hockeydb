@@ -38,7 +38,7 @@ class DashboardNav extends Component {
         const { match } = this.props;
 
         return (
-            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
                     <div className="dashboard-nav-header">
                         <div><LeagueLogo /></div>

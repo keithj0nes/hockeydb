@@ -22,11 +22,12 @@ class Schedule extends Component {
         if(games.length <= 0) {
             if(location.search.length > 0){
                 const [filters, filterString] = this.getQuery();
+                console.log(filters, 'FILTERS!')
                 return getGames(filterString).then(res => {
                        return res && this.setState({filters}) //this adds filters to default values
                 });
             }
-            return getGames('page=1')
+            return getGames('page=1').then(res => this.setState({filters: res}))
         } else {
             const [filters] = this.getQuery();
             this.setState({filters})

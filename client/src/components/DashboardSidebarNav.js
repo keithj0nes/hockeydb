@@ -7,7 +7,16 @@ class DashboardSidebarNav extends Component {
 
     render() {
         const { navSliderVisible } = this.props;
+
+        let body = document.getElementsByTagName('body')[0].style;
+        body.overflow = 'auto';
+        body.position = 'auto';
+
         let visibility = navSliderVisible ? "show" : "hide";
+        if(visibility === "show") {
+            body.overflow = 'hidden';
+            body.position = 'relative';
+        }
         return (
             <div className={`dashboard-nav-container dashboard-nav-container-${visibility}`}>
 
