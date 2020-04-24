@@ -30,7 +30,7 @@ export class DashGames extends Component {
     }
     componentDidMount() {
         this.props.locations.length <= 0 && this.props.getLocations();
-        this.props.getTeams();
+        this.props.getTeams('orderby=division_name');
         this.props.getGames('page=1');
     }
 
@@ -60,14 +60,19 @@ export class DashGames extends Component {
     }
 
     handleChange = edit => e => {
-        console.log(edit, e)
+        // console.log(edit, e)
         if(!!edit){
             const editStateCopy = {...this.state.edit};
             editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
             return this.setState({edit: editStateCopy})
         }
-        // console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
-        this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
+        // console.log()
+        // console.log(typeof JSON.parse(e.target.value), 'ahh!')
+        const val = JSON.parse(e.target.value);
+        console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
+        this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : val })
+
+        // this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
     handleAddGame = () => {
@@ -76,6 +81,8 @@ export class DashGames extends Component {
         // const defaultValue = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
 
         const {start_date} = this.state;
+
+        console.log(this.props.teams, 'teams!')
 
         this.props.toggleModal({
             isVisible: true,
@@ -87,6 +94,8 @@ export class DashGames extends Component {
                     type: 'select',
                     name: 'home_team',
                     defaultValue: null,
+                    // dashValue: 'division_id',
+                    dash: { dashValue: 'division_id', dashName: 'division_name'},
                     listOfSelects: [{name: 'Select Home Team', value: null}, ...this.props.teams]
 
                 },
@@ -95,6 +104,8 @@ export class DashGames extends Component {
                     type: 'select',
                     name: 'away_team',
                     defaultValue: null,
+                    // dashValue: 'division_id',
+                    dash: { dashValue: 'division_id', dashName: 'division_name'},
                     listOfSelects: [{name: 'Select Away Team', value: null}, ...this.props.teams]
                 },
                 {
@@ -124,22 +135,43 @@ export class DashGames extends Component {
             onChange: this.handleChange(),
             confirmActionTitle: 'Create Game',
             // confirmAction: () => console.log({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date})
-            confirmAction: () => { this.props.newGame({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date});}, //this.setState(defaultState) },
+            // confirmAction: () => { this.props.newGame({home: this.state.home_team, away: this.state.away_team,location_id: this.state.location_id, start_date: this.state.start_date});}, //this.setState(defaultState) },
+            confirmAction: () => { return this.handleNewGameSubmit()}, //this.setState(defaultState) },
+
         }, 'prompt');
     }
 
-    handleNewGameSubmit = (e) => {
-        e.preventDefault();
+    handleNewGameSubmit = () => {
         const { home_team, away_team, location_id, start_date } = this.state
         if (!home_team || !away_team || !location_id || !start_date) {
             return alert('please fill all inputs');
+            // return this.props.toggleModal()
         }
 
         if (home_team === away_team) {
             return alert('teams cannot be the same');
         }
 
-        this.props.newGame({ home_team, away_team, location_id, start_date });
+        const season_id = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.id;
+
+        console.log('submitting!', { home_team, away_team, location_id, start_date, season_id })
+        this.props.newGame({ home_team, away_team, location_id, start_date, season_id });
+
+        // store.dispatch({
+        //     type: TOGGLE_MODAL,
+        //     modalProps: {
+        //         ...state.misc.modalProps,
+        //         isVisible: true,
+        //         // title: 'Error',
+        //         // isClosableOnBackgroundClick: true,
+        //         errors: message,
+        //         // errors: `${message}\nError code: ${status}`
+        //         confirmAction: shouldLogOut ? () => store.dispatch(logout()) : null
+        //     },
+        //     modalType: state.misc.modalType
+        // })
+
+
     }
 
     render() {
@@ -217,7 +249,9 @@ export class DashGames extends Component {
 
 
 const mapStateToProps = state => {
+    console.log(state, 'STATE ______')
     return {
+        currentSeason: state.seasons.currentSeason,
         locations: state.locations.locations,
         totalGamesCount: state.games.totalGamesCount,
         teams: state.teams.teams,
@@ -229,7 +263,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     getLocations: () => dispatch(getLocations()),
-    getTeams: () => dispatch(getTeams()),
+    getTeams: filter => dispatch(getTeams(filter)),
     getGames: filter => dispatch(getGames(filter)),
     newGame: (home, away, location, date) => dispatch(newGame(home, away, location, date)),
     toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),

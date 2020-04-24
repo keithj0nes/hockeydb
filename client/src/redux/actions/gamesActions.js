@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_INIT, GET_SUCCESS } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 
 // function timeout(ms) {
 //   return new Promise(resolve => setTimeout(resolve, ms));
@@ -25,13 +25,25 @@ export const getGames = filter => async (dispatch, getState) => {
   })
   
   dispatch({ type: `games/${GET_SUCCESS}`, payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games} })
-  return true;
+
+  // this checks the active season to set to the <Schedule /> filter
+  const activeSeason = data.data.seasons.find(season => season.is_active === true)
+  return { season: activeSeason.id };
+  // return true;
 }
 
 
 export const newGame = (data) => async (dispatch, getState) => {
   const { user } = getState();
-  const post = await request('/api/admin/games', 'POST', { data, access_token: user.user.access_token })
-  if (!post.data) return false;
+  const newgame = await request('/api/admin/games', 'POST', { data, access_token: user.user.access_token })
+  if (!newgame.data) return false;
+  
+  // console.log(newgame.data, 'data data after new game')
+
+  dispatch({
+    type: TOGGLE_MODAL,
+    modalProps: { isVisible: false }
+  })
+
   return dispatch(getGames())
 }

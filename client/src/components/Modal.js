@@ -120,7 +120,12 @@ const PromptModal = ({data, toggleModal}) => {
                                 <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
                                     {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
                                     {field.listOfSelects.map((item, ind) => (
-                                    <option key={ind} value={item.value || item.id}>{item.name}</option>
+                                        field.dash && ind !== 0 ? (
+                                            // <option key={ind} value={item.value || item.id}>{item[field.dashValue]} - {item.name} </option>
+                                            <option key={ind} value={JSON.stringify({[field.dash.dashValue]: item[field.dash.dashValue], [field.name]: item.value || item.id})}>{item[field.dash.dashName]} - {item.name} </option>
+                                        ):(
+                                            <option key={ind} value={item.value || item.id}> {item.name} </option>
+                                        )
                                     ))}
                                 </select>
                             </div>

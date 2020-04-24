@@ -7,7 +7,7 @@ import { GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 export const getTeams = (filter) => async (dispatch, getState) => {
   const { seasons: { currentSeason }  } = getState();
 
-  // console.log(filter, 'filter!')
+  console.log(filter, 'filter!')
   //use filter variable if empty string or null/undefined
 
   if(!filter){

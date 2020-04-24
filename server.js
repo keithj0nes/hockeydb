@@ -211,17 +211,7 @@ app.post(`/api/admin/about`)
 
 // Create game
 
-app.post('/api/admin/games', async (req, res) => {
-
-    const { home_team, away_team, location_id, start_date } = req.body;
-    return res.status(200).send({ status: 400, data: [], message: 'Create game route not finished in the backend'})
-
-    // const game = await db.games.insert({ home_team, away_team, location_id, start_date, has_been_played: false });
-
-    // return res.status(200).send({ status: 200, data: game, message: 'Game created.' })
-
-})
-
+app.post('/api/admin/games', auth.authorizeAccessToken, admin.createGame)
 // app.put('/api/admin/games/:id', async)
 
 
