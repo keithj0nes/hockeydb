@@ -82,7 +82,15 @@ class Dashboard extends Component {
                                         )
                                     })}
 
-                                    <li><a onClick={this.handleLogout}>Logout</a></li>
+                                    {/* <li><a onClick={this.handleLogout}>Logout</a></li> */}
+                                    {/* <li onClick={this.handleLogout}>Logout</li> */}
+                                    <li>
+                                        <p onClick={this.handleLogout}>
+                                        Logout
+                                        </p> 
+                                    </li>
+
+
                                 </ul>
 
                             </div>

@@ -4,10 +4,23 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../ac
 
 
 export const getDivisions = (filter) => async (dispatch, getState) => {
+  // if(!filter){
+  //   const { seasons: { currentSeason } } = getState();
+  //   filter = `season=${currentSeason.name}`
+  // } 
+
+  const { seasons: { currentSeason }  } = getState();
+
+  console.log(filter, 'filter!')
+  //use filter variable if empty string or null/undefined
+
   if(!filter){
-    const { seasons: { currentSeason } } = getState();
-    filter = `season=${currentSeason.name}`
-  } 
+      filter = `season=${currentSeason.name}`;
+  } else {
+    if(!filter.includes('season')){
+      filter += `&season=${currentSeason.name}`;
+    }
+  }
 
   //use filter variable or empty string if null/undefined
   const data = await request(`/api/divisions?${filter || ''}`, 'GET', {}, true)
@@ -70,6 +83,11 @@ export const updateDivision = (id, divisionData) => async (dispatch, getState) =
       type: TOGGLE_MODAL,
       modalProps: { isVisible: false }
   })
+
+  if(data.message === 'Division hidden' || data.message === 'Division unhidden'){
+    // after hiding/unhiding, getDivisions again with filters
+    return 'getDivisions';
+}
 }
 
 

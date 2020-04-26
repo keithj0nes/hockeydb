@@ -6,11 +6,11 @@ import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
 
 // import './DashDivisions.scss';
-import ListItem from '../ListItem';
+// import ListItem from '../ListItem';
+import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 
 
 const defaultState = {
-    isAddDivisionVisible: false,
     name: '',
     edit: {},
     currentSeasonSelected: '',
@@ -43,24 +43,10 @@ class DashDivisions extends Component {
 
         return this.props.getDivisions();
     }
-
-    toggleSeasonVisible = () => {
-        this.setState({ isAddDivisionVisible: !this.state.isAddDivisionVisible })
-    }
     
     handleAddDivision = () => {
 
-        // console.log(qs.parse(this.props.location.search), 'seasrch!')
-
-        // let m;
-        // if(Object.keys(this.props.location.search).length > 0){
-
-        // }
-
-        // const m = qs.parse(this.props.location.search) || this.props.currentSeason.name;
-
         const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
-
 
         console.log(m, 'MMMM SERACH')
         this.props.toggleModal({
@@ -114,25 +100,6 @@ class DashDivisions extends Component {
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
-    // handleChangeSeasonDropdown = e => {
-
-    //     var editStateCopy = {...this.state.currentSeasonSelected};
-    //     editStateCopy = JSON.parse(e.target.value)
-    //     // editStateCopy = e.target.value;
-
-    //     // editStateCopy[e.target.name] = e.target.value;
-    //     console.log(editStateCopy, 'edistatcopy 2')
-
-    //     return this.setState({currentSeasonSelected: editStateCopy}, () =>{
-    //         console.log(this.state.currentSeasonSelected, 'edit!!')
-    //         // this.props.history.push({
-    //         //     search: `?season=${this.state.currentSeasonSelected.id}`
-    //         //   })
-    //         // this.props.getDivisions(this.state.currentSeasonSelected.season);
-    //         // this.props.getDivisions(this.state.currentSeasonSelected.id)
-    //     })
-    // }
-
     validation = () => {
         if (!this.state.name) return false;
         return true;
@@ -177,6 +144,25 @@ class DashDivisions extends Component {
         }, 'delete');
     }
 
+    handleHideDivision = (item) => {
+        this.props.toggleModal({
+            isVisible: true,
+            isClosableOnBackgroundClick: true,
+            title: `${item.hidden_date ? 'Unh': 'H'}ide Division`,
+            message: item.hidden_date ? 
+            `Are you sure you want to unhide this division? This will cause the selected division to be visible on the public page` 
+            : 
+            `Are you sure you want to hide this division?\nThis will hide the division from both the admin dashboard and from the public page. You can view all hidden divisions using the filter. This does NOT delete the division`,
+            fields: [],
+            confirmActionTitle: `${item.hidden_date ? 'Unh': 'H'}ide Division`,
+            confirmAction: () => {
+                return this.props.updateDivision(item.id, {is_hidden: !!item.hidden_date ? false : true}).then((d) => {
+                    d === 'getDivisions' && this.props.getDivisions(this.props.location.search.slice(1))
+                })
+            },
+            // confirmAction: () => console.log('confirm clicked')
+        }, 'prompt');
+    }
 
 
     checkFilters = () => {
@@ -190,9 +176,6 @@ class DashDivisions extends Component {
                 type: 'select',
                 name: 'season',
                 defaultValue: m,
-                // defaultValue: JSON.stringify(this.props.currentSeason),
-
-                // defaultValue: this.props.currentSeason,
                 listOfSelects: this.props.seasons,
                 hiddenValue: 'Select a season'
             }]
@@ -220,23 +203,10 @@ class DashDivisions extends Component {
 
         const { divisions } = this.props;
 
-        // console.log(divisions, 'div')
-        // console.log(this.props.currentSeason, 'currenseasons')
         return (
             <div>
                 <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
-
-                            {/* <select className="select-css" name={'season'} defaultValue={JSON.stringify(this.props.currentSeason)} onChange={this.handleChangeSeasonDropdown}>
-
-                                    {this.props.seasons && this.props.seasons.map(item => {
-                                        // console.log(item, 'item!')
-                                        // return <option key={item.id} value={item}>{item.name}</option>
-
-                                        return <option key={item.id} value={JSON.stringify(item)}>{item.name}</option>
-                                    })} 
-                            </select> */}
-
 
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <Button title="Add Division" onClick={this.handleAddDivision} />
@@ -252,26 +222,11 @@ class DashDivisions extends Component {
                         </div>
                         {/* <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/> */}
 
-
                         <Filter data={this.state.filterData} getAction={this.props.getDivisions} history={this.props.history} filterType={'divisions'}/>
-
                     </div>
-
                 </div>
 
-                {this.state.isAddDivisionVisible && (
-
-                    <div className="dashboard-add-container">
-                        <input type="text" placeholder="Enter division name" onChange={this.handleNameChange} />
-                        <div className="dashboard-add-button-container">
-                            <Button title="Save Division" success onClick={this.sendNewDivision} />
-                        </div>
-                    </div>
-                )}
-
-
                 <div className="dashboard-list-container">
-
                     <div className="dashboard-list">
 
                         {divisions && divisions.length <= 0 ? (
@@ -290,12 +245,19 @@ class DashDivisions extends Component {
 
                                 {divisions.map(item => {
                                     return (
-                                        <ListItem 
-                                            key={item.id} 
-                                            item={item} 
-                                            sections={{'name': 'three'}} 
-                                            onClick={() => this.handleDeleteDivision(item)}
+                                        <DashSeasonsListItem 
+                                            // key={item.id} 
+                                            // item={item} 
+                                            // sections={{'name': 'three'}} 
+                                            // onClick={() => this.handleDeleteDivision(item)}
+                                            // onEdit={() => this.handleEditDivision(item)}
+
+                                            key={item.id}
+                                            item={item}
+                                            sections={{ 'name': 'three' }}
+                                            onDelete={() => this.handleDeleteDivision(item)}
                                             onEdit={() => this.handleEditDivision(item)}
+                                            onHide={() => this.handleHideDivision(item)}
                                         />
                                     )
 

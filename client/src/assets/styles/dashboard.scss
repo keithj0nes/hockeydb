@@ -74,6 +74,23 @@
                     margin: 10px 0;
                     font-size: 22px;
                     cursor: pointer;
+
+                    &:last-child {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: $white_color;
+                        text-transform: uppercase;
+                        
+                        p {
+                            color: $white_color;
+
+                            &:hover {
+                                color: $highlite_color;
+                            }
+                        }
+                    }
+                    
                     
                     a {
                         display: flex;

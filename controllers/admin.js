@@ -335,17 +335,22 @@ const createDivision = async (req, res) => {
 const updateDivision = async (req, res) => {
     const db = app.get('db');
 
-    const { name } = req.body;
+    const { name, is_hidden } = req.body;
     const { id } = req.params;
-
+    
     const division = await db.divisions.findOne({ id }).catch(err => console.log(err));
-
+    
     if (!division) {
         return res.status(200).send({ status: 404, error: true, message: 'Division not found' })
     }
-
-
+        // Manage hidden request
+    if(req.body.hasOwnProperty('is_hidden')){
+        const data = await db.divisions.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden division error'))
+        return res.status(200).send({ status: 200, data: data, message: is_hidden ? 'Division hidden' : 'Division unhidden' })
+    }
+    
     if(name) {
+        // need to allow name exists so long as it's from a different season - can have the same division names between seasons
         const nameExists = await db.divisions.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
         if(nameExists.length > 0 && (nameExists[0].id !== division.id )){
             return res.status(200).send({ status: 409, data: [], message: 'Division already exists' })
@@ -353,9 +358,7 @@ const updateDivision = async (req, res) => {
     }
 
     const data = await db.divisions.update({ id }, { name, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update Division error'))
-
     return res.status(200).send({ status: 200, data: data[0], message: 'Division updated' })
-
 }
 
 const deleteDivision = async (req, res) => {
@@ -371,13 +374,12 @@ const deleteDivision = async (req, res) => {
 
     const divisionHasTeams = await db.team_season_division.findOne({division_id: division.id});
     if(divisionHasTeams){
-        return res.status(200).send({ status: 409, error: true, message: 'Division cannot be deleted, there are teams under this division' })
+        return res.status(200).send({ status: 409, error: true, message: 'Division cannot be deleted, there are teams in this division' })
     }
 
     const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete Division error'))
 
     return res.status(200).send({ status: 200, data, message: 'Division deleted' })
-
 }
 
 

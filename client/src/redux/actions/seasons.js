@@ -9,16 +9,12 @@ export const getSeasons = (filter) => async dispatch => {
 
     //use filter variable or empty string if null/undefined
     const data = await request(`/api/seasons?${filter || ''}`, 'GET', {}, true)
-
-    // console.log(data,' DATA from getSeasons actions')
     if(!data) return false;
-
 
     dispatch({
         type: `seasons/${GET_SUCCESS}`,
         payload: data.data
     })
-
 
     dispatch({
         type: TOGGLE_MODAL,
@@ -31,15 +27,11 @@ export const getSeasons = (filter) => async dispatch => {
 export const createSeason = seasonData => async (dispatch, getState) => {
     const { user } = getState();
 
-    console.log(user,' USERRRRR!!!!!')
-    // console.log(seasonData, 'SEASON DATA!')
-
     const data = await request(`/api/admin/seasons`, 'POST', {access_token: user.user.access_token, data: seasonData})
 
     console.log(data, 'DATA CREATE SEASON!!')
 
     if(!data) return false;
-
 
     dispatch({
         type: `seasons/${CREATE_SUCCESS}`,
@@ -54,14 +46,10 @@ export const createSeason = seasonData => async (dispatch, getState) => {
 
 export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
 
-    console.log(id, seasonData, 'SEASON DATA')
     const { user } = getState();
 
     const data = await request(`/api/admin/seasons/${id}`, 'PUT', {access_token: user.user.access_token, data: seasonData})
-
-    console.log(data, 'DATA IN UPDATE SEASON ACTIONS')
     if(!data) return false;
-
 
     dispatch({
         type: `seasons/${UPDATE_SUCCESS}`,
@@ -74,7 +62,6 @@ export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
     })
     
     if(data.data.updateCurrentSeasonGlobally){
-        console.log('setting globally!')
         dispatch({
             type: SET_CURRENT_SEASON,
             payload: data.data
