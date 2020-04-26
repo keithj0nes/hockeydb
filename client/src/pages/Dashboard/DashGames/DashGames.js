@@ -40,18 +40,6 @@ export class DashGames extends Component {
         this.setState({ start_date: date }, () => this.handleAddGame());
     }
 
-    handleHomeTeamChange = e => {
-        this.setState({ home_team: e.target.value })
-    }
-
-    handleAwayTeamChange = e => {
-        this.setState({ away_team: e.target.value })
-    }
-
-    handleGameLocationChange = e => {
-        this.setState({ location_id: e.target.value })
-    }
-
     handleLoadMore = () => {
         this.setState({page: this.state.page + 1, fromLoadMore: true}, () => {
             const search = qs.stringify({page: this.state.page, fromLoadMore: this.state.fromLoadMore});
@@ -60,19 +48,14 @@ export class DashGames extends Component {
     }
 
     handleChange = edit => e => {
-        // console.log(edit, e)
         if(!!edit){
             const editStateCopy = {...this.state.edit};
             editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
             return this.setState({edit: editStateCopy})
         }
-        // console.log()
-        // console.log(typeof JSON.parse(e.target.value), 'ahh!')
         const val = JSON.parse(e.target.value);
-        console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
+        // console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
         this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : val })
-
-        // this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
     handleAddGame = () => {
@@ -81,8 +64,6 @@ export class DashGames extends Component {
         // const defaultValue = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
 
         const {start_date} = this.state;
-
-        console.log(this.props.teams, 'teams!')
 
         this.props.toggleModal({
             isVisible: true,
@@ -94,17 +75,14 @@ export class DashGames extends Component {
                     type: 'select',
                     name: 'home_team',
                     defaultValue: null,
-                    // dashValue: 'division_id',
                     dash: { dashValue: 'division_id', dashName: 'division_name'},
                     listOfSelects: [{name: 'Select Home Team', value: null}, ...this.props.teams]
-
                 },
                 {                    
                     title: 'Away Team',
                     type: 'select',
                     name: 'away_team',
                     defaultValue: null,
-                    // dashValue: 'division_id',
                     dash: { dashValue: 'division_id', dashName: 'division_name'},
                     listOfSelects: [{name: 'Select Away Team', value: null}, ...this.props.teams]
                 },
@@ -114,14 +92,12 @@ export class DashGames extends Component {
                     name: 'location_id',
                     defaultValue: null,
                     listOfSelects: [{name: 'Select Location', value: null}, ...this.props.locations]
-                    // listOfSelects: this.props.divisions
                 },
                 {
                     title: 'Date',
                     name: 'start_date',
                     customComponent: <DatePicker
                                         selected={start_date}
-                                        // onChange={start_date => this.setState({start_date})}
                                         onChange={this.handleDateChange}
                                         showTimeSelect
                                         timeFormat="HH:mm"
@@ -175,8 +151,6 @@ export class DashGames extends Component {
     }
 
     render() {
-        // console.log(this.props.teams, 'teams');
-        // console.log(this.props.locations, 'locations')
         return (
             <div>
                 <div className="dashboard-filter-header">
@@ -189,10 +163,10 @@ export class DashGames extends Component {
                             <div style={{display: 'flex'}}>
 
                                 <p className="flex-one">Date</p>
+                                <p className="flex-one">Time</p>
                                 <p className="flex-two">Home</p>
                                 <p className="flex-two">Away</p>
                                 <p className="flex-two">Location</p>
-                                <p className="flex-one">Time</p>
                                 <p className="flex-one">Manage</p>
 
                             </div>
@@ -214,7 +188,7 @@ export class DashGames extends Component {
                                         <DashGamesListItem 
                                             key={item.id} 
                                             item={item} 
-                                            sections={{'date': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two', 'start_time': 'one'}} 
+                                            sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
                                             onClick={() => console.log('delete item!')} 
                                             locations={this.props.locations}
                                         />
@@ -225,7 +199,7 @@ export class DashGames extends Component {
                                         <ListItem 
                                             key={item.id} 
                                             item={item} 
-                                            sections={{'date': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two', 'start_time': 'one'}} 
+                                            sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
                                             onClick={() => console.log('delete item!')} 
                                             locations={this.props.locations}
                                         />
@@ -249,7 +223,6 @@ export class DashGames extends Component {
 
 
 const mapStateToProps = state => {
-    console.log(state, 'STATE ______')
     return {
         currentSeason: state.seasons.currentSeason,
         locations: state.locations.locations,
@@ -265,9 +238,8 @@ const mapDispatchToProps = dispatch => ({
     getLocations: () => dispatch(getLocations()),
     getTeams: filter => dispatch(getTeams(filter)),
     getGames: filter => dispatch(getGames(filter)),
-    newGame: (home, away, location, date) => dispatch(newGame(home, away, location, date)),
+    newGame: game => dispatch(newGame(game)),
     toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
-
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashGames);

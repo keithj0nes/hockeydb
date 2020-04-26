@@ -67,7 +67,7 @@ const getGames = async (req, res) => {
   const games = await db.query(query,[division, team, limit, offset]);
 
   // const seasons = await db.seasons.find();
-  const seasons = await db.query('select id, name, is_active from seasons order by id;');
+  const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
 
   const divisions = await db.query(`
     select distinct d.id, d.name

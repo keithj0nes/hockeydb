@@ -1,30 +1,17 @@
 const app = require('../server.js');
-
-const filter = (query) => {
-    const q = {...query};
-    if(q.show_hidden){
-        delete q.show_hidden;
-        q['hidden_date !='] = null;
-    } else {
-        q['hidden_date ='] = null;
-    }
-    q["deleted_date ="] = null;
-    return q;
-}
+const helpers = require('./helpers');
 
 const getSeasons = async (req, res) => {
     const db = app.get('db');
 
     console.log(req.query, 'QUERYRYYY')
 
-    const query = filter(req.query);
+    const query = helpers.filter(req.query);
 
     const data = await db.seasons.find({...query}, { order: [ {field: 'id', direction: 'desc'}]}).catch(err => console.log(err));
 
     res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
 }
-
-
 
 const getSeasonById = async (req, res) => {
     const db = app.get('db');

@@ -1,7 +1,6 @@
 @import '../assets/styles/variables';
 
 .todays-games-container {
-    // background: blue;
     background: white;
     padding: 20px;
     margin: 0 auto;
@@ -17,16 +16,12 @@
     }
 
     .todays-games-game {
-        // background: green;
-        padding: 20px;
+        padding: 20px 10px;
         border-bottom: 2px solid #f1f1f1;
         display: flex;
         justify-content: space-between;
 
         .todays-game-section {
-            // background: yellow;
-            // display: flex;
-            // flex-direction: column;
 
             &:nth-child(2) {
                 text-align: right;
@@ -53,12 +48,8 @@
 
 @media only screen and (min-width: 768px){
 
-
     .todays-games-container {
         min-width: 350px;
-        // margin-left: 20px; 
         margin-left: 30px; 
     }
-
-
 }

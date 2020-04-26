@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 // import { DashboardSidebarNav } from '../../components'; // maybe add a 'right' prop 
 import TodaysGames from '../../../components/TodaysGames';
 import './home.scss';
@@ -26,12 +25,6 @@ export class Home extends Component {
 
     return (
       <div>
-        {/* <h1>Home</h1>
-
-        <Link to={'/dashboard'}>
-          Admin
-        </Link> */}
-
         <div className="home-container">
 
           <div className="hide-desktop">
