@@ -13,14 +13,12 @@ if(process.env.NODE_ENV !== 'production') {
 // const jwt = require('jsonwebtoken');
 // require('dotenv').config();
 
-console.log('running in herooku')
 
 const app = module.exports = express();
 const port = process.env.PORT || config.PORT;
 
 // const version = 'v1';
 
-console.log(process.env.NODE_ENV, 'port')
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -268,9 +266,10 @@ app.post('/api/auth/login/cookie', auth.loginFromCookie)
 
 
 if (process.env.NODE_ENV === 'production') {
+    console.log('running in herooku')
     // Serve any static files
     app.use(express.static(path.join(__dirname, 'client/build')));
-  // Handle React routing, return all requests to React app
+    // Handle React routing, return all requests to React app
     app.get('*', function(req, res) {
       res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
