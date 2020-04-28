@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getTeams, createTeam, updateTeam } from '../../../redux/actions/teamsActions';
+import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teamsActions';
 
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import { Button, Filter } from '../../../components';
-import ListItem from '../ListItem';
+// import ListItem from '../ListItem';
+import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
+
 import qs from 'query-string';
 
 const defaultState = {
@@ -87,15 +89,15 @@ class DashTeams extends Component {
         }, 'prompt');
     }
 
-    // handleDeleteTeam = (item) => {
-    //     this.props.toggleModal({
-    //         isVisible: true,
-    //         title: 'Delete Season',
-    //         message: `Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.`,
-    //         toBeDeleted: item,
-    //         deleteAction: () => this.props.deleteSeason(item.id),
-    //     }, 'delete');
-    // }
+    handleDeleteTeam = (item) => {
+        this.props.toggleModal({
+            isVisible: true,
+            title: 'Delete Team',
+            message: `Are you sure you want to delete this team?\nTeam will be removed from the season, but will not affect any previous or upcoming games with this team.\n\nPlease type in the name of the team below to delete.`,
+            toBeDeleted: item,
+            deleteAction: () => this.props.deleteTeam(item.id, item),
+        }, 'delete');
+    }
 
     handleEditTeam = (item) => {
         this.setState({ edit: item })
@@ -257,12 +259,22 @@ class DashTeams extends Component {
                                 // console.log(item, 'item!')
                                 // item.division_name = this.getDivisionNameById(item.division_id)
                                 return (
-                                    <ListItem
+
+
+                                    <DashSeasonsListItem 
+                                        // key={item.id}
+                                        // item={item}
+                                        // sections={{ 'name': 'two', 'division_name': 'one' }}
+                                        // onClick={() => this.handleDeleteSeason(item)}
+                                        // onEdit={() => this.handleEditTeam(item)}
+
                                         key={item.id}
                                         item={item}
                                         sections={{ 'name': 'two', 'division_name': 'one' }}
-                                        onClick={() => this.handleDeleteSeason(item)}
+                                        onDelete={() => this.handleDeleteTeam(item)}
                                         onEdit={() => this.handleEditTeam(item)}
+                                        // onHide={() => this.handleHideDivision(item)}
+                                        onHide={() => console.log('on hide clicked')}
                                     />
                                 )
 
@@ -293,7 +305,7 @@ const mapDispatchToProps = dispatch => {
         getTeams: (filters) => dispatch(getTeams(filters)),
         createTeam: data => dispatch(createTeam(data)),
         updateTeam: (id, data) => dispatch(updateTeam(id, data)),
-        // deleteTeam: id => dispatch(deleteSeason(id)),
+        deleteTeam: (id, data) => dispatch(deleteTeam(id, data)),
         // updateTeams: (id, data) => dispatch(updateTeams(id, data)),
         toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
         toggleFilter: () => dispatch(toggleFilter('teams'))

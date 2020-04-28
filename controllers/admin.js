@@ -108,18 +108,36 @@ const updateTeam = async (req, res) => {
 const deleteTeam = async (req, res) => {
     const db = app.get('db');
     const { id } = req.params;
+    const { season_id, division_id } = req.body;
+
+    console.log(req.body, 'BODY IN DELETE')
 
     const team = await db.teams.findOne({ id }).catch(err => console.log(err));
     if (!team) {
         return res.status(404).send({ status: 404, error: true, message: 'Team not found' })
     }
-    // 🚨 🚨  not sure what deleted_by should be just copied how you had it in posts, not exactly sure how you want to delete teams
-    const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'error'))
-    return res.status(200).send({ status: 200, data, message: 'Team deleted' })
+
+    // const teamHasGames = await db.query(`
+    //     select * from game_season_division gsd
+    //     join games on games.id = gsd.game_id
+    //     join teams h on h.id = games.home_team
+    //     join teams a on a.id = games.away_team
+    //     where gsd.season_id = $1 AND (h.id = $2 OR a.id = $2);
+    //     `, [season_id, id]);
+
+    // if(teamHasGames.length > 0) {
+    //     console.log('this team has at least one game')
+    // }
+    
+    // const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'error'))
+    await db.team_season_division.destroy({team_id: id, season_id, division_id}).catch(err => console.log(err, 'error in TSD delete'));
+    return res.status(200).send({ status: 200, data: req.body, message: 'Team deleted from season' })
+    // if there's no games (and future no players), should we just delete the whole record instead of marking as deleted?
+    // const data = await db.teams.destroy({ id }).catch(err => console.log(err, 'error'))
+    // const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'error'))
+    // return res.status(200).send({ status: 200, data, message: 'Team deleted' })
+
 }
-
-
-
 
 
 // ⭐️  News ⭐️

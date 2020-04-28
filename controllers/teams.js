@@ -14,7 +14,7 @@ const getAllTeams = async (req, res) => {
   const seasons = await db.seasons.find({'hidden_date =': null, 'deleted_date =': null}).catch(err => console.log(err));
 
   let query = `
-    SELECT teams.*, seasons.name AS season_name, divisions.name AS division_name, divisions.id AS division_id FROM team_season_division tsd 
+    SELECT teams.*, seasons.name AS season_name, seasons.id AS season_id, divisions.name AS division_name, divisions.id AS division_id FROM team_season_division tsd 
     JOIN teams ON teams.id = tsd.team_id
     JOIN seasons ON seasons.id = tsd.season_id
     JOIN divisions ON divisions.id = tsd.division_id
@@ -23,6 +23,8 @@ const getAllTeams = async (req, res) => {
 
   if(orderby) {
     query += `ORDER BY division_name`
+  } else {
+    query += 'ORDER BY lower(teams.name)';
   }
 
 
