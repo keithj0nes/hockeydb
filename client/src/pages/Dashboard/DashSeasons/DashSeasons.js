@@ -8,6 +8,10 @@ import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
 import './DashSeasons.scss';
 
+import Edit from "../../../assets/icons/edit_icon.svg";
+import Delete from '../../../assets/icons/delete_icon.svg';
+import Hide from '../../../assets/icons/hide_icon.svg';
+
 
 const defaultState = {
     seasonTypes: [
@@ -250,30 +254,11 @@ class DashSeasons extends Component {
                             </div>
                         ) : (
                             <>
-
-                                <div className="dashboard-list-item hide-mobile">
-                                    <div style={{ display: 'flex' }}>
-
-                                        <p className="flex-two">Name</p>
-                                        <p className="flex-one">Type</p>
-                                        <p className="flex-one">Manage</p>
-                                    </div>
-                                </div>
-
-                                {seasons.map(item => {
-
-                                    return (
-                                        <DashSeasonsListItem
-                                            key={item.id}
-                                            item={item}
-                                            sections={{ 'name': 'two', 'type': 'one' }}
-                                            onDelete={() => this.handleDeleteSeason(item)}
-                                            onEdit={() => this.handleEditSeason(item)}
-                                            onHide={() => this.handleHideSeason(item)}
-                                        />
-                                    )
-
-                                })}
+                                <DashTable 
+                                    data={seasons}
+                                    sections={{ 'name': 'two', 'type': 'one' }}
+                                    minWidth={750}
+                                />
                             </>
                         )}
                     </div>
@@ -301,4 +286,122 @@ const mapDispatchToProps = dispatch => {
         toggleFilter: () => dispatch(toggleFilter('seasons'))
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(DashSeasons) 
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashSeasons);
+
+
+const DashTable = ({ data, sections, minWidth = null }) => {
+
+    const sectionKeys = Object.keys(sections);
+    return (
+        <div className="ot-container-dash">
+            <div className="ot-table" style={{minWidth}}>
+                <div className="ot-row-header">
+
+                    {sectionKeys.map(sk => {
+                        return (
+                            <p key={sk} className={`ot-header ot-flex-${sections[sk]}`}>{sk}</p>
+                        )
+                    })}
+
+                    <p className="ot-header" style={{width: '15%', background: 'pink'}}>Manage</p>
+
+                </div>
+
+                {data.map(d => {
+                    return (
+                        <div className="ot-row" key={d.id}>
+                    
+                                {sectionKeys.map(section => {
+                                    return (
+                                        <p key={section} className={`ot-cell ot-flex-${sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+                                    )
+                                })}
+                                <p className="ot-cell" style={{width: '15%', background: 'pink'}}>
+                                    <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
+                                    <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
+                                    <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
+                                </p>
+                        </div>
+                    )
+
+                })}
+            </div>
+        </div>
+    )
+}
+
+
+
+
+            //                     {/* <div className="dashboard-list-item hide-mobile">
+            //                         <div style={{ display: 'flex' }}>
+
+            //                             <p className="flex-two">Name</p>
+            //                             <p className="flex-one">Type</p>
+            //                             <p className="flex-one">Manage</p>
+            //                         </div>
+            //                     </div> */}
+
+
+            //                     <div className="ot-container-dash">
+            //                     <div className="ot-table" style={{minWidth: null}}>
+            //                         <div className="ot-row-header">
+            //                             <p className="ot-header ot-flex-two">Name</p>
+            //                             <p className="ot-header ot-flex-one">Type</p>
+            //                             <p className="ot-header ot-flex-one">Manage</p>
+
+            //                             {/* <p className="ot-header ot-flex-three">Location</p>
+            //                             <p className="ot-header ot-flex-four">Home</p>
+            //                             <p className="ot-header ot-flex-four">Away</p>
+            //                             <p className="ot-header ot-flex-one">Score</p>
+            //                             <p className="ot-header ot-flex-one">Scoresheet</p> */}
+            //                         </div>
+            
+            //                         {/* {this.renderTableData()}
+            //                         {this.state.filters.fromLoadMore && (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />)}
+            //                             */}
+
+            //             {seasons.map(item => {
+
+            //                 return (
+            //                     // <DashSeasonsListItem
+            //                     //     key={item.id}
+            //                     //     item={item}
+            //                     //     sections={{ 'name': 'two', 'type': 'one' }}
+            //                     //     onDelete={() => this.handleDeleteSeason(item)}
+            //                     //     onEdit={() => this.handleEditSeason(item)}
+            //                     //     onHide={() => this.handleHideSeason(item)}
+            //                     // />
+            //                     // <h2>hi</h2>
+
+            //                     <div className="ot-row" key={item.id}>
+            //                        <p className="ot-cell ot-flex-two">g:date</p>
+            //                         <p className="ot-cell ot-flex-two">g:time</p>
+            //                         <p className="ot-cell ot-flex-three">g:location</p>
+            //                         <p className="ot-cell ot-flex-four">g:home</p>
+            //                         <p className="ot-cell ot-flex-four">g:away</p>
+            //                         <p className="ot-cell ot-flex-one">g:score</p>
+            //                         <p className="ot-cell ot-flex-one">g:score</p>
+            //                     </div>
+
+            //                     // <div className="ot-container">
+            //                     //     <div className="ot-table" style={{minWidth: null}}>
+            //                     //         <div className="ot-row-header">
+            //                     //             <p className="ot-header ot-flex-two">Date</p>
+            //                     //             <p className="ot-header ot-flex-two">Time</p>
+            //                     //             <p className="ot-header ot-flex-three">Location</p>
+            //                     //             <p className="ot-header ot-flex-four">Home</p>
+            //                     //             <p className="ot-header ot-flex-four">Away</p>
+            //                     //             <p className="ot-header ot-flex-one">Score</p>
+            //                     //             <p className="ot-header ot-flex-one">Scoresheet</p>
+            //                     //         </div>
+            //                     //     </div>
+            //                     // </div>
+            //                 )
+
+            //             })}
+
+            //     </div>
+            
+            // </div>

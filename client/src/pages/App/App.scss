@@ -215,97 +215,97 @@ input[type=text] {
 // ot = overflow table
 // the table is not a part of the white-bg class
 // must be used outside for scroll to work all the way to the right
-.ot-container{
-    background: white;
-    overflow: scroll;
-    padding: 20px 0 40px 20px;
+// .ot-container{
+//     background: white;
+//     overflow: scroll;
+//     padding: 20px 0 40px 20px;
 
-    .ot-table {
-        // display: table;
-        width: 100%;
-        min-width: 900px;
-        padding-right: 20px;
+//     .ot-table {
+//         // display: table;
+//         width: 100%;
+//         min-width: 900px;
+//         padding-right: 20px;
 
-        .ot-row {
-            // display: table-row;
-            display: flex;
-            background: white;
-            padding: 12px 10px;
-            color: $main_color;
-            font-size: 14px;
-            letter-spacing: 1.2px;
-            margin-top: 10px;
-            border-radius: 3px;
-            box-shadow: 0px 5px 15px #5C636929;
+//         .ot-row {
+//             // display: table-row;
+//             display: flex;
+//             background: white;
+//             padding: 12px 10px;
+//             color: $main_color;
+//             font-size: 14px;
+//             letter-spacing: 1.2px;
+//             margin-top: 10px;
+//             border-radius: 3px;
+//             box-shadow: 0px 5px 15px #5C636929;
 
-            // .ot-cell {
-                // display: table-cell;
-                // display: flex;
-                // background: pink;
+//             // .ot-cell {
+//                 // display: table-cell;
+//                 // display: flex;
+//                 // background: pink;
 
-            // }
+//             // }
 
-            .shimmer {
-                position: relative;
+//             .shimmer {
+//                 position: relative;
 
-                &:after {
-                    content: '';
-                    // position: absolute;
-                    display: flex;
-                    width: 75%;
-                    height: 18px;
-                    background: #ccc;
-                    animation: shimmer 1.25s infinite;
-                }
-            }
+//                 &:after {
+//                     content: '';
+//                     // position: absolute;
+//                     display: flex;
+//                     width: 75%;
+//                     height: 18px;
+//                     background: #ccc;
+//                     animation: shimmer 1.25s infinite;
+//                 }
+//             }
 
-            @keyframes shimmer {
-                0% { background: #ccc; }
-                50% { background: #aaa; }
-                100% { background: #ccc; }
-            }
+//             @keyframes shimmer {
+//                 0% { background: #ccc; }
+//                 50% { background: #aaa; }
+//                 100% { background: #ccc; }
+//             }
 
-            &:hover {
-                background: #f0f0f0;
-            }
-        }
+//             &:hover {
+//                 background: #f0f0f0;
+//             }
+//         }
 
-        .ot-row-header {
-            // display: table-row;
-            display: flex;
-            padding: 0 10px;
+//         .ot-row-header {
+//             // display: table-row;
+//             display: flex;
+//             padding: 0 10px;
 
-            .ot-header {
-                // display: table-cell;
-                font-family: $heading_font;
-                text-transform: uppercase;
-                font-size: 12px;
-                // letter-spacing: 1.2px;
-                color: #7E92A3;
-            }
-        }
-    }
+//             .ot-header {
+//                 // display: table-cell;
+//                 font-family: $heading_font;
+//                 text-transform: uppercase;
+//                 font-size: 12px;
+//                 // letter-spacing: 1.2px;
+//                 color: #7E92A3;
+//             }
+//         }
+//     }
 
-    .ot-flex-one {
-        flex: 1;
-    }
+//     .ot-flex-one {
+//         flex: 1;
+//     }
 
-    .ot-flex-two {
-        flex: 2;
-    }
+//     .ot-flex-two {
+//         flex: 2;
+//     }
 
-    .ot-flex-three {
-        flex: 3;
-    }
+//     .ot-flex-three {
+//         flex: 3;
+//     }
 
-    .ot-flex-four {
-        flex: 4;
-    }
+//     .ot-flex-four {
+//         flex: 4;
+//     }
 
-    .ot-flex-five {
-        flex: 5;
-    }
-}
+//     .ot-flex-five {
+//         flex: 5;
+//     }
+// }
 
 
 .hide-mobile {
@@ -344,5 +344,106 @@ input[type=text] {
 
     .hide-mobile {
         display: block;
+    }
+}
+
+
+.ot-container-dash {
+    background: white;
+    // background: blue;
+    overflow: scroll;
+    // padding: 20px 0 40px 20px;
+    // padding: 20px 0;
+
+    .ot-table {
+        // display: table;
+        width: 100%;
+        min-width: 900px;
+        // padding-right: 20px;
+
+        .ot-row {
+            // display: table-row;
+            display: flex;
+            background: white;
+            padding: 12px 10px;
+            color: $main_color;
+            // font-size: 14px;
+            // letter-spacing: 1.2px;
+            border-bottom: 1px solid #EFF2F4;
+            // margin-top: 10px;
+            // border-radius: 3px;
+            // box-shadow: 0px 5px 15px #5C636929;
+
+            // .ot-cell {
+                // display: table-cell;
+                // display: flex;
+                // background: pink;
+
+            // }
+
+            .shimmer {
+                position: relative;
+
+                &:after {
+                    content: '';
+                    // position: absolute;
+                    display: flex;
+                    width: 75%;
+                    height: 18px;
+                    background: #ccc;
+                    animation: shimmer 1.25s infinite;
+                }
+            }
+
+            @keyframes shimmer {
+                0% { background: #ccc; }
+                50% { background: #aaa; }
+                100% { background: #ccc; }
+            }
+
+            // &:hover {
+            //     background: #f0f0f0;
+            // }
+        }
+
+        .ot-row-header {
+            // display: table-row;
+            display: flex;
+            // padding: 0 10px 10px;
+            padding: 10px;
+            border-bottom: 1px solid #EFF2F4;
+            
+            .ot-header {
+                display: flex;
+                align-items: center;
+                font-size: 16px;
+                // display: table-cell;
+                font-family: $heading_font;
+                text-transform: uppercase;
+                // font-size: 12px;
+                // letter-spacing: 1.2px;
+                color: #7E92A3;
+            }
+        }
+    }
+
+    .ot-flex-one {
+        flex: 1;
+    }
+
+    .ot-flex-two {
+        flex: 2;
+    }
+
+    .ot-flex-three {
+        flex: 3;
+    }
+
+    .ot-flex-four {
+        flex: 4;
+    }
+
+    .ot-flex-five {
+        flex: 5;
     }
 }
