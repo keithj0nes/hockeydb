@@ -11,7 +11,7 @@ import { getGames, newGame } from '../../../redux/actions/gamesActions';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { toggleModal } from '../../../redux/actions/misc';
-
+import DashTable from '../DashTable';
 
 
 
@@ -151,6 +151,8 @@ export class DashGames extends Component {
     }
 
     render() {
+
+        const { games } = this.props;
         return (
             <div>
                 <div className="dashboard-filter-header">
@@ -159,7 +161,21 @@ export class DashGames extends Component {
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">
-                        <div className="dashboard-list-item hide-mobile">
+
+                        {games && games.length <= 0 ? (
+                            <div>
+                                {this.props.location.search.length > 0 ? 'Sorry, there are no games within your filter criteria' : 'Sorry, no games have been created. Start by adding a games above.'}
+                            </div>
+                        ) : (
+                            <DashTable 
+                                data={games}
+                                // sections={{ 'name': 'two', 'type': 'one' }}
+                                tableType="games"
+                                minWidth={750}
+                                sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
+                                />
+                        )}
+                        {/* <div className="dashboard-list-item hide-mobile">
                             <div style={{display: 'flex'}}>
 
                                 <p className="flex-one">Date</p>
@@ -206,7 +222,7 @@ export class DashGames extends Component {
                                     </div>
                                 </div>
                             )
-                        })}
+                        })} */}
                     </div>
 
                     { Number(this.props.totalGamesCount) !== this.props.games.length && (

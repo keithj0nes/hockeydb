@@ -6,7 +6,7 @@ import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import { Button, Filter } from '../../../components';
 // import ListItem from '../ListItem';
 import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
-
+import DashTable from '../DashTable';
 import qs from 'query-string';
 
 const defaultState = {
@@ -244,42 +244,49 @@ class DashTeams extends Component {
                             Sorry, no teams have been created. Start by adding a season above.
                         </div>
                     ) : (
-                        <>
+                        <DashTable 
+                            data={teams}
+                            sections={{ 'name': 'two', 'division_name': 'one' }}
+                            minWidth={550}
+                            onEdit={this.handleEditTeam}
+                            onDelete={this.handleDeleteTeam}
+                        />
+                        // <>
 
-                            <div className="dashboard-list-item hide-mobile">
-                                <div style={{ display: 'flex' }}>
+                        //     <div className="dashboard-list-item hide-mobile">
+                        //         <div style={{ display: 'flex' }}>
 
-                                    <p className="flex-two">Name</p>
-                                    <p className="flex-one">Division</p>
-                                    <p className="flex-one">Manage</p>
-                                </div>
-                            </div>
+                        //             <p className="flex-two">Name</p>
+                        //             <p className="flex-one">Division</p>
+                        //             <p className="flex-one">Manage</p>
+                        //         </div>
+                        //     </div>
 
-                            {teams.map(item => {
-                                // console.log(item, 'item!')
-                                // item.division_name = this.getDivisionNameById(item.division_id)
-                                return (
+                        //     {teams.map(item => {
+                        //         // console.log(item, 'item!')
+                        //         // item.division_name = this.getDivisionNameById(item.division_id)
+                        //         return (
 
 
-                                    <DashSeasonsListItem 
-                                        // key={item.id}
-                                        // item={item}
-                                        // sections={{ 'name': 'two', 'division_name': 'one' }}
-                                        // onClick={() => this.handleDeleteSeason(item)}
-                                        // onEdit={() => this.handleEditTeam(item)}
+                        //             <DashSeasonsListItem 
+                        //                 // key={item.id}
+                        //                 // item={item}
+                        //                 // sections={{ 'name': 'two', 'division_name': 'one' }}
+                        //                 // onClick={() => this.handleDeleteSeason(item)}
+                        //                 // onEdit={() => this.handleEditTeam(item)}
 
-                                        key={item.id}
-                                        item={item}
-                                        sections={{ 'name': 'two', 'division_name': 'one' }}
-                                        onDelete={() => this.handleDeleteTeam(item)}
-                                        onEdit={() => this.handleEditTeam(item)}
-                                        // onHide={() => this.handleHideDivision(item)}
-                                        onHide={() => console.log('on hide clicked')}
-                                    />
-                                )
+                        //                 key={item.id}
+                        //                 item={item}
+                        //                 sections={{ 'name': 'two', 'division_name': 'one' }}
+                        //                 onDelete={() => this.handleDeleteTeam(item)}
+                        //                 onEdit={() => this.handleEditTeam(item)}
+                        //                 // onHide={() => this.handleHideDivision(item)}
+                        //                 onHide={() => console.log('on hide clicked')}
+                        //             />
+                        //         )
 
-                            })}
-                        </>
+                        //     })}
+                        // </>
                     )}
                 </div>
             </div>

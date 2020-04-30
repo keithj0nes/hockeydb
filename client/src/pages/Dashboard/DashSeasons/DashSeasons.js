@@ -257,6 +257,9 @@ class DashSeasons extends Component {
                                 data={seasons}
                                 sections={{ 'name': 'two', 'type': 'one' }}
                                 minWidth={550}
+                                onEdit={this.handleEditSeason}
+                                onDelete={this.handleDeleteSeason}
+                                onHide={this.handleHideSeason}
                             />
                         )}
                     </div>
