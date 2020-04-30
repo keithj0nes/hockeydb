@@ -8,9 +8,9 @@ import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
 import './DashSeasons.scss';
 
-import Edit from "../../../assets/icons/edit_icon.svg";
-import Delete from '../../../assets/icons/delete_icon.svg';
-import Hide from '../../../assets/icons/hide_icon.svg';
+import DashTable from '../DashTable';
+
+
 
 
 const defaultState = {
@@ -253,13 +253,11 @@ class DashSeasons extends Component {
                                 {this.props.location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                             </div>
                         ) : (
-                            <>
-                                <DashTable 
-                                    data={seasons}
-                                    sections={{ 'name': 'two', 'type': 'one' }}
-                                    minWidth={750}
-                                />
-                            </>
+                            <DashTable 
+                                data={seasons}
+                                sections={{ 'name': 'two', 'type': 'one' }}
+                                minWidth={550}
+                            />
                         )}
                     </div>
                 </div>
@@ -290,46 +288,48 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(DashSeasons);
 
 
-const DashTable = ({ data, sections, minWidth = null }) => {
+// const DashTable = ({ data, sections, minWidth = null }) => {
 
-    const sectionKeys = Object.keys(sections);
-    return (
-        <div className="ot-container-dash">
-            <div className="ot-table" style={{minWidth}}>
-                <div className="ot-row-header">
+//     const sectionKeys = Object.keys(sections);
+//     return (
+//         <div className="ot-container-dash">
+//             <div className="ot-table" style={{minWidth}}>
+//                 <div className="ot-row-header">
 
-                    {sectionKeys.map(sk => {
-                        return (
-                            <p key={sk} className={`ot-header ot-flex-${sections[sk]}`}>{sk}</p>
-                        )
-                    })}
+//                     {sectionKeys.map(sk => {
+//                         return (
+//                             <p key={sk} className={`ot-header ot-flex-${sections[sk]}`}>{sk}</p>
+//                         )
+//                     })}
 
-                    <p className="ot-header" style={{width: '15%', background: 'pink'}}>Manage</p>
+//                     <p className="ot-header ot-manage">Manage</p>
 
-                </div>
+//                 </div>
 
-                {data.map(d => {
-                    return (
-                        <div className="ot-row" key={d.id}>
+//                 {data.map(d => {
+//                     return (
+//                         <div className="ot-row" key={d.id}>
                     
-                                {sectionKeys.map(section => {
-                                    return (
-                                        <p key={section} className={`ot-cell ot-flex-${sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-                                    )
-                                })}
-                                <p className="ot-cell" style={{width: '15%', background: 'pink'}}>
-                                    <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
-                                    <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
-                                    <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
-                                </p>
-                        </div>
-                    )
+//                                 {sectionKeys.map(section => {
+//                                     return (
+//                                         <p key={section} className={`ot-cell ot-flex-${sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+//                                     )
+//                                 })}
+//                                 <p className="ot-cell ot-manage">
+//                                     {/* <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
+//                                     <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span> */}
+//                                     <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clicked')}><img src={Delete} width="25px" alt=""/></span>
+//                                     {!d.hidden_date && <span style={{cursor: "pointer", paddingRight: 10}} onClick={() => console.log('clickeda')}><img src={Edit} width="25px" alt=""/></span> }
+//                                     {!d.is_active && <span style={{cursor: "pointer"}} onClick={() => console.log('clickeda')}><img src={Hide} width="25px" alt=""/></span> }
+//                                 </p>
+//                         </div>
+//                     )
 
-                })}
-            </div>
-        </div>
-    )
-}
+//                 })}
+//             </div>
+//         </div>
+//     )
+// }
 
 
 

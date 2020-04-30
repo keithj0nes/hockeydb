@@ -361,6 +361,26 @@ input[type=text] {
         min-width: 900px;
         // padding-right: 20px;
 
+        .ot-manage {
+            width: 15%;
+            min-width: 105px;
+            background: yellow;
+
+            span {
+                padding-right: 10px;
+
+                &:last-child {
+                    padding-right: 0px;
+                }
+                
+                img {
+                    cursor: pointer;
+                    background: pink;
+
+                }
+            }
+        }
+
         .ot-row {
             // display: table-row;
             display: flex;
