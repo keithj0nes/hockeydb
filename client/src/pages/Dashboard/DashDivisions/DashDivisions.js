@@ -8,6 +8,7 @@ import qs from 'query-string';
 // import './DashDivisions.scss';
 // import ListItem from '../ListItem';
 import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
+import DashTable from '../DashTable';
 
 
 const defaultState = {
@@ -235,34 +236,42 @@ class DashDivisions extends Component {
                             </div>
                         ) : (
 
-                            <>
-                                <div className="dashboard-list-item hide-mobile">
-                                    <div style={{ display: 'flex' }}>
-                                        <p className="flex-three">Name</p>
-                                        <p className="flex-one">Manage</p>
-                                    </div>
-                                </div>
+                            <DashTable 
+                                data={divisions}
+                                sections={{ 'name': 'three' }}
+                                minWidth={350}
+                                onEdit={this.handleEditDivision}
+                                onDelete={this.handleDeleteDivision}
+                                onHide={this.handleHideDivision}
+                            />
+                            // <>
+                            //     <div className="dashboard-list-item hide-mobile">
+                            //         <div style={{ display: 'flex' }}>
+                            //             <p className="flex-three">Name</p>
+                            //             <p className="flex-one">Manage</p>
+                            //         </div>
+                            //     </div>
 
-                                {divisions.map(item => {
-                                    return (
-                                        <DashSeasonsListItem 
-                                            // key={item.id} 
-                                            // item={item} 
-                                            // sections={{'name': 'three'}} 
-                                            // onClick={() => this.handleDeleteDivision(item)}
-                                            // onEdit={() => this.handleEditDivision(item)}
+                            //     {divisions.map(item => {
+                            //         return (
+                            //             <DashSeasonsListItem 
+                            //                 // key={item.id} 
+                            //                 // item={item} 
+                            //                 // sections={{'name': 'three'}} 
+                            //                 // onClick={() => this.handleDeleteDivision(item)}
+                            //                 // onEdit={() => this.handleEditDivision(item)}
 
-                                            key={item.id}
-                                            item={item}
-                                            sections={{ 'name': 'three' }}
-                                            onDelete={() => this.handleDeleteDivision(item)}
-                                            onEdit={() => this.handleEditDivision(item)}
-                                            onHide={() => this.handleHideDivision(item)}
-                                        />
-                                    )
+                            //                 key={item.id}
+                            //                 item={item}
+                            //                 sections={{ 'name': 'three' }}
+                            //                 onDelete={() => this.handleDeleteDivision(item)}
+                            //                 onEdit={() => this.handleEditDivision(item)}
+                            //                 onHide={() => this.handleHideDivision(item)}
+                            //             />
+                            //         )
 
-                                })}
-                            </>
+                            //     })}
+                            // </>
                         )}
                     </div>
                 </div>

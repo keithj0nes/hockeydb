@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createLocation, getLocations, deleteLocation, updateLocation } from '../../../redux/actions/locationsActions';
 import { Button } from '../../../components';
 import ListItem from '../ListItem';
-
+import DashTable from '../DashTable';
 import { toggleModal } from '../../../redux/actions/misc';
 
 const defaultState = {
@@ -75,7 +75,7 @@ export class DashGames extends Component {
     }
 
 
-    handleEditSeason = (item) => {
+    handleEditLocation = (item) => {
         this.setState({ edit: item })
         console.log(item, 'itemss')
         this.props.toggleModal({
@@ -172,37 +172,45 @@ export class DashGames extends Component {
                             </div>
                         ) : (
 
-                            <>
+                            <DashTable 
+                                data={locations}
+                                sections={{ 'name': 'two', 'address': 'three' }}
+                                minWidth={660}
+                                onEdit={this.handleEditLocation}
+                                onDelete={this.handleDeleteLocation}                                            
+                            />
 
-                                <div className="dashboard-list-item hide-mobile">
-                                    <div style={{ display: 'flex' }}>
+                            // <>
 
-                                        <p className="flex-three">Name</p>
-                                        <p className="flex-three">Address</p>
-                                        <p className="flex-one">Manage</p>
+                            //     <div className="dashboard-list-item hide-mobile">
+                            //         <div style={{ display: 'flex' }}>
 
-                                    </div>
-                                </div>
+                            //             <p className="flex-three">Name</p>
+                            //             <p className="flex-three">Address</p>
+                            //             <p className="flex-one">Manage</p>
 
-                                {locations.map(item => {
+                            //         </div>
+                            //     </div>
 
-                                    // console.log(item, 'befroe')
-                                    // item.date = dateFormat(item.start_date, 'MM/DD/YYYY');
-                                    // item.start_time = dateFormat(item.start_date, 'h:mm A')
-                                    // console.log(item, 'after')
+                            //     {locations.map(item => {
 
-                                    return (
-                                        <ListItem 
-                                            key={item.id} 
-                                            item={item} 
-                                            sections={{ 'name': 'three', 'address': 'three' }} 
-                                            onClick={() => this.handleDeleteLocation(item)}                                            
-                                            onEdit={() => this.handleEditSeason(item)}
-                                            // onHide={() => this.handleHideSeason(item)} 
-                                        />
-                                    )
-                                })}
-                            </>
+                            //         // console.log(item, 'befroe')
+                            //         // item.date = dateFormat(item.start_date, 'MM/DD/YYYY');
+                            //         // item.start_time = dateFormat(item.start_date, 'h:mm A')
+                            //         // console.log(item, 'after')
+
+                            //         return (
+                            //             <ListItem 
+                            //                 key={item.id} 
+                            //                 item={item} 
+                            //                 sections={{ 'name': 'three', 'address': 'three' }} 
+                            //                 onClick={() => this.handleDeleteLocation(item)}                                            
+                            //                 onEdit={() => this.handleEditSeason(item)}
+                            //                 // onHide={() => this.handleHideSeason(item)} 
+                            //             />
+                            //         )
+                            //     })}
+                            // </>
                         )}
                     </div>
 
