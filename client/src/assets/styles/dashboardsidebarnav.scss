@@ -18,8 +18,6 @@
     left: 0;
     z-index: 1000;
     overflow: scroll;
-    // font-size: 20px;
-    // background: blue;
     
     &-hide {
         transition-delay: 0.5s;
@@ -59,17 +57,17 @@
         width: 100%;
         display: flex;
         transition: transform .35s cubic-bezier(.25, .1, .25, .1);
+
         
         .dashboard-nav {
             background: $white_color;
-            // background: green;
             width: 80vw;
             height: 100%;
             position: relative;
 
+
             &.bluebg {
                 // background: $header_sidenav_color;
-
                 background: transparent linear-gradient(180deg, #2B4272 0%, #0C1D40 100%) 0% 0% no-repeat padding-box;
             }
 
@@ -85,7 +83,6 @@
                 border: none;
                 position: absolute;
                 right: 10px;
-                // top: 10px;
                 font-size: 30px;
                 padding: 10px;
                 cursor: pointer;
@@ -99,7 +96,6 @@
             .dashboard-nav-header {
                 display: flex;
                 flex-direction: column;
-                // justify-content: center;
                 align-items: center;
                 padding: 30px 30px 10px 30px;
                 color: $main_font_color;
@@ -145,7 +141,6 @@
                 display: flex;
                 align-items: center;
                 padding: 15px 0;
-                // margin: 10px 0;
             }
 
             li a:hover {
@@ -180,10 +175,17 @@
 
 @media only screen and (min-width: 768px) {
 
+    // this "filler" takes up the same width as the nav container
+    // and basically fakes the width so that the nav container can
+    // be fixed and push the dashboard-content to the right of the nav bar
+    .nav-container-filler {
+        width: 25%;
+        max-width: 260px;
+    }
+
     .dashboard-nav-container {
         width: 25%;
         max-width: 260px;
-        position: static;
 
         &-hide {
             transition-delay: 0s;

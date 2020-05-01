@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import dateFormat from 'date-fns/format';
+// import dateFormat from 'date-fns/format';
 import qs from 'query-string';
 import { Button } from '../../../components';
-import DashGamesListItem from './DashGamesListItem';
-import ListItem from '../ListItem';
+// import DashGamesListItem from './DashGamesListItem';
+// import ListItem from '../ListItem';
 import { getLocations } from '../../../redux/actions/locationsActions';
 import { getTeams } from '../../../redux/actions/teamsActions';
 import { getGames, newGame } from '../../../redux/actions/gamesActions';
@@ -171,7 +171,7 @@ export class DashGames extends Component {
                                 data={games}
                                 // sections={{ 'name': 'two', 'type': 'one' }}
                                 tableType="games"
-                                minWidth={750}
+                                minWidth={775}
                                 sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
                                 />
                         )}

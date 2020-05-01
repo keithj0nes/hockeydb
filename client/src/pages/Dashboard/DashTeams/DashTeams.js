@@ -5,7 +5,7 @@ import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/act
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import { Button, Filter } from '../../../components';
 // import ListItem from '../ListItem';
-import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
+// import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 import DashTable from '../DashTable';
 import qs from 'query-string';
 

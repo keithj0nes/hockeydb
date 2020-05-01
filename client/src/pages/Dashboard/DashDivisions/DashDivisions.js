@@ -7,7 +7,7 @@ import qs from 'query-string';
 
 // import './DashDivisions.scss';
 // import ListItem from '../ListItem';
-import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
+// import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 import DashTable from '../DashTable';
 
 
