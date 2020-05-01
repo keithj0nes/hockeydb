@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { createLocation, getLocations, deleteLocation, updateLocation } from '../../../redux/actions/locationsActions';
 import { Button } from '../../../components';
-import ListItem from '../ListItem';
+// import ListItem from '../ListItem';
 import DashTable from '../DashTable';
 import { toggleModal } from '../../../redux/actions/misc';
 

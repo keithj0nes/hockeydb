@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from '../../../redux/actions/seasons';
 import { Button, Filter } from '../../../components';
 // import ListItem from '../ListItem';
-import DashSeasonsListItem from './DashSeasonsListItem';
+// import DashSeasonsListItem from './DashSeasonsListItem';
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
 import './DashSeasons.scss';

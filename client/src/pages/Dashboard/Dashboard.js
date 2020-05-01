@@ -48,6 +48,8 @@ class Dashboard extends Component {
                     <DashboardNav {...this.props} />
                 </DashboardSidebarNav>
 
+                <div className="nav-container-filler"></div>
+
                 <div className="dashboard-content">
                     <div className="dashboard-header">
                         <HamburgerIcon onClick={this.props.toggleNavSlider} />

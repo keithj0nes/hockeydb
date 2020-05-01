@@ -24,7 +24,7 @@ const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableTy
                 </div>
 
                 {data.map(d => {
-                    if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YYYY h:mmA').split(' ');
+                    if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
                     return (
                         <div className="ot-row" key={d.id}>
                     

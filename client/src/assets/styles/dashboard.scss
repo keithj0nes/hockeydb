@@ -3,7 +3,8 @@
 .dashboard-container {
     background: $body_background_color;
     // font-family: $main_font;
-    // height: 100vh;
+    min-height: 100vh;
+    height: 100%;
 
     a {
         color: $nav_link;
@@ -11,12 +12,10 @@
 
     .dashboard-content {
         width: 100%;
-        // background: red;
     }
 
     .dashboard-header {
         background: $gray_color;
-        // background: yellow;
         border-bottom: 5px solid $white_color;
         display: flex;
         justify-content: space-between;
@@ -34,15 +33,10 @@
         .dashboard-settings-container {
             height: 100%;
             width: 100%;
-            // background: red;
             position: absolute;
             top: -100%;
-            // transform: translate(0,-90%);
-            // transform: translateY(0%);
             left: 0;
-            // opacity: 0.5;
             transition: all 0.4s;
-
 
             .profile-image {
                 height: 25%;
