@@ -150,6 +150,10 @@ export class DashGames extends Component {
 
     }
 
+    handleEditGame = game => {
+        this.props.history.push(`${this.props.location.pathname}/${game.id}`, game);
+      }
+
     render() {
 
         const { games } = this.props;
@@ -173,6 +177,7 @@ export class DashGames extends Component {
                                 tableType="games"
                                 minWidth={775}
                                 sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
+                                onEdit={this.handleEditGame}
                                 />
                         )}
                         {/* <div className="dashboard-list-item hide-mobile">
