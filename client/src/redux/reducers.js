@@ -109,6 +109,7 @@ const initialGameState = {
   isLoading: true,
   allGames: [],
   selectedGame: null,
+  gameDetails: null,
   todaysGames: [],
   fromLoadMore: false,
   totalGamesCount: 0
@@ -125,6 +126,8 @@ export const games = (state = initialGameState, { type, payload }) => {
         return { ...state, isLoading: false, totalGamesCount, allGames: [...state.allGames, ...games] };
       }
       return { ...state, isLoading: false, totalGamesCount, allGames: games };
+    case `gameById/${GET_SUCCESS}`:
+      return {...state, gameDetails: payload}
     case `todaysgames/${GET_SUCCESS}`:
       return {...state, todaysGames: payload}
     default:

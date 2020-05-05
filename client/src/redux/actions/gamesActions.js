@@ -33,6 +33,22 @@ export const getGames = filter => async (dispatch, getState) => {
 }
 
 
+export const getGameById = gameId => async (dispatch, getState) => {
+
+  const game = await request(`/api/games/${gameId}`, 'GET', {}, true)
+
+  console.log(game, 'GAMEEEEEE!!')
+  if (!game.data) return false;
+
+  dispatch({ 
+    type: `gameById/${GET_SUCCESS}`, 
+    payload: game.data
+  })
+  
+
+}
+
+
 export const newGame = (data) => async (dispatch, getState) => {
   const { user } = getState();
   const newgame = await request('/api/admin/games', 'POST', { data, access_token: user.user.access_token })

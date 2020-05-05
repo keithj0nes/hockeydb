@@ -9,10 +9,10 @@ import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
+import DashGamesDetails from './DashGames/DashGamesDetails';
 import DashNews from './DashNews/DashNews';
 import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashLocations from './DashLocations/DashLocations';
-
 
 import '../../assets/styles/dashboard.scss';
 
@@ -27,7 +27,6 @@ class Dashboard extends Component {
 
     state = {
         showProfile: false
-        // showProfile: true
     }
 
     handleLogout = () => {
@@ -44,17 +43,15 @@ class Dashboard extends Component {
         const { match } = this.props;
         return (
             <>
-
-                <div style={{height: '100%', width: '100%', zIndex: 1100, position: 'absolute', display: this.state.showProfile ? 'block' : 'none'}} onClick={this.toggleShowProfile}></div>
+                <div style={{height: '100%', width: '100%', zIndex: 1100, position: 'absolute', display: this.state.showProfile ? 'block' : 'none'}} onClick={this.toggleShowProfile} />
+                
                 <div className="dashboard-container">
-
-
 
                     <DashboardSidebarNav {...this.props} >
                         <DashboardNav {...this.props} />
                     </DashboardSidebarNav>
 
-                    <div className="nav-container-filler"></div>
+                    <div className="nav-container-filler" />
 
                     <div className="dashboard-content">
                         <div className="dashboard-header">
@@ -91,30 +88,18 @@ class Dashboard extends Component {
                                             )
                                         })}
 
-                                        {/* <li><a onClick={this.handleLogout}>Logout</a></li> */}
-                                        {/* <li onClick={this.handleLogout}>Logout</li> */}
-                                        <li>
-                                            <p onClick={this.handleLogout}>
-                                            Logout
-                                            </p> 
-                                        </li>
-
-
+                                        <li> <p onClick={this.handleLogout}>Logout</p> </li>
                                     </ul>
-
                                 </div>
                             </div>
-
-
-
-
                         </div>
 
                         <Route path={`${match.path}/seasons`}   component={DashSeasons} />
                         <Route path={`${match.path}/divisions`} component={DashDivisions} />
                         <Route path={`${match.path}/teams`}     component={DashTeams} />
                         <Route path={`${match.path}/players`}   component={DashPlayers} />
-                        <Route path={`${match.path}/games`}     component={DashGames} />
+                        <Route path={`${match.path}/games`}     component={DashGames} exact />
+                        <Route path={`${match.path}/games/:id`} component={DashGamesDetails} />
                         <Route path={`${match.path}/news`}      component={DashNews} exact />
                         <Route path={`${match.path}/news/:id`}  component={DashNewsCreate} />
                         <Route path={`${match.path}/locations`} component={DashLocations} />

@@ -96,15 +96,23 @@ const getGames = async (req, res) => {
 const getGameById = async (req, res) => {
   const db = app.get('db');
   const { id } = req.params;
-  const data = await db.query('select * from games where id = $1', [id]);
+  const data = await db.query(`
+    select games.*, h.name AS home_team_name, a.name AS away_team_name, l.name AS location_name  from games
+    join teams h on h.id = games.home_team
+    join teams a on a.id = games.away_team
+    join locations l on l.id = games.location_id
+    where games.id = $1;
+  `, [id]);
+
+  console.log(data, 'DATA GET GAMES BY ID')
   if (!data) {
     return res.status(404).send({ status: 404, data: [], message: 'game cannot be found' })
   }
-  res.status(200).send({ status: 200, data, message: 'Retrieved game' })
+  res.status(200).send({ status: 200, data: data[0], message: 'Retrieved game' })
 }
 
 
 module.exports = {
   getGames,
-
+  getGameById
 }
