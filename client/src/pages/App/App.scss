@@ -221,12 +221,16 @@ input[type=text] {
     background: white;
     overflow: scroll;
     padding: 20px 0 40px 20px;
+    // padding: 20px 0 40px 6px;
+
 
     .ot-table {
         // display: table;
         width: 100%;
         min-width: 900px;
         padding-right: 20px;
+        // padding-right: 6px;
+
 
         .ot-row {
             // display: table-row;
@@ -313,6 +317,13 @@ input[type=text] {
 .hide-mobile {
     display: none;
 }
+
+
+// .white-bg {
+//     background: white;
+//     width: 100%;
+//     padding: 20px
+// }
 
 @media only screen and (min-width: 768px){
 
