@@ -19,6 +19,7 @@ export const getGames = filter => async (dispatch, getState) => {
   const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
   if (!data.data) return false;
 
+  console.log(data.data.games, 'games')
   dispatch({ 
     type: 'SCHEDULE_FILTERS', 
     payload: {seasons: data.data.seasons, divisions: data.data.divisions, teams: data.data.teams}

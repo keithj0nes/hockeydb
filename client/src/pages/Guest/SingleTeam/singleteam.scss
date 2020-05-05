@@ -1,0 +1,144 @@
+@import '../../../assets/styles/variables';
+
+// add this to app.scss and convert files to use this structure
+.content-container {
+    padding: 30px 10px 50px;
+
+    .white-bg {
+        background: white;
+        // background: lightgreen;
+        padding: 20px;
+    }
+}
+
+.single-team-container {
+    // background: yellow;
+    // background: white;
+    // padding: 20px 10px;
+    padding: 30px 10px 50px;
+
+    // .white-bg {
+    //     background: white;
+    //     width: 100%;
+    //     padding: 20px
+    // }
+}
+
+.single-team-info {
+    width: 100%;
+    // background: pink;
+    display: flex;
+    // justify-content: space-between;
+
+    // &
+
+    .single-team-logo {
+        display: flex;
+        align-items: center;
+        padding-right: 10px;
+
+        .actual-image {
+            height: 100px;
+            width: 100px;
+            background: $heading_color;
+            // background: $highlite_color;
+        }
+    }
+
+    .single-team-info {
+        // style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+    }
+}
+
+.single-team-record {
+    // background: teal;
+    // display: flex;
+    // align-items: center;
+    padding-top: 20px;
+
+    table {
+        font-family: $main_font;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    tr:first-child {
+        border-bottom: 1px solid gray;
+        // padding: 10px 0;
+    }
+
+    th {
+        color: gray;
+        // padding: 0 20px;
+        // background: seashell;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    td {
+        font-weight: bold;
+        // padding: 0 20px;
+        // background: greenyellow;
+        font-size: 18px;
+    }
+}
+
+
+.single-team-tabs {
+    // background: yellow;
+    input {
+        display: none;
+
+        &:checked + label {
+            // color: #555;
+            color: $heading_color;
+            // background: rgb(205, 215, 226);
+            background: $white_color;
+            // background: lightgreen;
+            border: none;
+        }
+    }
+
+    label {
+        display: inline-block;
+        // margin: 0 10px 0 0;
+        // padding: 15px 24px;
+        padding: 10px 12px;
+        // font-weight: 600;
+        font-size: 14px;
+        text-align: center;
+        text-transform: uppercase;
+        // color: #000;
+        color: $highlite_color;
+        // background:#FFF;
+        border: none;
+        font-family: $heading_font;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+
+
+        &:hover {
+            color: #888;
+            cursor: pointer;
+          }
+      }
+
+}
+
+@media only screen and (min-width: 768px){
+
+    .single-team-content {
+        // background: gray;
+        display: flex;
+    }
+
+    .single-team-record {
+        table {
+            min-width: 360px;
+        }
+    }
+}
