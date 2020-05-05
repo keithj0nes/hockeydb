@@ -137,7 +137,7 @@ app.get(`/api/news/:id`, news.getNewsById)
 
 // Games
 app.get(`/api/games`, games.getGames);
-// app.get(`/api/games/:id`, games.getGamesById);
+app.get(`/api/games/:id`, games.getGameById);
 
 // Teams
 app.get(`/api/teams/`, teams.getAllTeams);
