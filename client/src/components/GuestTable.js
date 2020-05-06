@@ -2,15 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
 
-const GuestTable = ({ data, sections, minWidth, tableType }) => {
+const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title }) => {
 
     const isGame = tableType === 'games';
 
     const sectionKeys = Object.keys(sections);
     return (
-        <div className="ot-container" style={{padding: '20px 0 40px 6px'}}>
-            <div className="ot-table" style={{minWidth, paddingRight: 6}}>
-                
+        // <div className="ot-container" style={{padding: '20px 0 40px 6px'}}>
+        //     <div className="ot-table" style={{minWidth, paddingRight: 6}}>
+        <div className="ot-container" style={{width: containerWidth}}>
+
+            {title && ( <h3>{title}</h3> )}
+            <div className="ot-table" style={{minWidth}}>
                 <div className="ot-row-header">
                     {sectionKeys.map(sk => {
                         return (

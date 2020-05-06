@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import GuestTable from '../../../components/GuestTable';
 import './singleteam.scss';
 
@@ -7,33 +6,21 @@ const SingleTeam = (props) => {
     // console.log(props, 'PROPS IN SINGLE TEAM')
 
     const [ tabSelected, setTabSelected ] = useState('home');
-    // let name;
-    // if(props.location.state) {
-    //     name = props.location.state.name;
-    // }
+    let name;
+    if(props.location.state) {
+        name = props.location.state.name;
+    }
 
     const renderTabComponent = () => {
         if(tabSelected === 'home') {
-            return ( 
-                <GuestTable 
-                    data={recentGames}
-                    // sections={{ 'name': 'two', 'type': 'one' }}
-                    // minWidth={550}
-
-                    tableType="games"
-                    minWidth={800}
-                    sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
-                />
-            )
+            return ( <HomeComponent />)
         } else if(tabSelected === 'schedule') {
-            return ( <p> Rendering schedule Screen </p>)
+            return ( <ScheduleComponent /> )
         } else if(tabSelected === 'roster') {
-            return ( <p> Rendering Roster Screen </p>)
+            return ( <RosterComponent />)
         } 
     }
     return (
-        // <div>Single Team Component - {name || 'team loading'}</div>
-
         <>
             <div className="content-container">
                 <div className="white-bg" style={{marginBottom: 20}}>
@@ -44,7 +31,7 @@ const SingleTeam = (props) => {
                                 <div className="actual-image"></div>
                             </div>
                             <div className="single-team-info">
-                                <h2>Ice Cats</h2>
+                                <h2>{name || 'Ice Cats'}</h2>
                                 <h3>Division 2</h3>
                                 <h5>Team Colors: Light Blue</h5>
                             </div>
@@ -91,9 +78,9 @@ const SingleTeam = (props) => {
                     <label htmlFor="roster">Roster & Stats</label>
                 </div>
 
-                <div className="white-bg">
+                {/* <div className="white-bg"> */}
                     {renderTabComponent()}
-                </div>
+                {/* </div> */}
 
             </div>
 
@@ -103,6 +90,64 @@ const SingleTeam = (props) => {
 }
 
 export default SingleTeam;
+
+
+const HomeComponent = () => {
+    return (
+        <>
+            <div className="split-50">
+
+                <GuestTable 
+                    title={'Team Leaders'}
+                    data={teamLeaders}
+                    minWidth={'100%'}
+                    containerWidth={'100%'}
+                    sections={{'category': 'three','player': 'five', 'points': 'one'}} 
+                />
+
+                <GuestTable 
+                    title={'Team Standings'}
+                    data={teamStandings}
+                    minWidth={'100%'}
+                    containerWidth={'100%'}
+                    sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
+                />
+
+            </div>
+
+            <GuestTable 
+                title={'Recent Games'}
+                data={recentGames}
+                tableType="games"
+                minWidth={800}
+                sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+            />
+        </>
+    )
+}
+
+const ScheduleComponent = () => {
+    return (
+        <GuestTable 
+            title={'Schedule'}
+            data={recentGames}
+            tableType="games"
+            minWidth={800}
+            sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+        />
+    )
+}
+
+const RosterComponent = () => {
+    return (
+        <GuestTable 
+            title={'Player Stats'}
+            data={playerStats}
+            minWidth={800}
+            sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}} 
+        />
+    )
+}
 
 const recentGames = [
     {
@@ -132,7 +177,7 @@ const recentGames = [
         home_score: 2,
         home_team: "hack wirelesss",
         home_team_id: 44,
-        id: 44,
+        id: 49,
         location_id: 6,
         location_name: "The Coliseum",
         season_name: "Summer 2016",
@@ -149,7 +194,7 @@ const recentGames = [
         home_score: 2,
         home_team: "synthesize onlines",
         home_team_id: 27,
-        id: 45,
+        id: 55,
         location_id: 5,
         location_name: "Center Ice Arena",
         season_name: "Summer 2016",
@@ -157,3 +202,37 @@ const recentGames = [
         start_time: "3:00 AM",
     },
 ]
+
+const teamLeaders = [
+    {category: 'Points', player: 'Tanner Seramur', points: 26},
+    {category: 'Goals', player: 'Adrian Kenepah', points: 25},
+    {category: 'Assists', player: 'Jerry Johnson', points: 22},
+    {category: 'Penalities In Minutes', player: 'Adam Kessler', points: 159},
+    {category: 'Wins', player: 'Roberto Luongo', points: 0},
+]
+
+const teamStandings = [
+    {rank: 1, team: 'Benchwarmers', games_played: 19, points: 26},
+    {rank: 2, team: 'Grocery Stick', games_played: 20, points: 26},
+    {rank: 3, team: 'Puck Bunnies', games_played: 19, points: 24},
+    {rank: 4, team: 'Gretzky Fanboys', games_played: 19, points: 22},
+    {rank: 5, team: 'The Other Guys', games_played: 20, points: 20},
+]
+
+
+const playerStats = [
+    {number: 25, name: 'Tanner Seramur', games_played: 5, goals: 12, assists: 14, points: 26, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 22, name: 'Adrian Kenepah', games_played: 4, goals: 25, assists: 0, points: 25, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 18, name: 'Jerry Johnson', games_played: 4, goals: 2, assists: 22, points: 24, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 7, name: 'John Singmore', games_played: 5, goals: 2, assists: 2, points: 4, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 23, name: 'Lee Spikman', games_played: 4, goals: 1, assists: 0, points: 1, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 15, name: 'Ian Grute', games_played: 5, goals: 0, assists: 3, points: 3, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 3, name: 'Glen Brooks', games_played: 5, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 30, name: 'Patrick Fedora', games_played: 5, goals: 6, assists: 2, points: 8, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    // {number: 30, name: 'Patrick Fedora', gp: 5, g: 6, a: 2, p: 8, pim: 0, gwg: 0, ppg: 0, shg: 0, gpg: 0},
+]
+
+
+// const goalieStats = [
+
+// ]
