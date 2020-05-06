@@ -124,10 +124,15 @@
         &:hover {
             color: #888;
             cursor: pointer;
-          }
-      }
-
+        }
+    }
 }
+
+.split-50 {
+    background: pink;
+}
+
+// style={{display: 'flex', background: 'pink', justifyContent: 'space-between'}}
 
 @media only screen and (min-width: 768px){
 
@@ -140,5 +145,11 @@
         table {
             min-width: 360px;
         }
+    }
+
+    .split-50 {
+        display: flex;
+        background: yellow;
+        justify-content: space-between;
     }
 }
