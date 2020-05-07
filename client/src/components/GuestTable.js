@@ -1,11 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
 
 const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title }) => {
 
     const isGame = tableType === 'games';
-
     const sectionKeys = Object.keys(sections);
     return (
         // <div className="ot-container" style={{padding: '20px 0 40px 6px'}}>
@@ -16,15 +16,23 @@ const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title
             <div className="ot-table" style={{minWidth}}>
                 <div className="ot-row-header">
                     {sectionKeys.map(sk => {
+
+                        const isObj = typeof sections[sk] === 'object';
+                        // console.log(sk, 'sk!')
+                        // console.log(`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`)
+                        // console.log(isObj,' isObj')
+
                         return (
-                            <p key={sk} className={`ot-header ot-flex-${sections[sk]}`}>{sk.split('_')[0]}</p>
+                            // <p key={sk} className={`ot-header ot-flex-${sections[sk]}`}>{sk.split('_')[0]}</p>
+                            <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>
+
                         )
                     })}
 
                     {isGame && (
                         <>
-                            <p className="ot-header ot-flex-one">Score</p>
-                            <p className="ot-header ot-flex-one">Scoresheet</p>
+                            <p title={'score'} className="ot-header ot-flex-one">Score</p>
+                            <p title={'scoresheet'} className="ot-header ot-flex-one">Scoresheet</p>
                         </>
                     )}
                 </div>
@@ -35,9 +43,24 @@ const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title
                         <div className="ot-row" key={d.id}>
                     
                                 {sectionKeys.map(section => {
-                                    return (
-                                        <p key={section} className={`ot-cell ot-flex-${sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-                                    )
+
+                                    const isObj = typeof sections[section] === 'object';
+                                    const sectionLink = sections[section].link;
+
+                                    // return (
+                                    //     <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+                                    // )
+
+                                    if(isObj && sectionLink) {
+                                        // could provide link state if query for previous season is provided
+                                        const split = sectionLink.split('/');
+                                        const newLink = sectionLink.replace(/[^\/]+$/,d[split[split.length - 1]]);
+                                        return <Link to={newLink} key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]}</Link>
+                                    } else {
+                                        return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+
+                                    }
+
                                 })}
 
                                 {isGame && (
@@ -68,8 +91,13 @@ GuestTable.defaultProps = {
 GuestTable.propTypes = {
     data: PropTypes.array.isRequired,
     sections: PropTypes.object.isRequired,  // shape = [{ columnName (same key you want from data object): size (one - five)}]
-    minWidth: PropTypes.number,             // number is the min width of the table
-    tableType: PropTypes.string
+                                            // shape = if key is an object, must use format { columnName : { as: string, flex: size (one -five), link: string (/teams/key_name)}}
+    minWidth: PropTypes.oneOfType([
+        PropTypes.string,                   // string is the min width of the table in px or %
+        PropTypes.number                    // number is the min width of the table in px
+    ]),             
+    tableType: PropTypes.string,
+    uniqueKey: PropTypes.string             // key to be used in mapping ELSE use .id
 }
 
 export default GuestTable;
