@@ -102,7 +102,13 @@ const HomeComponent = () => {
                     data={teamLeaders}
                     minWidth={'100%'}
                     containerWidth={'100%'}
-                    sections={{'category': 'three','player': 'five', 'points': 'one'}} 
+                    // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
+                    sections={{
+                        'category': { as: 'cat', flex: 'two' },
+                        'player': 'five', 
+                        'points':   { as: 'pts', flex: 'one' }
+                    }} 
+
                 />
 
                 <GuestTable 
@@ -110,7 +116,15 @@ const HomeComponent = () => {
                     data={teamStandings}
                     minWidth={'100%'}
                     containerWidth={'100%'}
-                    sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
+                    // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
+
+                    sections={{
+                        'rank': 'one',
+                        'team': 'five', 
+                        'games_played': { as: 'gp',  flex: 'one' }, 
+                        'points':       { as: 'pts', flex: 'one' }
+                    }} 
+
                 />
 
             </div>
@@ -120,7 +134,15 @@ const HomeComponent = () => {
                 data={recentGames}
                 tableType="games"
                 minWidth={800}
-                sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+                // sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+                sections={{
+                    'date': 'one',
+                    'start_time': 'one', 
+                    'location_name': 'two', 
+                    'home_team': { as: 'home', flex: 'two', link: '/teams/home_team_id' }, 
+                    'away_team': { as: 'away', flex: 'two', link: '/teams/away_team_id' } 
+                }} 
+
             />
         </>
     )
@@ -144,7 +166,21 @@ const RosterComponent = () => {
             title={'Player Stats'}
             data={playerStats}
             minWidth={800}
-            sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}} 
+            // sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}} 
+
+            sections={{
+                'number':               { as: '#',   flex: 'one' },
+                'name': 'five', 
+                'games_played':         { as: 'gp',  flex: 'one' }, 
+                'goals':                { as: 'g',   flex: 'one' }, 
+                'assists':              { as: 'a',   flex: 'one' }, 
+                'points':               { as: 'pts', flex: 'one' }, 
+                'penalties_in_minutes': { as: 'pim', flex: 'one' }, 
+                'game_winning_goals':   { as: 'gwg', flex: 'one' }, 
+                'power_play_goals':     { as: 'ppg', flex: 'one' }, 
+                'short_handed_goals':   { as: 'shg', flex: 'one' }, 
+                'goals_per_game':       { as: 'gpg', flex: 'one' }, 
+            }} 
         />
     )
 }
@@ -207,7 +243,7 @@ const teamLeaders = [
     {category: 'Points', player: 'Tanner Seramur', points: 26},
     {category: 'Goals', player: 'Adrian Kenepah', points: 25},
     {category: 'Assists', player: 'Jerry Johnson', points: 22},
-    {category: 'Penalities In Minutes', player: 'Adam Kessler', points: 159},
+    {category: 'PIMs', player: 'Adam Kessler', points: 159},
     {category: 'Wins', player: 'Roberto Luongo', points: 0},
 ]
 
