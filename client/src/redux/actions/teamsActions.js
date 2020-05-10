@@ -49,19 +49,41 @@ export const getTeams = (filter) => async (dispatch, getState) => {
 }
 
 
-export const getTeamById = teamId => async (dispatch, getState) => {
+export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
 
-  const team = await request(`/api/teams/${teamId}`, 'GET', {}, true)
+  // console.log(filter, 'filter!!')
 
-  console.log(team, 'TEAAAAMMM!!')
+  const team = await request(`/api/teams/${teamId}?${filter || ''}`, 'GET', {}, true)
+
+  // console.log(team, 'TEAAAAMMM!!')
   if (!team.data) return false;
 
-  console.log('payload: ', { ...team.data.team, schedule: team.data.schedule})
+  // console.log('payload: ', { team:team.data.team, schedule: team.data.schedule})
 
   dispatch({ 
     type: `teams/singleTeam/${GET_SUCCESS}`, 
-    payload: { ...team.data.team, schedule: team.data.schedule, recent: team.data.recent }
+    payload: { 
+      ...team.data.team, 
+      schedule: team.data.schedule, 
+      recent: team.data.recent,
+      record: team.data.record
+    }
   })
+
+  dispatch({
+    type: `seasons/${GET_SUCCESS}`,
+    payload: team.data.seasons
+  })
+
+
+  if(!filter) {
+    const activeSeason = team.data.seasons.find(season => season.is_active === true)
+    // console.log({season: activeSeason.id})
+    // return { season: activeSeason.id };
+    return activeSeason.id;
+  } else {
+    return filter.charAt(filter.length-1);
+  }
   
 
 }

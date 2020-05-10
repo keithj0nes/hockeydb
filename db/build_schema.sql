@@ -139,7 +139,14 @@ CREATE TABLE "team_season_division" (
   "id" SERIAL PRIMARY KEY,
   "team_id" INTEGER,           -- REFERENCES teams(id)
   "season_id" INTEGER,         -- REFERENCES seasons(id)
-  "division_id" INTEGER        -- REFERENCES divisions(id)
+  "division_id" INTEGER,       -- REFERENCES divisions(id)
+  "games_played" INTEGER,
+  "wins" INTEGER,
+  "losses" INTEGER,
+  "points" INTEGER,
+  "goals_for" INTEGER,
+  "goals_against" INTEGER,
+  "penalties_in_minutes" INTEGER
 );
 
 CREATE TABLE "game_season_division" (

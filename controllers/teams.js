@@ -39,6 +39,8 @@ const getTeamById = async (req, res) => {
   const { season, division } = req.query;
   let season_id;
 
+  console.log(req.query, "REQ DOT QUERY")
+
 
   const team = await db.teams.findOne({ id }).catch(err => console.log(err));
   if (!team) {
@@ -48,6 +50,25 @@ const getTeamById = async (req, res) => {
   // get schedule
   if(!season || season === 'undefined'){
     season_id = await db.seasons.findOne({is_active: true});
+  }
+
+  const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+
+  const recordQuery = `
+    select games_played, wins, losses, points, goals_for, goals_against, penalties_in_minutes from team_season_division where season_id = ${season || season_id.id} AND team_id = $1;
+  `;
+
+  let record = await db.query(recordQuery, [id]);
+
+  // console.log(record, 'RECORD!!!!!')
+  if(record.length === 0) {
+    record = [{ games_played: 0,
+      wins: 0,
+      losses: 0,
+      points: 0,
+      goals_for: 0,
+      goals_against: 0,
+      penalties_in_minutes: 0 }];
   }
 
   const recentQuery = `
@@ -69,7 +90,7 @@ const getTeamById = async (req, res) => {
 
   const recent = await db.query(recentQuery, [id]);
 
-console.log(recent, 'RECENT')
+// console.log(recent, 'RECENT')
   const scheduleQuery = `
     SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
     h.name AS home_team, h.id AS home_team_id,
@@ -89,9 +110,9 @@ console.log(recent, 'RECENT')
 
   const schedule = await db.query(scheduleQuery, [id]);
 
-  console.log(schedule, 'SCHEUDLE!!');
+  // console.log(schedule, 'SCHEUDLE!!');
 
-  res.status(200).send({ status: 200, data: {team, schedule: [], recent: []}, message: 'Retrieved Team' })
+  res.status(200).send({ status: 200, data: {team, schedule, recent, record: record[0], seasons}, message: 'Retrieved Team' })
 }
 
 module.exports = {

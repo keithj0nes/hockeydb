@@ -4,25 +4,67 @@ import { getTeamById } from '../../../redux/actions/teamsActions';
 import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';
-
+import { Select } from '../../../components/';
+import qs from 'query-string';
 import './singleteam.scss';
+
+
 
 const SingleTeam = (props) => {
     // console.log(props, 'PROPS IN SINGLE TEAM')
 
     const [ tabSelected, setTabSelected ] = useState('home');
+    const [ selectedSeason, setSelectedSeason ] = useState(null);
 
-
+    // component did mount
     useEffect(() => {
         // get team info
         console.log(props,' PROPS ON DIDMOUNT')
-        props.getTeamById(props.match.params.id);
+
+        if(props.location.search.length > 0) {
+            const [filters, filterString] = getQuery();
+            console.log({filters, filterString}, 'FILTERS')
+            props.getTeamById(props.match.params.id, filterString).then(res => {
+                console.log(res, 'RES!!')
+                setSelectedSeason(res)
+            });
+
+        } else {
+            props.getTeamById(props.match.params.id).then(res => {
+                console.log(res, 'RES!!')
+                setSelectedSeason(res)
+            });
+        }
+
+
         return () => console.log('use this unmount to clear the single team redux state')
     }, [])
 
     let name;
     if(props.location.state) {
         name = props.location.state.name;
+    }
+
+    const handleChange = e => {
+        console.log(e.target.name, e.target.value)
+        const { name, value } = e.target
+        setSelectedSeason(value);
+        const search = setQuery({[name]:value})
+        props.getTeamById(props.match.params.id, search)
+    }
+
+    const getQuery = (q) => {
+        if(!q) q = props.location.search.slice(1);
+        const parsed = qs.parse(q);
+        // console.log(parsed, 'getQuery');
+        return [parsed, q];
+    }
+
+    const setQuery = (q) => {
+        if(!q) return;
+        const search = qs.stringify(q);
+        props.history.push({search});
+        return search;
     }
 
     const renderTabComponent = () => {
@@ -38,6 +80,7 @@ const SingleTeam = (props) => {
             return ( <RosterComponent />)
         } 
     }
+
     return (
         <>
             <div className="content-container">
@@ -49,34 +92,48 @@ const SingleTeam = (props) => {
                                 <div className="actual-image"></div>
                             </div>
                             <div className="single-team-info">
-                                <h2>{name || 'Ice Cats'}</h2>
+                                <h2>{name || 'Default Name'}</h2>
                                 <h3>Division 2</h3>
                                 <h5>Team Colors: Light Blue</h5>
                             </div>
                         </div>
 
                         <div className="single-team-record">
+                            <Select 
+                                name='season'   
+                                title="Season"   
+                                listOfSelects={props.seasons}                                  
+                                onChange={handleChange}  
+                                defaultValue={selectedSeason || ''}   
+                                useKey="id" 
+                            />
+
+        <br/>
 
                             <h4>Team Record</h4>
                             <table>
                                 <tr>
-                                    <th title="Games Played">GP</th>
-                                    <th>W</th>
-                                    <th>L</th>
-                                    <th>PTS</th>
-                                    <th>GF</th>
-                                    <th>GA</th>
-                                    <th>PIM</th>
+                                    <th title="games played">GP</th>
+                                    <th title="wins">W</th>
+                                    <th title="losses">L</th>
+                                    <th title="points">PTS</th>
+                                    <th title="goals for">GF</th>
+                                    <th title="goals against">GA</th>
+                                    <th title="penalty minutes">PIM</th>
                                 </tr>
                                 <tr>
-                                    <td>20</td>
+                                    {/* <td>20</td>
                                     <td>8</td>
                                     <td>20</td>
                                     <td>16</td>
                                     <td>3.78</td>
                                     <td>7.78</td>
-                                    <td>326</td>
+                                    <td>326</td> */}
+
+                                    { Object.keys(props.record).map(rec => <td key={rec}>{props.record[rec] || 0}</td>)}
                                 </tr>
+
+                                
                             </table>
 
                         </div>
@@ -109,18 +166,33 @@ const SingleTeam = (props) => {
 
 const mapStateToProps = state => {
     console.log(state, 'STATE!')
-    return {}
+    return {
+        record: state.teams.singleTeam.record || {},
+        seasons: state.seasons.seasons
+    }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getTeamById: (id) => dispatch(getTeamById(id))
+        getTeamById: (id, filter) => dispatch(getTeamById(id, filter))
     }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleTeam);
 
-
+const seasons = [{
+    id: 1,
+    is_active: false,
+    name: "Fall 2016",
+},{
+    id: 2,
+    is_active: true,
+    name: "Summer 2016",
+},{
+    id: 3,
+    is_active: false,
+    name: "Spring 2020",
+}]
 // const HomeComponent = () => {
 //     return (
 //         <>
