@@ -5,6 +5,7 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
 const initialteamstate = {
     isLoading: true,
     teams: [],
+    singleTeam: {},
     //filter
     isVisible: false,
     
@@ -19,6 +20,9 @@ export const teams = (state = initialteamstate, { type, payload }) => {
     case `teams/${CREATE_SUCCESS}`:
         // return { ...state, isLoading: false, teams: [payload, ...state.teams]}
         return { ...state, isLoading: false, teams: [...state.teams, payload] }
+
+    case `teams/singleTeam/${GET_SUCCESS}`:
+        return { ...state, isLoading: false, singleTeam: { ...state.singleTeam, ...payload }}
     case `teams/${UPDATE_SUCCESS}`:
         const newteams = state.teams.map(item => {
             if(item.id === payload.id){

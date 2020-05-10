@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { getTeamById } from '../../../redux/actions/teamsActions';
 import GuestTable from '../../../components/GuestTable';
+import STSchedule from './STSchedule';
+import STHome from './STHome';
+
 import './singleteam.scss';
 
 const SingleTeam = (props) => {
     // console.log(props, 'PROPS IN SINGLE TEAM')
 
     const [ tabSelected, setTabSelected ] = useState('home');
+
+
+    useEffect(() => {
+        // get team info
+        console.log(props,' PROPS ON DIDMOUNT')
+        props.getTeamById(props.match.params.id);
+        return () => console.log('use this unmount to clear the single team redux state')
+    }, [])
+
     let name;
     if(props.location.state) {
         name = props.location.state.name;
@@ -13,9 +27,13 @@ const SingleTeam = (props) => {
 
     const renderTabComponent = () => {
         if(tabSelected === 'home') {
-            return ( <HomeComponent />)
+            // return ( <HomeComponent />)
+            return ( <STHome />)
+
         } else if(tabSelected === 'schedule') {
-            return ( <ScheduleComponent /> )
+            // return ( <ScheduleComponent /> )
+            return ( <STSchedule /> )
+
         } else if(tabSelected === 'roster') {
             return ( <RosterComponent />)
         } 
@@ -89,76 +107,87 @@ const SingleTeam = (props) => {
     )
 }
 
-export default SingleTeam;
-
-
-const HomeComponent = () => {
-    return (
-        <>
-            <div className="split-50">
-
-                <GuestTable 
-                    title={'Team Leaders'}
-                    data={teamLeaders}
-                    minWidth={'100%'}
-                    containerWidth={'100%'}
-                    // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
-                    sections={{
-                        'category': { as: 'cat', flex: 'two' },
-                        'player': 'five', 
-                        'points':   { as: 'pts', flex: 'one' }
-                    }} 
-
-                />
-
-                <GuestTable 
-                    title={'Team Standings'}
-                    data={teamStandings}
-                    minWidth={'100%'}
-                    containerWidth={'100%'}
-                    // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
-
-                    sections={{
-                        'rank': 'one',
-                        'team': 'five', 
-                        'games_played': { as: 'gp',  flex: 'one' }, 
-                        'points':       { as: 'pts', flex: 'one' }
-                    }} 
-
-                />
-
-            </div>
-
-            <GuestTable 
-                title={'Recent Games'}
-                data={recentGames}
-                tableType="games"
-                minWidth={800}
-                // sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
-                sections={{
-                    'date': 'one',
-                    'start_time': 'one', 
-                    'location_name': 'two', 
-                    'home_team': { as: 'home', flex: 'two', link: '/teams/home_team_id' }, 
-                    'away_team': { as: 'away', flex: 'two', link: '/teams/away_team_id' } 
-                }} 
-
-            />
-        </>
-    )
+const mapStateToProps = state => {
+    console.log(state, 'STATE!')
+    return {}
 }
 
-const ScheduleComponent = () => {
-    return (
-        <GuestTable 
-            title={'Schedule'}
-            data={recentGames}
-            tableType="games"
-            minWidth={800}
-            sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
-        />
-    )
+const mapDispatchToProps = dispatch => {
+    return {
+        getTeamById: (id) => dispatch(getTeamById(id))
+    }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(SingleTeam);
+
+
+// const HomeComponent = () => {
+//     return (
+//         <>
+//             <div className="split-50">
+
+//                 <GuestTable 
+//                     title={'Team Leaders'}
+//                     data={teamLeaders}
+//                     minWidth={'100%'}
+//                     containerWidth={'100%'}
+//                     // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
+//                     sections={{
+//                         'category': { as: 'cat', flex: 'two' },
+//                         'player': 'five', 
+//                         'points':   { as: 'pts', flex: 'one' }
+//                     }} 
+//                     uniqueKey='category'
+//                 />
+
+//                 <GuestTable 
+//                     title={'Team Standings'}
+//                     data={teamStandings}
+//                     minWidth={'100%'}
+//                     containerWidth={'100%'}
+//                     // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
+
+//                     sections={{
+//                         'rank': 'one',
+//                         'team': 'five', 
+//                         'games_played': { as: 'gp',  flex: 'one' }, 
+//                         'points':       { as: 'pts', flex: 'one' }
+//                     }} 
+//                     uniqueKey='rank'
+//                 />
+
+//             </div>
+
+//             <GuestTable 
+//                 title={'Recent Games'}
+//                 data={recentGames}
+//                 tableType="games"
+//                 minWidth={800}
+//                 // sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+//                 sections={{
+//                     'date': 'one',
+//                     'start_time': 'one', 
+//                     'location_name': 'two', 
+//                     'home_team': { as: 'home', flex: 'two', link: '/teams/home_team_id' }, 
+//                     'away_team': { as: 'away', flex: 'two', link: '/teams/away_team_id' } 
+//                 }} 
+//             />
+//         </>
+//     )
+// }
+
+// const ScheduleComponent = () => {
+//     console.log('mounting now!')
+//     return (
+//         <GuestTable 
+//             title={'Schedule'}
+//             data={recentGames}
+//             tableType="games"
+//             minWidth={800}
+//             sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+//         />
+//     )
+// }
 
 const RosterComponent = () => {
     return (
@@ -185,75 +214,75 @@ const RosterComponent = () => {
     )
 }
 
-const recentGames = [
-    {
-        away_score: 1,
-        away_team: "navigate virtuals",
-        away_team_id: 40,
-        date: "Fri, Apr 4",
-        division_name: "C1",
-        has_been_played: true,
-        home_score: 2,
-        home_team: "hack wirelesss",
-        home_team_id: 44,
-        id: 44,
-        location_id: 6,
-        location_name: "The Coliseum",
-        season_name: "Summer 2016",
-        start_date: "2020-04-24T09:15:01.130Z",
-        start_time: "5:15 AM"
-    },
-    {
-        away_score: 5,
-        away_team: "navigate virtuals",
-        away_team_id: 40,
-        date: "Fri, Apr 4",
-        division_name: "C1",
-        has_been_played: true,
-        home_score: 2,
-        home_team: "hack wirelesss",
-        home_team_id: 44,
-        id: 49,
-        location_id: 6,
-        location_name: "The Coliseum",
-        season_name: "Summer 2016",
-        start_date: "2020-04-24T22:30:00.000Z",
-        start_time: "6:30 PM"
-    },
-    {
-        away_score: 1,
-        away_team: "array arrays",
-        away_team_id: 20,
-        date: "Sat, Apr 4",
-        division_name: "A1",
-        has_been_played: false,
-        home_score: 2,
-        home_team: "synthesize onlines",
-        home_team_id: 27,
-        id: 55,
-        location_id: 5,
-        location_name: "Center Ice Arena",
-        season_name: "Summer 2016",
-        start_date: "2020-04-25T07:00:00.000Z",
-        start_time: "3:00 AM",
-    },
-]
+// const recentGames = [
+//     {
+//         away_score: 1,
+//         away_team: "navigate virtuals",
+//         away_team_id: 40,
+//         date: "Fri, Apr 4",
+//         division_name: "C1",
+//         has_been_played: true,
+//         home_score: 2,
+//         home_team: "hack wirelesss",
+//         home_team_id: 44,
+//         id: 44,
+//         location_id: 6,
+//         location_name: "The Coliseum",
+//         season_name: "Summer 2016",
+//         start_date: "2020-04-24T09:15:01.130Z",
+//         start_time: "5:15 AM"
+//     },
+//     {
+//         away_score: 5,
+//         away_team: "navigate virtuals",
+//         away_team_id: 40,
+//         date: "Fri, Apr 4",
+//         division_name: "C1",
+//         has_been_played: true,
+//         home_score: 2,
+//         home_team: "hack wirelesss",
+//         home_team_id: 44,
+//         id: 49,
+//         location_id: 6,
+//         location_name: "The Coliseum",
+//         season_name: "Summer 2016",
+//         start_date: "2020-04-24T22:30:00.000Z",
+//         start_time: "6:30 PM"
+//     },
+//     {
+//         away_score: 1,
+//         away_team: "array arrays",
+//         away_team_id: 20,
+//         date: "Sat, Apr 4",
+//         division_name: "A1",
+//         has_been_played: false,
+//         home_score: 2,
+//         home_team: "synthesize onlines",
+//         home_team_id: 27,
+//         id: 55,
+//         location_id: 5,
+//         location_name: "Center Ice Arena",
+//         season_name: "Summer 2016",
+//         start_date: "2020-04-25T07:00:00.000Z",
+//         start_time: "3:00 AM",
+//     },
+// ]
 
-const teamLeaders = [
-    {category: 'Points', player: 'Tanner Seramur', points: 26},
-    {category: 'Goals', player: 'Adrian Kenepah', points: 25},
-    {category: 'Assists', player: 'Jerry Johnson', points: 22},
-    {category: 'PIMs', player: 'Adam Kessler', points: 159},
-    {category: 'Wins', player: 'Roberto Luongo', points: 0},
-]
+// const teamLeaders = [
+//     {category: 'Points', player: 'Tanner Seramur', points: 26},
+//     {category: 'Goals', player: 'Adrian Kenepah', points: 25},
+//     {category: 'Assists', player: 'Jerry Johnson', points: 22},
+//     {category: 'PIMs', player: 'Adam Kessler', points: 159},
+//     {category: 'Wins', player: 'Roberto Luongo', points: 0},
+// ]
 
-const teamStandings = [
-    {rank: 1, team: 'Benchwarmers', games_played: 19, points: 26},
-    {rank: 2, team: 'Grocery Stick', games_played: 20, points: 26},
-    {rank: 3, team: 'Puck Bunnies', games_played: 19, points: 24},
-    {rank: 4, team: 'Gretzky Fanboys', games_played: 19, points: 22},
-    {rank: 5, team: 'The Other Guys', games_played: 20, points: 20},
-]
+// const teamStandings = [
+//     {rank: 1, team: 'Benchwarmers', games_played: 19, points: 26},
+//     {rank: 2, team: 'Grocery Stick', games_played: 20, points: 26},
+//     {rank: 3, team: 'Puck Bunnies', games_played: 19, points: 24},
+//     {rank: 4, team: 'Gretzky Fanboys', games_played: 19, points: 22},
+//     {rank: 5, team: 'The Other Guys', games_played: 20, points: 20},
+// ]
 
 
 const playerStats = [

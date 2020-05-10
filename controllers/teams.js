@@ -36,11 +36,62 @@ const getAllTeams = async (req, res) => {
 const getTeamById = async (req, res) => {
   const db = app.get('db');
   const { id } = req.params;
-  const data = await db.teams.findOne({ id }).catch(err => console.log(err));
-  if (!data) {
+  const { season, division } = req.query;
+  let season_id;
+
+
+  const team = await db.teams.findOne({ id }).catch(err => console.log(err));
+  if (!team) {
     return res.status(404).send({ status: 404, data: [], message: 'Team cannot be found' })
   }
-  res.status(200).send({ status: 200, data, message: 'Retrieved Team' })
+
+  // get schedule
+  if(!season || season === 'undefined'){
+    season_id = await db.seasons.findOne({is_active: true});
+  }
+
+  const recentQuery = `
+    SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
+    h.name AS home_team, h.id AS home_team_id,
+    a.name AS away_team, a.id AS away_team_id,
+    locations.name AS location_name, locations.id AS location_id,
+    seasons.name AS season_name, divisions.name AS division_name 
+    FROM game_season_division gsd 
+    JOIN games g ON g.id = gsd.game_id
+    JOIN teams h ON h.id = g.home_team
+    JOIN teams a ON a.id = g.away_team
+    JOIN seasons ON seasons.id = gsd.season_id
+    JOIN divisions ON divisions.id = gsd.division_id
+    JOIN locations ON locations.id = g.location_id
+    WHERE gsd.season_id = ${season || season_id.id} AND (h.id = $1 OR a.id = $1) AND g.has_been_played = true
+    ORDER BY g.start_date desc limit 5;
+  `;
+
+  const recent = await db.query(recentQuery, [id]);
+
+console.log(recent, 'RECENT')
+  const scheduleQuery = `
+    SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
+    h.name AS home_team, h.id AS home_team_id,
+    a.name AS away_team, a.id AS away_team_id,
+    locations.name AS location_name, locations.id AS location_id,
+    seasons.name AS season_name, divisions.name AS division_name 
+    FROM game_season_division gsd 
+    JOIN games g ON g.id = gsd.game_id
+    JOIN teams h ON h.id = g.home_team
+    JOIN teams a ON a.id = g.away_team
+    JOIN seasons ON seasons.id = gsd.season_id
+    JOIN divisions ON divisions.id = gsd.division_id
+    JOIN locations ON locations.id = g.location_id
+    WHERE gsd.season_id = ${season || season_id.id} AND (h.id = $1 OR a.id = $1) 
+    ORDER BY g.start_date;
+  `;
+
+  const schedule = await db.query(scheduleQuery, [id]);
+
+  console.log(schedule, 'SCHEUDLE!!');
+
+  res.status(200).send({ status: 200, data: {team, schedule: [], recent: []}, message: 'Retrieved Team' })
 }
 
 module.exports = {
