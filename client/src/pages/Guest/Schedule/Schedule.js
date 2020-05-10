@@ -27,7 +27,7 @@ class Schedule extends Component {
                        return res && this.setState({filters}) //this adds filters to default values
                 });
             }
-            return getGames('page=1').then(res => this.setState({filters: res}))
+            return getGames('page=1').then(res => this.setState({filters: this.state.filters, ...res}))
         } else {
             const [filters] = this.getQuery();
             this.setState({filters})

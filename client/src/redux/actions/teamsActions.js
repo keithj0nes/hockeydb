@@ -48,6 +48,25 @@ export const getTeams = (filter) => async (dispatch, getState) => {
   return true;
 }
 
+
+export const getTeamById = teamId => async (dispatch, getState) => {
+
+  const team = await request(`/api/teams/${teamId}`, 'GET', {}, true)
+
+  console.log(team, 'TEAAAAMMM!!')
+  if (!team.data) return false;
+
+  console.log('payload: ', { ...team.data.team, schedule: team.data.schedule})
+
+  dispatch({ 
+    type: `teams/singleTeam/${GET_SUCCESS}`, 
+    payload: { ...team.data.team, schedule: team.data.schedule, recent: team.data.recent }
+  })
+  
+
+}
+
+
 export const createTeam = teamData => async (dispatch, getState) => {
   const { user } = getState();
 
