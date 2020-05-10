@@ -45,7 +45,14 @@ const STHome = ({recent}) => {
                 data={recent}
                 tableType="games"
                 minWidth={800}
-                sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+                // sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+                sections={{
+                    'date': 'one',
+                    'start_time': 'one', 
+                    'location_name': 'two', 
+                    'home_team': { as: 'home', flex: 'two', link: '/teams/home_team_id' }, 
+                    'away_team': { as: 'away', flex: 'two', link: '/teams/away_team_id' } 
+                }} 
                 emptyTableText="No recent games have been played"
             />
         </>
