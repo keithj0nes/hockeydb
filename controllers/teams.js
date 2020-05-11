@@ -36,23 +36,45 @@ const getAllTeams = async (req, res) => {
 const getTeamById = async (req, res) => {
   const db = app.get('db');
   const { id } = req.params;
-  const { season, division } = req.query;
+  const { season } = req.query;
   let season_id;
 
   console.log(req.query, "REQ DOT QUERY")
 
 
-  const team = await db.teams.findOne({ id }).catch(err => console.log(err));
-  if (!team) {
+  const confirmTeam = await db.teams.findOne({ id }).catch(err => console.log(err));
+  if (!confirmTeam) {
     return res.status(404).send({ status: 404, data: [], message: 'Team cannot be found' })
   }
+
 
   // get schedule
   if(!season || season === 'undefined'){
     season_id = await db.seasons.findOne({is_active: true});
   }
 
+  const teamQuery = `
+    select t.id, t.name, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
+    join teams t on t.id = tsd.team_id
+    join divisions d on d.id = tsd.division_id
+    WHERE tsd.season_id = ${season || season_id.id} AND tsd.team_id = $1
+
+  `;
+
+  const team = await db.query(teamQuery, [id]);
+
+
+  // this seasons returns ALL seasons for team page
   const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+
+  // *** this seasons returns ONLY seasons associated with the team - some teams dont play every season ***
+  // const seasonsQuery = `
+  //   select s.id, s.name, s.is_active  from team_season_division tsd
+  //   join seasons s on s.id = tsd.season_id
+  //   where tsd.team_id = $1;
+  // `;
+  // const seasons = await db.query(seasonsQuery, [id]);
+
 
   const recordQuery = `
     select games_played, wins, losses, points, goals_for, goals_against, penalties_in_minutes from team_season_division where season_id = ${season || season_id.id} AND team_id = $1;
@@ -112,7 +134,7 @@ const getTeamById = async (req, res) => {
 
   // console.log(schedule, 'SCHEUDLE!!');
 
-  res.status(200).send({ status: 200, data: {team, schedule, recent, record: record[0], seasons}, message: 'Retrieved Team' })
+  res.status(200).send({ status: 200, data: {team: team[0], schedule, recent, record: record[0], seasons}, message: 'Retrieved Team' })
 }
 
 module.exports = {

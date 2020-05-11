@@ -50,8 +50,8 @@ const STHome = ({recent}) => {
                     'date': 'one',
                     'start_time': 'one', 
                     'location_name': 'two', 
-                    'home_team': { as: 'home', flex: 'two', link: '/teams/home_team_id' }, 
-                    'away_team': { as: 'away', flex: 'two', link: '/teams/away_team_id' } 
+                    'home_team': { as: 'home', flex: 'two', link: { to:'/teams', key: 'home_team_id' }}, 
+                    'away_team': { as: 'away', flex: 'two', link: { to:'/teams', key: 'away_team_id' }}
                 }} 
                 emptyTableText="No recent games have been played"
             />

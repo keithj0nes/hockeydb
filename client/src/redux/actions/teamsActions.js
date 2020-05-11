@@ -63,7 +63,8 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
   dispatch({ 
     type: `teams/singleTeam/${GET_SUCCESS}`, 
     payload: { 
-      ...team.data.team, 
+      // ...team.data.team, 
+      team: team.data.team,
       schedule: team.data.schedule, 
       recent: team.data.recent,
       record: team.data.record

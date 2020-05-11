@@ -16,7 +16,7 @@ const SingleTeam = (props) => {
     const [ tabSelected, setTabSelected ] = useState('home');
     const [ selectedSeason, setSelectedSeason ] = useState(null);
 
-    // component did mount
+    // component did update on pathname change (will fire when going to new team route)
     useEffect(() => {
         // get team info
         console.log(props,' PROPS ON DIDMOUNT')
@@ -36,14 +36,8 @@ const SingleTeam = (props) => {
             });
         }
 
-
         return () => console.log('use this unmount to clear the single team redux state')
-    }, [])
-
-    let name;
-    if(props.location.state) {
-        name = props.location.state.name;
-    }
+    }, [props.location.pathname])
 
     const handleChange = e => {
         console.log(e.target.name, e.target.value)
@@ -92,9 +86,12 @@ const SingleTeam = (props) => {
                                 <div className="actual-image"></div>
                             </div>
                             <div className="single-team-info">
-                                <h2>{name || 'Default Name'}</h2>
+                                {/* <h2>{name || 'Default Name'}</h2>
                                 <h3>Division 2</h3>
-                                <h5>Team Colors: Light Blue</h5>
+                                <h5>Team Colors: Light Blue</h5> */}
+                                <h2>{props.team.name || 'Default Name'}</h2>
+                                <h3>Division: {props.team.division_name}</h3>
+                                <h5>Team Colors: {props.team.colors}</h5>
                             </div>
                         </div>
 
@@ -168,7 +165,8 @@ const mapStateToProps = state => {
     console.log(state, 'STATE!')
     return {
         record: state.teams.singleTeam.record || {},
-        seasons: state.seasons.seasons
+        team: state.teams.singleTeam.team || {},
+        seasons: state.seasons.seasons,
     }
 }
 
@@ -268,7 +266,7 @@ const RosterComponent = () => {
             data={playerStats}
             minWidth={800}
             // sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}} 
-
+            uniqueKey={'number'}
             sections={{
                 'number':               { as: '#',   flex: 'one' },
                 'name': 'five', 
@@ -361,11 +359,11 @@ const playerStats = [
     {number: 25, name: 'Tanner Seramur', games_played: 5, goals: 12, assists: 14, points: 26, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
     {number: 22, name: 'Adrian Kenepah', games_played: 4, goals: 25, assists: 0, points: 25, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
     {number: 18, name: 'Jerry Johnson', games_played: 4, goals: 2, assists: 22, points: 24, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 7, name: 'John Singmore', games_played: 5, goals: 2, assists: 2, points: 4, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 23, name: 'Lee Spikman', games_played: 4, goals: 1, assists: 0, points: 1, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 15, name: 'Ian Grute', games_played: 5, goals: 0, assists: 3, points: 3, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 3, name: 'Glen Brooks', games_played: 5, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
     {number: 30, name: 'Patrick Fedora', games_played: 5, goals: 6, assists: 2, points: 8, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 7, name: 'John Singmore', games_played: 5, goals: 2, assists: 2, points: 4, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 15, name: 'Ian Grute', games_played: 5, goals: 0, assists: 3, points: 3, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 23, name: 'Lee Spikman', games_played: 4, goals: 1, assists: 0, points: 1, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    {number: 3, name: 'Glen Brooks', games_played: 5, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
     // {number: 30, name: 'Patrick Fedora', gp: 5, g: 6, a: 2, p: 8, pim: 0, gwg: 0, ppg: 0, shg: 0, gpg: 0},
 ]
 
