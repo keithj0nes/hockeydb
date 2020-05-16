@@ -1,0 +1,18 @@
+
+.teams-container {
+    background: blue;
+    display: flex;
+    flex-wrap: wrap;
+    // justify-content: center;
+
+    .division-container {
+        background: pink;
+        // width: 100%;
+        min-width: 200px;
+        margin-right: 40px;
+
+        h2 { 
+            padding: 0;
+        }
+    }
+}

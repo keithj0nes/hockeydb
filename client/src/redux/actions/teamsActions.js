@@ -165,3 +165,19 @@ export const deleteTeam = (id, season) => async (dispatch, getState) => {
   })
   return dispatch(getTeams(season && `season=${season.season_name}`));
 }
+
+
+
+export const getTeamsPageFilters = (filter) => async (dispatch) => {
+
+  console.log(filter, 'FITLER')
+
+  const data = await request(`/api/misc/teams_filters?${filter || ''}`, 'GET', {}, true);
+
+  console.log(data, 'DATAAAAA ON GET FILTERS')
+
+  dispatch({ 
+    type: 'SCHEDULE_FILTERS', 
+    payload: { seasons: data.data.seasons, allTeams: data.data.all_teams }
+  })
+}

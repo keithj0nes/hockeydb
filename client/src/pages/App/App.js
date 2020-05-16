@@ -9,7 +9,7 @@ import Login from '../../components/Login';
 import Players from '../Guest/Players/Players';
 import Games from '../Guest/Games/Games';
 import Schedule from '../Guest/Schedule/Schedule';
-
+import Teams from '../Guest/Teams/Teams';
 import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
 
@@ -43,6 +43,7 @@ class App extends Component {
           <div className="site-container">
             <Route exact path="/"       component={Home} />
             <Route path='/schedule'     component={Schedule} />
+            <Route path='/teams'        component={Teams} exact />
             <Route path='/teams/:id'    component={SingleTeam} />
             <Route path='/boxscore/:id' component={Boxscore} />
             <Route path='/login'        component={Login} />
