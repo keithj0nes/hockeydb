@@ -1,7 +1,6 @@
 import { request } from './middleware';
 import { GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-
-
+import { history } from '../../helpers';
 
 
 export const getTeams = (filter) => async (dispatch, getState) => {

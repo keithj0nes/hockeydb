@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { toggleFilter } from '../redux/actions/misc';
-import qs from 'query-string';
+import { setQuery } from '../helpers';
+// import qs from 'query-string';
 
 
 class Filter extends Component {
@@ -30,7 +31,7 @@ class Filter extends Component {
                 delete filters['division'];
             }
 
-            const search = qs.stringify(filters);
+            const search = setQuery(filters);
             // console.log(search,' FILTERS!')
 
             // console.log(search.replace('%20', '_'))

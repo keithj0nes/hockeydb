@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import { Router, Route, Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginFromCookie } from '../../redux/actions/auth';
-
+import { history } from '../../helpers';
 import Home from '../Guest/Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
 import Login from '../../components/Login';
@@ -36,7 +36,7 @@ class App extends Component {
 
     // console.log('redering')
     return (
-      <Router>
+      <Router history={history}>
         {/* <Routes /> */}
         <div className="site-body">
           <Header />

@@ -5,7 +5,8 @@ import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';
 import { Select } from '../../../components/';
-import qs from 'query-string';
+import { getQuery, setQuery } from '../../../helpers';
+
 import './singleteam.scss';
 
 
@@ -45,20 +46,6 @@ const SingleTeam = (props) => {
         setSelectedSeason(value);
         const search = setQuery({[name]:value})
         props.getTeamById(props.match.params.id, search)
-    }
-
-    const getQuery = (q) => {
-        if(!q) q = props.location.search.slice(1);
-        const parsed = qs.parse(q);
-        // console.log(parsed, 'getQuery');
-        return [parsed, q];
-    }
-
-    const setQuery = (q) => {
-        if(!q) return;
-        const search = qs.stringify(q);
-        props.history.push({search});
-        return search;
     }
 
     const renderTabComponent = () => {
