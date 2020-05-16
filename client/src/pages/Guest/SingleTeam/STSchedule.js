@@ -19,7 +19,14 @@ const STSchedule = ({schedule}) => {
             data={schedule}
             tableType="games"
             minWidth={800}
-            sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+            // sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
+            sections={{
+                'date': 'one',
+                'start_time': 'one', 
+                'location_name': 'two', 
+                'home_team': { as: 'home', flex: 'two', link: { to:'/teams', key: 'home_team_id' }}, 
+                'away_team': { as: 'away', flex: 'two', link: { to:'/teams', key: 'away_team_id' }}
+            }} 
             emptyTableText="Schedule is not complete"
         />
     )

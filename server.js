@@ -33,6 +33,8 @@ const games = require('./controllers/games');
 const locations = require('./controllers/locations');
 const seasons = require('./controllers/seasons');
 const divisions = require('./controllers/divisions');
+const misc = require('./controllers/misc');
+
 
 
 //Make sure to create a local postgreSQL db called hockeydb
@@ -168,6 +170,9 @@ app.get(`/api/locations`, locations.getLocations)
 app.get(`/api/divisions/`, divisions.getAllDivisions);          // Postman Docs
 // app.get(`/api/divisions/:season_id`, divisions.getAllDivisions);
 // app.get(`/api/divisions/:season_id`, divisions.getDivisionById);
+
+// Misc
+app.get('/api/misc/teams_filters', misc.getTeamsPageFilters);
 
 
 // ⭐ ️ ADMIN  ⭐️
