@@ -6,7 +6,7 @@ const initialDivisionState = {
     selectedSeasonName: '',
     //filter
     isVisible: false,
-  };
+};
   
 export const divisions = (state = initialDivisionState, { type, payload }) => {
     switch (type) {

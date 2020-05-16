@@ -68,7 +68,7 @@ class Dashboard extends Component {
 
                             <div className="dashboard-header-img" onClick={this.toggleShowProfile}></div>
 
-                                {/* profile slide down */}
+                            {/* profile slide down */}
 
                             <div className={`dashboard-settings-container ${this.state.showProfile && 'slide-down'}`}>
 

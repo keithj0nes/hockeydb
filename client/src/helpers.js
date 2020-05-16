@@ -1,21 +1,21 @@
 //helper functions
-
+import { createBrowserHistory } from "history";
+import qs from 'query-string';
+export const history = createBrowserHistory();
 
 //queries
 
-export const getParams = location => {
-    const searchParams = new URLSearchParams(location.search);
-    return  {
-        query: searchParams.get("query") || ""
+export const getQuery = (q) => {
+    if(!q) q = history.location.search.slice(1);
+    const parsed = qs.parse(q);
+    return [parsed, q];
+}
+
+export const setQuery = (q, noPush) => {
+    if(!q) return;
+    const search = qs.stringify(q);
+    if(!noPush) {
+        history.push({search});
     }
+    return search;
 }
-
-export const setParams = search => {
-    const searchParams = new URLSearchParams();
-    console.log(search, 'SEARCH PARAMERTR')
-    console.log(searchParams, 'search params in set')
-    // searchParams.set()
-    // return searchParams.toString();
-}
-
-export const slideTime = 500;

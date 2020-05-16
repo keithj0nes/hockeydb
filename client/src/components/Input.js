@@ -5,7 +5,7 @@ export const Input = ({name, label, type = 'text', disabled, onChange}) => {
 
     return (
         <div className="custom-input">
-        {/* <div style={{position: 'relative'}}> */}
+            {/* <div style={{position: 'relative'}}> */}
             <input id={name} type={type} placeholder='something' disabled={disabled} onChange={onChange}/>
             <label htmlFor={name}>{label}</label>
         </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import qs from 'query-string';
 import { getTeamsPageFilters } from '../../../redux/actions/teamsActions';
 import { Select } from '../../../components/';
+import { getQuery, setQuery } from '../../../helpers';
 import './teams.scss';
 
 const Teams = (props) => {
@@ -14,7 +14,7 @@ const Teams = (props) => {
     useEffect(() => {
 
         if(props.location.search.length > 0) {
-            const [filters, filterString] = getQuery();
+            const [ filters, filterString ] = getQuery();
             // get the teams list here by passing in the filterString
             setFilters(filters)
             props.getTeamsPageFilters(filterString)
@@ -22,9 +22,9 @@ const Teams = (props) => {
         } else {
             // if theres no seasons or allTeams, get the filters
             const { seasons, allTeams } = props.scheduleFilters;
-            if(seasons.length <= 0 && allTeams.length <= 0) {
+            // if(seasons.length <= 0 && allTeams.length <= 0) {
                 props.getTeamsPageFilters()
-            }
+            // }
         }
         
     }, [])
@@ -52,23 +52,6 @@ const Teams = (props) => {
             props.getTeamsPageFilters(search)
             setFilters({..._filters}); 
         }
-    }
-
-
-    const getQuery = (q) => {
-        if(!q) q = props.location.search.slice(1);
-        const parsed = qs.parse(q);
-        // console.log(parsed, 'getQuery');
-        return [parsed, q];
-    }
-
-    const setQuery = (q, noPush) => {
-        if(!q) return;
-        const search = qs.stringify(q);
-        if(!noPush) {
-            props.history.push({search});
-        }
-        return search;
     }
 
     return (

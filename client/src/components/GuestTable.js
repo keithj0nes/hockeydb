@@ -46,38 +46,38 @@ const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title
                         return (
                             <div className="ot-row" key={uniqueKey ? d[uniqueKey] : d.id}>
                         
-                                    {sectionKeys.map(section => {
+                                {sectionKeys.map(section => {
 
-                                        const isObj = typeof sections[section] === 'object';
-                                        const sectionLink = sections[section].link;
+                                    const isObj = typeof sections[section] === 'object';
+                                    const sectionLink = sections[section].link;
 
-                                        if(isObj && sectionLink) {
-                                            // could provide link state if query for previous season is provided
-                                            let newLink = sectionLink.to;
-                                            if(sectionLink.key) {
-                                                newLink += `/${d[sectionLink.key]}`;
-                                            }
-
-                                            return <Link to={{pathname: newLink }} key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]}</Link>
-                                        } else {
-                                            return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-
+                                    if(isObj && sectionLink) {
+                                        // could provide link state if query for previous season is provided
+                                        let newLink = sectionLink.to;
+                                        if(sectionLink.key) {
+                                            newLink += `/${d[sectionLink.key]}`;
                                         }
 
-                                    })}
+                                        return <Link to={{pathname: newLink }} key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]}</Link>
+                                    } else {
+                                        return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
 
-                                    {isGame && (
+                                    }
+
+                                })}
+
+                                {isGame && (
                                         <>
                                             <p className="ot-cell ot-flex-one">{d.has_been_played && ( `${d.home_score} : ${d.away_score}` )}</p>
                                             <p className="ot-cell ot-flex-one">
                                                 {d.has_been_played && (
                                                     // <Link to={`/boxscore/${d.id}`}>
-                                                        'Boxscore'
+                                                    'Boxscore'
                                                     // {/* </Link> */}
                                                 )}
                                             </p>
                                         </>
-                                    )}
+                                )}
                             </div>
                         )
 
@@ -96,7 +96,7 @@ GuestTable.defaultProps = {
 GuestTable.propTypes = {
     data: PropTypes.array.isRequired,
     sections: PropTypes.object.isRequired,  // shape = [{ columnName (same key you want from data object): size (one - five)}]
-                                            // shape = if key is an object, must use format { columnName : { as: string, flex: size (one -five), link: object (/teams/key_name) { to: string ('/teams'), key: string ('key_name')}}}
+    // shape = if key is an object, must use format { columnName : { as: string, flex: size (one -five), link: object (/teams/key_name) { to: string ('/teams'), key: string ('key_name')}}}
     minWidth: PropTypes.oneOfType([
         PropTypes.string,                   // string is the min width of the table in px or %
         PropTypes.number                    // number is the min width of the table in px

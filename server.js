@@ -144,7 +144,8 @@ app.get(`/api/games/:id`, games.getGameById);
 // Teams
 app.get(`/api/teams/`, teams.getAllTeams);
 app.get(`/api/teams/:id`, teams.getTeamById);
-// app.get('/api/teams/:id/schedule', teams.getTeamSchedule);
+app.get('/api/teams/:id/schedule', teams.getTeamSchedule);
+// app.get('/api/teams/:id/roster', teams.getTeamSchedule);
 
 // Players
 app.get(`/api/players`, players.getAllPlayers);

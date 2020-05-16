@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { toggleFilter } from '../redux/actions/misc';
-import qs from 'query-string';
+import { setQuery } from '../helpers';
+// import qs from 'query-string';
 
 
 class Filter extends Component {
@@ -30,7 +31,7 @@ class Filter extends Component {
                 delete filters['division'];
             }
 
-            const search = qs.stringify(filters);
+            const search = setQuery(filters);
             // console.log(search,' FILTERS!')
 
             // console.log(search.replace('%20', '_'))
@@ -62,7 +63,7 @@ class Filter extends Component {
                     <p onClick={this.handleClear}>clear filters</p>
                     {/* <p style={{marginLeft: 10}} onClick={() => this.props.toggleFilter()}>close</p> */}
                 </div>
-               {data.map(d => {
+                {data.map(d => {
                 // console.log(d, 'd')
                     return (
                         <div style={{flex: 1, marginRight: 10}} key={d.title}>
@@ -95,11 +96,11 @@ class Filter extends Component {
                                         {field.type === 'checkbox' && (
                                             <div className="modal-field">
                                                 <div style={{display: 'flex'}}>
-                                                {!field.hidden && (
-                                                    <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={this.handleChange} />
-                                                )}
-                                                <label htmlFor={field.name}>{field.title}</label>
-                                            </div>
+                                                    {!field.hidden && (
+                                                        <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={this.handleChange} />
+                                                    )}
+                                                    <label htmlFor={field.name}>{field.title}</label>
+                                                </div>
 
                                             </div>
 

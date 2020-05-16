@@ -28,16 +28,16 @@ const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableTy
                     return (
                         <div className="ot-row" key={d.id}>
                     
-                                {sectionKeys.map(section => {
-                                    return (
-                                        <p key={section} className={`ot-cell ot-flex-${sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-                                    )
-                                })}
-                                <p className="ot-cell ot-manage">
-                                    {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                    <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
-                                    {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
-                                </p>
+                            {sectionKeys.map(section => {
+                                return (
+                                    <p key={section} className={`ot-cell ot-flex-${sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+                                )
+                            })}
+                            <p className="ot-cell ot-manage">
+                                {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+                                {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                            </p>
                         </div>
                     )
 

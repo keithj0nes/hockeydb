@@ -3,88 +3,88 @@ import React from 'react';
 class Swiper extends React.Component {
 
   state = {
-    position: 0,
-    sliding: false,
-    direction: 'next',
-    speed: this.props.options.speed
+      position: 0,
+      sliding: false,
+      direction: 'next',
+      speed: this.props.options.speed
   }
  
   getOrder = (itemIndex) => {
-    const { position } = this.state;
-    const { children } = this.props;
-    const numItems = children.length || 1;
-    return ((numItems + 1) - position+itemIndex) % numItems;
+      const { position } = this.state;
+      const { children } = this.props;
+      const numItems = children.length || 1;
+      return ((numItems + 1) - position+itemIndex) % numItems;
 
-    // if(itemIndex - position < 0){
-    //   return numItems - Math.abs(itemIndex - position);
-    // }
-    // return itemIndex - position;
+      // if(itemIndex - position < 0){
+      //   return numItems - Math.abs(itemIndex - position);
+      // }
+      // return itemIndex - position;
   }
 
   next = () => {
-    // console.log('you', this.state.position)
+      // console.log('you', this.state.position)
 
-    const { position } = this.state;
-    const { children, options } = this.props;
-    const numItems = children.length || 1;
+      const { position } = this.state;
+      const { children, options } = this.props;
+      const numItems = children.length || 1;
 
-    if(position === numItems - 1 && !options.loop) return;
+      if(position === numItems - 1 && !options.loop) return;
 
-    // console.log(position === numItems - 1 ? 0 : position + 1)
+      // console.log(position === numItems - 1 ? 0 : position + 1)
 
-    this.doSliding('next', position === numItems - 1 ? 0 : position + 1)
-    // this.doSliding(position)
+      this.doSliding('next', position === numItems - 1 ? 0 : position + 1)
+      // this.doSliding(position)
   }
 
   prev = () => {
-    const { position } = this.state
-    const { children, options } = this.props
-    const numItems = children.length
+      const { position } = this.state
+      const { children, options } = this.props
+      const numItems = children.length
 
-    if(position === 0 && !options.loop) return;
+      if(position === 0 && !options.loop) return;
 
-    this.doSliding('prev', position === 0 ? numItems - 1 : position - 1)
+      this.doSliding('prev', position === 0 ? numItems - 1 : position - 1)
   }
 
   doSliding = (direction, position) => {
 
-    this.setState({
-      sliding: true,
-      direction,
-      position
-    })
-
-    setTimeout(() => {
       this.setState({
-        sliding: false
+          sliding: true,
+          direction,
+          position
       })
-    }, 50);
+
+      setTimeout(() => {
+          this.setState({
+              sliding: false
+          })
+      }, 50);
   }
 
 
   render(){
-    const { children } = this.props;
+      const { children } = this.props;
 
-    const transform = () => {
-      if (!this.state.sliding) return 'translateX(-100%)'
-      if (this.state.direction === 'prev') return 'translateX(calc(2 * (-100%)))'
-      return 'translateX(0%)'
-    }
+      const transform = () => {
+          if (!this.state.sliding) return 'translateX(-100%)'
+          if (this.state.direction === 'prev') return 'translateX(calc(2 * (-100%)))'
+          return 'translateX(0%)'
+      }
 
-    return (
-      <div className='carousel-main' style={styles.carouselMain}>
-        {/* <h1>myswiper</h1> */}
-        {/* <div className="swiper-wrapper"> */}
-          <div className="carousel-container" style={{display: 'flex', transition: this.state.sliding ? 'none' : `transform ${this.state.speed}ms ease`, transform: transform() }}>
-            {children.map((child, index) => {
-              return <div className="carousel-child" key={index} style={{order: this.getOrder(index), ...styles.carouselChild}}>{child}</div>
-            })}
-          {/* </div> */}
-        </div>
-        {/* <button onClick={this.prev}>Prev</button> */}
-        {/* <button onClick={this.next}>Next</button> */}
-      </div>
-    )
+      return (
+          <div className='carousel-main' style={styles.carouselMain}>
+              {/* <h1>myswiper</h1> */}
+              {/* <div className="swiper-wrapper"> */}
+              <div className="carousel-container" style={{display: 'flex', transition: this.state.sliding ? 'none' : `transform ${this.state.speed}ms ease`, transform: transform() }}>
+                  {children.map((child, index) => {
+                      return <div className="carousel-child" key={index} style={{order: this.getOrder(index), ...styles.carouselChild}}>{child}</div>
+                  })}
+                  {/* </div> */}
+              </div>
+              {/* <button onClick={this.prev}>Prev</button> */}
+              {/* <button onClick={this.next}>Next</button> */}
+          </div>
+      )
   }
 }
 
@@ -103,10 +103,10 @@ export default Swiper
 //prev()
 
 Swiper.defaultProps = {
-  options: {
-    speed: 1000,
-    loop: false
-  }
+    options: {
+        speed: 1000,
+        loop: false
+    }
 }
 
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
-import qs from 'query-string';
+import { getQuery, setQuery } from '../../../helpers';
 import { getGames } from '../../../redux/actions/gamesActions';
 import { Select, Button } from '../../../components/';
 import './schedule.scss';
@@ -21,7 +21,7 @@ class Schedule extends Component {
         const { games, location, getGames } = this.props;
         if(games.length <= 0) {
             if(location.search.length > 0){
-                const [filters, filterString] = this.getQuery();
+                const [filters, filterString] = getQuery();
                 console.log(filters, 'FILTERS!')
                 return getGames(filterString).then(res => {
                        return res && this.setState({filters}) //this adds filters to default values
@@ -29,23 +29,9 @@ class Schedule extends Component {
             }
             return getGames('page=1').then(res => this.setState({filters: this.state.filters, ...res}))
         } else {
-            const [filters] = this.getQuery();
+            const [filters] = getQuery();
             this.setState({filters})
         }
-    }
-
-    setQuery = (q) => {
-        if(!q) return;
-        const search = qs.stringify(q);
-        this.props.history.push({search});
-        return search;
-    }
-
-    getQuery = (q) => {
-        if(!q) q = this.props.location.search.slice(1);
-        const parsed = qs.parse(q);
-        // console.log(parsed, 'getQuery');
-        return [parsed, q];
     }
 
     handleChange = e => {
@@ -74,7 +60,7 @@ class Schedule extends Component {
         delete filters['fromLoadMore'];
 
         this.setState(() => {
-            const search = this.setQuery(filters);
+            const search = setQuery(filters);
             this.props.getGames(search)
             filters.page = 1;
             return {filters}
@@ -83,7 +69,7 @@ class Schedule extends Component {
 
     handleLoadMore = () => {
         this.setState({filters: {...this.state.filters, page: this.state.filters.page + 1, fromLoadMore: true}}, () => {
-            const search = qs.stringify(this.state.filters);
+            const search = setQuery(this.state.filters);
             this.props.getGames(search).then(() => this.setState({filters: {...this.state.filters, fromLoadMore: false}}))
         });
     }

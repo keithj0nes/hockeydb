@@ -15,7 +15,7 @@ export const Select = ({name, defaultValue, hiddenValue, listOfSelects, onChange
                 ))} */}
 
                 {listOfSelects && listOfSelects.map((item, ind) => {
-                   return (
+                    return (
                         <option key={ind} value={item[useKey] || item.value}>{item.name}</option>
                     )
                 })}

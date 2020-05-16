@@ -1,35 +1,35 @@
 import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
 
 const initialAuthState = {
-  user: {},
-  isUserLoggedIn: false,
+    user: {},
+    isUserLoggedIn: false,
 
 };
 
 
 export const user = (state = initialAuthState, { type, payload }) => {
-  switch (type) {
+    switch (type) {
     case AUTH_SET_USER:
-      return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn }
+        return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn }
     default:
-      return state;
-  }
+        return state;
+    }
 };
 
 
 const initialNewsState = {
-  news: [],
-  newsById: {},
-  newsNum: 0
+    news: [],
+    newsById: {},
+    newsNum: 0
 }
 
 export const news = (state = initialNewsState, { type, payload }) => {
-  switch (type) {
+    switch (type) {
     case GET_BLOGS:
-      // console.log(payload, 'PAYLOAD')
-      return { ...state, news: payload,  newsNum: state.newsNum +1 };
+        // console.log(payload, 'PAYLOAD')
+        return { ...state, news: payload,  newsNum: state.newsNum +1 };
     case `news/${CREATE_SUCCESS}`:
-      // console.log(state.newsNum, 'state.newsnum')
+        // console.log(state.newsNum, 'state.newsnum')
         return  { ...state, news: [payload, ...state.news],  newsNum: state.newsNum +1};
 
     case `news/${UPDATE_SUCCESS}`:
@@ -40,14 +40,14 @@ export const news = (state = initialNewsState, { type, payload }) => {
             }
             return item;
 
-          })
+        })
         return  { ...state, news: newNews, newsNum: state.newsNum +1 }
 
     case `newsById/${GET_SUCCESS}`:
         return  { ...state, newsById: payload};
     default:
-      return state;
-  }
+        return state;
+    }
 }
 
 // case `locations/${UPDATE_SUCCESS}`:
@@ -61,106 +61,106 @@ export const news = (state = initialNewsState, { type, payload }) => {
 //         return  { ...state, isLoading: false, locations: newLocations }
 
 const initialMiscState = {
-  navSliderVisible: false,
-  modalVisible: false,
-  modalProps: {},
-  modalType: '',
-  isLoading: false, 
-  errors: '',
-  scheduleFilters: {
-    seasons: [],
-    divisions: [],
-    teams: [],
-    allTeams: []
-  }
+    navSliderVisible: false,
+    modalVisible: false,
+    modalProps: {},
+    modalType: '',
+    isLoading: false, 
+    errors: '',
+    scheduleFilters: {
+        seasons: [],
+        divisions: [],
+        teams: [],
+        allTeams: []
+    }
 }
 
 export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading, payload }) => {
-  switch (type) {
+    switch (type) {
     case TOGGLE_NAV_SLIDER:
-      return { ...state, navSliderVisible: !state.navSliderVisible }
+        return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-      // console.log(modalProps.errors, 'hitting!!')
-      //   console.log(modalProps)
+        // console.log(modalProps.errors, 'hitting!!')
+        //   console.log(modalProps)
         return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors}
 
-      // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
+        // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     case 'SCHEDULE_FILTERS':
-      return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload }};
+        return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload }};
     default:
-      return state;
-  }
+        return state;
+    }
 }
 
 const initialPlayersState = {
-  allPlayers: [],
-  selectedPlayer: null,
+    allPlayers: [],
+    selectedPlayer: null,
 };
 
 export const players = (state = initialPlayersState, { type, payload }) => {
-  switch (type) {
+    switch (type) {
     case GET_PLAYERS:
-      return { ...state, allPlayers: payload };
+        return { ...state, allPlayers: payload };
     default:
-      return state;
-  }
+        return state;
+    }
 }
 
 const initialGameState = {
-  isLoading: true,
-  allGames: [],
-  selectedGame: null,
-  gameDetails: null,
-  todaysGames: [],
-  fromLoadMore: false,
-  totalGamesCount: 0
+    isLoading: true,
+    allGames: [],
+    selectedGame: null,
+    gameDetails: null,
+    todaysGames: [],
+    fromLoadMore: false,
+    totalGamesCount: 0
 };
 
 export const games = (state = initialGameState, { type, payload }) => {
-  switch (type) {
+    switch (type) {
     case `games/${GET_INIT}`:
-      return { ...state, isLoading: true }
+        return { ...state, isLoading: true }
     case `games/${GET_SUCCESS}`:
-      const { games, fromLoadMore, totalGamesCount } = payload;
+        const { games, fromLoadMore, totalGamesCount } = payload;
 
-      if(fromLoadMore) {
-        return { ...state, isLoading: false, totalGamesCount, allGames: [...state.allGames, ...games] };
-      }
-      return { ...state, isLoading: false, totalGamesCount, allGames: games };
+        if(fromLoadMore) {
+            return { ...state, isLoading: false, totalGamesCount, allGames: [...state.allGames, ...games] };
+        }
+        return { ...state, isLoading: false, totalGamesCount, allGames: games };
     case `gameById/${GET_SUCCESS}`:
-      return {...state, gameDetails: payload}
+        return {...state, gameDetails: payload}
     case `todaysgames/${GET_SUCCESS}`:
-      return {...state, todaysGames: payload}
+        return {...state, todaysGames: payload}
     default:
-      return state;
-  }
+        return state;
+    }
 }
 
 
 const initialTeamsState = {
-  allTeams: [],
-  selectedTeam: null,
+    allTeams: [],
+    selectedTeam: null,
 };
 
 export const teams = (state = initialTeamsState, { type, payload }) => {
-  switch (type) {
+    switch (type) {
     case GET_TEAMS:
-      return { ...state, allTeams: payload };
+        return { ...state, allTeams: payload };
     default:
-      return state;
-  }
+        return state;
+    }
 }
 
 const initialDivisionsState = {
-  allDivisions: [],
-  selectedDivision: null,
+    allDivisions: [],
+    selectedDivision: null,
 };
 
 export const divisions = (state = initialDivisionsState, { type, payload }) => {
-  switch (type) {
+    switch (type) {
     case GET_DIVISIONS:
-      return { ...state, allDivisions: payload };
+        return { ...state, allDivisions: payload };
     default:
-      return state;
-  }
+        return state;
+    }
 }
