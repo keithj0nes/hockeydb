@@ -5,7 +5,13 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
 const initialteamstate = {
     isLoading: true,
     teams: [],
-    singleTeam: {},
+    singleTeam: {
+        record: {},
+        team: {},
+        seasons: [],
+        schedule: [],
+        recent: []
+    },
     //filter
     isVisible: false,
     

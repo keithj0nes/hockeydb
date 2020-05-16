@@ -20,25 +20,24 @@ const SingleTeam = (props) => {
     // component did update on pathname change (will fire when going to new team route)
     useEffect(() => {
         // get team info
-        console.log(props,' PROPS ON DIDMOUNT')
 
         if(props.location.search.length > 0) {
-            const [filters, filterString] = getQuery();
-            console.log({filters, filterString}, 'FILTERS')
+            const [, filterString] = getQuery();
             props.getTeamById(props.match.params.id, filterString).then(res => {
-                console.log(res, 'RES!!')
                 setSelectedSeason(res)
+                setTabSelected('home')
             });
 
         } else {
             props.getTeamById(props.match.params.id).then(res => {
-                console.log(res, 'RES!!')
                 setSelectedSeason(res)
+                setTabSelected('home')
+
             });
         }
 
         return () => console.log('use this unmount to clear the single team redux state')
-    }, [props.location.pathname])
+    }, [props.location.pathname + props.location.search])
 
     const handleChange = e => {
         console.log(e.target.name, e.target.value)
@@ -55,7 +54,7 @@ const SingleTeam = (props) => {
 
         } else if(tabSelected === 'schedule') {
             // return ( <ScheduleComponent /> )
-            return ( <STSchedule /> )
+            return ( <STSchedule {...props} /> )
 
         } else if(tabSelected === 'roster') {
             return ( <RosterComponent />)
@@ -149,9 +148,8 @@ const SingleTeam = (props) => {
 }
 
 const mapStateToProps = state => {
-    console.log(state, 'STATE!')
     return {
-        record: state.teams.singleTeam.record || {},
+        record: state.teams.singleTeam.record,
         team: state.teams.singleTeam.team || {},
         seasons: state.seasons.seasons,
     }

@@ -14,7 +14,7 @@ const Teams = (props) => {
     useEffect(() => {
 
         if(props.location.search.length > 0) {
-            const [filters, filterString] = getQuery();
+            const [ filters, filterString ] = getQuery();
             // get the teams list here by passing in the filterString
             setFilters(filters)
             props.getTeamsPageFilters(filterString)
@@ -22,9 +22,9 @@ const Teams = (props) => {
         } else {
             // if theres no seasons or allTeams, get the filters
             const { seasons, allTeams } = props.scheduleFilters;
-            if(seasons.length <= 0 && allTeams.length <= 0) {
+            // if(seasons.length <= 0 && allTeams.length <= 0) {
                 props.getTeamsPageFilters()
-            }
+            // }
         }
         
     }, [])

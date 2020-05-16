@@ -64,7 +64,7 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
         payload: { 
             // ...team.data.team, 
             team: team.data.team,
-            schedule: team.data.schedule, 
+            // schedule: team.data.schedule, 
             recent: team.data.recent,
             record: team.data.record
         }
@@ -179,4 +179,25 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
         type: 'SCHEDULE_FILTERS', 
         payload: { seasons: data.data.seasons, allTeams: data.data.all_teams }
     })
+}
+
+export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
+
+  console.log(filter, 'FITLER')
+
+  const data = await request(`/api/teams/${teamId}/schedule?${filter || ''}`, 'GET', {}, true);
+
+  console.log(data, 'DATAAAAA ON GET SCCHEEDDULLEEE')
+
+  // dispatch({ 
+  //     type: 'SCHEDULE_FILTERS', 
+  //     payload: { seasons: data.data.seasons, allTeams: data.data.all_teams }
+  // })
+
+  dispatch({ 
+    type: `teams/singleTeam/${GET_SUCCESS}`, 
+    payload: { 
+        schedule: data.data 
+    }
+})
 }
