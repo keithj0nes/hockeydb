@@ -89,9 +89,9 @@ const AlertModal = ({data, toggleModal}) => (
         {/* <button onClick={toggleModal}>OK</button> */}
 
         <div className="modal-button-container">
-                {/* <Button title={'Cancel'} cancel onClick={toggleModal} /> */}
-                <Button title={'Close'} onClick={() => data.confirmAction ? (data.confirmAction(), toggleModal()): toggleModal()} />
-            </div>
+            {/* <Button title={'Cancel'} cancel onClick={toggleModal} /> */}
+            <Button title={'Close'} onClick={() => data.confirmAction ? (data.confirmAction(), toggleModal()): toggleModal()} />
+        </div>
     </div>
 )
 
@@ -135,11 +135,11 @@ const PromptModal = ({data, toggleModal}) => {
                         {field.type === 'checkbox' && (
                             <div className="modal-field">
                                 <div style={{display: 'flex'}}>
-                                {!field.hidden && (
-                                    <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
-                                )}
-                                <label htmlFor={field.name}>{field.title}</label>
-                            </div>
+                                    {!field.hidden && (
+                                        <input type="checkbox" style={{margin: '5px 10px 0 0'}} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
+                                    )}
+                                    <label htmlFor={field.name}>{field.title}</label>
+                                </div>
 
                             </div>
 
@@ -177,15 +177,15 @@ const PromptModal = ({data, toggleModal}) => {
 
 const renderModalType = (modalType, modalProps, isLoading, toggleModal) => {
     switch (modalType) {
-        case 'delete':
-            return <DeleteModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal}/>
-        case 'alert':
-            return <AlertModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal}/>
-        case 'prompt':
-            return <PromptModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal}/>
+    case 'delete':
+        return <DeleteModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal}/>
+    case 'alert':
+        return <AlertModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal}/>
+    case 'prompt':
+        return <PromptModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal}/>
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 

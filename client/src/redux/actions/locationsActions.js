@@ -5,66 +5,66 @@ import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../ac
 
 
 export const getLocations = () => async dispatch => {
-  const data = await request('/api/locations', 'GET', {}, true);
-  if (!data.data) return false;
-  dispatch({ type: `locations/${GET_SUCCESS}`, payload: data.data })
-  return true;
+    const data = await request('/api/locations', 'GET', {}, true);
+    if (!data.data) return false;
+    dispatch({ type: `locations/${GET_SUCCESS}`, payload: data.data })
+    return true;
 }
 
 export const createLocation = (data) => async (dispatch, getState) => {
-  const { user } = getState();
-  const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token });
-  if (!post.data) return false;
+    const { user } = getState();
+    const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token });
+    if (!post.data) return false;
 
-  dispatch({ type: `locations/${CREATE_SUCCESS}`, payload: post.data });
+    dispatch({ type: `locations/${CREATE_SUCCESS}`, payload: post.data });
 
-  dispatch({
-    type: TOGGLE_MODAL,
-    modalProps: { isVisible: false }
-  })
-  return true;
+    dispatch({
+        type: TOGGLE_MODAL,
+        modalProps: { isVisible: false }
+    })
+    return true;
 }
 
 export const updateLocation = (id, locationData) => async (dispatch, getState) => {
-  const { user } = getState();
-  const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.user.access_token, data: locationData})
-  if(!data) return false;
+    const { user } = getState();
+    const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.user.access_token, data: locationData})
+    if(!data) return false;
 
-  dispatch({
-      type: `locations/${UPDATE_SUCCESS}`,
-      payload: data.data
-  })
+    dispatch({
+        type: `locations/${UPDATE_SUCCESS}`,
+        payload: data.data
+    })
   
-  dispatch({
-      type: TOGGLE_MODAL,
-      modalProps: { isVisible: false }
-  })
+    dispatch({
+        type: TOGGLE_MODAL,
+        modalProps: { isVisible: false }
+    })
   
-  // if(data.message === 'Season hidden' || data.message === 'Season unhidden'){
-  //     // after hiding/unhiding, getSeasons again with filters
-  //     return 'getSeasons';
-  // }
+    // if(data.message === 'Season hidden' || data.message === 'Season unhidden'){
+    //     // after hiding/unhiding, getSeasons again with filters
+    //     return 'getSeasons';
+    // }
 }
 
 export const deleteLocation = id => async (dispatch, getState) => {
-  const { user } = getState();
-  const data = await request(`/api/admin/locations/${id}`, 'DELETE', {access_token: user.user.access_token})
-  if(!data) return false;
-  //Close Delete Modal
-  // dispatch({
-  //     type: TOGGLE_MODAL,
-  // })
+    const { user } = getState();
+    const data = await request(`/api/admin/locations/${id}`, 'DELETE', {access_token: user.user.access_token})
+    if(!data) return false;
+    //Close Delete Modal
+    // dispatch({
+    //     type: TOGGLE_MODAL,
+    // })
 
-  //Open Alert Modal
-  dispatch({
-      type: TOGGLE_MODAL,
-      modalProps: {
-          isVisible: true,
-          title: 'Delete Location',
-          message: data.message
-      },
-      modalType: 'alert'
-  })
-  // return data
-  return dispatch(getLocations());
+    //Open Alert Modal
+    dispatch({
+        type: TOGGLE_MODAL,
+        modalProps: {
+            isVisible: true,
+            title: 'Delete Location',
+            message: data.message
+        },
+        modalType: 'alert'
+    })
+    // return data
+    return dispatch(getLocations());
 }

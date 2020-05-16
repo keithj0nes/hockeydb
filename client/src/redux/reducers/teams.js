@@ -9,7 +9,7 @@ const initialteamstate = {
     //filter
     isVisible: false,
     
-  };
+};
   
 export const teams = (state = initialteamstate, { type, payload }) => {
     switch (type) {
@@ -31,7 +31,7 @@ export const teams = (state = initialteamstate, { type, payload }) => {
                 return {...item, is_active: false}
             }
             return item;
-            })
+        })
         return  { ...state, isLoading: false, teams: newteams }
     case 'teams/FILTER_IS_VISIBLE':
         //if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)

@@ -17,12 +17,12 @@ class Routes extends Component {
     render(){
         return (
             <div>
-            <Route exact path="/"   component={Home} />
-            <Route path='/login'    component={Login} />
-            <Route path='/players'  component={Players} />
-            <Route path='/games'    component={Games} />
-            <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
-            <Modal />
+                <Route exact path="/"   component={Home} />
+                <Route path='/login'    component={Login} />
+                <Route path='/players'  component={Players} />
+                <Route path='/games'    component={Games} />
+                <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
+                <Modal />
             </div>
         )
     }
@@ -34,24 +34,24 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   
     console.log(rest, 'rest!');
 
-  return <Route {...rest} render={(props) =>  {
+    return <Route {...rest} render={(props) =>  {
 
-    console.log(props.location, 'props')
+        console.log(props.location, 'props')
 
-    return rest.authenticated
-      ? <Component {...props} />
-      : <Redirect             to={{
-        pathname: "/login",
-        state: { from: props.location }
-      }} />
+        return rest.authenticated
+            ? <Component {...props} />
+            : <Redirect             to={{
+                pathname: "/login",
+                state: { from: props.location }
+            }} />
       
-      }
+    }
     }/>
 
-  }
+}
 
 const mapStateToProps = state => ({
-  isUserLoggedIn: state.user && state.user.isUserLoggedIn
+    isUserLoggedIn: state.user && state.user.isUserLoggedIn
 })
 
 // const mapStateToProps = state => {
@@ -61,7 +61,7 @@ const mapStateToProps = state => ({
 // }
 
 const mapDispatchToProps = dispatch => ({
-  loginFromCookie: () => dispatch(loginFromCookie()),
+    loginFromCookie: () => dispatch(loginFromCookie()),
 //   toggleModal: () => dispatch(toggleModal(200, 'opening from app.js'))
 })
 

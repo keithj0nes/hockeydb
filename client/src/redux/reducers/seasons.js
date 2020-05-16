@@ -11,7 +11,7 @@ const initialSeasonState = {
     //filter
     isVisible: false,
     
-  };
+};
   
 export const seasons = (state = initialSeasonState, { type, payload }) => {
     switch (type) {
@@ -33,7 +33,7 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
                 return {...item, is_active: false}
             }
             return item;
-            })
+        })
 
         return  { ...state, isLoading: false, seasons: newSeasons }
 

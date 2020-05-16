@@ -9,15 +9,15 @@ import { locations } from './reducers/locations';
 
 
 let reducers = combineReducers({
-  user,
-  seasons,
-  misc,
-  news,
-  players,
-  games,
-  locations,
-  teams,
-  divisions
+    user,
+    seasons,
+    misc,
+    news,
+    players,
+    games,
+    locations,
+    teams,
+    divisions
 });
 
 const store = createStore(reducers, {}, applyMiddleware(thunk));

@@ -32,14 +32,14 @@ class TodaysGames extends Component {
 
                         </div>
                     )
-                    })}
+                })}
 
                 <div style={{display: 'flex', justifyContent: 'center', padding: 24}}>
                     <Button
                         title="VIEW SCHEDULE"
                         onClick={() => console.log('view schedule pushed')}
                         outline
-                        />
+                    />
                 </div>
             </div>
         )

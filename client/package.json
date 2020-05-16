@@ -22,7 +22,7 @@
     "react-dom": "^16.13.1",
     "react-quill": "^1.3.3",
     "react-redux": "^6.0.1",
-    "react-router-dom": "^5.1.2",
+    "react-router-dom": "^5.0.0",
     "react-swipe": "^6.0.4",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
@@ -38,7 +38,21 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "airbnb-base",
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "rules": {
+      "no-console": 0,
+			"quotes": [
+				"error",
+				"double",
+				{
+					"avoidEscape": true
+				}
+      ]
+    }
   },
   "browserslist": [
     ">0.2%",

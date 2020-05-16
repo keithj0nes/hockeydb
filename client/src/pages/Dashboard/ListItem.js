@@ -135,9 +135,9 @@ class ListItem extends Component {
                             {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
                             {this.state.isEditing ? (
-                                    <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
+                                <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
 
-                                ):
+                            ):
 
                                 <span style={{cursor: "pointer"}} onClick={onClick}><img src={Delete} width="25px" alt=""/></span>
                             }
