@@ -47,6 +47,28 @@ export const getTeams = (filter) => async (dispatch, getState) => {
     return true;
 }
 
+export const getTeamsByDivision = (filter) => async (dispatch, getState) => {
+
+  console.log(filter, 'GETTING TEAMS BY DIVISOINSSS!')
+
+  // console.log(filter, 'filter TWOOOOOO')
+
+  const data = await request(`/api/teams/by_division?${filter || ''}`, 'GET', {}, true);
+
+  if (!data.data) return false;
+
+  console.log(data.data, 'TEAMS FROM DIVISOINSSS!')
+
+  dispatch({
+      type: `teams/byDivision/${GET_SUCCESS}`,
+      payload: data.data
+  })
+
+  return true;
+}
+
+
+
 
 export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
 

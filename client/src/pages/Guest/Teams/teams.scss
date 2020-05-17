@@ -1,18 +1,36 @@
 
 .teams-container {
-    background: blue;
     display: flex;
     flex-wrap: wrap;
-    // justify-content: center;
+    justify-content: space-between;
 
     .division-container {
-        background: pink;
-        // width: 100%;
+        padding: 20px 0;
         min-width: 200px;
-        margin-right: 40px;
+        flex-grow:0;
+        flex-shrink:0;
+        flex-basis:calc(50% - 10px); /* separate properties for IE11 upport */
 
         h2 { 
             padding: 0;
+        }
+
+        p {
+            padding: 2px 10px 2px 0;
+            margin-top: 7px;
+        }
+    }
+}
+
+
+@media only screen and (min-width: 768px){
+
+    .teams-container {
+        justify-content: start;
+    
+        .division-container {
+            margin-right: 40px;
+            flex-basis: 0 ; /* separate properties for IE11 upport */
         }
     }
 }
