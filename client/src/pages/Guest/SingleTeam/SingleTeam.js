@@ -163,19 +163,19 @@ const mapDispatchToProps = dispatch => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleTeam);
 
-const seasons = [{
-    id: 1,
-    is_active: false,
-    name: "Fall 2016",
-},{
-    id: 2,
-    is_active: true,
-    name: "Summer 2016",
-},{
-    id: 3,
-    is_active: false,
-    name: "Spring 2020",
-}]
+// const seasons = [{
+//     id: 1,
+//     is_active: false,
+//     name: "Fall 2016",
+// },{
+//     id: 2,
+//     is_active: true,
+//     name: "Summer 2016",
+// },{
+//     id: 3,
+//     is_active: false,
+//     name: "Spring 2020",
+// }]
 // const HomeComponent = () => {
 //     return (
 //         <>

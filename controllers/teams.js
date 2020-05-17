@@ -54,7 +54,7 @@ const getAllTeamsByDivision = async (req, res) => {
   `;
 
   const data = await db.query(query);
-  res.status(200).send({ status: 200, data, message: 'Retrieved list of teams grouped by division' });
+  res.status(200).send({ status: 200, data: {allTeams: data, season: season || season_id.id}, message: 'Retrieved list of teams grouped by division' });
 }
 
 const getTeamById = async (req, res) => {

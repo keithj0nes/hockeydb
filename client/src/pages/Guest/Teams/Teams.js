@@ -10,8 +10,6 @@ const Teams = (props) => {
 
     const [ filters, setFilters ] = useState({});
 
-    // console.log(props.scheduleFilters, 'SCHEDULE FILTERS')
-
     useEffect(() => {
 
         if(props.location.search.length > 0) {
@@ -25,8 +23,10 @@ const Teams = (props) => {
             // if theres no seasons or allTeams, get the filters
             // const { seasons, allTeams } = props.scheduleFilters;
             // if(seasons.length <= 0 && allTeams.length <= 0) {
-                props.getTeamsPageFilters()
-                props.getTeamsByDivision()
+                // const res = props.getTeamsByDivision();
+                // props.getTeamsPageFilters(res);
+                props.getTeamsByDivision().then(res => setFilters({...filters, season: res}));
+                props.getTeamsPageFilters();
 
             // }
         }
@@ -73,38 +73,28 @@ const Teams = (props) => {
                 </div>
 
                 <div className="teams-container">
-
-                    {/* {ListOfTeams.map(t => {
-                        return (
-                            <div key={t.divName} className="division-container">
-
-                                <h2>{t.divName}</h2>
-
-                                {t.teams.map(team => {
-                                    return (
-                                        <p key={team.id} style={{background: 'yellow', padding: '2px 10px 2px 0', marginTop: 10}}>{team.name}</p>
-                                    )
-                                })}
-                            </div>
-                        )
-                    })} */}
-
-                    {props.teamsByDivision.map(t => {
-                        return (
-                            <div key={t.division_name} className="division-container">
-                                <h2>{t.division_name}</h2>
-
-                                {t.teams_in_division.map(team => {
-                                    return (
-                                        <p key={team.id}>
-                                        
+                    {
+                        props.teamsByDivision.length <= 0 ? (
+                            <p>No teams under this season</p>
+                        ):(
+                            props.teamsByDivision.map(t => {
+                                return (
+                                    <div key={t.division_name} className="division-container">
+                                    <h2>{t.division_name}</h2>
+                                    
+                                    {t.teams_in_division.map(team => {
+                                        return (
+                                            <p key={team.id}>
+                                            
                                             <Link to={`teams/${team.id}`}    >{team.name}</Link>
-                                        </p>
-                                    )
-                                })}
-                            </div>
+                                            </p>
+                                            )
+                                        })}
+                                    </div>
+                                )
+                            })
                         )
-                    })}
+                    }
                 </div>
             </div>
 
@@ -128,87 +118,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Teams);
-
-
-
-
-const ListOfTeams = [
-    {
-        divName: 'A1',
-        teams: [ { id: 27, name: 'synthesize onlines'}, {id: 20, name: 'array arrays'}, {id: 26, name: 'mobile microchips' } ]
-    },
-    {
-        divName: 'B1',
-        teams: [ { id: 32, name: 'quantify matrixs'}, {id: 29, name: 'matrix matrixs'}, {id: 28, name: 'hack hacks'}, {id: 31, name: 'bluetooth generates'}, {id: 35, name: 'override protocols'} ]
-    },
-    {
-        divName: 'C1',
-        teams: [ { id: 44, name: 'hack wireless'}, {id: 40, name: 'navigate virtuals'}, {id: 41, name: 'firewall copys'}, {id: 42, name: 'calculate monitors' } ]
-    }
-]
-
-
-// const listOfSelects = [
-//     {id: 1, name: 'hi'},
-//     {id: 2, name: 'hello'},
-//     {id: 3, name: 'whatsup'},
-//     {id: 4, name: 'nmyou?'},
-// ]
-
-
-// Pivot Table
-
-// id | team_id | season_id | division_id
-// --------------------------------------
-// 1  |	3	 |     1     |      3	
-// 2  |	4	 |     1     |      3	
-// 3  |	5	 |     1     |      3	
-// 4  |	6	 |     1     |      3	
-
-
-// Query to list all teams 
-
-// SELECT t.name, d.name FROM team_season_division tsd
-// JOIN teams t ON t.id = tsd.team_id
-// JOIN divisions d ON d.id = tsd.division_id
-// WHERE tsd.season_id = 1;
-
-
-
-// [
-//     {
-//         team_name: 'synthesize onlines',
-//         division_name: 'A1',
-//     },
-//     {
-//         team_name: 'array arrays',
-//         division_name: 'A1',
-//     },
-//     {
-//         team_name: 'quantify matrixs',
-//         division_name: 'B1',
-//     }
-// ]
-
-// How to get nested array within an array of objects using joins
-
-// const exampleResponseNeeded = [
-//     {
-//         division_name: 'A1',
-//         teams_in_division: [ 
-//             { name: 'synthesize onlines' }, 
-//             { name: 'array arrays' },
-//             { name: 'mobile microchips' } 
-//         ]
-//     },
-//     {
-//         division_name: 'B1',
-//         teamteams_in_divisions: [ 
-//             { name: 'quantify matrixs' }, 
-//             { name: 'matrix matrixs' }, 
-//             { name: 'hack hacks' }, 
-//             { name: 'bluetooth generates' }, 
-//             { name: 'override protocols' } 
-//         ]
-//     }
-// ]
