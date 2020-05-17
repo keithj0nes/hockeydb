@@ -33,6 +33,30 @@ const getAllTeams = async (req, res) => {
 }
 
 
+const getAllTeamsByDivision = async (req, res) => {
+  const db = app.get('db');
+
+  console.log(req.query, 'getting teams by division!!')
+  let { season } = req.query;
+  // console.log(division_id, 'divid')
+  if(!season || season === 'undefined'){
+    season_id = await db.seasons.findOne({is_active: true});
+  }
+  
+  let query = `
+    SELECT 
+    d.name AS division_name, jsonb_agg(jsonb_build_object('name', t.name, 'id', t.id)) AS teams_in_division 
+    FROM team_season_division tsd
+    INNER join teams t ON t.id = tsd.team_id
+    INNER join divisions d ON d.id = tsd.division_id
+    WHERE tsd.season_id = ${season || season_id.id}
+    GROUP BY d.id, d.name ORDER BY d.name;
+  `;
+
+  const data = await db.query(query);
+  res.status(200).send({ status: 200, data, message: 'Retrieved list of teams grouped by division' });
+}
+
 const getTeamById = async (req, res) => {
   const db = app.get('db');
   const { id } = req.params;
@@ -187,6 +211,7 @@ const getTeamSchedule = async (req, res) => {
 
 module.exports = {
   getAllTeams,
+  getAllTeamsByDivision,
   getTeamById,
   getTeamSchedule
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getTeamsPageFilters } from '../../../redux/actions/teamsActions';
+import { getTeamsPageFilters, getTeamsByDivision } from '../../../redux/actions/teamsActions';
 import { Select } from '../../../components/';
 import { getQuery, setQuery } from '../../../helpers';
 import './teams.scss';
@@ -18,12 +19,15 @@ const Teams = (props) => {
             // get the teams list here by passing in the filterString
             setFilters(filters)
             props.getTeamsPageFilters(filterString)
+            props.getTeamsByDivision(filterString)
 
         } else {
             // if theres no seasons or allTeams, get the filters
-            const { seasons, allTeams } = props.scheduleFilters;
+            // const { seasons, allTeams } = props.scheduleFilters;
             // if(seasons.length <= 0 && allTeams.length <= 0) {
                 props.getTeamsPageFilters()
+                props.getTeamsByDivision()
+
             // }
         }
         
@@ -50,6 +54,7 @@ const Teams = (props) => {
             // }
             const search = setQuery(_filters)
             props.getTeamsPageFilters(search)
+            props.getTeamsByDivision(search)
             setFilters({..._filters}); 
         }
     }
@@ -69,7 +74,7 @@ const Teams = (props) => {
 
                 <div className="teams-container">
 
-                    {ListOfTeams.map(t => {
+                    {/* {ListOfTeams.map(t => {
                         return (
                             <div key={t.divName} className="division-container">
 
@@ -78,6 +83,23 @@ const Teams = (props) => {
                                 {t.teams.map(team => {
                                     return (
                                         <p key={team.id} style={{background: 'yellow', padding: '2px 10px 2px 0', marginTop: 10}}>{team.name}</p>
+                                    )
+                                })}
+                            </div>
+                        )
+                    })} */}
+
+                    {props.teamsByDivision.map(t => {
+                        return (
+                            <div key={t.division_name} className="division-container">
+                                <h2>{t.division_name}</h2>
+
+                                {t.teams_in_division.map(team => {
+                                    return (
+                                        <p key={team.id}>
+                                        
+                                            <Link to={`teams/${team.id}`}    >{team.name}</Link>
+                                        </p>
                                     )
                                 })}
                             </div>
@@ -93,13 +115,15 @@ const Teams = (props) => {
 const mapStateToProps = state => {
     return {
         scheduleFilters: state.misc.scheduleFilters,
-        currentSeasonId: state.seasons.currentSeason && state.seasons.currentSeason.id
+        currentSeasonId: state.seasons.currentSeason && state.seasons.currentSeason.id,
+        teamsByDivision: state.teams.teamsByDivision
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         getTeamsPageFilters: filter => dispatch(getTeamsPageFilters(filter)),
+        getTeamsByDivision: filter => dispatch(getTeamsByDivision(filter))
     }
 }
 
@@ -129,4 +153,62 @@ const ListOfTeams = [
 //     {id: 2, name: 'hello'},
 //     {id: 3, name: 'whatsup'},
 //     {id: 4, name: 'nmyou?'},
+// ]
+
+
+// Pivot Table
+
+// id | team_id | season_id | division_id
+// --------------------------------------
+// 1  |	3	 |     1     |      3	
+// 2  |	4	 |     1     |      3	
+// 3  |	5	 |     1     |      3	
+// 4  |	6	 |     1     |      3	
+
+
+// Query to list all teams 
+
+// SELECT t.name, d.name FROM team_season_division tsd
+// JOIN teams t ON t.id = tsd.team_id
+// JOIN divisions d ON d.id = tsd.division_id
+// WHERE tsd.season_id = 1;
+
+
+
+// [
+//     {
+//         team_name: 'synthesize onlines',
+//         division_name: 'A1',
+//     },
+//     {
+//         team_name: 'array arrays',
+//         division_name: 'A1',
+//     },
+//     {
+//         team_name: 'quantify matrixs',
+//         division_name: 'B1',
+//     }
+// ]
+
+// How to get nested array within an array of objects using joins
+
+// const exampleResponseNeeded = [
+//     {
+//         division_name: 'A1',
+//         teams_in_division: [ 
+//             { name: 'synthesize onlines' }, 
+//             { name: 'array arrays' },
+//             { name: 'mobile microchips' } 
+//         ]
+//     },
+//     {
+//         division_name: 'B1',
+//         teamteams_in_divisions: [ 
+//             { name: 'quantify matrixs' }, 
+//             { name: 'matrix matrixs' }, 
+//             { name: 'hack hacks' }, 
+//             { name: 'bluetooth generates' }, 
+//             { name: 'override protocols' } 
+//         ]
+//     }
 // ]

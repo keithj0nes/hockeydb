@@ -12,6 +12,7 @@ const initialteamstate = {
         schedule: [],
         recent: []
     },
+    teamsByDivision: [],
     //filter
     isVisible: false,
     
@@ -29,6 +30,8 @@ export const teams = (state = initialteamstate, { type, payload }) => {
 
     case `teams/singleTeam/${GET_SUCCESS}`:
         return { ...state, isLoading: false, singleTeam: { ...state.singleTeam, ...payload }}
+    case `teams/byDivision/${GET_SUCCESS}`:
+        return { ...state, isLoading: false, teamsByDivision: payload}
     case `teams/${UPDATE_SUCCESS}`:
         const newteams = state.teams.map(item => {
             if(item.id === payload.id){
