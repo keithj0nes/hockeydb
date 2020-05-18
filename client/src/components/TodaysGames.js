@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import { Button } from './';
 import './todaysgames.scss';
+import { history } from '../helpers';
 
 
 class TodaysGames extends Component {
@@ -37,7 +38,7 @@ class TodaysGames extends Component {
                 <div style={{display: 'flex', justifyContent: 'center', padding: 24}}>
                     <Button
                         title="VIEW SCHEDULE"
-                        onClick={() => console.log('view schedule pushed')}
+                        onClick={() => history.push('/schedule')}
                         outline
                     />
                 </div>
