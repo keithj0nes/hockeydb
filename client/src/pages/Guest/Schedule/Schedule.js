@@ -132,7 +132,6 @@ class Schedule extends Component {
 
     render() {
 
-        console.log(this.props.scheduleFilters, 'aye!')
         return (
             <div className="schedule-container">
                 <div className="white-bg">

@@ -2,13 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import GuestTable from '../../../components/GuestTable';
 
-const STHome = ({recent}) => {
+const STHome = ({recent, standings}) => {
 
     return (
 
         <>
             <div className="split-50">
-
                 <GuestTable 
                     title={'Team Leaders'}
                     data={teamLeaders}
@@ -21,25 +20,28 @@ const STHome = ({recent}) => {
                         'points':   { as: 'pts', flex: 'one' }
                     }} 
                     uniqueKey='category'
+                    emptyTableText="Leaders not available"
                 />
 
                 <GuestTable 
-                    title={'Team Standings'}
-                    data={teamStandings}
+                    title={'Team Standings - Top 5'}
+                    // data={teamStandings}
+                    data={standings}
                     minWidth={'100%'}
                     containerWidth={'100%'}
                     // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
 
                     sections={{
                         'rank': 'one',
-                        'team': 'five', 
+                        'team_name':  { as: 'team',  flex: 'five', link: { to:'/teams', key: 'team_id' } }, 
                         'games_played': { as: 'gp',  flex: 'one' }, 
                         'points':       { as: 'pts', flex: 'one' }
                     }} 
                     uniqueKey='rank'
+                    emptyTableText="Standings not available"
                 />
-
             </div>
+            
             <GuestTable 
                 title={'Recent'}
                 data={recent}
@@ -60,8 +62,10 @@ const STHome = ({recent}) => {
 }
 
 const mapStateToProps = state => {
+    console.log(state.teams.singleTeam.standings, 'STANDINGS')
     return {
-        recent: state.teams.singleTeam.recent || []
+        recent: state.teams.singleTeam.recent,
+        standings: state.teams.singleTeam.standings
     }
 }
 
@@ -76,9 +80,9 @@ const teamLeaders = [
 ]
 
 const teamStandings = [
-    {rank: 1, team: 'Benchwarmers', games_played: 19, points: 26},
-    {rank: 2, team: 'Grocery Stick', games_played: 20, points: 26},
-    {rank: 3, team: 'Puck Bunnies', games_played: 19, points: 24},
-    {rank: 4, team: 'Gretzky Fanboys', games_played: 19, points: 22},
-    {rank: 5, team: 'The Other Guys', games_played: 20, points: 20},
+    {rank: 1, team_name: 'Benchwarmers', games_played: 19, points: 26},
+    {rank: 2, team_name: 'Grocery Stick', games_played: 20, points: 26},
+    {rank: 3, team_name: 'Puck Bunnies', games_played: 19, points: 24},
+    {rank: 4, team_name: 'Gretzky Fanboys', games_played: 19, points: 22},
+    {rank: 5, team_name: 'The Other Guys', games_played: 20, points: 20},
 ]

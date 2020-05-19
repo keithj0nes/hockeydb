@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
-import { TableLoader } from './';
+// import { TableLoader } from './';
 
 const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title, uniqueKey, emptyTableText }) => {
 

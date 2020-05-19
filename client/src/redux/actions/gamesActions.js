@@ -19,7 +19,6 @@ export const getGames = filter => async (dispatch, getState) => {
     const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
     if (!data.data) return false;
 
-    console.log(data.data.games, 'games')
     dispatch({ 
         type: 'SCHEDULE_FILTERS', 
         payload: {seasons: data.data.seasons, divisions: data.data.divisions, teams: data.data.teams}
@@ -38,15 +37,12 @@ export const getGameById = gameId => async (dispatch, getState) => {
 
     const game = await request(`/api/games/${gameId}`, 'GET', {}, true)
 
-    console.log(game, 'GAMEEEEEE!!')
     if (!game.data) return false;
 
     dispatch({ 
         type: `gameById/${GET_SUCCESS}`, 
         payload: game.data
     })
-  
-
 }
 
 
