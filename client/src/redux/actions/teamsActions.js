@@ -66,6 +66,13 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
 
     if (!team.data) return false;
 
+    console.log(team.data, 'GET TEAM BY ID DATA')
+
+    // add rank key - not stored in db
+    const standings = team.data.standings.map((item, ind) => {
+        return {...item, rank: ind + 1}
+    })
+
     dispatch({ 
         type: `teams/singleTeam/${GET_SUCCESS}`, 
         payload: { 
@@ -73,7 +80,8 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
             team: team.data.team,
             // schedule: team.data.schedule, 
             recent: team.data.recent,
-            record: team.data.record
+            record: team.data.record,
+            standings
         }
     })
 

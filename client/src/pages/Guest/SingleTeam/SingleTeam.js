@@ -20,7 +20,7 @@ const SingleTeam = (props) => {
     // component did update on pathname change (will fire when going to new team route)
     useEffect(() => {
         // get team info
-
+        window.scrollTo(0,0);
         if(props.location.search.length > 0) {
             const [, filterString] = getQuery();
             props.getTeamById(props.match.params.id, filterString).then(res => {
@@ -95,7 +95,8 @@ const SingleTeam = (props) => {
 
                             <h4>Team Record</h4>
                             <table>
-                                <tr>
+                                <thead>
+                                    <tr>
                                     <th title="games played">GP</th>
                                     <th title="wins">W</th>
                                     <th title="losses">L</th>
@@ -103,26 +104,16 @@ const SingleTeam = (props) => {
                                     <th title="goals for">GF</th>
                                     <th title="goals against">GA</th>
                                     <th title="penalty minutes">PIM</th>
-                                </tr>
-                                <tr>
-                                    {/* <td>20</td>
-                                    <td>8</td>
-                                    <td>20</td>
-                                    <td>16</td>
-                                    <td>3.78</td>
-                                    <td>7.78</td>
-                                    <td>326</td> */}
-
-                                    { Object.keys(props.record).map(rec => <td key={rec}>{props.record[rec] || 0}</td>)}
-                                </tr>
-
-                                
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        { Object.keys(props.record).map(rec => <td key={rec}>{props.record[rec] || 0}</td>)}
+                                    </tr>
+                                </tbody>
                             </table>
-
                         </div>
-
                     </div>
-
                 </div>
 
                 <div className="single-team-tabs">

@@ -64,26 +64,25 @@
         font-family: $main_font;
         border-collapse: collapse;
         width: 100%;
-    }
 
-    tr:first-child {
-        border-bottom: 1px solid gray;
-        // padding: 10px 0;
-    }
-
-    th {
-        color: gray;
-        // padding: 0 20px;
-        // background: seashell;
-        text-align: left;
-        font-size: 14px;
-    }
-
-    td {
-        font-weight: bold;
-        // padding: 0 20px;
-        // background: greenyellow;
-        font-size: 18px;
+        thead tr:first-child {
+            border-bottom: 1px solid gray;
+            // padding: 10px 0;
+        }
+        th {
+            color: gray;
+            // padding: 0 20px;
+            // background: seashell;
+            text-align: left;
+            font-size: 14px;
+        }
+    
+        td {
+            font-weight: bold;
+            // padding: 0 20px;
+            // background: greenyellow;
+            font-size: 18px;
+        }
     }
 }
 

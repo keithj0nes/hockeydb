@@ -10,7 +10,9 @@ const initialteamstate = {
         team: {},
         seasons: [],
         schedule: [],
-        recent: []
+        recent: [],
+        standings: [],
+        leaders: []
     },
     teamsByDivision: [],
     //filter
