@@ -1,5 +1,6 @@
 import axios from 'axios';
 import store from '../store';
+import {history}  from '../../helpers';
 // import { ROOT } from '../../client_config';
 import { TOGGLE_MODAL } from '../actionTypes';
 
@@ -51,8 +52,7 @@ export const request = async (route, method, session, noAuth) => {
 
     // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     if(!responseRaw) return false;
-    const { status, data, message, shouldLogOut } = responseRaw.data;
-
+    const { status, data, message, shouldLogOut, redirect } = responseRaw.data;
     // const status = 243;
     // const message = 'fake message lol';
     
@@ -85,6 +85,13 @@ export const request = async (route, method, session, noAuth) => {
             return false;
         }
         // store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
+
+        if(redirect){
+            console.log('Redirecting to the ' + redirect + ' page')
+            history.push(redirect);
+            return false;
+        }
+
         store.dispatch({
             type: TOGGLE_MODAL,
             modalProps: {

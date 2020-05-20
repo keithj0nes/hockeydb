@@ -18,20 +18,15 @@ class Schedule extends Component {
     }
 
     componentDidMount() {
-        const { games, location, getGames } = this.props;
-        if(games.length <= 0) {
+        const { location, getGames } = this.props;
             if(location.search.length > 0){
                 const [filters, filterString] = getQuery();
-                console.log(filters, 'FILTERS!')
+                // console.log(filters, 'FILTERS!')
                 return getGames(filterString).then(res => {
                        return res && this.setState({filters}) //this adds filters to default values
                 });
             }
-            return getGames('page=1').then(res => this.setState({filters: this.state.filters, ...res}))
-        } else {
-            const [filters] = getQuery();
-            this.setState({filters})
-        }
+            return getGames('page=1').then(res => this.setState({filters: {...this.state.filters, ...res}}))
     }
 
     handleChange = e => {
@@ -63,7 +58,7 @@ class Schedule extends Component {
             const search = setQuery(filters);
             this.props.getGames(search)
             filters.page = 1;
-            return {filters}
+            return {filters, statechanged: name === 'season' && true}
         })
     }
 
@@ -81,6 +76,10 @@ class Schedule extends Component {
 
         // if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
         if( games.length <= 0 ) return <h3 style={{textAlign: 'center', marginTop: 50}}>No games fit that search criteria :(</h3>
+            
+        // const season = this.state.filters.season && `?season=${this.state.filters.season}`;
+        const season = this.state.statechanged && `?season=${this.state.filters.season}`; // wonky - added above on line 67
+        // const seasonZ = Number(this.state.filters.season) !== this.props.currentSeasonId && `?season=${this.state.filters.season}`;
 
         return games.map(game => {
                             
@@ -88,19 +87,19 @@ class Schedule extends Component {
             
             game.date = `${d[0]} ${d[1]} ${d[2]}`;
             game.start_time = `${d[3]} ${d[4]}`;
-            
+
             return (
                 <div className="ot-row" key={game.id}>
                     <p className="ot-cell ot-flex-two">{game.date}</p>
                     <p className="ot-cell ot-flex-two">{game.start_time}</p>
                     <p className="ot-cell ot-flex-three">{game.location_name}</p>
                     <p className="ot-cell ot-flex-four">
-                        <Link to={{pathname:`/teams/${game.home_team_id}`, state: {name:game.home_team}}}>
+                        <Link to={{pathname:`/teams/${game.home_team_id}`, search: season}}>
                             {game.home_team}
                         </Link>
                     </p>
                     <p className="ot-cell ot-flex-four">
-                        <Link to={{pathname:`/teams/${game.away_team_id}`, state: {name:game.away_team}}}>
+                        <Link to={{pathname:`/teams/${game.away_team_id}`, search: season}}>
                             {game.away_team}
                         </Link>
                     </p>
@@ -180,7 +179,8 @@ const mapStateToProps = state => {
         // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,
         games: state.games.allGames,
-        scheduleFilters: state.misc.scheduleFilters
+        scheduleFilters: state.misc.scheduleFilters,
+        currentSeasonId: state.seasons.currentSeason && state.seasons.currentSeason.id,
     }
 }
 

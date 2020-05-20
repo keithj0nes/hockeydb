@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getTeamById } from '../../../redux/actions/teamsActions';
+import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teamsActions';
 import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';
@@ -20,6 +20,7 @@ const SingleTeam = (props) => {
     // component did update on pathname change (will fire when going to new team route)
     useEffect(() => {
         // get team info
+
         window.scrollTo(0,0);
         if(props.location.search.length > 0) {
             const [, filterString] = getQuery();
@@ -36,11 +37,10 @@ const SingleTeam = (props) => {
             });
         }
 
-        return () => console.log('use this unmount to clear the single team redux state')
+        return () => props.clearSingleTeamState();
     }, [props.location.pathname + props.location.search])
 
     const handleChange = e => {
-        console.log(e.target.name, e.target.value)
         const { name, value } = e.target
         setSelectedSeason(value);
         const search = setQuery({[name]:value})
@@ -51,11 +51,9 @@ const SingleTeam = (props) => {
         if(tabSelected === 'home') {
             // return ( <HomeComponent />)
             return ( <STHome />)
-
         } else if(tabSelected === 'schedule') {
             // return ( <ScheduleComponent /> )
             return ( <STSchedule {...props} /> )
-
         } else if(tabSelected === 'roster') {
             return ( <RosterComponent />)
         } 
@@ -85,7 +83,7 @@ const SingleTeam = (props) => {
                             <Select 
                                 name='season'   
                                 title="Season"   
-                                listOfSelects={props.seasons}                                  
+                                listOfSelects={props.seasonsSelect}                                  
                                 onChange={handleChange}  
                                 defaultValue={selectedSeason || ''}   
                                 useKey="id" 
@@ -143,12 +141,14 @@ const mapStateToProps = state => {
         record: state.teams.singleTeam.record,
         team: state.teams.singleTeam.team || {},
         seasons: state.seasons.seasons,
+        seasonsSelect: state.teams.singleTeam.seasonsSelect,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getTeamById: (id, filter) => dispatch(getTeamById(id, filter))
+        getTeamById: (id, filter) => dispatch(getTeamById(id, filter)),
+        clearSingleTeamState: () => dispatch(clearSingleTeamState())
     }
 }
 

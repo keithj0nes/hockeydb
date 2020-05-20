@@ -59,14 +59,17 @@ const Teams = (props) => {
         }
     }
 
+    // pass this as the search param in Link for the get request on the Teams page
+    const season = Number(filters.season) !== props.currentSeasonId && `?season=${filters.season}`;
+
     return (
         <div className="schedule-container">
             <div className="white-bg" style={{paddingBottom:40}}>
                 <h1>Teams</h1>
 
                 <div className="schedule-filters"> 
-                    <Select name='season'   title="Season"   listOfSelects={props.scheduleFilters.seasons}                                     onChange={handleChange}  defaultValue={filters.season || ''}   useKey="id" />
-                    <Select name='team'     title="Team"     listOfSelects={[{name: 'All', value: ''}, ...props.scheduleFilters.allTeams]}     onChange={handleChange}  defaultValue={filters.allTeams || ''} useKey="id" />
+                    <Select name='season' title="Season" listOfSelects={props.scheduleFilters.seasons}                                 onChange={handleChange} defaultValue={filters.season || ''}   useKey="id" />
+                    <Select name='team'   title="Team"   listOfSelects={[{name: 'All', value: ''}, ...props.scheduleFilters.allTeams]} onChange={handleChange} defaultValue={filters.allTeams || ''} useKey="id" />
                     {/* <a>Clear Filters</a> */}
                     <div></div>
                     <div></div>
@@ -85,8 +88,7 @@ const Teams = (props) => {
                                     {t.teams_in_division.map(team => {
                                         return (
                                             <p key={team.id}>
-                                            
-                                            <Link to={`teams/${team.id}`}    >{team.name}</Link>
+                                                <Link to={{pathname: `teams/${team.id}`, search: season}}>{team.name}</Link>
                                             </p>
                                             )
                                         })}

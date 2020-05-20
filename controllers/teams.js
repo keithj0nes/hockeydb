@@ -68,7 +68,7 @@ const getTeamById = async (req, res) => {
 
   const confirmTeam = await db.teams.findOne({ id }).catch(err => console.log(err));
   if (!confirmTeam) {
-    return res.status(404).send({ status: 404, data: [], message: 'Team cannot be found' })
+    return res.status(200).send({ status: 404, data: [], message: 'Team cannot be found', redirect: '/teams' })
   }
 
 
@@ -86,18 +86,22 @@ const getTeamById = async (req, res) => {
   `;
 
   const team = await db.query(teamQuery, [id]);
-
+  
+  console.log(team, 'TEAM!!!')
+  if(team.length <= 0) {
+    return res.status(200).send({ status: 404, data: [], message: 'Team did not play in this season', redirect: '/teams' })
+  }
 
   // this seasons returns ALL seasons for team page
-  // const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+  const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
 
   // *** this seasons returns ONLY seasons associated with the team - some teams dont play every season ***
-  const seasonsQuery = `
+  const seasonsSelectQuery = `
     select s.id, s.name, s.is_active  from team_season_division tsd
     join seasons s on s.id = tsd.season_id
     where tsd.team_id = $1 and deleted_date IS null AND hidden_date IS null ORDER BY id;
   `;
-  const seasons = await db.query(seasonsQuery, [id]);
+  const seasonsSelect = await db.query(seasonsSelectQuery, [id]);
 
 
   const recordQuery = `
@@ -147,8 +151,13 @@ const getTeamById = async (req, res) => {
     LIMIT 5;
   `;
 
-  console.log(team)
-  const standings = await db.query(standingsQuery, [team[0].division_id]);
+  // console.log(team)
+
+  let standings = [];
+  if(team.length > 0) {
+    standings = await db.query(standingsQuery, [team[0].division_id]);
+
+  }
 
 // console.log(recent, 'RECENT')
   // const scheduleQuery = `
@@ -172,7 +181,7 @@ const getTeamById = async (req, res) => {
 
   // console.log(schedule, 'SCHEUDLE!!');
 
-  res.status(200).send({ status: 200, data: {team: team[0], recent, record: record[0], seasons, standings}, message: 'Retrieved Team' })
+  res.status(200).send({ status: 200, data: {team: team[0], recent, record: record[0], seasons, standings, seasonsSelect}, message: 'Retrieved Team' })
 }
 
 

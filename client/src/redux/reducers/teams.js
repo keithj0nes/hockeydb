@@ -1,6 +1,6 @@
 // teams REDUCER!!
 
-import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
+import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, CLEAR_STATE } from '../actionTypes';
 
 const initialteamstate = {
     isLoading: true,
@@ -8,7 +8,7 @@ const initialteamstate = {
     singleTeam: {
         record: {},
         team: {},
-        seasons: [],
+        seasonsSelect: [],
         schedule: [],
         recent: [],
         standings: [],
@@ -48,6 +48,8 @@ export const teams = (state = initialteamstate, { type, payload }) => {
         //if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)
         //otherwise just set it to the opposite of what it's currently set to
         return { ...state, isVisible: typeof(payload) !== 'undefined' ? payload : !state.isVisible }
+    case `teams/singleTeam/${CLEAR_STATE}`:
+        return { ...state, singleTeam: initialteamstate.singleTeam }
         
     default:
         return state;

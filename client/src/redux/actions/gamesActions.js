@@ -26,6 +26,11 @@ export const getGames = filter => async (dispatch, getState) => {
   
     dispatch({ type: `games/${GET_SUCCESS}`, payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games} })
 
+    // dispatch({
+    //     type: `seasons/${GET_SUCCESS}`,
+    //     payload: data.data.seasons
+    // })
+
     // this checks the active season to set to the <Schedule /> filter
     const activeSeason = data.data.seasons.find(season => season.is_active === true)
     return { season: activeSeason.id };
