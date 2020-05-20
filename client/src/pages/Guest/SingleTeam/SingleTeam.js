@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getTeamById } from '../../../redux/actions/teamsActions';
+import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teamsActions';
 import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';
@@ -39,7 +39,7 @@ const SingleTeam = (props) => {
             });
         }
 
-        return () => console.log('use this unmount to clear the single team redux state')
+        return () => props.clearSingleTeamState();
     }, [props.location.pathname + props.location.search])
 
     const handleChange = e => {
@@ -151,7 +151,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getTeamById: (id, filter) => dispatch(getTeamById(id, filter))
+        getTeamById: (id, filter) => dispatch(getTeamById(id, filter)),
+        clearSingleTeamState: () => dispatch(clearSingleTeamState())
     }
 }
 

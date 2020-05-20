@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+import { GET_SUCCESS, TOGGLE_MODAL, CLEAR_STATE } from '../actionTypes';
 
 
 export const getTeams = (filter) => async (dispatch, getState) => {
@@ -194,4 +194,12 @@ export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
           schedule: data.data 
       }
   })
+}
+
+
+
+export const clearSingleTeamState = () => {
+    return {
+        type: `teams/singleTeam/${CLEAR_STATE}`
+    }
 }

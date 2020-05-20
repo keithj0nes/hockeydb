@@ -23,6 +23,7 @@ const STHome = ({recent, standings}) => {
                 />
 
                 <GuestTable 
+                    // title={`Team Standings - Top ${standings.length}`}
                     title={'Team Standings - Top 5'}
                     // data={teamStandings}
                     data={standings}

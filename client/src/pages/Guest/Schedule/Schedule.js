@@ -180,6 +180,7 @@ class Schedule extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state.teams.singleTeam, 'SINGLE TEAM!!')
     return {
         // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,

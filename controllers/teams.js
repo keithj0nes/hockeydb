@@ -68,7 +68,7 @@ const getTeamById = async (req, res) => {
 
   const confirmTeam = await db.teams.findOne({ id }).catch(err => console.log(err));
   if (!confirmTeam) {
-    return res.status(200).send({ status: 404, data: [], message: 'Team cannot be found' })
+    return res.status(200).send({ status: 404, data: [], message: 'Team cannot be found', redirect: '/teams' })
   }
 
 
