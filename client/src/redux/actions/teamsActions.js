@@ -92,7 +92,9 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
 
 
     if(!filter) {
+        console.log(team.data.seasons)
         const activeSeason = team.data.seasons.find(season => season.is_active === true)
+        console.log(activeSeason, 'activeseason')
         // console.log({season: activeSeason.id})
         // return { season: activeSeason.id };
         return activeSeason.id;

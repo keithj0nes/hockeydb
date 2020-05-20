@@ -82,12 +82,16 @@ class Schedule extends Component {
         // if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
         if( games.length <= 0 ) return <h3 style={{textAlign: 'center', marginTop: 50}}>No games fit that search criteria :(</h3>
 
+            console.log(this.state.filters, 'filters!')
         return games.map(game => {
                             
             const d = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
             
             game.date = `${d[0]} ${d[1]} ${d[2]}`;
             game.start_time = `${d[3]} ${d[4]}`;
+
+            const season = this.state.filters.season && `?season=${this.state.filters.season}`;
+            console.log(season, 'SEASON!!!')
             
             return (
                 <div className="ot-row" key={game.id}>
@@ -95,12 +99,12 @@ class Schedule extends Component {
                     <p className="ot-cell ot-flex-two">{game.start_time}</p>
                     <p className="ot-cell ot-flex-three">{game.location_name}</p>
                     <p className="ot-cell ot-flex-four">
-                        <Link to={{pathname:`/teams/${game.home_team_id}`, state: {name:game.home_team}}}>
+                        <Link to={{pathname:`/teams/${game.home_team_id}`, search: season}}>
                             {game.home_team}
                         </Link>
                     </p>
                     <p className="ot-cell ot-flex-four">
-                        <Link to={{pathname:`/teams/${game.away_team_id}`, state: {name:game.away_team}}}>
+                        <Link to={{pathname:`/teams/${game.away_team_id}`, search: season}}>
                             {game.away_team}
                         </Link>
                     </p>
