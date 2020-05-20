@@ -26,7 +26,6 @@ const SingleTeam = (props) => {
         window.scrollTo(0,0);
         if(props.location.search.length > 0) {
             const [, filterString] = getQuery();
-            console.log(filterString,' FILTERS STRING')
             props.getTeamById(props.match.params.id, filterString).then(res => {
                 setSelectedSeason(res)
                 setTabSelected('home')

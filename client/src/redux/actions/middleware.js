@@ -53,8 +53,6 @@ export const request = async (route, method, session, noAuth) => {
     // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     if(!responseRaw) return false;
     const { status, data, message, shouldLogOut, redirect } = responseRaw.data;
-    console.log(redirect,' REIDRUCTTEDDD 🙂')
-
     // const status = 243;
     // const message = 'fake message lol';
     

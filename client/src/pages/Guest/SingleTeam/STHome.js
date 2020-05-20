@@ -5,7 +5,6 @@ import GuestTable from '../../../components/GuestTable';
 const STHome = ({recent, standings}) => {
 
     return (
-
         <>
             <div className="split-50">
                 <GuestTable 
@@ -62,7 +61,6 @@ const STHome = ({recent, standings}) => {
 }
 
 const mapStateToProps = state => {
-    console.log(state.teams.singleTeam.standings, 'STANDINGS')
     return {
         recent: state.teams.singleTeam.recent,
         standings: state.teams.singleTeam.standings
@@ -79,10 +77,10 @@ const teamLeaders = [
     {category: 'Wins', player: 'Roberto Luongo', points: 0},
 ]
 
-const teamStandings = [
-    {rank: 1, team_name: 'Benchwarmers', games_played: 19, points: 26},
-    {rank: 2, team_name: 'Grocery Stick', games_played: 20, points: 26},
-    {rank: 3, team_name: 'Puck Bunnies', games_played: 19, points: 24},
-    {rank: 4, team_name: 'Gretzky Fanboys', games_played: 19, points: 22},
-    {rank: 5, team_name: 'The Other Guys', games_played: 20, points: 20},
-]
+// const teamStandings = [
+//     {rank: 1, team_name: 'Benchwarmers', games_played: 19, points: 26},
+//     {rank: 2, team_name: 'Grocery Stick', games_played: 20, points: 26},
+//     {rank: 3, team_name: 'Puck Bunnies', games_played: 19, points: 24},
+//     {rank: 4, team_name: 'Gretzky Fanboys', games_played: 19, points: 22},
+//     {rank: 5, team_name: 'The Other Guys', games_played: 20, points: 20},
+// ]
