@@ -21,8 +21,6 @@ const SingleTeam = (props) => {
     useEffect(() => {
         // get team info
 
-            console.log(props, 'PRROPPPSSS')
-
         window.scrollTo(0,0);
         if(props.location.search.length > 0) {
             const [, filterString] = getQuery();
@@ -43,7 +41,6 @@ const SingleTeam = (props) => {
     }, [props.location.pathname + props.location.search])
 
     const handleChange = e => {
-        console.log(e.target.name, e.target.value)
         const { name, value } = e.target
         setSelectedSeason(value);
         const search = setQuery({[name]:value})
@@ -54,11 +51,9 @@ const SingleTeam = (props) => {
         if(tabSelected === 'home') {
             // return ( <HomeComponent />)
             return ( <STHome />)
-
         } else if(tabSelected === 'schedule') {
             // return ( <ScheduleComponent /> )
             return ( <STSchedule {...props} /> )
-
         } else if(tabSelected === 'roster') {
             return ( <RosterComponent />)
         } 
@@ -88,7 +83,7 @@ const SingleTeam = (props) => {
                             <Select 
                                 name='season'   
                                 title="Season"   
-                                listOfSelects={props.seasons}                                  
+                                listOfSelects={props.seasonsSelect}                                  
                                 onChange={handleChange}  
                                 defaultValue={selectedSeason || ''}   
                                 useKey="id" 
@@ -146,6 +141,7 @@ const mapStateToProps = state => {
         record: state.teams.singleTeam.record,
         team: state.teams.singleTeam.team || {},
         seasons: state.seasons.seasons,
+        seasonsSelect: state.teams.singleTeam.seasonsSelect,
     }
 }
 

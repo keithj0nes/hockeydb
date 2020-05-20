@@ -18,20 +18,15 @@ class Schedule extends Component {
     }
 
     componentDidMount() {
-        const { games, location, getGames } = this.props;
-        if(games.length <= 0) {
+        const { location, getGames } = this.props;
             if(location.search.length > 0){
                 const [filters, filterString] = getQuery();
-                console.log(filters, 'FILTERS!')
+                // console.log(filters, 'FILTERS!')
                 return getGames(filterString).then(res => {
                        return res && this.setState({filters}) //this adds filters to default values
                 });
             }
-            return getGames('page=1').then(res => this.setState({filters: this.state.filters, ...res}))
-        } else {
-            const [filters] = getQuery();
-            this.setState({filters})
-        }
+            return getGames('page=1').then(res => this.setState({filters: {...this.state.filters, ...res}}))
     }
 
     handleChange = e => {
@@ -63,7 +58,7 @@ class Schedule extends Component {
             const search = setQuery(filters);
             this.props.getGames(search)
             filters.page = 1;
-            return {filters}
+            return {filters, statechanged: name === 'season' && true}
         })
     }
 
@@ -81,8 +76,11 @@ class Schedule extends Component {
 
         // if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
         if( games.length <= 0 ) return <h3 style={{textAlign: 'center', marginTop: 50}}>No games fit that search criteria :(</h3>
+            
+        // const season = this.state.filters.season && `?season=${this.state.filters.season}`;
+        const season = this.state.statechanged && `?season=${this.state.filters.season}`; // wonky - added above on line 67
+        // const seasonZ = Number(this.state.filters.season) !== this.props.currentSeasonId && `?season=${this.state.filters.season}`;
 
-            console.log(this.state.filters, 'filters!')
         return games.map(game => {
                             
             const d = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
@@ -90,9 +88,6 @@ class Schedule extends Component {
             game.date = `${d[0]} ${d[1]} ${d[2]}`;
             game.start_time = `${d[3]} ${d[4]}`;
 
-            const season = this.state.filters.season && `?season=${this.state.filters.season}`;
-            console.log(season, 'SEASON!!!')
-            
             return (
                 <div className="ot-row" key={game.id}>
                     <p className="ot-cell ot-flex-two">{game.date}</p>
@@ -180,12 +175,12 @@ class Schedule extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state.teams.singleTeam, 'SINGLE TEAM!!')
     return {
         // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,
         games: state.games.allGames,
-        scheduleFilters: state.misc.scheduleFilters
+        scheduleFilters: state.misc.scheduleFilters,
+        currentSeasonId: state.seasons.currentSeason && state.seasons.currentSeason.id,
     }
 }
 

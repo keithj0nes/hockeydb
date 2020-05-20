@@ -96,12 +96,12 @@ const getTeamById = async (req, res) => {
   const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
 
   // *** this seasons returns ONLY seasons associated with the team - some teams dont play every season ***
-  // const seasonsQuery = `
-  //   select s.id, s.name, s.is_active  from team_season_division tsd
-  //   join seasons s on s.id = tsd.season_id
-  //   where tsd.team_id = $1 and deleted_date IS null AND hidden_date IS null ORDER BY id;
-  // `;
-  // const seasons = await db.query(seasonsQuery, [id]);
+  const seasonsSelectQuery = `
+    select s.id, s.name, s.is_active  from team_season_division tsd
+    join seasons s on s.id = tsd.season_id
+    where tsd.team_id = $1 and deleted_date IS null AND hidden_date IS null ORDER BY id;
+  `;
+  const seasonsSelect = await db.query(seasonsSelectQuery, [id]);
 
 
   const recordQuery = `
@@ -181,7 +181,7 @@ const getTeamById = async (req, res) => {
 
   // console.log(schedule, 'SCHEUDLE!!');
 
-  res.status(200).send({ status: 200, data: {team: team[0], recent, record: record[0], seasons, standings}, message: 'Retrieved Team' })
+  res.status(200).send({ status: 200, data: {team: team[0], recent, record: record[0], seasons, standings, seasonsSelect}, message: 'Retrieved Team' })
 }
 
 

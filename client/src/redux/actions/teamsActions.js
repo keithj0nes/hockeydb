@@ -2,6 +2,7 @@ import { request } from './middleware';
 import { GET_SUCCESS, TOGGLE_MODAL, CLEAR_STATE } from '../actionTypes';
 
 
+// Dashboard/DashTeams.js  -  Dashboard/DashGames.js 
 export const getTeams = (filter) => async (dispatch, getState) => {
     const { seasons: { currentSeason }  } = getState();
 
@@ -43,10 +44,11 @@ export const getTeams = (filter) => async (dispatch, getState) => {
     return true;
 }
 
+
+// Guest/Teams.js
 export const getTeamsByDivision = (filter) => async (dispatch, getState) => {
 
   const data = await request(`/api/teams/by_division?${filter || ''}`, 'GET', {}, true);
-
   if (!data.data) return false;
 
   dispatch({
@@ -58,15 +60,11 @@ export const getTeamsByDivision = (filter) => async (dispatch, getState) => {
 }
 
 
-
-
+// Guest/SingleTeam.js
 export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
 
     const team = await request(`/api/teams/${teamId}?${filter || ''}`, 'GET', {}, true)
-
     if (!team.data) return false;
-
-    console.log(team.data, 'GET TEAM BY ID DATA')
 
     // add rank key - not stored in db
     const standings = team.data.standings.map((item, ind) => {
@@ -81,6 +79,7 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
             // schedule: team.data.schedule, 
             recent: team.data.recent,
             record: team.data.record,
+            seasonsSelect: team.data.seasonsSelect,
             standings
         }
     })
@@ -90,25 +89,18 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
         payload: team.data.seasons
     })
 
-
     if(!filter) {
-        console.log(team.data.seasons)
         const activeSeason = team.data.seasons.find(season => season.is_active === true)
-        console.log(activeSeason, 'activeseason')
-        // console.log({season: activeSeason.id})
-        // return { season: activeSeason.id };
         return activeSeason.id;
     } else {
         return filter.charAt(filter.length-1);
     }
-  
-
 }
 
 
+// Dashboard/DashTeams
 export const createTeam = teamData => async (dispatch, getState) => {
     const { user } = getState();
-
     const data = await request(`/api/admin/teams`, 'POST', {access_token: user.user.access_token, data: teamData});
     if(!data) return;
 
@@ -126,10 +118,9 @@ export const createTeam = teamData => async (dispatch, getState) => {
 }
 
 
-
+// Dashboard/DashTeams
 export const updateTeam = (id, teamData) => async (dispatch, getState) => {
     const { user } = getState();
-
     const data = await request(`/api/admin/teams/${id}`, 'PUT', {access_token: user.user.access_token, data: teamData});
     if(!data) return;
 
@@ -147,9 +138,8 @@ export const updateTeam = (id, teamData) => async (dispatch, getState) => {
 }
 
 
-
+// Dashboard/DashTeams
 export const deleteTeam = (id, season) => async (dispatch, getState) => {
-
     const { user } = getState();
     const data = await request(`/api/admin/teams/${id}`, 'DELETE', {data: season, access_token: user.user.access_token})
     if(!data) return false;
@@ -173,10 +163,10 @@ export const deleteTeam = (id, season) => async (dispatch, getState) => {
 }
 
 
-
+// Guest/Teams.js
 export const getTeamsPageFilters = (filter) => async (dispatch) => {
-
     const data = await request(`/api/misc/teams_filters?${filter || ''}`, 'GET', {}, true);
+    if(!data.data) return false;
 
     dispatch({ 
         type: 'SCHEDULE_FILTERS', 
@@ -184,9 +174,11 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
     })
 }
 
-export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
 
+// Guest/STSchedule.js
+export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
   const data = await request(`/api/teams/${teamId}/schedule?${filter || ''}`, 'GET', {}, true);
+  if(!data.data) return false;
 
   dispatch({ 
       type: `teams/singleTeam/${GET_SUCCESS}`, 
@@ -197,7 +189,7 @@ export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
 }
 
 
-
+// Guest/SingleTeam.js
 export const clearSingleTeamState = () => {
     return {
         type: `teams/singleTeam/${CLEAR_STATE}`

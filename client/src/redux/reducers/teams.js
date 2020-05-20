@@ -8,7 +8,7 @@ const initialteamstate = {
     singleTeam: {
         record: {},
         team: {},
-        seasons: [],
+        seasonsSelect: [],
         schedule: [],
         recent: [],
         standings: [],
@@ -49,7 +49,7 @@ export const teams = (state = initialteamstate, { type, payload }) => {
         //otherwise just set it to the opposite of what it's currently set to
         return { ...state, isVisible: typeof(payload) !== 'undefined' ? payload : !state.isVisible }
     case `teams/singleTeam/${CLEAR_STATE}`:
-        return { ...state, singleTeam: initialteamstate}
+        return { ...state, singleTeam: initialteamstate.singleTeam }
         
     default:
         return state;
