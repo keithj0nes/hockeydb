@@ -149,11 +149,7 @@ class Schedule extends Component {
                         {/* <a>Clear Filters</a> */}
                         <div></div>
                     </div>
-
-
-                    {/* <h2>APRIL</h2> */}
                 </div>
-
 
                 <div className="ot-container">
                     <div className="ot-table" style={{minWidth: null}}>

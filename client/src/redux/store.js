@@ -13,14 +13,14 @@ if(process.env.NODE_ENV !== 'production') {
     config = require('../client_config');
 }
 
-if(process.env.NODE_ENV == 'production') {
+if(process.env.NODE_ENV === 'production') {
     console.log('PRODUCTION!!')
     console.log(process.env.SOMEVAR, 'SOMEVAR')
     console.log(process.env.REACT_APP_SITE_LEVEL, 'REACT_APP_SITE_LEVEL')
     console.log(process.env.SITE_LEVEL, 'SITE_LEVEL')
 }
 
-const SITE_LEVEL = process.env.SITE_LEVEL || process.env.REACT_APP_SITE_LEVEL || config.SITE_LEVEL;
+const SITE_LEVEL = process.env.REACT_APP_SITE_LEVEL || config.SITE_LEVEL;
 
 let reducers = combineReducers({
     user,
