@@ -1,34 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GuestTable from '../../../components/GuestTable';
+import Auth, { basicList } from '../../../components/Auth';
 
 const STHome = ({recent, standings}) => {
 
     return (
         <>
             <div className="split-50">
-                <GuestTable 
-                    title={'Team Leaders'}
-                    data={teamLeaders}
-                    minWidth={'100%'}
-                    containerWidth={'100%'}
-                    // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
-                    sections={{
-                        'category': { as: 'cat', flex: 'two' },
-                        'player': 'five', 
-                        'points':   { as: 'pts', flex: 'one' }
-                    }} 
-                    uniqueKey='category'
-                    emptyTableText="Leaders not available"
-                />
+
+                <Auth.Tier tiers={basicList}>
+
+                    <GuestTable 
+                        title={'Team Leaders'}
+                        data={teamLeaders}
+                        minWidth={'50%'}
+                        containerWidth={'50%'}
+                        // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
+                        sections={{
+                            'category': { as: 'cat', flex: 'two' },
+                            'player': 'five', 
+                            'points':   { as: 'pts', flex: 'one' }
+                        }} 
+                        uniqueKey='category'
+                        emptyTableText="Leaders not available"
+                    />
+                </Auth.Tier>
 
                 <GuestTable 
                     // title={`Team Standings - Top ${standings.length}`}
                     title={'Team Standings - Top 5'}
                     // data={teamStandings}
                     data={standings}
-                    minWidth={'100%'}
-                    containerWidth={'100%'}
+                    minWidth={'50%'}
+                    containerWidth={'50%'}
                     // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
 
                     sections={{

@@ -16,12 +16,6 @@ import Boxscore from '../Guest/Boxscore/Boxscore';
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
-// import Routes from './Routes';
-
-
-// for demoing 
-// import { toggleModal } from '../../redux/actions/misc';
-
 import './App.scss';
 
 class App extends Component {
@@ -30,14 +24,9 @@ class App extends Component {
         await this.props.loginFromCookie();
     }
 
-    //{/* <button onClick={this.props.toggleModal}>toggle modal!</button> */}
-
     render() {
-
-        // console.log('redering')
         return (
             <Router history={history}>
-                {/* <Routes /> */}
                 <div className="site-body">
                     <Header />
                     <div className="site-container">
@@ -60,49 +49,24 @@ class App extends Component {
 }
 
 
-// const PrivateRoute = ({ component: Component, ...rest }) => (
-//   <Route {...rest} render={(props) => (
-//     rest.authenticated
-//       ? <Component {...props} />
-//       : <Redirect to={'/login'} />
-//   )} />
-// )
-
 const PrivateRoute = ({ component: Component, ...rest }) => {
   
-    // console.log(rest);
-
     return <Route {...rest} render={(props) =>  {
-
-        // console.log(props.location, 'props')
-
         return rest.authenticated
             ? <Component {...props} />
             : <Redirect             to={{
                 pathname: "/login",
                 state: { from: props.location }
             }} />
-      
-    }
-    }/>
-
+    }}/>
 }
 
 const mapStateToProps = state => ({
     isUserLoggedIn: state.user && state.user.isUserLoggedIn
 })
 
-// const mapStateToProps = state => {
-//   return {
-//     isUserLoggedIn: state.user && state.user.isUserLoggedIn
-//   }
-// }
-
 const mapDispatchToProps = dispatch => ({
     loginFromCookie: () => dispatch(loginFromCookie()),
-    // toggleModal: () => dispatch(toggleModal(200, 'opening from app.js'))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-
-// export default App;

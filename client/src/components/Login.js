@@ -9,80 +9,78 @@ import { loginFromCookie } from '../redux/actions/auth';
 
 class Login extends React.Component {
 
-  state = {
-      // email: '',
-      // password: ''
-      email: 'admin@hockeydb.com',
-      password: 'admin',
+    state = {
+        email: '@hockeydb.com',
+        password: '',
+        //   email: 'admin@hockeydb.com',
+        //   password: 'admin',
 
-      redirectToReferrer: false
-  }
+        redirectToReferrer: false
+    }
 
-  // componentDidMount() {
-  //   return this.props.isUserLoggedIn && this.props.history.push('/dashboard');
-  // }
+    // componentDidMount() {
+    //   return this.props.isUserLoggedIn && this.props.history.push('/dashboard');
+    // }
 
-  async componentDidMount() {
-      const redirectToReferrer = await this.props.loginFromCookie();
-      // if(redirectToReferrer)
-      // console.log(redirectToReferrer)
-      redirectToReferrer && this.setState({redirectToReferrer})
-  }
+    async componentDidMount() {
+        const redirectToReferrer = await this.props.loginFromCookie();
+        redirectToReferrer && this.setState({redirectToReferrer})
+    }
 
-  handleChange = e => {
-      this.setState({ [e.target.name]: e.target.value });
-  };
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
 
-  handleSubmit = async (e) => {
-      e.preventDefault();
-      const loggedIn = await this.props.login({email: this.state.email.toLowerCase(), password: this.state.password})
-      return loggedIn && this.props.history.push('/dashboard');
-  };
+    handleSubmit = async (e) => {
+        e.preventDefault();
+        const loggedIn = await this.props.login({email: this.state.email.toLowerCase(), password: this.state.password})
+        return loggedIn && this.props.history.push('/dashboard');
+    };
 
-  handleLogout = () => {
-      this.props.logout();
-      this.props.history.push('/');
-  }
+    handleSubmit2 = async (e) => {
+        const loggedIn = await this.props.login({email: e.target.name + '@hockeydb.com', password: e.target.name === 'teammanager' ? 'manager' : e.target.name})
+        return loggedIn && this.props.history.push('/dashboard');
+    }
 
 
+    render() {
 
-  render() {
+        let { from } = this.props.location.state || { from: { pathname: "dashboard" } };
+        let { redirectToReferrer } = this.state;
 
-      // console.log('YOOOOOOOOO!!!!!!')
+        if (redirectToReferrer) return <Redirect to={from} />;
 
-      // console.log(this.props)
+        return (
+            <div>
+                <div className="form">
+                    <form onSubmit={this.handleSubmit}>
+                        <h1>Login</h1>
+                        <div className='inputs'>
+                            <input
+                                placeholder="email"
+                                name="email"
+                                onChange={this.handleChange}
+                                value={this.state.email}
+                            />
+                            <input
+                                placeholder="password"
+                                name="password"
+                                type="password"
+                                onChange={this.handleChange}
+                                value={this.state.password}
+                            />
+                            <input className='btn' type="submit" value="login" />
+                        </div>
+                    </form>
+                </div>
 
-      let { from } = this.props.location.state || { from: { pathname: "dashboard" } };
-      let { redirectToReferrer } = this.state;
+                <button name="admin"       style={{display: 'block', marginLeft: 20, marginTop: 40}} onClick={this.handleSubmit2}>Login as <br /> ADMIN</button>
+                <button name="scorekeeper" style={{display: 'block', marginLeft: 20, marginTop: 20}} onClick={this.handleSubmit2}>Login as <br /> SCOREKEEPER</button>
+                <button name="teammanager" style={{display: 'block', marginLeft: 20, marginTop: 20}} onClick={this.handleSubmit2}>Login as <br /> TEAM MANAGER</button>
 
-      if (redirectToReferrer) return <Redirect to={from} />;
-
-      return (
-          <div>
-              <div className="form">
-                  <form onSubmit={this.handleSubmit}>
-                      <h1>Login</h1>
-                      <div className='inputs'>
-                          <input
-                              placeholder="email"
-                              name="email"
-                              onChange={this.handleChange}
-                              value={this.state.email}
-                          />
-                          <input
-                              placeholder="password"
-                              name="password"
-                              type="password"
-                              onChange={this.handleChange}
-                              value={this.state.password}
-                          />
-                          <input className='btn' type="submit" value="login" />
-                      </div>
-                  </form>
-              </div>
-          </div>
-      );
-  }
+            </div>
+        );
+    }
 }
 
 

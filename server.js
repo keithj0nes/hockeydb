@@ -36,6 +36,13 @@ const divisions = require('./controllers/divisions');
 const misc = require('./controllers/misc');
 
 
+// const tierLevels = {
+//     X:   1,
+//     XX:  2,
+//     XXX: 3
+// }
+
+// const SITE_LEVEL = tierLevels.X;
 
 //Make sure to create a local postgreSQL db called hockeydb
 
@@ -83,6 +90,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(instance => {
 //     const date = new Date();
 //     return {
 //         "site": config.SITE_URL,
+//         "site_level": SITE_LEVEL,
 //         "version": config.API_VERSION,
 //         "datetime": date,
 //         "timestamp": date.getTime(),

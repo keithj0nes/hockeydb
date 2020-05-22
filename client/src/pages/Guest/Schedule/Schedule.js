@@ -5,6 +5,7 @@ import dateFormat from 'date-fns/format';
 import { getQuery, setQuery } from '../../../helpers';
 import { getGames } from '../../../redux/actions/gamesActions';
 import { Select, Button } from '../../../components/';
+// import { Auth } from '../../../components/Auth';
 import './schedule.scss';
 
 
@@ -133,6 +134,11 @@ class Schedule extends Component {
 
         return (
             <div className="schedule-container">
+
+                {/* <Auth roles={['super', 'admin', 'scorekeeper']}>
+                    This is only shown from auth
+                </Auth> */}
+
                 <div className="white-bg">
                     <h1>Schedule</h1>
 
@@ -143,11 +149,7 @@ class Schedule extends Component {
                         {/* <a>Clear Filters</a> */}
                         <div></div>
                     </div>
-
-
-                    {/* <h2>APRIL</h2> */}
                 </div>
-
 
                 <div className="ot-container">
                     <div className="ot-table" style={{minWidth: null}}>
@@ -175,6 +177,7 @@ class Schedule extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state, 'STATEEE')
     return {
         // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,
