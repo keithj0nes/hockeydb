@@ -6,9 +6,8 @@ import STSchedule from './STSchedule';
 import STHome from './STHome';
 import { Select } from '../../../components/';
 import { getQuery, setQuery } from '../../../helpers';
-
+import Auth, { basicList } from '../../../components/Auth';
 import './singleteam.scss';
-
 
 
 const SingleTeam = (props) => {
@@ -70,10 +69,7 @@ const SingleTeam = (props) => {
                                 <div className="actual-image"></div>
                             </div>
                             <div className="single-team-info">
-                                {/* <h2>{name || 'Default Name'}</h2>
-                                <h3>Division 2</h3>
-                                <h5>Team Colors: Light Blue</h5> */}
-                                <h2>{props.team.name || 'Default Name'}</h2>
+                                <h2>{props.team.name || 'Unavailable'}</h2>
                                 <h3>Division: {props.team.division_name}</h3>
                                 <h5>Team Colors: {props.team.colors}</h5>
                             </div>
@@ -120,9 +116,13 @@ const SingleTeam = (props) => {
                         
                     <input id="schedule" type="radio" name="tabsA" checked={tabSelected === 'schedule'} onChange={e => setTabSelected(e.target.id)} />
                     <label htmlFor="schedule">Schedule</label>
+
+
+                    <Auth.Tier tiers={basicList}>
+                        <input id="roster" type="radio" name="tabsA" checked={tabSelected === 'roster'} onChange={e => setTabSelected(e.target.id)} />
+                        <label htmlFor="roster">Roster & Stats</label>
+                    </Auth.Tier>
                         
-                    <input id="roster" type="radio" name="tabsA" checked={tabSelected === 'roster'} onChange={e => setTabSelected(e.target.id)} />
-                    <label htmlFor="roster">Roster & Stats</label>
                 </div>
 
                 {/* <div className="white-bg"> */}

@@ -128,7 +128,8 @@
 }
 
 .split-50 {
-    background: pink;
+    // background: pink;
+    background: $white_color;
 }
 
 // style={{display: 'flex', background: 'pink', justifyContent: 'space-between'}}
@@ -148,7 +149,7 @@
 
     .split-50 {
         display: flex;
-        background: yellow;
+        // background: yellow;
         justify-content: space-between;
     }
 }
