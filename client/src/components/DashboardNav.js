@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth'
 import { Button } from './';
+import { history } from '../helpers';
 
 
 import { ReactComponent as Home } from '../assets/icons/home.svg';
@@ -55,11 +56,23 @@ const navLinks1 = {
 
 class DashboardNav extends Component {
 
+    // this componentDidMount checks to make sure the URL matches a path the logged in 
+    // user can access otherwise it redirects to the first page in the navLinks array
+    componentDidMount() {
+        const hasAccess = navLinks1[this.props.admin_type].filter(navLink =>  {
+            return this.props.location.pathname.includes(navLink.to)
+        })
+
+        if(hasAccess.length <= 0) {
+            console.log('Not allowed at this route, redirecting')
+            return history.push(`/dashboard${navLinks1[this.props.admin_type][0].to}`)
+        }
+    }
+
     handleLogout = () => {
         this.props.logout();
         this.props.history.push('/');
     }
-
 
     render() {
         const { match } = this.props;

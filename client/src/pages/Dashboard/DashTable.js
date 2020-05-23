@@ -5,6 +5,7 @@ import dateFormat from 'date-fns/format';
 import Edit from "../../assets/icons/edit_icon.svg";
 import Delete from '../../assets/icons/delete_icon.svg';
 import Hide from '../../assets/icons/hide_icon.svg';
+import Auth, { accessAdmin, accessONLYScorekeeper } from '../../components/Auth';
 
 
 const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableType }) => {
@@ -34,9 +35,17 @@ const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableTy
                                 )
                             })}
                             <p className="ot-cell ot-manage">
-                                {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
-                                {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                                
+                                <Auth.User roles={accessAdmin}>
+                                    {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                    <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+                                    {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                                </Auth.User>
+
+                                <Auth.User roles={accessONLYScorekeeper}>
+                                    {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                </Auth.User>
+
                             </p>
                         </div>
                     )
