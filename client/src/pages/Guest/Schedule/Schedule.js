@@ -177,7 +177,6 @@ class Schedule extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state, 'STATEEE')
     return {
         // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,

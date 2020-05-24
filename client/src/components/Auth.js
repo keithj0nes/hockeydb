@@ -31,15 +31,16 @@ export default {
 }
 
 
-export const starterList = ['STARTER', 'BASIC', 'PRO'];
-export const basicList =   ['BASIC', 'PRO'];
+export const starterList = ['ROOKIE', 'AMATEUR', 'PRO'];
+export const basicList =   ['AMATEUR', 'PRO'];
 export const proList =     ['PRO'];
 
 
-export const accessPlayer =      ['super', 'admin', 'manager', 'player'];
-export const accessManager =     ['super', 'admin', 'manager'];
-export const accessScorekeeper = ['super', 'admin', 'scorekeeper'];
-export const accessAdmin =       ['super', 'admin'];
+export const accessPlayer =          ['super', 'admin', 'manager', 'player'];
+export const accessManager =         ['super', 'admin', 'manager'];
+export const accessScorekeeper =     ['super', 'admin', 'scorekeeper'];
+export const accessONLYScorekeeper = ['scorekeeper'];
+export const accessAdmin =           ['super', 'admin'];
 
 
 // class Auth extends React.Component {

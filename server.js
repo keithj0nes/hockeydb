@@ -162,7 +162,7 @@ app.get(`/api/players/:id`, players.getPlayerById);
 
 
 // Standings 
-// app.get(`/api/standings`)
+app.get(`/api/standings`, teams.getStandings);
 
 // Leaders 
 // app.get(`/api/leaders`)
@@ -183,12 +183,19 @@ app.get(`/api/divisions/`, divisions.getAllDivisions);          // Postman Docs
 
 // Misc
 app.get('/api/misc/teams_filters', misc.getTeamsPageFilters);
+app.get('/api/misc/standings_filters', misc.getStandingsPageFilters);
 
 
 // ⭐ ️ ADMIN  ⭐️
 
+
+// const accessPlayer =          ['super', 'admin', 'manager', 'player'];
+// const accessManager =         ['super', 'admin', 'manager'];
+// const accessScorekeeper =     ['super', 'admin', 'scorekeeper'];
+const accessAdmin =           ['super', 'admin'];
+
 // Create seasons
-app.post(`/api/admin/seasons`, auth.authorizeAccessToken, admin.createSeason);             // Postman Docs
+app.post(`/api/admin/seasons`, auth.authorizeAccessToken(accessAdmin), admin.createSeason);             // Postman Docs
 app.put(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.updateSeason);          // Postman Docs
 app.delete(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.deleteSeason);       // Postman Docs
 

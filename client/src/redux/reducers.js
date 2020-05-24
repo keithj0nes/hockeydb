@@ -72,7 +72,11 @@ const initialMiscState = {
         divisions: [],
         teams: [],
         allTeams: []
-    }
+    },
+    standingsFilters: {
+        seasons: [],
+        divisions: [],
+    },
 }
 
 export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading, payload }) => {
@@ -87,10 +91,27 @@ export const misc = (state = initialMiscState, { type, modalProps, modalType, is
         // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     case 'SCHEDULE_FILTERS':
         return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload }};
+    case 'STANDINGS_FILTERS':
+        return { ...state, standingsFilters: { ...state.standingsFilters, ...payload }};
     default:
         return state;
     }
 }
+
+
+const initialStandingsState = {
+    standings: []
+};
+
+export const standings = (state = initialStandingsState, { type, payload }) => {
+    switch (type) {
+    case `standings/${GET_SUCCESS}`:
+        return { ...state, standings: payload };
+    default:
+        return state;
+    }
+}
+
 
 const initialPlayersState = {
     allPlayers: [],

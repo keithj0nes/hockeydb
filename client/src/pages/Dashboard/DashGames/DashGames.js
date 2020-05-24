@@ -12,7 +12,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { toggleModal } from '../../../redux/actions/misc';
 import DashTable from '../DashTable';
-
+import Auth, { accessAdmin } from '../../../components/Auth';
 
 
 
@@ -159,9 +159,12 @@ export class DashGames extends Component {
         const { games } = this.props;
         return (
             <div>
-                <div className="dashboard-filter-header">
-                    <Button title="Add Game" onClick={this.handleAddGame} />
-                </div>
+
+                <Auth.User roles={accessAdmin}>
+                    <div className="dashboard-filter-header">
+                        <Button title="Add Game" onClick={this.handleAddGame} />
+                    </div>
+                </Auth.User>
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">

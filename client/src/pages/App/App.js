@@ -12,6 +12,8 @@ import Schedule from '../Guest/Schedule/Schedule';
 import Teams from '../Guest/Teams/Teams';
 import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
+import Standings from '../Guest/Standings/Standings';
+
 
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
@@ -32,6 +34,7 @@ class App extends Component {
                     <div className="site-container">
                         <Route exact path="/"       component={Home} />
                         <Route path='/schedule'     component={Schedule} />
+                        <Route path='/standings'    component={Standings} />
                         <Route path='/teams'        component={Teams} exact />
                         <Route path='/teams/:id'    component={SingleTeam} />
                         <Route path='/boxscore/:id' component={Boxscore} />

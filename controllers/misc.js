@@ -33,6 +33,38 @@ const getTeamsPageFilters = async (req, res) => {
 }
 
 
+const getStandingsPageFilters = async (req, res) => {
+    const db = app.get('db');
+
+    // get seasons
+    // get all divisions
+
+    const { season } = req.query;
+
+    let season_id;
+  
+    if(!season || season === 'undefined'){
+      season_id = await db.seasons.findOne({is_active: true});
+    }
+
+    const allDivisionsQuery = `
+        SELECT * FROM divisions
+        WHERE season_id = $1 AND deleted_date IS null AND hidden_date IS null
+        ORDER BY name;
+    `;
+    
+    const divisions = await db.query(allDivisionsQuery, [season || season_id.id]);
+    
+    
+    const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+
+
+    res.status(200).send({ status: 200, data: {seasons, divisions}, message: 'Retrieved list of teams page filters' })
+
+}
+
+
 module.exports = {
-    getTeamsPageFilters
+    getTeamsPageFilters,
+    getStandingsPageFilters
 }
