@@ -13,7 +13,8 @@ const navLinks = [
     { name: 'Standings',  to: 'standings' },
     { name: 'Scoreboard', to: 'scoreboard' },
     { name: 'Stats',      to: 'stats' },
-    { name: 'Contact',    to: 'contact' }
+    // { name: 'Stats',      to: 'stats', subLinks: [{ name: 'general inquiry', to: 'inquiry' }, { name: 'league staff', to: 'schedule2' }, { name: 'player registration', to: 'schedule222' }] },
+    { name: 'Contact',    to: 'contact', subLinks: [{ name: 'general inquiry', to: 'inquiry' }, { name: 'league staff', to: 'schedule2' }, { name: 'player registration', to: 'schedule222' }] }
 ]
 
 class Header extends Component {
@@ -59,7 +60,24 @@ class Header extends Component {
                                         <li key={link.to}>
                                             <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`link pressed to ${link.to}`)}>
                                                 {link.name}
+                                                {link.subLinks && (<div className="arrow" />)}
                                             </NavLink>
+
+                                            {link.subLinks && (
+
+                                                <ul className={'navBoiStyle'}>
+                                                    {link.subLinks.map(subLink => {
+                                                        return (
+                                                            <li key={subLink.to}>
+                                                                <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={() => console.log(`link pressed to ${link.to}`)}>
+                                                                    {subLink.name}
+                                                                </NavLink> 
+
+                                                            </li>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
@@ -126,7 +144,25 @@ class Header extends Component {
                                                 <li key={link.to}>
                                                     <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.toggleMobileSlider}>
                                                         <div style={{height: 30, width: 30, background: 'white'}}/>{link.name}
-                                                    </NavLink>
+
+                                                        {link.subLinks && (<div className="arrow" />)}
+                                                    </NavLink> 
+
+                                                    {link.subLinks && (
+
+                                                        <ul className={'navBoiStyle'}>
+                                                            {link.subLinks.map(subLink => {
+                                                                return (
+                                                                    <li key={subLink.to}>
+                                                                        <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={this.toggleMobileSlider}>
+                                                                            <div style={{height: 30, width: 30, background: 'white'}}/>{subLink.name}
+                                                                        </NavLink> 
+
+                                                                    </li>
+                                                                )
+                                                            })}
+                                                        </ul>
+                                                    )}
                                                 </li>
                                             ))}
                                         </ul>
