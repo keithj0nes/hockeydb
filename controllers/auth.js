@@ -13,16 +13,29 @@ const JWTSECRET = process.env.JWTSECRET || config.JWTSECRET;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const authorizeAccessToken = async (req, res, next) => {
-    console.log('authoriszeaccestoken!')
+const authorizeAccessToken = (roles) => async (req, res, next) => {
+    console.log(roles, 'authoriszeaccestoken! 🌟🌟🌟🌟🌟')
+    req.roles = roles;
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err || !user) {
             return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized", ...info });
         }
         req.user = user;
-        return next();
+        console.log(req.user, 'USER!')
+        // return next();
     })(req, res, next)
 }
+
+// const authorizeAccessToken = async (req, res, next) => {
+//     console.log('authoriszeaccestoken!')
+//     passport.authenticate('jwt', { session: false }, (err, user, info) => {
+//         if (err || !user) {
+//             return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized", ...info });
+//         }
+//         req.user = user;
+//         return next();
+//     })(req, res, next)
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -228,10 +241,20 @@ const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 passport.use('jwt', new JWTStrategy({
     secretOrKey: JWTSECRET,
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
-}, async (token, done) => {
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    passReqToCallback: true
+}, async(req, token, done) => {
+    console.log(req.roles, 'REQQQQQQQQ')
     console.log(token.user, 'OKEN>USER')
     try {
+
+        console.log(req.roles && req.roles.includes(token.user.admin_type), 'INCLUDEZZ')
+        if(req.roles && !req.roles.includes(token.user.admin_type)){
+            console.log("DOES NOT ROLSE")
+            return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
+            
+        }
+
         const isSuspended = await checkSuspended(token.user.id);
         if(!!isSuspended){
             console.log(isSuspended, 'issupsended')

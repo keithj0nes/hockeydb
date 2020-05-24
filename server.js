@@ -187,8 +187,14 @@ app.get('/api/misc/teams_filters', misc.getTeamsPageFilters);
 
 // ⭐ ️ ADMIN  ⭐️
 
+
+// const accessPlayer =          ['super', 'admin', 'manager', 'player'];
+// const accessManager =         ['super', 'admin', 'manager'];
+// const accessScorekeeper =     ['super', 'admin', 'scorekeeper'];
+const accessAdmin =           ['super', 'admin'];
+
 // Create seasons
-app.post(`/api/admin/seasons`, auth.authorizeAccessToken, admin.createSeason);             // Postman Docs
+app.post(`/api/admin/seasons`, auth.authorizeAccessToken(accessAdmin), admin.createSeason);             // Postman Docs
 app.put(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.updateSeason);          // Postman Docs
 app.delete(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.deleteSeason);       // Postman Docs
 

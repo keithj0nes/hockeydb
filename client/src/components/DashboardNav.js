@@ -46,7 +46,7 @@ const navLinks1 = {
         { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         }
     ],
     manager: [
-        { name: 'Teams',      to: '/teams',       svg: <Teams alt="teams icon" />         },
+        { name: 'My Teams',   to: '/myteams',     svg: <Teams alt="teams icon" />         },
     ],
     player: []
 }
@@ -64,7 +64,7 @@ class DashboardNav extends Component {
         })
 
         if(hasAccess.length <= 0) {
-            console.log('Not allowed at this route, redirecting')
+            console.log('Not allowed at this route, redirecting to', `/dashboard${navLinks1[this.props.admin_type][0].to}`)
             return history.push(`/dashboard${navLinks1[this.props.admin_type][0].to}`)
         }
     }

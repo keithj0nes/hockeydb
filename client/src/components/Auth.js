@@ -31,8 +31,8 @@ export default {
 }
 
 
-export const starterList = ['STARTER', 'BASIC', 'PRO'];
-export const basicList =   ['BASIC', 'PRO'];
+export const starterList = ['ROOKIE', 'AMATEUR', 'PRO'];
+export const basicList =   ['AMATEUR', 'PRO'];
 export const proList =     ['PRO'];
 
 
