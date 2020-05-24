@@ -175,6 +175,18 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
 }
 
 
+// Guest/Standings.js
+export const getStandingsPageFilters = (filter) => async (dispatch) => {
+    const data = await request(`/api/misc/standings_filters?${filter || ''}`, 'GET', {}, true);
+    if(!data.data) return false;
+
+    dispatch({ 
+        type: 'STANDINGS_FILTERS', 
+        payload: { seasons: data.data.seasons, divisions: data.data.divisions }
+    })
+}
+
+
 // Guest/STSchedule.js
 export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
   const data = await request(`/api/teams/${teamId}/schedule?${filter || ''}`, 'GET', {}, true);
@@ -195,3 +207,25 @@ export const clearSingleTeamState = () => {
         type: `teams/singleTeam/${CLEAR_STATE}`
     }
 }
+
+// Guest/Standings.js
+export const getStandings = (filter) => async (dispatch, getState) => {
+
+    const data = await request(`/api/standings?${filter || ''}`, 'GET', {}, true);
+    if (!data.data) return false;
+
+    // heavy lifting - add "rank" key to the teams_in_division list
+    // maybe add rank key to the team_season_division table
+    const standings = data.data.standings.map((item, ind) => {
+        return {...item, teams_in_division: item.teams_in_division.map((team, idx) => {
+            return {...team, rank: idx + 1}
+        })}
+    });
+
+    dispatch({
+        type: `standings/${GET_SUCCESS}`,
+        payload: standings
+    })
+  
+    return data.data.season;
+  }

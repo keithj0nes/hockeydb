@@ -58,7 +58,7 @@ const GuestTable = ({ data, sections, minWidth, tableType, containerWidth, title
                                             newLink += `/${d[sectionLink.key]}`;
                                         }
 
-                                        return <Link to={{pathname: newLink }} key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]}</Link>
+                                        return <Link to={{pathname: newLink, search: sectionLink.search }} key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]}</Link>
                                     } else {
                                         return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
 

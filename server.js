@@ -162,7 +162,7 @@ app.get(`/api/players/:id`, players.getPlayerById);
 
 
 // Standings 
-// app.get(`/api/standings`)
+app.get(`/api/standings`, teams.getStandings);
 
 // Leaders 
 // app.get(`/api/leaders`)
@@ -183,6 +183,7 @@ app.get(`/api/divisions/`, divisions.getAllDivisions);          // Postman Docs
 
 // Misc
 app.get('/api/misc/teams_filters', misc.getTeamsPageFilters);
+app.get('/api/misc/standings_filters', misc.getStandingsPageFilters);
 
 
 // ⭐ ️ ADMIN  ⭐️
