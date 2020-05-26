@@ -2,17 +2,16 @@
 
 // padding is being called on line 4, need to refactor the dashboard nav css
 .dashboard-nav-container .dashboard-nav-sliding-container .dashboard-nav li a {
-    // padding: 10px 50px;
     padding: 10px 20px;
+}
+
+// this is for subLinks padding
+.dashboard-nav-container .dashboard-nav-sliding-container .dashboard-nav li .navBoiStyle li a {
+    padding: 10px 40px;
 }
 header {
     background: $heading_color;
-    // height: 50px;
     width: 100%;
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
-    // padding: 10px 0;
     padding: 16px 16px;
 
     .dashboard-nav { 
@@ -23,7 +22,6 @@ header {
     }
 
     .hamburger-menu {
-        // background: yellow;
         height: 26px;
         width: 32px;
         display: flex;
@@ -63,12 +61,9 @@ header {
     .logo {
         display: flex;
         flex-direction: column;
-        // justify-content: center;
         align-items: center;
         padding-left: 40px;
         height: 40px;
-        // padding: 30px;
-        // color: $main_font_color;
 
         h2 {
             color: $white_color;
@@ -82,35 +77,74 @@ header {
     }
 
     ul {
-        // background: yellow;
-
         li {
+            position: relative;
+
             a {
-                // padding: 10px 20px;
                 // padding is being called on line 4, need to refactor the dashboard nav css
                 color: $white_color;
-                
                 font-family: $heading_font;
-                // color: $white_color;
                 text-transform: uppercase;
                 
-                &:hover {
+                &:hover, &:hover .arrow {
                     color: $highlite_color;
+                    border-color: $highlite_color;
                 }
-
 
                 & > div {
                     margin-right: 20px;
                 }
+
+                .arrow {
+                    position: absolute;
+                    right: 16px;
+                    top: 14px;
+                    border: solid $white_color;
+                    border-width: 0 1px 1px 0;
+                    padding: 5px;
+                    transform: rotate(45deg);
+                    -webkit-transform: rotate(45deg);
+                }
+            }
+
+
+            .navBoiStyle {
+                display: none;
+
+                li {
+                    position: relative;
+
+                    a {
+                        display: block;
+                        padding: 10px 20px;
+                        // padding is being called on line 9, need to refactor the dashboard nav css
+                        color: $white_color;
+                        font-family: $heading_font;
+                        text-transform: uppercase;
+                        
+                        &:hover {
+                            color: $highlite_color;
+                        }
+        
+                        & > div {
+                            margin-right: 20px;
+                        }
+                    }
+                }
+            }
+
+            &:hover .navBoiStyle {
+                display: block;
             }
 
             .selected {
-                // background: $highlite_color !important;
-                // color: $white_color !important;
-
                 background: transparent !important;
                 color: $highlite_color !important;
                 position: relative;
+
+                .arrow {
+                    border-color: $highlite_color;
+                }
 
                 &:after {
                     content: '';
@@ -119,7 +153,6 @@ header {
                     background: $highlite_color !important;
                     position: absolute;
                     right: 0;
-                    // left: 20px;
                 }
             }
         }
@@ -141,9 +174,10 @@ header {
             display: flex;
             flex-wrap: wrap;
             
-            li{
+            li {
                 padding: 12px 0px;
-                
+                position: relative;
+
                 a {
                     padding: 12px 20px !important;
                     
@@ -151,6 +185,43 @@ header {
                         color: $highlite_color;
                         
                     }
+
+                    .arrow {
+                        right: -22px;
+                    }
+                }
+
+                .navBoiStyle {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    background: $heading_color;
+                    padding: 0 10px;
+                    z-index: 100;
+
+                    li{
+                        padding: 12px 0px;
+                        position: relative;
+                        width: 100%;
+                        white-space: nowrap;
+
+                        a {
+                            padding: 12px 20px !important;
+                            
+                            &:hover {
+                                color: $highlite_color;
+                            }
+                        }
+
+                        &:first-child {
+                            padding-top: 19px;
+                        }
+                    }
+                }
+
+                &:hover .navBoiStyle {
+                    display: block;
                 }
                 
                 .selected {
