@@ -41,9 +41,8 @@ select, input, label {
     display: block;
 }
 
-select, input {
+select, input, textarea {
     font-size: 15px;
-    // background: $white_color !important;
 }
 
 .muted {

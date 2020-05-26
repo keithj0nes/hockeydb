@@ -13,6 +13,7 @@ import Teams from '../Guest/Teams/Teams';
 import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
 import Standings from '../Guest/Standings/Standings';
+import Inquiry from '../Guest/Inquiry/Inquiry';
 
 
 import { Modal, Header } from '../../components';
@@ -41,6 +42,7 @@ class App extends Component {
                         <Route path='/login'        component={Login} />
                         <Route path='/players'      component={Players} />
                         <Route path='/games'        component={Games} />
+                        <Route path='/inquiry'      component={Inquiry} />
                         <Route path='/styleguide'   component={Styleguide} />
                     </div>
                     <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />

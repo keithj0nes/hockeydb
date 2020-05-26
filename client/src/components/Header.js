@@ -13,8 +13,12 @@ const navLinks = [
     { name: 'Standings',  to: 'standings' },
     { name: 'Scoreboard', to: 'scoreboard' },
     { name: 'Stats',      to: 'stats' },
-    // { name: 'Stats',      to: 'stats', subLinks: [{ name: 'general inquiry', to: 'inquiry' }, { name: 'league staff', to: 'schedule2' }, { name: 'player registration', to: 'schedule222' }] },
-    { name: 'Contact',    to: 'contact', subLinks: [{ name: 'general inquiry', to: 'inquiry' }, { name: 'league staff', to: 'schedule2' }, { name: 'player registration', to: 'schedule222' }] }
+    { name: 'Contact',    to: 'contact', subLinks: [
+                                            { name: 'general inquiry',     to: 'inquiry' }, 
+                                            { name: 'league staff',        to: 'schedule2' }, 
+                                            { name: 'player registration', to: 'schedule222' }
+                                        ] 
+    }
 ]
 
 class Header extends Component {
