@@ -1,0 +1,55 @@
+
+.snack-bar-container {
+    display: none;
+    // background: yellow;
+    position: absolute;
+    // right: 20px;
+    top: 65px;
+    width: 100%;
+    padding: 0 20px;
+    // width: 90%;
+    z-index: 10000000;
+
+    &.snack-bar-visible {
+        display: block;
+    }
+
+    .snack-bar-content {
+        background: lightskyblue;
+        padding: 12px;
+        border-radius: 3px;
+        border: 1px solid blue;
+        animation: snack-slide ease-in;     // animation duration set in SnackBar.js
+        
+        &.snack-bar-remove {
+            animation: snack-slide-out ease-in;  // animation duration set in SnackBar.js
+        }
+    }
+}
+
+
+@keyframes snack-slide {
+    // 0% { right: -100% }
+    // 100% { right: 0% }
+
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes snack-slide-out {
+    // 0% { right: -100% }
+    // 100% { right: 0% }
+
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+
+@media only screen and (min-width: 768px){
+
+    .snack-bar-container {
+        width: auto;
+        right: 10px;
+    }
+
+}
