@@ -56,18 +56,27 @@ export const request = async (route, method, session, noAuth) => {
     // const status = 243;
     // const message = 'fake message lol';
 
-    console.log(responseRaw.data, 'AYEEOOOO 🤬🤬🤬')
+    // console.log(responseRaw.data, 'AYEEOOOO 🤬🤬🤬')
 
-    // console.log(String(status).charAt(0), 'CHAR AT INDEX ZERO')
-
+    
     if(snack) {
+        const statusFirst = String(status).charAt(0);
+        let type;
+        switch (statusFirst) {
+            case '2':
+                type = 'success';
+                break;
+            case '4':
+                type = 'error';
+                break;
+            default:
+                 type = 'alert';
+                 break;
+        }
+
         store.dispatch({
             type: 'TOGGLE_SNACKBAR',
-            payload: { 
-                isVisible: true, 
-                message,
-                type: 'error'
-             }
+            payload: { isVisible: true, message, type }
         })
     }
     

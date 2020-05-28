@@ -17,21 +17,24 @@ const SnackBar = props => {
             setTimeout(() => {
                     setIsVisible(props.isVisible)
                     setHideSnack(true)
-            }, ANIMATION_DURATION);
+            }, ANIMATION_DURATION - 10); // - 10 avoids flash when animating out
 
         } else {
             setIsVisible(props.isVisible)
         }
     }, [props.isVisible])
 
+    let colorScheme;
+    if(props.type === 'error') colorScheme = 'sb-error';
+    if(props.type === 'alert') colorScheme = 'sb-alert';
+    if(props.type === 'success') colorScheme = 'sb-success';
+
     return (
         <div className={`snack-bar-container ${isVisible ? 'snack-bar-visible' : ''}`}>
-            <div className={`snack-bar-content ${!hideSnack ? 'snack-bar-remove' : ''}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
+            <div className={`snack-bar-content ${!hideSnack ? 'snack-bar-remove' : ''} ${colorScheme}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
                 <p> {props.message} </p>
-
             </div>
-            
-            <div className={`snack-bar-close-btn ${!hideSnack ? 'snack-bar-remove' : ''}`} onClick={props.closeSnackBar} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>&times;</div>
+            <div className={`snack-bar-close-btn ${!hideSnack ? 'snack-bar-remove' : ''} ${colorScheme}`} onClick={props.closeSnackBar} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>&times;</div>
         </div>
     )
 }

@@ -12,16 +12,35 @@
     }
 
     .snack-bar-content {
-        background: lightskyblue;
+        // background: lightskyblue;
+        // background: #ffcccb;
         padding: 12px;
         border-radius: 3px;
-        border: 1px solid blue;
+        border: 1px solid;
+        border-color: blue;
+
         animation: snack-slide ease-in;     // animation duration set in SnackBar.js
     }
 
     .snack-bar-remove {
         animation: snack-slide-out ease-in;  // animation duration set in SnackBar.js
     }
+
+    .sb-alert {
+        background: lightskyblue;
+        border-color: blue;
+    }
+
+    .sb-error {
+        background: #ffcccb;
+        border-color: #ff3727 !important;
+    }
+
+    .sb-success {
+        background: #c7ffc0;
+        border-color: #24a300 !important;
+    }
+    
 
     .snack-bar-close-btn {
         display: flex;
@@ -30,9 +49,9 @@
         height: 24px;
         width: 24px;
         border-radius: 50px;
-        border: 1px solid blue;
+        border: 1px solid;
         position: absolute;
-        background: lightskyblue;
+        // background: lightskyblue;
         top: -8px;
         right: 10px;
         cursor: pointer;
