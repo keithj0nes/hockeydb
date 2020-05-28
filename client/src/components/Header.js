@@ -69,7 +69,7 @@ class Header extends Component {
 
                                             {link.subLinks && (
 
-                                                <ul className={'navBoiStyle'}>
+                                                <ul className={'sub-links'}>
                                                     {link.subLinks.map(subLink => {
                                                         return (
                                                             <li key={subLink.to}>
@@ -90,14 +90,14 @@ class Header extends Component {
 
                         <div className="login">
 
-                            {!this.props.isUserLoggedIn && (
+                            {/* {!this.props.isUserLoggedIn && (
 
                                 <Button 
                                     title="Player Register"
                                     onClick={() => console.log('clicekd player register')}
                                     style={{textTransform: 'uppercase'}}
                                 />
-                            )}
+                            )} */}
 
                             <Button 
                                 title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
@@ -154,7 +154,7 @@ class Header extends Component {
 
                                                     {link.subLinks && (
 
-                                                        <ul className={'navBoiStyle'}>
+                                                        <ul className={'sub-links'}>
                                                             {link.subLinks.map(subLink => {
                                                                 return (
                                                                     <li key={subLink.to}>

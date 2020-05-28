@@ -6,7 +6,7 @@
 }
 
 // this is for subLinks padding
-.dashboard-nav-container .dashboard-nav-sliding-container .dashboard-nav li .navBoiStyle li a {
+.dashboard-nav-container .dashboard-nav-sliding-container .dashboard-nav li .sub-links li a {
     padding: 10px 40px;
 }
 header {
@@ -108,7 +108,7 @@ header {
             }
 
 
-            .navBoiStyle {
+            .sub-links {
                 display: none;
 
                 li {
@@ -133,7 +133,7 @@ header {
                 }
             }
 
-            &:hover .navBoiStyle {
+            &:hover .sub-links {
                 display: block;
             }
 
@@ -191,7 +191,7 @@ header {
                     }
                 }
 
-                .navBoiStyle {
+                .sub-links {
                     display: none;
                     position: absolute;
                     top: 100%;
@@ -220,7 +220,7 @@ header {
                     }
                 }
 
-                &:hover .navBoiStyle {
+                &:hover .sub-links {
                     display: block;
                 }
                 
