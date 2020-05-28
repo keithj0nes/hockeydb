@@ -1,13 +1,10 @@
 
 .snack-bar-container {
     display: none;
-    // background: yellow;
     position: absolute;
-    // right: 20px;
-    top: 65px;
+    top: 70px;
     width: 100%;
     padding: 0 20px;
-    // width: 90%;
     z-index: 10000000;
 
     &.snack-bar-visible {
@@ -20,10 +17,26 @@
         border-radius: 3px;
         border: 1px solid blue;
         animation: snack-slide ease-in;     // animation duration set in SnackBar.js
-        
-        &.snack-bar-remove {
-            animation: snack-slide-out ease-in;  // animation duration set in SnackBar.js
-        }
+    }
+
+    .snack-bar-remove {
+        animation: snack-slide-out ease-in;  // animation duration set in SnackBar.js
+    }
+
+    .snack-bar-close-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 24px;
+        width: 24px;
+        border-radius: 50px;
+        border: 1px solid blue;
+        position: absolute;
+        background: lightskyblue;
+        top: -8px;
+        right: 10px;
+        cursor: pointer;
+        animation: snack-slide ease-in;     // animation duration set in SnackBar.js
     }
 }
 

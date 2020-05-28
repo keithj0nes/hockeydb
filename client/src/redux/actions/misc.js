@@ -36,3 +36,9 @@ export const toggleFilter = (section, bool) => {
 // export const getFilters = () => dispatch => {
 //     console.log('getting all filters!')
 // }
+
+export const closeSnackBar = () => {
+    return {
+        type: 'TOGGLE_SNACKBAR'
+    }
+}

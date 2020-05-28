@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { closeSnackBar } from '../redux/actions/misc';
 import './snackbar.scss';
 
 const ANIMATION_DURATION = 350; // in MS
@@ -23,17 +25,30 @@ const SnackBar = props => {
     }, [props.isVisible])
 
     return (
-        <div className={`snack-bar-container ${isVisible ? 'snack-bar-visible' : null}`}>
-            <div className={`snack-bar-content ${!hideSnack ? 'snack-bar-remove' : null}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
-
-                SNACKKKKK
+        <div className={`snack-bar-container ${isVisible ? 'snack-bar-visible' : ''}`}>
+            <div className={`snack-bar-content ${!hideSnack ? 'snack-bar-remove' : ''}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
+                <p> {props.message} </p>
 
             </div>
+            
+            <div className={`snack-bar-close-btn ${!hideSnack ? 'snack-bar-remove' : ''}`} onClick={props.closeSnackBar} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>&times;</div>
         </div>
     )
 }
 
-export default SnackBar;
+const mapStateToProps = state => {
+    return {
+        isVisible: state.misc.snackBar.isVisible,
+        message: state.misc.snackBar.message,
+        type: state.misc.snackBar.type
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    closeSnackBar: () => dispatch(closeSnackBar())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SnackBar);
 
 // snackbar logic
 

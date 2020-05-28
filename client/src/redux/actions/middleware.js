@@ -52,9 +52,24 @@ export const request = async (route, method, session, noAuth) => {
 
     // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     if(!responseRaw) return false;
-    const { status, data, message, shouldLogOut, redirect } = responseRaw.data;
+    const { status, data, message, shouldLogOut, redirect, snack } = responseRaw.data;
     // const status = 243;
     // const message = 'fake message lol';
+
+    console.log(responseRaw.data, 'AYEEOOOO 🤬🤬🤬')
+
+    // console.log(String(status).charAt(0), 'CHAR AT INDEX ZERO')
+
+    if(snack) {
+        store.dispatch({
+            type: 'TOGGLE_SNACKBAR',
+            payload: { 
+                isVisible: true, 
+                message,
+                type: 'error'
+             }
+        })
+    }
     
     if(status !== 200){
         console.log(`status error: ${status} - ${message}`)
@@ -67,7 +82,7 @@ export const request = async (route, method, session, noAuth) => {
 
 
         //if a modal is already visible and there's an error, show that error in the current modal
-        if(state.misc.modalVisible){
+        if(state.misc.modalVisible && !redirect){
             store.dispatch({
                 type: TOGGLE_MODAL,
                 modalProps: {
@@ -86,8 +101,16 @@ export const request = async (route, method, session, noAuth) => {
         }
         // store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
 
+
+
+
         if(redirect){
             console.log('Redirecting to the ' + redirect + ' page')
+
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: { isVisible: false }
+            })
             history.push(redirect);
             return false;
         }

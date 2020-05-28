@@ -14,6 +14,8 @@ import DashNews from './DashNews/DashNews';
 import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashLocations from './DashLocations/DashLocations';
 
+import SnackBar from '../../components/SnackBar';
+
 import '../../assets/styles/dashboard.scss';
 
 const navLinks = [
@@ -26,7 +28,8 @@ const navLinks = [
 class Dashboard extends Component {
 
     state = {
-        showProfile: false
+        showProfile: false,
+        showSnack: false
     }
 
     handleLogout = () => {
@@ -54,6 +57,10 @@ class Dashboard extends Component {
                     <div className="nav-container-filler" />
 
                     <div className="dashboard-content">
+
+                        <SnackBar />
+
+                        {/* <button onClick={() => this.setState({showSnack: !this.state.showSnack})}>CLICK MEEEE</button> */}
                         <div className="dashboard-header">
                             <HamburgerIcon onClick={this.props.toggleNavSlider} />
                             <div style={{textAlign: 'center'}} className="hide-desktop">

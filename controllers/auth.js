@@ -249,10 +249,12 @@ passport.use('jwt', new JWTStrategy({
     try {
 
         console.log(req.roles && req.roles.includes(token.user.admin_type), 'INCLUDEZZ')
+
+        // if list of roles exists, check to see if the current user's admin_type is in the roles list
         if(req.roles && !req.roles.includes(token.user.admin_type)){
             console.log("DOES NOT ROLSE")
-            return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
-            
+            // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
+            return done(null, false, {message: 'You do not have permission for this action', redirect: '/dashboard', snack: true })
         }
 
         const isSuspended = await checkSuspended(token.user.id);
@@ -269,11 +271,12 @@ passport.use('jwt', new JWTStrategy({
 }))
 
 
+// this fires on every admin request - too much?
 const checkSuspended = async (id) => {
     const db = app.get('db');
     const user = await db.users.findOne({ id })
     if(!user){
-        return { status: 404, message: 'User could not be found'}
+        return { status: 404, message: 'User could not be found', shouldLogOut: true }
     }
     if(user.is_suspended){
         return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true }
