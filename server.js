@@ -196,7 +196,7 @@ const accessAdmin =           ['super', ];
 
 // Create seasons
 app.post(`/api/admin/seasons`,       auth.authorizeAccessToken(accessAdmin), admin.createSeason);             // Postman Docs
-app.put(`/api/admin/seasons/:id`,    auth.authorizeAccessToken, admin.updateSeason);          // Postman Docs
+app.put(`/api/admin/seasons/:id`,    auth.authorizeAccessToken2, admin.updateSeason);          // Postman Docs
 app.delete(`/api/admin/seasons/:id`, auth.authorizeAccessToken, admin.deleteSeason);       // Postman Docs
 
 // Create division

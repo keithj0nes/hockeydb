@@ -45,6 +45,7 @@ export const createSeason = seasonData => async (dispatch, getState) => {
 }
 
 export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
+    console.log('yo yo yo')
 
     const { user } = getState();
 

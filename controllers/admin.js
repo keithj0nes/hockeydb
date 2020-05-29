@@ -297,7 +297,7 @@ const updateSeason = async (req, res) => {
     }
 
     const data = await db.seasons.update({ id }, { name, type, is_active, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update season error'))
-    return res.status(200).send({ status: 200, data: {...data[0], updateCurrentSeasonGlobally: is_active}, message: 'Season updated' })
+    return res.status(200).send({ status: 200, data: {...data[0], updateCurrentSeasonGlobally: is_active}, message: 'Season updated', snack: true })
 }
 
 
