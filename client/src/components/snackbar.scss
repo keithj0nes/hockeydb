@@ -1,34 +1,28 @@
 
 .snack-bar-container {
-    display: none;
-    position: absolute;
-    top: 70px;
+    position: fixed;
+    top: -100px;
     width: 100%;
-    padding: 0 20px;
-    z-index: 10000000;
+    z-index: 100000;
+    display: flex;
 
-    &.snack-bar-visible {
-        display: block;
+    .snack-bar-full-width-filler {
+        display: none;
     }
 
     .snack-bar-content {
-        // background: lightskyblue;
-        // background: #ffcccb;
-        padding: 12px;
-        border-radius: 3px;
+        padding: 12px 40px 12px 12px;
         border: 1px solid;
-        border-color: blue;
-
-        animation: snack-slide ease-in;     // animation duration set in SnackBar.js
-    }
-
-    .snack-bar-remove {
-        animation: snack-slide-out ease-in;  // animation duration set in SnackBar.js
+        justify-content: space-between;
+        align-items: center;
+        align-self: center;
+        text-align: center;
+        width: 100%;
     }
 
     .sb-alert {
         background: lightskyblue;
-        border-color: blue;
+        border-color: blue !important;
     }
 
     .sb-error {
@@ -50,38 +44,51 @@
         width: 24px;
         border-radius: 50px;
         border: 1px solid;
+        align-self: center;
         position: absolute;
-        // background: lightskyblue;
-        top: -8px;
+        top: 50%;
+        transform: translate(0, -50%);
         right: 10px;
         cursor: pointer;
-        animation: snack-slide ease-in;     // animation duration set in SnackBar.js
     }
 }
 
+.snack-bar-add {
+    animation: snack-slide ease-in forwards;     // animation duration set in SnackBar.js
+}
+
+.snack-bar-remove {
+    animation: snack-slide-out ease-in forwards;  // animation duration set in SnackBar.js
+}
 
 @keyframes snack-slide {
-    // 0% { right: -100% }
-    // 100% { right: 0% }
-
-    0%   { opacity: 0; }
-    100% { opacity: 1; }
+    0%   { top: -100px }
+    100% { top: 70px }
+    // 0%   { opacity: 0; }
+    // 100% { opacity: 1; }
 }
 
 @keyframes snack-slide-out {
-    // 0% { right: -100% }
-    // 100% { right: 0% }
-
-    0%   { opacity: 1; }
-    100% { opacity: 0; }
+    0%   { top: 70px }
+    100% { top: -100px }
+    // 0%   { opacity: 1; }
+    // 100% { opacity: 0; }
 }
 
 
 @media only screen and (min-width: 768px){
 
     .snack-bar-container {
-        width: auto;
-        right: 10px;
+        width: 100%;
+        right: 0px;
+
+        .snack-bar-full-width-filler {
+            width: 25%;
+            max-width: 260px;
+            background: blue;
+            height: 100%;
+            display: block;
+        }
     }
 
 }

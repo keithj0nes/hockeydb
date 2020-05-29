@@ -33,12 +33,14 @@ const SnackBar = props => {
             wait(3000).then(() => props.closeSnackBar()); // closing in redux will force component to fade out
         }
     }
+
     return (
-        <div className={`snack-bar-container ${isVisible ? 'snack-bar-visible' : ''}`}>
-            <div className={`snack-bar-content ${!hideSnack ? 'snack-bar-remove' : ''} ${colorScheme}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
+        <div className={`snack-bar-container ${isVisible ? 'snack-bar-add' : ''}  ${!hideSnack ? 'snack-bar-remove' : ''}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
+            <div className="snack-bar-full-width-filler" />
+            <div className={`snack-bar-content ${colorScheme}`}>
                 <p> {props.message} </p>
+                {colorScheme !== 'sb-success' && <div className={`snack-bar-close-btn ${colorScheme}`} onClick={props.closeSnackBar}>&times;</div>}
             </div>
-            {colorScheme !== 'sb-success' && <div className={`snack-bar-close-btn ${!hideSnack ? 'snack-bar-remove' : ''} ${colorScheme}`} onClick={props.closeSnackBar} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>&times;</div>}
         </div>
     )
 }
