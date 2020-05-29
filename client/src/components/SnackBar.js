@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { closeSnackBar } from '../redux/actions/misc';
+import { wait } from '../helpers';
 import './snackbar.scss';
 
 const ANIMATION_DURATION = 350; // in MS
@@ -13,12 +14,11 @@ const SnackBar = props => {
     useEffect(() => {
         if(isVisible) {
             setHideSnack(false)
-            
-            setTimeout(() => {
-                    setIsVisible(props.isVisible)
-                    setHideSnack(true)
-            }, ANIMATION_DURATION - 10); // - 10 avoids flash when animating out
 
+            wait(ANIMATION_DURATION - 10).then(() => {
+                setIsVisible(props.isVisible);
+                setHideSnack(true);
+            })
         } else {
             setIsVisible(props.isVisible)
         }
@@ -27,14 +27,20 @@ const SnackBar = props => {
     let colorScheme;
     if(props.type === 'error') colorScheme = 'sb-error';
     if(props.type === 'alert') colorScheme = 'sb-alert';
-    if(props.type === 'success') colorScheme = 'sb-success';
+    if(props.type === 'success') {
+        colorScheme = 'sb-success';
+        if(isVisible && props.isVisible) {
+            wait(3000).then(() => props.closeSnackBar()); // closing in redux will force component to fade out
+        }
+    }
 
     return (
-        <div className={`snack-bar-container ${isVisible ? 'snack-bar-visible' : ''}`}>
-            <div className={`snack-bar-content ${!hideSnack ? 'snack-bar-remove' : ''} ${colorScheme}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
+        <div className={`snack-bar-container ${isVisible ? 'snack-bar-add' : ''}  ${!hideSnack ? 'snack-bar-remove' : ''}`} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>
+            <div className="snack-bar-full-width-filler" />
+            <div className={`snack-bar-content ${colorScheme}`}>
                 <p> {props.message} </p>
+                {colorScheme !== 'sb-success' && <div className={`snack-bar-close-btn ${colorScheme}`} onClick={props.closeSnackBar}>&times;</div>}
             </div>
-            <div className={`snack-bar-close-btn ${!hideSnack ? 'snack-bar-remove' : ''} ${colorScheme}`} onClick={props.closeSnackBar} style={{animationDuration: `${ANIMATION_DURATION}ms`}}>&times;</div>
         </div>
     )
 }

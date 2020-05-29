@@ -26,16 +26,16 @@ const authorizeAccessToken = (roles) => async (req, res, next) => {
     })(req, res, next)
 }
 
-// const authorizeAccessToken = async (req, res, next) => {
-//     console.log('authoriszeaccestoken!')
-//     passport.authenticate('jwt', { session: false }, (err, user, info) => {
-//         if (err || !user) {
-//             return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized", ...info });
-//         }
-//         req.user = user;
-//         return next();
-//     })(req, res, next)
-// }
+const authorizeAccessToken2 = async (req, res, next) => {
+    console.log('authoriszeaccestoken!')
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+        if (err || !user) {
+            return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized", ...info });
+        }
+        req.user = user;
+        return next();
+    })(req, res, next)
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -157,6 +157,8 @@ const reinvite = async (req, res) => {
 
 module.exports = {
     authorizeAccessToken,
+    authorizeAccessToken2,
+
     login,
     signup,
     invite,
