@@ -32,14 +32,15 @@ import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 
 const navLinks1 = {
     admin: [
-        { name: 'Home',       to: '',            svg: <Home alt="home icon" />            },
+        { name: 'Home',       to: '',             svg: <Home alt="home icon" />           },
         { name: 'News',       to: '/news',        svg: <News alt="news icon" />           },
         { name: 'Seasons',    to: '/seasons',     svg: <Seasons alt="season icon" />      },
         { name: 'Divisions',  to: '/divisions',   svg: <Divisions alt="divisions icon" /> },
         { name: 'Teams',      to: '/teams',       svg: <Teams alt="teams icon" />         },
         { name: 'Players',    to: '/players',     svg: <Players alt="players icon" />     },
         { name: 'Locations',  to: '/locations',   svg: <Players alt="players icon" />     },
-        { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         }
+        { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         },
+        { name: 'Users',      to: '/users',       svg: <Players alt="players icon" />     },
     ],
     scorekeeper: [
         { name: 'Players',    to: '/players',     svg: <Players alt="players icon" />     },

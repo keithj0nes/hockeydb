@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from 'redux-thunk';
 // import { composeWithDevTools } from "redux-devtools-extension";
-import { user, news, misc, players, games, standings } from './reducers';
+import { user, news, misc, players, games, standings, users } from './reducers';
 import { seasons } from './reducers/seasons';
 import { teams } from './reducers/teams';
 import { divisions } from './reducers/divisions';
@@ -33,6 +33,7 @@ let reducers = combineReducers({
     teams,
     divisions,
     standings,
+    users,
     site_level: (state = SITE_LEVEL) => (state)
 });
 

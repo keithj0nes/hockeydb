@@ -13,6 +13,7 @@ import DashGamesDetails from './DashGames/DashGamesDetails';
 import DashNews from './DashNews/DashNews';
 import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashLocations from './DashLocations/DashLocations';
+import DashUsers from './DashUsers/DashUsers';
 
 import SnackBar from '../../components/SnackBar';
 
@@ -110,6 +111,8 @@ class Dashboard extends Component {
                         <Route path={`${match.path}/news`}      component={DashNews} exact />
                         <Route path={`${match.path}/news/:id`}  component={DashNewsCreate} />
                         <Route path={`${match.path}/locations`} component={DashLocations} />
+                        <Route path={`${match.path}/users`}     component={DashUsers} />
+
                     </div>
                 </div>
             </>
