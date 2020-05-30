@@ -163,7 +163,7 @@ const createNews = async (req, res) => {
 
     const data = {id, display_order, title, allow_collapse, tag, body, created_by, created_date, user_id, first_name, last_name};
  
-    return res.status(200).send({ status: 200, data, message: 'Blog post created' })
+    return res.status(200).send({ status: 200, data, message: 'News post created', snack: true })
 }
 
 
@@ -179,7 +179,7 @@ const updateNews = async (req, res) => {
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
 
     if (!newsPost) {
-        return res.status(200).send({ status: 404, error: true, message: 'News post not found' })
+        return res.status(200).send({ status: 404, error: true, message: 'News post not found', snack: true })
     }
 
     // if updating news post order
@@ -210,7 +210,7 @@ const updateNews = async (req, res) => {
     
     const data = await db.news.update({ id }, { title, body, allow_collapse, tag, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update blog error'))
 
-    return res.status(200).send({ status: 200, data: data[0], message: 'News post updated' })
+    return res.status(200).send({ status: 200, data: data[0], message: 'News post updated', snack: true })
 
 }
 
@@ -222,13 +222,12 @@ const deleteNews = async (req, res) => {
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
 
     if (!newsPost) {
-        return res.status(200).send({ status: 404, error: true, message: 'Blog post not found' })
+        return res.status(200).send({ status: 404, error: true, message: 'News post not found', snack: true })
     }
 
     const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete blog error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Blog post deleted' })
-
+    return res.status(200).send({ status: 200, data, message: 'News post deleted', snack: true })
 }
 
 
@@ -250,7 +249,7 @@ const createSeason = async (req, res) => {
 
     const data = await db.seasons.insert({ name, type, is_active: false, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create blog error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Season created' })
+    return res.status(200).send({ status: 200, data, message: 'Season created', snack: true })
 }
 
 
@@ -267,17 +266,17 @@ const updateSeason = async (req, res) => {
     if(req.body.hasOwnProperty('is_hidden')){
         const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
         if(season.is_active) {
-            return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season' })
+            return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season', snack: true })
         }
         const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
         console.log(data, 'NOT HIDING NAYMORE data')
-        return res.status(200).send({ status: 200, data: [], message: is_hidden ? 'Season hidden' : 'Season unhidden' })
+        return res.status(200).send({ status: 200, data: [], message: is_hidden ? 'Season hidden' : 'Season unhidden', snack: true })
     }
 
     const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
 
     if (!season) {
-        return res.status(200).send({ status: 404, error: true, message: 'Season not found' })
+        return res.status(200).send({ status: 404, error: true, message: 'Season not found', snack: true })
     }
     
     if(name) {
@@ -309,12 +308,12 @@ const deleteSeason = async (req, res) => {
     const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
 
     if (!season) {
-        return res.status(404).send({ status: 404, error: true, message: 'Season not found' })
+        return res.status(404).send({ status: 404, error: true, message: 'Season not found', snack: true })
     }
 
     const data = await db.seasons.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete season error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Season deleted' })
+    return res.status(200).send({ status: 200, data, message: 'Season deleted', snack: true })
 
 }
 
@@ -341,12 +340,9 @@ const createDivision = async (req, res) => {
         return res.status(200).send({ status: 400, error: true, message: 'Division under this season already exists' })
     }
 
-
-
     const data = await db.divisions.insert({ name, season_id: season_id.id, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create division error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Division created' })
-
+    return res.status(200).send({ status: 200, data, message: 'Division created', snack: true })
 }
 
 
@@ -359,12 +355,12 @@ const updateDivision = async (req, res) => {
     const division = await db.divisions.findOne({ id }).catch(err => console.log(err));
     
     if (!division) {
-        return res.status(200).send({ status: 404, error: true, message: 'Division not found' })
+        return res.status(200).send({ status: 404, error: true, message: 'Division not found', snack: true })
     }
         // Manage hidden request
     if(req.body.hasOwnProperty('is_hidden')){
         const data = await db.divisions.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden division error'))
-        return res.status(200).send({ status: 200, data: data, message: is_hidden ? 'Division hidden' : 'Division unhidden' })
+        return res.status(200).send({ status: 200, data: data, message: is_hidden ? 'Division hidden' : 'Division unhidden', snack: true })
     }
     
     if(name) {
@@ -376,7 +372,7 @@ const updateDivision = async (req, res) => {
     }
 
     const data = await db.divisions.update({ id }, { name, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update Division error'))
-    return res.status(200).send({ status: 200, data: data[0], message: 'Division updated' })
+    return res.status(200).send({ status: 200, data: data[0], message: 'Division updated', snack: true })
 }
 
 const deleteDivision = async (req, res) => {
@@ -387,7 +383,7 @@ const deleteDivision = async (req, res) => {
     const division = await db.divisions.findOne({ id }).catch(err => console.log(err));
 
     if (!division) {
-        return res.status(200).send({ status: 404, error: true, message: 'Division not found' })
+        return res.status(200).send({ status: 404, error: true, message: 'Division not found', snack: true })
     }
 
     const divisionHasTeams = await db.team_season_division.findOne({division_id: division.id});
@@ -397,7 +393,7 @@ const deleteDivision = async (req, res) => {
 
     const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete Division error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Division deleted' })
+    return res.status(200).send({ status: 200, data, message: 'Division deleted', snack: true })
 }
 
 
@@ -412,8 +408,6 @@ const createLocation = async (req, res) => {
     const { name, address } = req.body;
 
     const location = await db.locations.where('lower(name) = $1 AND deleted_date IS null', [name.toLowerCase()]).catch(err => console.log(err));
-
-
     // const location = await db.locations.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
     console.log(location, 'location!')
@@ -423,7 +417,7 @@ const createLocation = async (req, res) => {
 
     const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create location error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Location created' })
+    return res.status(200).send({ status: 200, data, message: 'Location created', snack: true })
 
 }
 
@@ -437,7 +431,7 @@ const updateLocation = async (req, res) => {
     const location = await db.locations.findOne({ id }).catch(err => console.log(err));
 
     if (!location) {
-        return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
+        return res.status(404).send({ status: 404, error: true, message: 'Location not found', snack: true })
     }
 
     if(name) {
@@ -449,7 +443,7 @@ const updateLocation = async (req, res) => {
 
     const data = await db.locations.update({ id }, { name, address, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update location error'))
 
-    return res.status(200).send({ status: 200, data: data[0], message: 'Location updated' })
+    return res.status(200).send({ status: 200, data: data[0], message: 'Location updated', snack: true })
 
 }
 
@@ -461,7 +455,7 @@ const deleteLocation = async (req, res) => {
     const location = await db.locations.findOne({ id }).catch(err => console.log(err));
 
     if (!location) {
-        return res.status(404).send({ status: 404, error: true, message: 'Location not found' })
+        return res.status(404).send({ status: 404, error: true, message: 'Location not found', snack: true })
     }
 
     // currently set up to where deleting location will not effect the game played
@@ -472,7 +466,7 @@ const deleteLocation = async (req, res) => {
 
     const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete location error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Location deleted' })
+    return res.status(200).send({ status: 200, data, message: 'Location deleted', snack: true })
 
 }
 
@@ -497,7 +491,7 @@ const createGame = async (req, res) => {
 
     // console.log(game, 'GAME!!!')
 
-    return res.status(200).send({ status: 200, data: game, message: 'Game created' })
+    return res.status(200).send({ status: 200, data: game, message: 'Game created', snack: true })
 
 }
 

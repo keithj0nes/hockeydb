@@ -63,13 +63,13 @@
 
 @keyframes snack-slide {
     0%   { top: -100px }
-    100% { top: 70px }
+    100% { top: 0px }  // old way was top: 70px
     // 0%   { opacity: 0; }
     // 100% { opacity: 1; }
 }
 
 @keyframes snack-slide-out {
-    0%   { top: 70px }
+    0%   { top: 0px } // old way was top: 70px
     100% { top: -100px }
     // 0%   { opacity: 1; }
     // 100% { opacity: 0; }
