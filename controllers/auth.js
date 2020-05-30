@@ -13,7 +13,7 @@ const JWTSECRET = process.env.JWTSECRET || config.JWTSECRET;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const authorizeAccessToken = (roles) => async (req, res, next) => {
+const authorizeAccessToken2 = (roles) => async (req, res, next) => {
     console.log(roles, 'authoriszeaccestoken! 🌟🌟🌟🌟🌟')
     req.roles = roles;
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
@@ -26,7 +26,7 @@ const authorizeAccessToken = (roles) => async (req, res, next) => {
     })(req, res, next)
 }
 
-const authorizeAccessToken2 = async (req, res, next) => {
+const authorizeAccessToken = async (req, res, next) => {
     console.log('authoriszeaccestoken!')
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err || !user) {
