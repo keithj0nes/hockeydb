@@ -54,6 +54,9 @@ const loginFromCookie = async (req, res) => {
         const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
         // NEED TO CHANGE THIS TO BE OPTIMIZED
 
+        console.log(user, 'USERRRRR!!!82472947248')
+        await db.users.update({id: user.id}, {last_login: new Date()}).catch(err => console.log(err, 'update last_login error on cookie login'))
+
         res.status(200).send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' });
     })(req, res)
 }
@@ -85,6 +88,9 @@ const login = async (req, res) => {
             // NEED TO CHANGE THIS TO BE OPTIMIZED
             const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
             // NEED TO CHANGE THIS TO BE OPTIMIZED
+
+            await db.users.update({id: user.id}, {last_login: new Date()}).catch(err => console.log(err, 'update last_login error on LOCAL login'))
+
 
             // console.log(seasons, 'SEASON')
             const access_token = jwt.sign({ user, season, seasons }, JWTSECRET)

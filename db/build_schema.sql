@@ -37,7 +37,10 @@ CREATE TABLE "users" (
   "is_admin" BOOLEAN,
   "invite_token" VARCHAR,
   "invite_date" TIMESTAMP,
-  "reinvite_date" TIMESTAMP
+  "reinvite_date" TIMESTAMP,
+  "last_login" TIMESTAMP,
+  "created_date" TIMESTAMP,
+  "created_by" INTEGER      -- REFERENCES users(id)
 );
 
 CREATE TABLE "passwords" (
@@ -212,6 +215,8 @@ CREATE TABLE "games" (
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
 --==--==--==--==--==--     Add Foreign Keys     --==--==--==--==--==--
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
+
+ALTER TABLE "users" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 
 ALTER TABLE "passwords" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 

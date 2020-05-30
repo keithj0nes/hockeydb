@@ -236,7 +236,7 @@ app.post('/api/admin/games', auth.authorizeAccessToken, admin.createGame)
 // app.put('/api/admin/games/:id', async)
 
 
-
+app.get('/api/admin/users', admin.getUsers);
 
 
 

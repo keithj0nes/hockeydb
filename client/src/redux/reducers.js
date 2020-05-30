@@ -193,3 +193,21 @@ export const divisions = (state = initialDivisionsState, { type, payload }) => {
         return state;
     }
 }
+
+
+
+const initialUsersState = {
+    users: [],
+    isLoading: true
+};
+
+export const users = (state = initialUsersState, { type, payload }) => {
+    switch (type) {
+        case `users/${GET_INIT}`:
+            return { ...state, isLoading: true};
+        case `users/${GET_SUCCESS}`:
+            return { ...state, users: payload, isLoading: false};
+        default:
+            return state;
+    }
+}
