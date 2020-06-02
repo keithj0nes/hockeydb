@@ -55,7 +55,7 @@ class Dashboard extends Component {
                         <DashboardNav {...this.props} />
                     </DashboardSidebarNav>
 
-                    <div className="nav-container-filler" />
+                    {/* <div className="nav-container-filler" /> */}
 
                     <div className="dashboard-content">
 

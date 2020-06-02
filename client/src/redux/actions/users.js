@@ -1,5 +1,6 @@
 import { request } from './middleware';
-import { GET_INIT, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS } from '../actionTypes';
+// import { GET_INIT, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS } from '../actionTypes';
+import {GET_SUCCESS } from '../actionTypes';
 
 
 export const getUsers = (filter) => async dispatch => {

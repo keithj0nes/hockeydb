@@ -9,7 +9,7 @@ const DashUsers = props => {
     useEffect(() => {
         props.getUsers();
     }, [])
-    
+
     return (
         <>
             <div className="dashboard-filter-header">
@@ -32,14 +32,14 @@ const DashUsers = props => {
                         <DashTable 
                             data={props.users}
                             sections={{ 
-                                'full_name': { as: 'name', flex: 'two' },
+                                'full_name':    { as: 'name', flex: 'two' },
                                 'email': 'three', 
-                                'admin_type': { as: 'role', flex: 'one' },
-                                'is_suspended': { as: 'status', flex: 'one' },
-                                'last_login': {as: 'last login', flex: 'one'}
+                                'admin_type':   { as: 'role', flex: 'one' },
+                                'is_suspendedd': { as: 'status', flex: 'one' },
+                                'last_loginn':   { as: 'last login', flex: 'one' }
                             }}
                             tableType='users'
-                            minWidth={550}
+                            minWidth={800}
                             // onEdit={this.handleEditSeason}
                             // onDelete={this.handleDeleteSeason}
                             // onHide={this.handleHideSeason}

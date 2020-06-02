@@ -40,13 +40,8 @@ const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableTy
                 {data.map(d => {
                     if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
                     if(tableType === 'users') {
-                        // console.log(d.last_login, 'last login')
-                        d.is_suspended === null ? d.is_suspended = '[active]' : d.is_suspended = '[inactive]';
-                        // d.last_login && (d.last_login = distanceInWords( new Date(), d.last_login, {addSuffix: true}));
-                        d.last_login = (d.last_login ? distanceInWords( new Date(), d.last_login, {addSuffix: true}) : 'never');
-
-                        // d.last_login = dateFormat(d.last_login, 'MM/DD/YY h:mmA');
-
+                        d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
+                        d.last_loginn = (d.last_login ? distanceInWords( new Date(), d.last_login, {addSuffix: true}) : 'never');
                     }
                     return (
                         <div className="ot-row" key={d.id}>
