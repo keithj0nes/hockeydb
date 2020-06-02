@@ -11,7 +11,7 @@ const navLinks = [
     { name: 'Schedule',   to: 'schedule' },
     { name: 'Teams',      to: 'teams' },
     { name: 'Standings',  to: 'standings' },
-    { name: 'Scoreboard', to: 'scoreboard' },
+    // { name: 'Scoreboard', to: 'scoreboard' },
     { name: 'Stats',      to: 'stats' },
     { name: 'Contact',    to: 'contact', subLinks: [
                                             { name: 'general inquiry',     to: 'inquiry' }, 
