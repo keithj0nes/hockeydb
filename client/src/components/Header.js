@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 import { Button } from './';
+import SlideOut from './SlideOut';
 
 import './header.scss';
 
@@ -131,51 +132,9 @@ class Header extends Component {
                     />
 
 
-                    <div className={`dashboard-nav-container dashboard-nav-container-${visibility}`}>
-                        <div className={`dashboard-nav-background fade-in-${visibility}`} />
-                        <div className={`dashboard-nav-sliding-container dashboard-nav-${visibility}`}>
-                            <div className={"dashboard-nav bluebg"}>
-                                <div className={"hide-desktop bluebg close"} onClick={this.toggleMobileSlider}>&times;</div>
-
-                                    <div className="logo">
-                                        <div><LeagueLogo /></div>
-                                        <h2>HockeyDB</h2>
-                                    </div>
-
-                                    <nav>
-                                        <ul>
-                                            {navLinks.map(link => (
-                                                <li key={link.to}>
-                                                    <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.toggleMobileSlider}>
-                                                        <div style={{height: 30, width: 30, background: 'white'}}/>{link.name}
-
-                                                        {link.subLinks && (<div className="arrow" />)}
-                                                    </NavLink> 
-
-                                                    {link.subLinks && (
-
-                                                        <ul className={'sub-links'}>
-                                                            {link.subLinks.map(subLink => {
-                                                                return (
-                                                                    <li key={subLink.to}>
-                                                                        <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={this.toggleMobileSlider}>
-                                                                            <div style={{height: 30, width: 30, background: 'white'}}/>{subLink.name}
-                                                                        </NavLink> 
-
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    )}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </nav>
-
-                                </div>
-                            <div className={"dashboard-nav-close"} onClick={this.toggleMobileSlider} />
-                        </div>
-                    </div>
+                    <SlideOut isVisible={this.state.mobileSliderVisible} onClose={this.toggleMobileSlider}>
+                        <VisitorSlideOutNav match={this.props.match} toggleMobileSlider={this.toggleMobileSlider} />
+                    </SlideOut>
                 </div>
 
 
@@ -192,3 +151,51 @@ const mapStateToProps = state => {
     }
 }
 export default withRouter(connect(mapStateToProps)(Header));
+
+
+
+const VisitorSlideOutNav = ({match, toggleMobileSlider}) => {
+    return (
+        <>
+            <div className={"visitor-nav"}>
+
+            <div className={"close"} onClick={toggleMobileSlider}>&times;</div>
+
+                <div className="logo">
+                    <div><LeagueLogo /></div>
+                    <h2>HockeyDB</h2>
+                </div>
+
+                <nav>
+                    <ul>
+                        {navLinks.map(link => (
+                            <li key={link.to}>
+                                <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={toggleMobileSlider}>
+                                    <div style={{height: 30, width: 30, background: 'white'}}/>{link.name}
+
+                                    {link.subLinks && (<div className="arrow" />)}
+                                </NavLink> 
+
+                                {link.subLinks && (
+
+                                    <ul className={'sub-links'}>
+                                        {link.subLinks.map(subLink => {
+                                            return (
+                                                <li key={subLink.to}>
+                                                    <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={toggleMobileSlider}>
+                                                        <div style={{height: 30, width: 30, background: 'white'}}/>{subLink.name}
+                                                    </NavLink> 
+
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+        </>
+    )
+}

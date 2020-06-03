@@ -17,6 +17,8 @@ import DashUsers from './DashUsers/DashUsers';
 
 import SnackBar from '../../components/SnackBar';
 
+import SlideOut from '../../components/SlideOut';
+
 import '../../assets/styles/dashboard.scss';
 
 const navLinks = [
@@ -51,9 +53,13 @@ class Dashboard extends Component {
                 
                 <div className="dashboard-container">
 
-                    <DashboardSidebarNav {...this.props} >
+                    <SlideOut isVisible={this.props.navSliderVisible} onClose={this.props.toggleNavSlider}>
                         <DashboardNav {...this.props} />
-                    </DashboardSidebarNav>
+                    </SlideOut>
+
+                    {/* <DashboardSidebarNav {...this.props} >
+                        <DashboardNav {...this.props} />
+                    </DashboardSidebarNav> */}
 
                     {/* <div className="nav-container-filler" /> */}
 
@@ -123,7 +129,8 @@ class Dashboard extends Component {
 const mapStateToProps = state => {
     return {
         user: state.user.user,
-        currentSeason: state.seasons.currentSeason
+        currentSeason: state.seasons.currentSeason,
+        navSliderVisible: state.misc.navSliderVisible
     }
 }
 

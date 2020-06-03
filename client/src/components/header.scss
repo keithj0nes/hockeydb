@@ -1,25 +1,20 @@
 @import '../assets/styles/variables';
 
 // padding is being called on line 4, need to refactor the dashboard nav css
-.dashboard-nav-container .dashboard-nav-sliding-container .dashboard-nav li a {
+.visitor-nav li a {
     padding: 10px 20px;
 }
 
 // this is for subLinks padding
-.dashboard-nav-container .dashboard-nav-sliding-container .dashboard-nav li .sub-links li a {
+.visitor-nav li .sub-links li a {
     padding: 10px 40px;
 }
+
+
 header {
     background: $heading_color;
     width: 100%;
     padding: 16px 16px;
-
-    .dashboard-nav { 
-        .logo {
-            padding: 30px;
-            height: auto;
-        }
-    }
 
     .hamburger-menu {
         height: 26px;
@@ -43,7 +38,6 @@ header {
                 align-self: flex-start;
             }
         }
-
     }
 
     .site-container {
@@ -58,30 +52,50 @@ header {
         align-items: center;
     }
 
-    .logo {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-left: 40px;
-        height: 40px;
+    .visitor-nav {
+        width: 100%;
+        background: $header_sidenav_color;
+        background: transparent linear-gradient(180deg, #2B4272 0%, #0C1D40 100%) 0% 0% no-repeat padding-box;
 
-        h2 {
+        div.close {
+            border: none;
+            position: absolute;
+            right: 10px;
+            font-size: 30px;
+            padding: 10px;
+            cursor: pointer;
             color: $white_color;
+    
         }
 
-        > div:first-child > * > * {
-        //    fill: $main_font_color;
-           fill: $white_color;
-
-       }
+        .logo {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-left: 40px;
+            height: auto;
+    
+            h2 {
+                color: $white_color;
+            }
+    
+            > div:first-child > * > * {
+            //    fill: $main_font_color;
+               fill: $white_color;
+    
+           }
+        }
     }
-
+    
     ul {
         li {
             position: relative;
 
             a {
                 // padding is being called on line 4, need to refactor the dashboard nav css
+                display: flex;
+                align-items: center;
                 color: $white_color;
                 font-family: $heading_font;
                 text-transform: uppercase;
@@ -115,7 +129,7 @@ header {
                     position: relative;
 
                     a {
-                        display: block;
+                        display: flex;
                         padding: 10px 20px;
                         // padding is being called on line 9, need to refactor the dashboard nav css
                         color: $white_color;
@@ -188,6 +202,7 @@ header {
 
                     .arrow {
                         right: -22px;
+                        top: 26px;
                     }
                 }
 
