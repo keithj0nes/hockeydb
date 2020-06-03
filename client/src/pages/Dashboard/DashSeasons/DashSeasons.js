@@ -206,7 +206,6 @@ class DashSeasons extends Component {
 
 
     render() {
-        console.log('firring seasons')
         //this should be it's own loading icon component
         if (this.props.isLoading) {
             return <div>Loading...</div>

@@ -6,6 +6,8 @@ import '../assets/styles/dashboardsidebarnav.scss';
 class DashboardSidebarNav extends Component {
 
     render() {
+
+        console.log(this.props, 'PROPS!!')
         const { navSliderVisible } = this.props;
 
         let body = document.getElementsByTagName('body')[0].style;

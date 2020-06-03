@@ -1,62 +1,40 @@
-import React, { Component } from 'react';
-// import { DashboardSidebarNav } from '../../components'; // maybe add a 'right' prop 
+import React, { Component, useState } from 'react';
 import TodaysGames from '../../../components/TodaysGames';
+import SlideOut from '../../../components/SlideOut';
+import News from './News';
 import './home.scss';
 
-import News from './News';
+const Home = () => {
 
-export class Home extends Component {
+  const [ leftSliderVisible, setLeftSliderVisible ] = useState(false);
 
-  state = {
-    leftSliderVisible: false
-  }
+  return (
+    <>
+      <div className="home-container">
 
-
-  toggleLeftSlider = () => {
-    this.setState({leftSliderVisible: !this.state.leftSliderVisible})
-  }
-
-  render() {
-
-    const { leftSliderVisible } = this.state;
-    let visibility = leftSliderVisible ? "show" : "hide";
-
-    // console.log(this.state.leftSliderVisible, 'toggleLeftSlider')
-
-    return (
-      <div>
-        <div className="home-container">
-
-          <div className="hide-desktop">
-            <div className={`dashboard-nav-container right dashboard-nav-container-${visibility}`}>
-              <div className={`dashboard-nav-background fade-in-${visibility}`} />
-              <div className={`dashboard-nav-sliding-container right dashboard-nav-${visibility}`}>
-                  <div className={"dashboard-nav right"}>
-                      <div className={"hide-desktop close"} onClick={this.toggleLeftSlider}>&times;</div>
-                      <TodaysGames />
-                  </div>
-                  <div className={"dashboard-nav-close"} onClick={this.toggleLeftSlider} />
-              </div>
-            </div>
-          </div>
-
-          <News />
-
-          <div className="hide-mobile">
-            <TodaysGames />
-          </div>
+        <div className="hide-desktop">
+          <SlideOut isVisible={leftSliderVisible} onClose={() => setLeftSliderVisible(!leftSliderVisible)} slideFrom="right">
+              <TodaysGames />
+          </SlideOut>
         </div>
 
-        <div 
-          className="todays-games-toggle-button"
-          onClick={this.toggleLeftSlider}
-          >
-            Today's Games
-        </div>
+        <News />
 
+        <div className="hide-mobile">
+          <TodaysGames />
+        </div>
       </div>
-    )
-  }
+
+      <div 
+        className="todays-games-toggle-button"
+        onClick={() => setLeftSliderVisible(!leftSliderVisible)}
+        >
+          Today's Games
+      </div>
+
+    </>
+  )
+
 }
 
 export default Home

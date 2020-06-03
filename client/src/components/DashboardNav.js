@@ -16,6 +16,8 @@ import { ReactComponent as News } from '../assets/icons/news.svg';
 
 import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 
+import './dashboardnav.scss';
+
 // import Auth, { accessPlayer, accessManager, accessScorekeeper } from '../components/Auth';
 
 // const navLinks = [
@@ -78,49 +80,93 @@ class DashboardNav extends Component {
     render() {
         const { match } = this.props;
 
+
+
         return (
-            <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div>
-                    <div className="dashboard-nav-header">
-                        <div><LeagueLogo /></div>
-                        <h2>HockeyDB</h2>
+
+            <div className='dashboard-nav'>
+
+
+                <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                        <div className="dashboard-nav-header">
+                            <div><LeagueLogo /></div>
+                            <h2>HockeyDB</h2>
+                        </div>
+
+                        <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
+                        <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+
+                        <ul>
+                            {navLinks1[this.props.admin_type].map(link => (
+                                <li key={link.to}>
+                                    <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                        <div className="nav-icon-container">
+                                            {link.svg}
+                                        </div>
+                                        {link.name}
+                                    </NavLink>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
-                    <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
-                    <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+                    <div style={{ marginBottom: 30, textAlign: 'center' }}>
+                        <Button title={'Logout'} onClick={this.handleLogout} />
+                        <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
 
-                    <ul>
-                        {/* {navLinks.map(link => (
-                            <li key={link.to}>
-                                <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                    <div className="nav-icon-container">
-                                        {link.svg}
-                                    </div>
-                                    {link.name}
-                                </NavLink>
-                            </li>
-                        ))} */}
-
-                        {navLinks1[this.props.admin_type].map(link => (
-                            <li key={link.to}>
-                                <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
-                                    <div className="nav-icon-container">
-                                        {link.svg}
-                                    </div>
-                                    {link.name}
-                                </NavLink>
-                            </li>
-                        ))}
-                    </ul>
+                    </div>
                 </div>
 
-                <div style={{ marginBottom: 30, textAlign: 'center' }}>
-                    <Button title={'Logout'} onClick={this.handleLogout} />
-                    <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
-
-                </div>
             </div>
+
         )
+
+        
+
+        // return (
+        //     <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
+        //         <div>
+        //             <div className="dashboard-nav-header">
+        //                 <div><LeagueLogo /></div>
+        //                 <h2>HockeyDB</h2>
+        //             </div>
+
+        //             <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
+        //             <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+
+        //             <ul>
+        //                 {/* {navLinks.map(link => (
+        //                     <li key={link.to}>
+        //                         <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+        //                             <div className="nav-icon-container">
+        //                                 {link.svg}
+        //                             </div>
+        //                             {link.name}
+        //                         </NavLink>
+        //                     </li>
+        //                 ))} */}
+
+        //                 {navLinks1[this.props.admin_type].map(link => (
+        //                     <li key={link.to}>
+        //                         <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+        //                             <div className="nav-icon-container">
+        //                                 {link.svg}
+        //                             </div>
+        //                             {link.name}
+        //                         </NavLink>
+        //                     </li>
+        //                 ))}
+        //             </ul>
+        //         </div>
+
+        //         <div style={{ marginBottom: 30, textAlign: 'center' }}>
+        //             <Button title={'Logout'} onClick={this.handleLogout} />
+        //             <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
+
+        //         </div>
+        //     </div>
+        // )
     }
 }
 
