@@ -111,7 +111,7 @@ class DashboardNav extends Component {
                         </ul>
                     </div>
 
-                    <div style={{ marginBottom: 30, textAlign: 'center' }}>
+                    <div style={{ margin: '40px 0 30px', textAlign: 'center' }}>
                         <Button title={'Logout'} onClick={this.handleLogout} />
                         <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
 
