@@ -1,0 +1,18 @@
+.permissions-container {
+    background: lightcoral;
+    width: 100%;
+}
+
+
+
+@media only screen and (min-width: 768px) {
+
+
+    .permissions-container {
+        // background: lightcoral;
+        // width: 100%;
+        width: 300px;
+        // width: 80vw;
+    }
+
+}

@@ -14,8 +14,10 @@ const SlideOut = props => {
         body.position = 'relative';
     }
 
+    const sticky = props.sticky ? 'sticky' : ''
+
     return (
-        <div className={`slideout-container slideout-container-${visibility} ${props.slideFrom} `}>
+        <div className={`slideout-container slideout-container-${visibility} ${sticky} ${props.slideFrom} `}>
 
             <div className={`slideout-opacity-bg slideout-fadein-${visibility}`} /> {/* self closing */}
 
@@ -38,7 +40,8 @@ SlideOut.defaultProps = {
 SlideOut.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    slideFrom: PropTypes.oneOf(['left', 'right']) // add top bottom later
+    slideFrom: PropTypes.oneOf(['left', 'right']), // add top bottom later
+    sticky: PropTypes.bool // sticks slideout to left side on desktop view
 }
 
 export default SlideOut;
