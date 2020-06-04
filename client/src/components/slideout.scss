@@ -19,6 +19,8 @@
     left: 0;
     z-index: 1000;
     overflow: scroll;
+    height: 100vh;
+    height: -webkit-fill-available;
     // background: green;
 
     &-hide {
