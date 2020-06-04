@@ -1,21 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from '../../../redux/actions/users';
 import { Button } from '../../../components';
+import SlideOut from '../../../components/SlideOut';
 import DashTable from '../DashTable';
 
+import './dashusers.scss';
+
 const DashUsers = props => {
+
+    const [ showPermissions, setShowPermissions ] = useState(false);
 
     useEffect(() => {
         props.getUsers();
     }, [])
 
     return (
-        <>
+        <div style={{position: 'relative'}}>
             <div className="dashboard-filter-header">
                 <div style={{width: '100%'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Button title="Add User" onClick={() => console.log('add user clicked')} />
+                        <Button title="Show Permissions" onClick={() => setShowPermissions(!showPermissions)} />
+
                     </div>
                 </div>
             </div>
@@ -47,7 +54,15 @@ const DashUsers = props => {
                     )}
                 </div>
             </div>
-        </>
+
+            <SlideOut isVisible={showPermissions} onClose={() => setShowPermissions(!showPermissions)} slideFrom="right">
+                <div className="permissions-container">
+                    hello
+                    <Button title="Show Permissions" onClick={() => setShowPermissions(!showPermissions)} />
+
+                </div>
+            </SlideOut>
+        </div>
     )
 }
 

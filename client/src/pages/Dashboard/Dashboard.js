@@ -53,7 +53,7 @@ class Dashboard extends Component {
                 
                 <div className="dashboard-container">
 
-                    <SlideOut isVisible={this.props.navSliderVisible} onClose={this.props.toggleNavSlider}>
+                    <SlideOut isVisible={this.props.navSliderVisible} onClose={this.props.toggleNavSlider} sticky>
                         <DashboardNav {...this.props} />
                     </SlideOut>
 
