@@ -1,18 +1,25 @@
 .permissions-container {
     background: lightcoral;
     width: 100%;
+    padding: 20px;
+
+    h2 {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    ul {
+        margin-bottom: 20px;
+    }
+
 }
 
 
 
 @media only screen and (min-width: 768px) {
 
-
     .permissions-container {
-        // background: lightcoral;
-        // width: 100%;
         width: 300px;
-        // width: 80vw;
     }
 
 }
