@@ -10,7 +10,7 @@ const SlideOut = props => {
 
     let visibility = props.isVisible ? "show" : "hide";
     if(visibility === "show") {
-        body.overflow = 'hidden';
+        // body.overflow = 'hidden';
         body.position = 'relative';
     }
 
