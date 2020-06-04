@@ -57,8 +57,15 @@ const DashUsers = props => {
 
             <SlideOut isVisible={showPermissions} onClose={() => setShowPermissions(!showPermissions)} slideFrom="right">
                 <div className="permissions-container">
-                    hello
-                    <Button title="Show Permissions" onClick={() => setShowPermissions(!showPermissions)} />
+                    <h2>Permissions</h2>
+                    <ul>
+                        <li>create season: true</li>
+                        <li>create divisions: true</li>
+                        <li>create teams: true</li>
+                        <li>create locations: true</li>
+                        <li>create games: false</li>
+                    </ul>
+                    <Button title="Hide Permissions" onClick={() => setShowPermissions(!showPermissions)} />
 
                 </div>
             </SlideOut>

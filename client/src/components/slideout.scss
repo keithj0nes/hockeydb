@@ -12,12 +12,15 @@
     display: flex;
     width: 100vw;
     height: 100vh;
+    // height: 100%;
     // position: absolute;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
     overflow: scroll;
+    height: 100vh;
+    height: -webkit-fill-available;
     // background: green;
 
     &-hide {
@@ -40,6 +43,7 @@
         width: 100%;
         height: 100%;
         position: absolute;
+        z-index: 1;
         opacity: 0;
         transition: opacity 0.5s ease;
         background: rgba(0,0,0,0.5);
@@ -59,7 +63,9 @@
         // width: 100%;
         width: 80vw;
         display: flex;
+        z-index: 20;
         // background: green;
+        overflow: hidden;
         transition: transform .35s cubic-bezier(.25, .1, .25, .1);
 
         &.right {
@@ -86,10 +92,10 @@
         width: 20vw;
         height: 100%;
         cursor: pointer;
-        // background-color: blue;
         position: absolute;
         right: 0;
         top: 0;
+        z-index: 2;
 
         &.right {
             left: 0;
@@ -162,7 +168,7 @@
             // background: blue;
             // display: none;
             width: 100%;
-            z-index: 0;
+            z-index: 2;
             cursor: default;
 
         }
