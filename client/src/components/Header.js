@@ -4,6 +4,7 @@ import { withRouter, NavLink } from 'react-router-dom';
 import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 import { Button } from './';
 import SlideOut from './SlideOut';
+import HeadManager from './HeadManager';
 
 import './header.scss';
 
@@ -48,6 +49,7 @@ class Header extends Component {
 
         return (
             <header>
+                <HeadManager/> 
 
             {/* DESKTOP HEADER */}
 
