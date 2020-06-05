@@ -1,11 +1,12 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import league_logo from '../assets/icons/league_logo.svg';
 
 const HeadManager = () => {
   return (
     <Helmet>
       <title>Play Maker League</title>
-      <link id="favicon" rel="icon" href="../assets/icons/league_logo.svg" type="image/svg+xml" />
+      <link rel="shortcut icon" href={league_logo} type="image/svg+xml" />
     </Helmet>
   );
 };
