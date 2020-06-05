@@ -27,31 +27,26 @@ const DashUsers = props => {
                 </div>
             </div>
 
-
             <div className="dashboard-list-container">
                 <div className="dashboard-list">
 
-                    { props.users && props.users.length <= 0 ? (
-                        <div>
-                            {props.location.search.length > 0 ? 'Sorry, there are no users within your filter criteria' : 'Sorry, no users have been created. Start by adding a user above.'}
-                        </div>
-                    ) : (
-                        <DashTable 
-                            data={props.users}
-                            sections={{ 
-                                'full_name':    { as: 'name', flex: 'two' },
-                                'email': 'three', 
-                                'admin_type':   { as: 'role', flex: 'one' },
-                                'is_suspendedd': { as: 'status', flex: 'one' },
-                                'last_loginn':   { as: 'last login', flex: 'one' }
-                            }}
-                            tableType='users'
-                            minWidth={800}
-                            // onEdit={this.handleEditSeason}
-                            // onDelete={this.handleDeleteSeason}
-                            // onHide={this.handleHideSeason}
-                        />
-                    )}
+                    <DashTable 
+                        data={props.users}
+                        sections={{ 
+                            'full_name':     { as: 'name', flex: 'two' },
+                            'email': 'three', 
+                            'admin_type':    { as: 'role', flex: 'one' },
+                            'is_suspendedd': { as: 'status', flex: 'one' },
+                            'last_loginn':   { as: 'last login', flex: 'one' }
+                        }}
+                        tableType='users'
+                        minWidth={800}
+                        isLoading={props.isLoading}
+                        // onEdit={this.handleEditSeason}
+                        // onDelete={this.handleDeleteSeason}
+                        // onHide={this.handleHideSeason}
+                        emptyTableText={props.location.search.length > 0 ? 'Sorry, there are no users within your filter criteria' : 'Sorry, no users have been created. Start by adding a user above.'}
+                    />
                 </div>
             </div>
 
@@ -75,7 +70,8 @@ const DashUsers = props => {
 
 const mapStateToProps = state => {
     return {
-        users: state.users.users || []
+        users: state.users.users,
+        isLoading: state.users.isLoading
     }
 }
 

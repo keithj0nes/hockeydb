@@ -1,14 +1,14 @@
 import { request } from './middleware';
 // import { GET_INIT, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS } from '../actionTypes';
-import {GET_SUCCESS } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS } from '../actionTypes';
+import { wait } from '../../helpers';
 
 
 export const getUsers = (filter) => async dispatch => {
 
-    // console.log(filter, 'FILTER GET SEASONS')
+    dispatch({ type: `users/${GET_INIT}` })
 
-    // dispatch({ type: `users/${GET_INIT}` })
-
+    await wait(3000);
 
     //use filter variable or empty string if null/undefined
     const data = await request(`/api/admin/users?${filter || ''}`, 'GET', {}, true)
