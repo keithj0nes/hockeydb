@@ -10,9 +10,16 @@ import Hide from '../../assets/icons/hide_icon.svg';
 import Auth, { accessAdmin, accessONLYScorekeeper } from '../../components/Auth';
 
 
-const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableType }) => {
+
+const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText }) => {
 
     const sectionKeys = Object.keys(sections);
+
+    let flexValues;
+    if(isLoading) {
+        flexValues = sectionKeys.map(item => typeof sections[item] === 'object' ? sections[item].flex : sections[item])
+    }
+
     return (
         <div className="ot-container-dash">
             <div className="ot-table" style={{minWidth}}>
@@ -28,54 +35,61 @@ const DashTable = ({ data, sections, minWidth, onEdit, onDelete, onHide, tableTy
 
                         )
                     })}
-                            {tableType !== 'users' && (
 
-                                <p className="ot-header ot-manage">Manage</p>
-                            )}
+                    {tableType !== 'users' && (
+                        <p className="ot-header ot-manage">Manage</p>
+                    )}
                 </div>
 
 
+                {isLoading ? (
+                    <TableLoader count={5} format={flexValues} />
+                ) : (
 
+                    data.length <= 0 ? (
+                        <h4 style={{textAlign: 'center', padding: '20px 0'}}>{emptyTableText}</h4>
+                    ) : (
 
-                {data.map(d => {
-                    if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
-                    if(tableType === 'users') {
-                        d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
-                        d.last_loginn = (d.last_login ? distanceInWords( new Date(), d.last_login, {addSuffix: true}) : 'never');
-                    }
-                    return (
-                        <div className="ot-row" key={d.id}>
-                    
-                            {sectionKeys.map(section => {
+                    data.map(d => {
+                        if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
+                        if(tableType === 'users') {
+                            d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
+                            d.last_loginn = (d.last_login ? distanceInWords( new Date(), d.last_login, {addSuffix: true}) : 'never');
+                        }
+                        return (
+                            <div className="ot-row" key={d.id}>
+                        
+                                {sectionKeys.map(section => {
 
-                                const isObj = typeof sections[section] === 'object';
-                                // const sectionLink = sections[section].link;
+                                    const isObj = typeof sections[section] === 'object';
+                                    // const sectionLink = sections[section].link;
 
-                                return (
-                                    <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-                                )
-                            })}
+                                    return (
+                                        <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+                                    )
+                                })}
 
-                            {tableType !== 'users' && (
+                                {tableType !== 'users' && (
 
-                                <p className="ot-cell ot-manage">
-                                
-                                <Auth.User roles={accessAdmin}>
-                                    {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                    <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
-                                    {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
-                                </Auth.User>
+                                    <p className="ot-cell ot-manage">
+                                    
+                                    <Auth.User roles={accessAdmin}>
+                                        {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                        <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+                                        {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                                    </Auth.User>
 
-                                <Auth.User roles={accessONLYScorekeeper}>
-                                    {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                </Auth.User>
+                                    <Auth.User roles={accessONLYScorekeeper}>
+                                        {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                    </Auth.User>
 
-                            </p>
-                        )}
-                        </div>
-                    )
+                                </p>
+                            )}
+                            </div>
+                        )
 
-                })}
+                    }))
+                )}
             </div>
         </div>
     )
@@ -95,7 +109,9 @@ DashTable.propTypes = {
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
     onHide: PropTypes.func,
-    tableType: PropTypes.string
+    tableType: PropTypes.string,
+    isLoading: PropTypes.bool,
+    emptyTableText: PropTypes.string
 }
 
 export default DashTable;
@@ -106,3 +122,19 @@ export default DashTable;
 // const gameDate = dateFormat(d.start_date, 'MM/DD/YYYY h:mmA').split(' ');
 // d.date = gameDate[0];
 // d.start_time = gameDate[1];
+
+
+{/* <TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} /> */}
+
+
+const TableLoader = ({count = 5, format}) => {
+    return Array(count).fill().map( (_, idx) => {
+        return (
+            <div className="ot-row" key={idx}>
+                {format.map((flexNum, fidx) => (
+                    <p key={fidx} className={`ot-cell ot-flex-${flexNum} shimmer`}></p>
+                ))}
+            </div>
+        )
+    })
+}
