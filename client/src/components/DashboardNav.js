@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../redux/actions/auth'
+import { logout } from 'redux/actions/auth'
 import { Button } from './';
 import { history } from '../helpers';
 
 
-import { ReactComponent as Home } from '../assets/icons/home.svg';
-import { ReactComponent as Seasons } from '../assets/icons/seasons.svg';
-import { ReactComponent as Divisions } from '../assets/icons/divisions.svg';
-import { ReactComponent as Teams } from '../assets/icons/teams.svg';
-import { ReactComponent as Players } from '../assets/icons/players.svg';
-import { ReactComponent as Games } from '../assets/icons/games.svg';
-import { ReactComponent as News } from '../assets/icons/news.svg';
+import { ReactComponent as Home } from 'assets/icons/home.svg';
+import { ReactComponent as Seasons } from 'assets/icons/seasons.svg';
+import { ReactComponent as Divisions } from 'assets/icons/divisions.svg';
+import { ReactComponent as Teams } from 'assets/icons/teams.svg';
+import { ReactComponent as Players } from 'assets/icons/players.svg';
+import { ReactComponent as Games } from 'assets/icons/games.svg';
+import { ReactComponent as News } from 'assets/icons/news.svg';
 
-import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
+import { ReactComponent as LeagueLogo } from 'assets/icons/league_logo.svg';
 
 import './dashboardnav.scss';
 
