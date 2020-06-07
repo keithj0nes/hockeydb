@@ -135,10 +135,8 @@ export class DashGames extends Component {
     }
 
     render() {
-        if (this.props.isLoading) {
-            return <div>Loading...</div>
-        }
-        const { locations } = this.props;
+     
+        const { locations, isLoading } = this.props;
         return (
             <div>
                 <div className="dashboard-filter-header">
@@ -156,62 +154,23 @@ export class DashGames extends Component {
                         <div className="dashboard-add-button-container">
                             <Button title="Save Location" success onClick={() => { }} />
                         </div>
-
                     </form>
 
                 )}
 
 
                 <div className="dashboard-list-container">
-
                     <div className="dashboard-list">
 
-                        { locations && locations.length <= 0 ? (
-                            <div>
-                                {this.props.location.search.length > 0 ? 'Sorry, there are no locations within your filter criteria' : 'Sorry, no locations have been created. Start by adding a location above.'}
-                            </div>
-                        ) : (
-
-                            <DashTable 
-                                data={locations}
-                                sections={{ 'name': 'two', 'address': 'three' }}
-                                minWidth={660}
-                                onEdit={this.handleEditLocation}
-                                onDelete={this.handleDeleteLocation}                                            
-                            />
-
-                            // <>
-
-                            //     <div className="dashboard-list-item hide-mobile">
-                            //         <div style={{ display: 'flex' }}>
-
-                            //             <p className="flex-three">Name</p>
-                            //             <p className="flex-three">Address</p>
-                            //             <p className="flex-one">Manage</p>
-
-                            //         </div>
-                            //     </div>
-
-                            //     {locations.map(item => {
-
-                            //         // console.log(item, 'befroe')
-                            //         // item.date = dateFormat(item.start_date, 'MM/DD/YYYY');
-                            //         // item.start_time = dateFormat(item.start_date, 'h:mm A')
-                            //         // console.log(item, 'after')
-
-                            //         return (
-                            //             <ListItem 
-                            //                 key={item.id} 
-                            //                 item={item} 
-                            //                 sections={{ 'name': 'three', 'address': 'three' }} 
-                            //                 onClick={() => this.handleDeleteLocation(item)}                                            
-                            //                 onEdit={() => this.handleEditSeason(item)}
-                            //                 // onHide={() => this.handleHideSeason(item)} 
-                            //             />
-                            //         )
-                            //     })}
-                            // </>
-                        )}
+                        <DashTable 
+                            data={locations}
+                            sections={{ 'name': 'two', 'address': 'three' }}
+                            minWidth={660}
+                            onEdit={this.handleEditLocation}
+                            onDelete={this.handleDeleteLocation}
+                            isLoading={isLoading}
+                            emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no locations within your filter criteria' : 'Sorry, no locations have been created. Start by adding a location above.'}
+                        />
                     </div>
 
                 </div>
@@ -224,6 +183,7 @@ export class DashGames extends Component {
 const mapStateToProps = state => {
     return {
         locations: state.locations.locations,
+        isLoading: state.locations.isLoading
     };
 };
 

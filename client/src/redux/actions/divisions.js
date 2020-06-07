@@ -1,6 +1,7 @@
 import { request } from './middleware';
-import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-// import qs from 'query-string';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+import { wait } from '../../helpers';
+
 
 
 export const getDivisions = (filter) => async (dispatch, getState) => {
@@ -9,9 +10,12 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
     //   filter = `season=${currentSeason.name}`
     // } 
 
+    dispatch({ type: `divisions/${GET_INIT}` })
+
+    await wait(3000);
+
     const { seasons: { currentSeason }  } = getState();
 
-    console.log(filter, 'filter!')
     //use filter variable if empty string or null/undefined
 
     if(!filter){

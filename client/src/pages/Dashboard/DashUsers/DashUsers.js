@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUsers } from '../../../redux/actions/users';
-import { Button } from '../../../components';
-import SlideOut from '../../../components/SlideOut';
+import { getUsers } from 'redux/actions/users';
+import { Button, SlideOut } from '../../../components';
 import DashTable from '../DashTable';
 
 import './dashusers.scss';
@@ -41,10 +40,10 @@ const DashUsers = props => {
                         }}
                         tableType='users'
                         minWidth={800}
-                        isLoading={props.isLoading}
                         // onEdit={this.handleEditSeason}
                         // onDelete={this.handleDeleteSeason}
                         // onHide={this.handleHideSeason}
+                        isLoading={props.isLoading}
                         emptyTableText={props.location.search.length > 0 ? 'Sorry, there are no users within your filter criteria' : 'Sorry, no users have been created. Start by adding a user above.'}
                     />
                 </div>

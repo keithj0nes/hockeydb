@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getDivisions, createDivision, updateDivision, deleteDivision } from '../../../redux/actions/divisions';
-import { Button, Filter } from '../../../components';
-import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import qs from 'query-string';
-
-// import './DashDivisions.scss';
-// import ListItem from '../ListItem';
-// import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
+import { getDivisions, createDivision, updateDivision, deleteDivision } from 'redux/actions/divisions';
+import { toggleModal, toggleFilter} from 'redux/actions/misc';
+import { Button, Filter } from '../../../components';
 import DashTable from '../DashTable';
+// import './DashDivisions.scss';
 
 
 const defaultState = {
@@ -197,12 +194,7 @@ class DashDivisions extends Component {
 
 
     render() {
-        //this should be it's own loading icon component
-        if (this.props.isLoading) {
-            return <div>Loading...</div>
-        }
-
-        const { divisions } = this.props;
+        const { divisions, isLoading } = this.props;
 
         return (
             <div>
@@ -230,49 +222,16 @@ class DashDivisions extends Component {
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">
 
-                        {divisions && divisions.length <= 0 ? (
-                            <div>
-                                Sorry, no divisions for this season. Start by adding a division above.
-                            </div>
-                        ) : (
-
-                            <DashTable 
-                                data={divisions}
-                                sections={{ 'name': 'three' }}
-                                minWidth={350}
-                                onEdit={this.handleEditDivision}
-                                onDelete={this.handleDeleteDivision}
-                                onHide={this.handleHideDivision}
-                            />
-                            // <>
-                            //     <div className="dashboard-list-item hide-mobile">
-                            //         <div style={{ display: 'flex' }}>
-                            //             <p className="flex-three">Name</p>
-                            //             <p className="flex-one">Manage</p>
-                            //         </div>
-                            //     </div>
-
-                            //     {divisions.map(item => {
-                            //         return (
-                            //             <DashSeasonsListItem 
-                            //                 // key={item.id} 
-                            //                 // item={item} 
-                            //                 // sections={{'name': 'three'}} 
-                            //                 // onClick={() => this.handleDeleteDivision(item)}
-                            //                 // onEdit={() => this.handleEditDivision(item)}
-
-                            //                 key={item.id}
-                            //                 item={item}
-                            //                 sections={{ 'name': 'three' }}
-                            //                 onDelete={() => this.handleDeleteDivision(item)}
-                            //                 onEdit={() => this.handleEditDivision(item)}
-                            //                 onHide={() => this.handleHideDivision(item)}
-                            //             />
-                            //         )
-
-                            //     })}
-                            // </>
-                        )}
+                        <DashTable 
+                            data={divisions}
+                            sections={{ 'name': 'three' }}
+                            minWidth={350}
+                            onEdit={this.handleEditDivision}
+                            onDelete={this.handleDeleteDivision}
+                            onHide={this.handleHideDivision}
+                            isLoading={isLoading}
+                            emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no divisions within your filter criteria' : 'Sorry, no divisions have been created. Start by adding a division above.'}
+                        />
                     </div>
                 </div>
             </div>
@@ -284,6 +243,7 @@ const mapStateToProps = state => {
     // console.log(state.divisions, 'dffef')
     return {
         divisions: state.divisions.divisions,
+        isLoading: state.divisions.isLoading,
         seasons: state.seasons.seasons,
         currentSeason: state.seasons.currentSeason
     }

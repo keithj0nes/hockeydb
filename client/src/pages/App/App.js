@@ -19,6 +19,8 @@ import Inquiry from '../Guest/Inquiry/Inquiry';
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
+import HeadManager from 'components/HeadManager';
+
 import './App.scss';
 
 class App extends Component {
@@ -30,7 +32,9 @@ class App extends Component {
     render() {
         return (
             <Router history={history}>
+                <HeadManager/> 
                 <div className="site-body">
+
                     <Header />
                     <div className="site-container">
                         <Route exact path="/"       component={Home} />

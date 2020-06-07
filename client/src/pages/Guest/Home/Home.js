@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import TodaysGames from '../../../components/TodaysGames';
 import SlideOut from '../../../components/SlideOut';
 import News from './News';

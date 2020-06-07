@@ -1,4 +1,4 @@
-import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
 
 const initialDivisionState = {
     isLoading: true,
@@ -10,7 +10,7 @@ const initialDivisionState = {
   
 export const divisions = (state = initialDivisionState, { type, payload }) => {
     switch (type) {
-    case 'divisions/GET':
+    case `divisions/${GET_INIT}`:
         return { ...state, isLoading: true }
     case `divisions/${GET_SUCCESS}`:
         // console.log('reducer payload:::', payload)

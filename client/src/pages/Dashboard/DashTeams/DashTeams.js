@@ -218,10 +218,7 @@ class DashTeams extends Component {
 
 
     render() {
-        if (this.props.isLoading) {
-            return <div>Loading...</div>
-        }
-        const { teams } = this.props
+        const { teams, isLoading } = this.props
 
         return (
             <>
@@ -238,56 +235,15 @@ class DashTeams extends Component {
 
             <div className="dashboard-list-container">
                 <div className="dashboard-list">
-
-                    { teams && teams.length <= 0 ? (
-                        <div>
-                            Sorry, no teams have been created. Start by adding a season above.
-                        </div>
-                    ) : (
-                        <DashTable 
-                            data={teams}
-                            sections={{ 'name': 'two', 'division_name': 'one' }}
-                            minWidth={550}
-                            onEdit={this.handleEditTeam}
-                            onDelete={this.handleDeleteTeam}
-                        />
-                        // <>
-
-                        //     <div className="dashboard-list-item hide-mobile">
-                        //         <div style={{ display: 'flex' }}>
-
-                        //             <p className="flex-two">Name</p>
-                        //             <p className="flex-one">Division</p>
-                        //             <p className="flex-one">Manage</p>
-                        //         </div>
-                        //     </div>
-
-                        //     {teams.map(item => {
-                        //         // console.log(item, 'item!')
-                        //         // item.division_name = this.getDivisionNameById(item.division_id)
-                        //         return (
-
-
-                        //             <DashSeasonsListItem 
-                        //                 // key={item.id}
-                        //                 // item={item}
-                        //                 // sections={{ 'name': 'two', 'division_name': 'one' }}
-                        //                 // onClick={() => this.handleDeleteSeason(item)}
-                        //                 // onEdit={() => this.handleEditTeam(item)}
-
-                        //                 key={item.id}
-                        //                 item={item}
-                        //                 sections={{ 'name': 'two', 'division_name': 'one' }}
-                        //                 onDelete={() => this.handleDeleteTeam(item)}
-                        //                 onEdit={() => this.handleEditTeam(item)}
-                        //                 // onHide={() => this.handleHideDivision(item)}
-                        //                 onHide={() => console.log('on hide clicked')}
-                        //             />
-                        //         )
-
-                        //     })}
-                        // </>
-                    )}
+                    <DashTable 
+                        data={teams}
+                        sections={{ 'name': 'two', 'division_name': 'one' }}
+                        minWidth={550}
+                        onEdit={this.handleEditTeam}
+                        onDelete={this.handleDeleteTeam}
+                        isLoading={isLoading}
+                        emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no teams within your filter criteria' : 'Sorry, no teams have been created. Start by adding a team above.'}
+                    />
                 </div>
             </div>
 

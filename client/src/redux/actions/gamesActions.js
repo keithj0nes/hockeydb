@@ -1,12 +1,8 @@
 import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-
-// function timeout(ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }
+import { wait } from '../../helpers';
 
 export const getGames = filter => async (dispatch, getState) => {
-
     // if it's from loadmore, dont GET_INIT the whole games data
     if(filter && !filter.includes('fromLoadMore')) {
         dispatch({ 
@@ -14,7 +10,7 @@ export const getGames = filter => async (dispatch, getState) => {
         })
     }
 
-    // await timeout(2000); // wait 2 seconds
+    await wait(3000);
 
     const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
     if (!data.data) return false;
@@ -24,12 +20,11 @@ export const getGames = filter => async (dispatch, getState) => {
         payload: {seasons: data.data.seasons, divisions: data.data.divisions, teams: data.data.teams}
     })
   
-    dispatch({ type: `games/${GET_SUCCESS}`, payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games} })
+    dispatch({ 
+        type: `games/${GET_SUCCESS}`, 
+        payload: { totalGamesCount: data.data.games_count, fromLoadMore: data.data.fromLoadMore, games:data.data.games}
+    })
 
-    // dispatch({
-    //     type: `seasons/${GET_SUCCESS}`,
-    //     payload: data.data.seasons
-    // })
 
     // this checks the active season to set to the <Schedule /> filter
     const activeSeason = data.data.seasons.find(season => season.is_active === true)
@@ -38,7 +33,7 @@ export const getGames = filter => async (dispatch, getState) => {
 }
 
 
-export const getGameById = gameId => async (dispatch, getState) => {
+export const getGameById = gameId => async (dispatch) => {
 
     const game = await request(`/api/games/${gameId}`, 'GET', {}, true)
 

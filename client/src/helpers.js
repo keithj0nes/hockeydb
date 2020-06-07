@@ -20,4 +20,10 @@ export const setQuery = (q, noPush) => {
     return search;
 }
 
-export const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); 
+// export const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); 
+
+
+export const wait = ms => new Promise(resolve => {
+    // console.log(`waiting ${ms}ms`); 
+    setTimeout(resolve, ms)}
+); 
