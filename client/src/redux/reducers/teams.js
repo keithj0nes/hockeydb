@@ -1,6 +1,6 @@
 // teams REDUCER!!
 
-import { GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, CLEAR_STATE } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, CLEAR_STATE } from '../actionTypes';
 
 const initialteamstate = {
     isLoading: true,
@@ -22,7 +22,7 @@ const initialteamstate = {
   
 export const teams = (state = initialteamstate, { type, payload }) => {
     switch (type) {
-    case 'teams/GET':
+    case `teams/${GET_INIT}`:
         return { ...state, isLoading: true }
     case `teams/${GET_SUCCESS}`:
         return { ...state, isLoading: false, teams: payload }

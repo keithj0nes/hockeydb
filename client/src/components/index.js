@@ -15,3 +15,5 @@ export { default as TableLoader } from './TableLoader';
 
 export { Input } from './Input';
 export { Select } from './Select';
+
+export { default as SlideOut } from './SlideOut';

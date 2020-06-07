@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, NavLink } from 'react-router-dom';
 import { toggleNavSlider } from '../../redux/actions/misc';
 import { logout } from '../../redux/actions/auth'
-import { DashboardSidebarNav, DashboardNav, HamburgerIcon } from '../../components';
+import { DashboardNav, HamburgerIcon } from '../../components';
 import DashSeasons from './DashSeasons/DashSeasons';
 import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';

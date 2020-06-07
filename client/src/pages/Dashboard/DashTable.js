@@ -4,10 +4,10 @@ import dateFormat from 'date-fns/format';
 import distanceInWords from 'date-fns/distance_in_words'
 
 // import { format as dateFormat, distance_in_words as distanceInWords } from 'date-fns';
-import Edit from "../../assets/icons/edit_icon.svg";
-import Delete from '../../assets/icons/delete_icon.svg';
-import Hide from '../../assets/icons/hide_icon.svg';
-import Auth, { accessAdmin, accessONLYScorekeeper } from '../../components/Auth';
+import Edit from 'assets/icons/edit_icon.svg';
+import Delete from 'assets/icons/delete_icon.svg';
+import Hide from 'assets/icons/hide_icon.svg';
+import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
 
 
 
@@ -20,20 +20,21 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
         flexValues = sectionKeys.map(item => typeof sections[item] === 'object' ? sections[item].flex : sections[item])
     }
 
+    // is loading formats for tableLoader count
+                            // isLoading={[isLoading, 5]}
+                            // isLoading={{
+                            //     isLoading: isLoading,
+                            //     loadingCount: 5
+                            // }}
+
     return (
         <div className="ot-container-dash">
             <div className="ot-table" style={{minWidth}}>
                 
                 <div className="ot-row-header">
                     {sectionKeys.map(sk => {
-
                         const isObj = typeof sections[sk] === 'object';
-
-                        return (
-                            // <p key={sk} className={`ot-header ot-flex-${sections[sk]}`}>{sk.split('_')[0]}</p>
-                            <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>
-
-                        )
+                        return <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>
                     })}
 
                     {tableType !== 'users' && (
@@ -43,7 +44,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
 
 
                 {isLoading ? (
-                    <TableLoader count={5} format={flexValues} />
+                    <TableLoader count={12} format={flexValues} manage={tableType !== 'users'} />
                 ) : (
 
                     data.length <= 0 ? (
@@ -60,31 +61,24 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
                             <div className="ot-row" key={d.id}>
                         
                                 {sectionKeys.map(section => {
-
                                     const isObj = typeof sections[section] === 'object';
                                     // const sectionLink = sections[section].link;
-
-                                    return (
-                                        <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-                                    )
+                                    return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
                                 })}
 
                                 {tableType !== 'users' && (
-
                                     <p className="ot-cell ot-manage">
-                                    
-                                    <Auth.User roles={accessAdmin}>
-                                        {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                        <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
-                                        {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
-                                    </Auth.User>
+                                        <Auth.User roles={accessAdmin}>
+                                            {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                            <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+                                            {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                                        </Auth.User>
 
-                                    <Auth.User roles={accessONLYScorekeeper}>
-                                        {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                    </Auth.User>
-
-                                </p>
-                            )}
+                                        <Auth.User roles={accessONLYScorekeeper}>
+                                            {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                                        </Auth.User>
+                                    </p>
+                                )}
                             </div>
                         )
 
@@ -124,16 +118,17 @@ export default DashTable;
 // d.start_time = gameDate[1];
 
 
-{/* <TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} /> */}
+// {/* <TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} /> */}
 
 
-const TableLoader = ({count = 5, format}) => {
+const TableLoader = ({count = 5, format, manage}) => {
     return Array(count).fill().map( (_, idx) => {
         return (
             <div className="ot-row" key={idx}>
                 {format.map((flexNum, fidx) => (
                     <p key={fidx} className={`ot-cell ot-flex-${flexNum} shimmer`}></p>
                 ))}
+                {manage && <p className={`ot-cell ot-manage shimmer`}></p>}
             </div>
         )
     })

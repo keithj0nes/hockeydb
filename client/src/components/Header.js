@@ -4,7 +4,6 @@ import { withRouter, NavLink } from 'react-router-dom';
 import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
 import { Button } from './';
 import SlideOut from './SlideOut';
-import HeadManager from './HeadManager';
 
 import './header.scss';
 
@@ -45,11 +44,9 @@ class Header extends Component {
         if(location.pathname.includes('/dashboard')) return null;
 
         const { mobileSliderVisible } = this.state;
-        let visibility = mobileSliderVisible ? "show" : "hide";
 
         return (
             <header>
-                <HeadManager/> 
 
             {/* DESKTOP HEADER */}
 
@@ -134,8 +131,8 @@ class Header extends Component {
                     />
 
 
-                    <SlideOut isVisible={this.state.mobileSliderVisible} onClose={this.toggleMobileSlider}>
-                        <VisitorSlideOutNav match={this.props.match} toggleMobileSlider={this.toggleMobileSlider} />
+                    <SlideOut isVisible={mobileSliderVisible} onClose={this.toggleMobileSlider}>
+                        <VisitorSlideOutNav match={match} toggleMobileSlider={this.toggleMobileSlider} />
                     </SlideOut>
                 </div>
 

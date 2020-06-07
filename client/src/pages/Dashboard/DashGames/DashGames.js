@@ -156,7 +156,7 @@ export class DashGames extends Component {
 
     render() {
 
-        const { games } = this.props;
+        const { games, isLoading } = this.props;
         return (
             <div>
 
@@ -168,69 +168,15 @@ export class DashGames extends Component {
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">
-
-                        {games && games.length <= 0 ? (
-                            <div>
-                                {this.props.location.search.length > 0 ? 'Sorry, there are no games within your filter criteria' : 'Sorry, no games have been created. Start by adding a games above.'}
-                            </div>
-                        ) : (
-                            <DashTable 
-                                data={games}
-                                // sections={{ 'name': 'two', 'type': 'one' }}
-                                tableType="games"
-                                minWidth={775}
-                                sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
-                                onEdit={this.handleEditGame}
-                                />
-                        )}
-                        {/* <div className="dashboard-list-item hide-mobile">
-                            <div style={{display: 'flex'}}>
-
-                                <p className="flex-one">Date</p>
-                                <p className="flex-one">Time</p>
-                                <p className="flex-two">Home</p>
-                                <p className="flex-two">Away</p>
-                                <p className="flex-two">Location</p>
-                                <p className="flex-one">Manage</p>
-
-                            </div>
-                        </div>
-
-                        {this.props.games && this.props.games.map(item => {
-
-                            const mydate = dateFormat(item.start_date, 'MM/DD/YYYY h:mmA').split(' ');
-
-                            item.date = mydate[0];
-                            item.start_time = mydate[1];
-                            
-                            // this should work below, but not
-                            // [ item.date, item.start_time ] = dateFormat(item.start_date, 'MM/DD/YYYY h:mm A').split(' ');
-                            return (
-
-                                <div key={item.id}>
-                                    <div className="hide-desktop">
-                                        <DashGamesListItem 
-                                            key={item.id} 
-                                            item={item} 
-                                            sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
-                                            onClick={() => console.log('delete item!')} 
-                                            locations={this.props.locations}
-                                        />
-
-                                    </div>
-
-                                    <div className="hide-mobile">
-                                        <ListItem 
-                                            key={item.id} 
-                                            item={item} 
-                                            sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
-                                            onClick={() => console.log('delete item!')} 
-                                            locations={this.props.locations}
-                                        />
-                                    </div>
-                                </div>
-                            )
-                        })} */}
+                        <DashTable 
+                            data={games}
+                            sections={{'date': 'one','start_time': 'one', 'home_team': 'two', 'away_team': 'two', 'location_name': 'two'}} 
+                            tableType="games"
+                            minWidth={775}
+                            onEdit={this.handleEditGame}
+                            isLoading={isLoading}
+                            emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no games within your filter criteria' : 'Sorry, no games have been created. Start by adding a games above.'}
+                        />
                     </div>
 
                     { Number(this.props.totalGamesCount) !== this.props.games.length && (
