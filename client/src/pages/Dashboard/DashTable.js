@@ -2,30 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
 import distanceInWords from 'date-fns/distance_in_words'
-
-// import { format as dateFormat, distance_in_words as distanceInWords } from 'date-fns';
 import Edit from 'assets/icons/edit_icon.svg';
 import Delete from 'assets/icons/delete_icon.svg';
 import Hide from 'assets/icons/hide_icon.svg';
 import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
 
 
-
 const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText }) => {
 
     const sectionKeys = Object.keys(sections);
+    const isLoadingIsBoolean = typeof isLoading === 'boolean';
 
     let flexValues;
     if(isLoading) {
         flexValues = sectionKeys.map(item => typeof sections[item] === 'object' ? sections[item].flex : sections[item])
     }
-
-    // is loading formats for tableLoader count
-                            // isLoading={[isLoading, 5]}
-                            // isLoading={{
-                            //     isLoading: isLoading,
-                            //     loadingCount: 5
-                            // }}
 
     return (
         <div className="ot-container-dash">
@@ -43,8 +34,8 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
                 </div>
 
 
-                {isLoading ? (
-                    <TableLoader count={12} format={flexValues} manage={tableType !== 'users'} />
+                {(isLoadingIsBoolean ? isLoading : isLoading[0]) ? (
+                    <TableLoader count={(isLoadingIsBoolean ? undefined : isLoading[1])} format={flexValues} manage={tableType !== 'users'} />
                 ) : (
 
                     data.length <= 0 ? (
@@ -104,7 +95,11 @@ DashTable.propTypes = {
     onEdit: PropTypes.func,
     onHide: PropTypes.func,
     tableType: PropTypes.string,
-    isLoading: PropTypes.bool,
+    // isLoading: PropTypes.bool,
+    isLoading: PropTypes.oneOfType([        // this defines how many shimmer rows are rendered during isLoading
+        PropTypes.bool,                     // isLoading={isLoading}
+        PropTypes.array                     // isLoading={[isLoading, 15]}
+    ]),
     emptyTableText: PropTypes.string
 }
 

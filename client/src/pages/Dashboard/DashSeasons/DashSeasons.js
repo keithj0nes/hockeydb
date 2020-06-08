@@ -232,12 +232,8 @@ class DashSeasons extends Component {
                             onEdit={this.handleEditSeason}
                             onDelete={this.handleDeleteSeason}
                             onHide={this.handleHideSeason}
-                            isLoading={isLoading}
-                            // isLoading={[isLoading, 5]}
-                            // isLoading={{
-                            //     isLoading: isLoading,
-                            //     loadingCount: 5
-                            // }}
+                            // isLoading={isLoading}
+                            isLoading={[isLoading, 15]}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                         />
                     </div>
