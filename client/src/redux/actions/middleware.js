@@ -1,9 +1,8 @@
 import axios from 'axios';
 import store from '../store';
-import {history}  from '../../helpers';
+import { history }  from '../../helpers';
 // import { ROOT } from '../../client_config';
 import { TOGGLE_MODAL } from '../actionTypes';
-
 import { logout } from '../actions/auth';
 
 
@@ -115,6 +114,12 @@ export const request = async (route, method, session, noAuth) => {
 
         if(redirect){
             console.log('Redirecting to the ' + redirect + ' page')
+            if(redirect === 'current') {
+                const currentPath = history.location.pathname;
+                history.push('/');
+                history.push(currentPath)
+                return false
+            }
 
             store.dispatch({
                 type: TOGGLE_MODAL,
@@ -124,16 +129,18 @@ export const request = async (route, method, session, noAuth) => {
             return false;
         }
 
-        store.dispatch({
-            type: TOGGLE_MODAL,
-            modalProps: {
-                isVisible: true,
-                title: 'Error',
-                message: `${message}\n\nError code: ${status}`,
-                confirmAction: shouldLogOut ? () => store.dispatch(logout()) : null
-            },
-            modalType: 'alert'
-        })
+        if(!snack) {
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: {
+                    isVisible: true,
+                    title: 'Error',
+                    message: `${message}\n\nError code: ${status}`,
+                    confirmAction: shouldLogOut ? () => store.dispatch(logout()) : null
+                },
+                modalType: 'alert'
+            })
+        }
 
 
         // alert(`status error: ${status} - ${message}`)
@@ -142,7 +149,7 @@ export const request = async (route, method, session, noAuth) => {
 
 
     if(status === 200){
-        return {data, message};
+        return { data, message };
     }
 
 }
