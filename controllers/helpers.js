@@ -15,7 +15,18 @@ const filter = (query, excludeFromReqQuery = []) => {
 }
 
 
+function tryCatch(promise, additionalObj){
+    return promise.then((data) => [null, data]).catch((err) => {
+        if (additionalObj) {
+          Object.assign(err, additionalObj);
+        }
+        return [err]; // which is same as [err, undefined];
+    });
+}
+
+
 module.exports = {
-    filter
+    filter,
+    tryCatch
 }
   
