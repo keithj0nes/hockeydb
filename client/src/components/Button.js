@@ -48,6 +48,9 @@
 
 import React from 'react';
 import './button.scss';
+// use this to read variable colors to change in the buttons file
+// import vars from 'assets/styles/_variables.scss';
+
 
 //opa (opacity) is for the site.com/styleguide page to perminaently be in the 'hover' state
 
