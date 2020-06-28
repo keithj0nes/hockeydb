@@ -16,6 +16,8 @@ import { ReactComponent as News } from 'assets/icons/news.svg';
 
 import { ReactComponent as LeagueLogo } from 'assets/icons/league_logo.svg';
 
+import logo from 'assets/images/logo.png';
+
 import './dashboardnav.scss';
 
 // import Auth, { accessPlayer, accessManager, accessScorekeeper } from '../components/Auth';
@@ -43,6 +45,33 @@ const navLinks1 = {
         { name: 'Locations',  to: '/locations',   svg: <Players alt="players icon" />     },
         { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         },
         { name: 'Users',      to: '/users',       svg: <Players alt="players icon" />     },
+    ],
+    scorekeeper: [
+        { name: 'Players',    to: '/players',     svg: <Players alt="players icon" />     },
+        { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         }
+    ],
+    manager: [
+        { name: 'My Teams',   to: '/myteams',     svg: <Teams alt="teams icon" />         },
+    ],
+    player: []
+}
+
+const dashLinks = {
+    admin: [
+        { name: 'Dashboard',  to: '',             svg: <Home alt="home icon" />           },
+        { name: 'Seasons',    to: '/seasons',     svg: <Seasons alt="season icon" />      },
+        { name: 'Divisions',  to: '/divisions',   svg: <Divisions alt="divisions icon" /> },
+        { name: 'Teams',      to: '/teams',       svg: <Teams alt="teams icon" />         },
+        { name: 'Players',    to: '/players',     svg: <Players alt="players icon" />     },
+        { name: 'Games',      to: '/games',       svg: <Games alt="games icon" />         },
+        { name: 'Locations',  to: '/locations',   svg: <Players alt="players icon" />     },
+        { name: 'Users',      to: '/users',       svg: <Players alt="players icon" />     },
+        { name: 'News',       to: '/news',        svg: <News alt="news icon" />           },
+
+        { name: 'Messages',   to: '/messages',    svg: <Players alt="players icon" />     },
+        { name: 'Pages',      to: '/pages',       svg: <Players alt="players icon" />     },
+        { name: 'Payments',   to: '/payments',    svg: <News alt="news icon" />           },
+        { name: 'Settings',    to: '/settings',   svg: <News alt="news icon" />           },
     ],
     scorekeeper: [
         { name: 'Players',    to: '/players',     svg: <Players alt="players icon" />     },
@@ -84,21 +113,34 @@ class DashboardNav extends Component {
 
         return (
 
-            <div className='dashboard-nav'>
+            <div className='dashboard-nav-a'>
 
-
+                {/* might not need this div? test before deleting */}
                 <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
-                        <div className="dashboard-nav-header">
-                            <div><LeagueLogo /></div>
+                        {/* <div className="dashboard-nav-header">
+                            <img src={logo} alt="Logo" />
                             <h2>HockeyDB</h2>
+                            <p style={{fontSize: 13, paddingBottom: 10}}>Current Season: {this.props.currentSeason && this.props.currentSeason.name}</p>
+                        </div> */}
+
+                        <div className="dashboard-nav-header">
+                            <img src={logo} alt="Logo" />
+
+                            <div>
+                                <h2>HockeyDB</h2>
+                                {/* <p>Current Season: {this.props.currentSeason && this.props.currentSeason.name}</p> */}
+                                <p>{this.props.currentSeason && this.props.currentSeason.name}</p>
+
+                                {/* <p>CURRENT SEASON</p>
+                                <p>{this.props.currentSeason && this.props.currentSeason.name}</p> */}
+
+                            </div>
                         </div>
 
-                        <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
-                        <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
-
+                        <h3>Navigation</h3>
                         <ul>
-                            {navLinks1[this.props.admin_type].map(link => (
+                            {dashLinks[this.props.admin_type].map(link => (
                                 <li key={link.to}>
                                     <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                         <div className="nav-icon-container">
@@ -111,9 +153,12 @@ class DashboardNav extends Component {
                         </ul>
                     </div>
 
-                    <div style={{ margin: '40px 0 30px', textAlign: 'center' }}>
-                        <Button title={'Logout'} onClick={this.handleLogout} />
+                    <div style={{ margin: '40px 0 10px', textAlign: 'center' }}>
+                        {/* <Button title={'Logout'} onClick={this.handleLogout} /> */}
                         <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
+                                <br/>
+                                <br/>
+                        <a className="powered-by" href="#">Powered by Playmaker Leagues</a>
 
                     </div>
                 </div>
@@ -122,51 +167,11 @@ class DashboardNav extends Component {
 
         )
 
+
+
+
+
         
-
-        // return (
-        //     <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
-        //         <div>
-        //             <div className="dashboard-nav-header">
-        //                 <div><LeagueLogo /></div>
-        //                 <h2>HockeyDB</h2>
-        //             </div>
-
-        //             <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
-        //             <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
-
-        //             <ul>
-        //                 {/* {navLinks.map(link => (
-        //                     <li key={link.to}>
-        //                         <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
-        //                             <div className="nav-icon-container">
-        //                                 {link.svg}
-        //                             </div>
-        //                             {link.name}
-        //                         </NavLink>
-        //                     </li>
-        //                 ))} */}
-
-        //                 {navLinks1[this.props.admin_type].map(link => (
-        //                     <li key={link.to}>
-        //                         <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
-        //                             <div className="nav-icon-container">
-        //                                 {link.svg}
-        //                             </div>
-        //                             {link.name}
-        //                         </NavLink>
-        //                     </li>
-        //                 ))}
-        //             </ul>
-        //         </div>
-
-        //         <div style={{ marginBottom: 30, textAlign: 'center' }}>
-        //             <Button title={'Logout'} onClick={this.handleLogout} />
-        //             <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
-
-        //         </div>
-        //     </div>
-        // )
     }
 }
 
@@ -182,3 +187,38 @@ const mapDispatchToProps = dispatch => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardNav)
+
+
+
+// old dash nav
+
+// return (
+//     <div className='dashboard-nav'>
+//         <div style={{ height: '100%', display: 'flex', overflow: 'scroll', flexDirection: 'column', justifyContent: 'space-between' }}>
+//             <div>
+//                 <div className="dashboard-nav-header">
+//                     <div><LeagueLogo /></div>
+//                     <h2>HockeyDB</h2>
+//                 </div>
+//                 <p style={{textAlign: 'center', fontSize: 13}}>CURRENT SEASON</p>
+//                 <p style={{textAlign: 'center', paddingBottom: 10}}>{this.props.currentSeason && this.props.currentSeason.name}</p>
+//                 <ul>
+//                     {navLinks1[this.props.admin_type].map(link => (
+//                         <li key={link.to}>
+//                             <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+//                                 <div className="nav-icon-container">
+//                                     {link.svg}
+//                                 </div>
+//                                 {link.name}
+//                             </NavLink>
+//                         </li>
+//                     ))}
+//                 </ul>
+//             </div>
+//             <div style={{ margin: '40px 0 30px', textAlign: 'center' }}>
+//                 <Button title={'Logout'} onClick={this.handleLogout} />
+//                 <Button title={'Back to Site'} onClick={() => this.props.history.push('/')} />
+//             </div>
+//         </div>
+//     </div>
+// )

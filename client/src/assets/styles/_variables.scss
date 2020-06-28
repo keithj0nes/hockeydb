@@ -53,7 +53,7 @@ $max_container_width: 1640px;
 
 
 
-// VERSION 4 ADMIN (v4a) STYLES 
+// VERSION 4 ADMIN (admin) STYLES 
 
 // $v4a_main_font:
 $v4a_main_font_color: #333333;
@@ -64,6 +64,37 @@ $v4a_body_background_color: #F6F8FB;
 $v4a_muted_color: #8AA6C4;
 $v4a_highlite_color: #FF815C; // #FFAF98 soft highlite in button icon
 $v4a_white_color: #FFFFFF;
+$v4a_navy_color: #050949;
+
+
+//different naming convention?
+
+$admin-color-font: #333333;
+
+$admin-color-body:        #F6F8FB;    // light gray
+$admin-color-muted:       #8AA6C4;    // soft blue
+$admin-color-highlite:    #FF815C;    // #FFAF98 soft highlite in button icon
+$admin-color-white:       #FFFFFF;    // white
+// $admin-color-off-white:   #F1F1F1;    // off white
+$admin-color-off-white:   #F2F2F2;    // off white
+
+
+$admin-color-navy:        #050949;    // dark navy
+$admin-color-slate:       #1D215B;    // slate blue
+$admin-color-lavendar:    #BABBCD;    // lavendar
+
+$admin-color-green:       #2CA62C;    // green
+$admin-color-lightgreen:  #D9EDDB;    // light green
+
+$admin-color-yellow:      #BABA1E;    // yellow
+$admin-color-lightyellow: #F8F8B2;    // light yellow
+
 
 // status green text and border #2CA62C - bg-color #D9EDDB
 // status inactive uses MUTED color - bg-color #FAFAFC | #E5EBF2
+
+
+// this lets you add this file into javascript and get the variable from the key
+// :export {
+//     white: $v4a_main_font_color
+// }

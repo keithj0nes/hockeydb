@@ -1,24 +1,134 @@
 @import '../assets/styles/variables';
 
 
-.dashboard-nav {
-    background: $white_color;
+// .dashboard-nav {
+//     // background: $white_color;
+//     background:lightblue;
+//     width: 80vw;
+//     height: 100%;
+//     position: relative;
+
+
+//     &.bluebg {
+//         // background: $header_sidenav_color;
+//         background: transparent linear-gradient(180deg, #2B4272 0%, #0C1D40 100%) 0% 0% no-repeat padding-box;
+//     }
+
+
+//     // slide from right
+//     &.right {
+//         position: absolute;
+//         right: 0;
+//     }
+
+
+//     div.close {
+//         border: none;
+//         position: absolute;
+//         right: 10px;
+//         font-size: 30px;
+//         padding: 10px;
+//         cursor: pointer;
+//         color: $main_font_color;
+
+//         &.bluebg {
+//             color: $white_color;
+//         }
+//     }
+
+//     .dashboard-nav-header {
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//         padding: 30px 30px 10px 30px;
+//         color: $main_font_color;
+
+
+//         > div:first-child > * > * {
+//            fill: $main_font_color;
+//        }
+//     }
+
+//     // .dashboard-nav-header:first-child {
+//     //     // background: pink;
+//     // }
+
+//     .selected {
+//         color: $main_font_color;
+//         background: darken($white_color, 10%);
+
+//         //if the selected class is applied by NavLink 
+//         //component, change the fill of the SVG
+//         .nav-icon-container > * > *, 
+//         .nav-icon-container > * > * > * {
+//             fill: $main_font_color;
+//         }
+//     }
+
+//     .nav-icon-container {
+//         display: flex;
+//         justify-content: center;
+//         width: 40px;
+//         margin-right: 10px;
+//         margin-left: 30%;
+//         color: inherit;
+//     }
+
+//     //set the SVG to this color when not selected by NavLink
+//     .nav-icon-container > * > *, 
+//     .nav-icon-container > * > * > * {
+//         fill: $nav_link;
+//     }
+
+//     li a {
+//         display: flex;
+//         align-items: center;
+//         padding: 15px 0;
+//     }
+
+//     li a:hover {
+//         background: darken($white_color, 10%);
+//     }
+// }
+
+
+
+
+// @media only screen and (min-width: 768px) {
+
+
+//     .dashboard-nav {
+//         width: 100%;
+//         .nav-icon-container {
+//             margin-left: 18%;
+//         }
+//     }
+// }
+
+
+
+
+.dashboard-nav-a {
+    background: $admin-color-navy;
+    // background:lightblue;
     width: 80vw;
     height: 100%;
     position: relative;
+    overflow: scroll;
+    // padding: 16px;
 
 
-    &.bluebg {
-        // background: $header_sidenav_color;
-        background: transparent linear-gradient(180deg, #2B4272 0%, #0C1D40 100%) 0% 0% no-repeat padding-box;
-    }
+    // &.bluebg {
+    //     // background: $header_sidenav_color;
+    //     background: transparent linear-gradient(180deg, #2B4272 0%, #0C1D40 100%) 0% 0% no-repeat padding-box;
+    // }
 
 
     // slide from right
-    &.right {
-        position: absolute;
-        right: 0;
-    }
+    // &.right {
+    //     position: absolute;
+    //     right: 0;
+    // }
 
 
     div.close {
@@ -30,22 +140,66 @@
         cursor: pointer;
         color: $main_font_color;
 
-        &.bluebg {
-            color: $white_color;
-        }
+        // &.bluebg {
+        //     color: $white_color;
+        // }
+    }
+
+    h2, h3, p {
+        color: $admin-color-off-white;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        text-transform: uppercase;
+        font-size: 14px;
+        padding-left: 16px;
+        letter-spacing: 0.9px;
     }
 
     .dashboard-nav-header {
+        // display: flex;
+        // flex-direction: column;
+        // align-items: center;
+        // padding: 16px 30px 10px 30px;
+        // color: $admin-color-off-white;
+
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px 30px 10px 30px;
-        color: $main_font_color;
+        padding: 16px 16px 25px 16px;
+        color: $admin-color-off-white;
 
+        div {
+            padding-left: 16px;
+            // background: lightblue;
 
+            // h2 {
+            //     line-height: 24px;
+            // }
+
+            p {
+                font-size: 13px;
+                color: $admin-color-lavendar;
+            }
+        }
+
+        // need to figure thise out for svg's
         > div:first-child > * > * {
            fill: $main_font_color;
-       }
+        }
+
+        img {
+            // height: 50px;
+            // width: auto;
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+    //    h2, p {
+    //         color: $admin-color-off-white;
+    //    }
     }
 
     // .dashboard-nav-header:first-child {
@@ -53,40 +207,126 @@
     // }
 
     .selected {
-        color: $main_font_color;
-        background: darken($white_color, 10%);
+        // color: $admin-color-off-white !important;
+        // color: $admin-color-highlite;
+        // color: $admin-color-lavendar;
+
+        // color: $main_font_color;
+        // background: darken($white_color, 10%);
+
+        // color: $admin-color-navy;
+        // background: $admin-color-lavendar;
 
         //if the selected class is applied by NavLink 
         //component, change the fill of the SVG
         .nav-icon-container > * > *, 
         .nav-icon-container > * > * > * {
-            fill: $main_font_color;
+            // fill: $main_font_color;
+            // fill: $admin-color-lavendar;
+            fill: $admin-color-off-white;
+
         }
+
+        .nav-icon-container {
+            background: $admin-color-highlite;
+            position: relative;
+
+            // border-left: 2px solid $admin-color-highlite;
+        }
+
+        .nav-icon-container:before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            height: 100%;
+            width: 4px;
+            background: $admin-color-highlite;
+        }
+
+
     }
 
     .nav-icon-container {
         display: flex;
         justify-content: center;
-        width: 40px;
+        align-items: center;
+        width: 32px;
+        height: 32px;
         margin-right: 10px;
-        margin-left: 30%;
-        color: inherit;
+        // margin-left: 30%;
+        // margin-left: 40px;
+        // color: inherit;
+        background: $admin-color-slate;
+        border-radius: 5px;
+        padding: 6px;
     }
 
     //set the SVG to this color when not selected by NavLink
     .nav-icon-container > * > *, 
     .nav-icon-container > * > * > * {
-        fill: $nav_link;
+        // fill: $nav_link;
+        fill: $admin-color-lavendar;
+    }
+
+    ul {
+        padding-top: 16px;
     }
 
     li a {
         display: flex;
         align-items: center;
-        padding: 15px 0;
+        // padding: 7px 0 7px 20%;
+        padding: 7px 0 7px 40px;
+        font-size: 14px;
+        font-family: $heading-font;
+        // color: $admin-color-white;
+        color: $admin-color-off-white;
+        // color: $admin-color-lavendar;
+        
+
     }
 
     li a:hover {
-        background: darken($white_color, 10%);
+        // background: darken($white_color, 10%);
+        // background: $admin-color-slate;
+        // background: lighten($admin-color-navy, 10%);
+        background: #363a6d;
+
+        .nav-icon-container {
+            // background: $admin-color-highlite;
+            // position: relative;
+
+            // border-left: 2px solid $admin-color-highlite;
+
+
+        // &:before {
+        //     content: '';
+        //     position: absolute;
+        //     left: -20px;
+        //     height: 100%;
+        //     width: 4px;
+        //     background: $admin-color-highlite;
+        // }
+
+        > * > *, 
+        > * > * > * {
+            // fill: $main_font_color;
+            // fill: $admin-color-lavendar;
+            fill: $admin-color-off-white;
+
+        }
+        }
+    }
+
+    .powered-by {
+        font-size: 13px;
+        font-family: $heading-font;
+        color: $admin-color-lavendar;
+        text-decoration: underline;
+
+        &:hover{
+            color: $admin-color-off-white;
+        }
     }
 }
 
