@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route, NavLink } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { toggleNavSlider } from '../../redux/actions/misc';
 import { logout } from '../../redux/actions/auth'
 import { DashboardNav, HamburgerIcon } from '../../components';
@@ -119,11 +119,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 //<div className="dashboard-header-img" onClick={this.toggleShowProfile}></div>
 
-{/* profile slide down */}
+// profile slide down
 
 //<div className={`dashboard-settings-container ${this.state.showProfile && 'slide-down'}`}>
 
-    {/* <p style={{position: 'absolute', top: 10, right: 10}} onClick={this.toggleShowProfile}>CLOSE!!!</p> */}
+// <p style={{position: 'absolute', top: 10, right: 10}} onClick={this.toggleShowProfile}>CLOSE!!!</p>
 
   //  <div className="profile-image">
     //    <h4 className="name">{this.props.user.first_name} {this.props.user.last_name}</h4>
