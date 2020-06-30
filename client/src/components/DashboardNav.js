@@ -7,7 +7,7 @@ import { history } from '../helpers';
 
 import { ICONS } from 'assets/ICONS';
 
-import Icon from 'components/Icon';
+import { Icon } from 'components';
 
 
 // import { ReactComponent as Home } from 'assets/icons/home.svg';
