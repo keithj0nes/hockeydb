@@ -55,6 +55,8 @@ $max_container_width: 1640px;
 
 // VERSION 4 ADMIN (admin) STYLES 
 
+
+
 // $v4a_main_font:
 $v4a_main_font_color: #333333;
 // $v4a_heading_font:
@@ -69,7 +71,12 @@ $v4a_navy_color: #050949;
 
 //different naming convention?
 
-$admin-color-font: #333333;
+$main-font:     'Open Sans', sans-serif;
+$heading-font:  'Nunito Sans', sans-serif;
+
+$dash-color-font: #333333;
+
+$universal-color-black: #000000;
 
 $admin-color-body:        #F6F8FB;    // light gray
 $admin-color-muted:       #8AA6C4;    // soft blue
@@ -89,6 +96,15 @@ $admin-color-lightgreen:  #D9EDDB;    // light green
 $admin-color-yellow:      #BABA1E;    // yellow
 $admin-color-lightyellow: #F8F8B2;    // light yellow
 
+$dash-color-silver:       #F6F8FB;    // silver
+
+//                 //
+// DASHBOARD TABLE //
+//                 //
+
+$dash-color-table-bg: $admin-color-white;
+$dash-color-table-header: $admin-color-muted;
+$dash-color-table-ellipsis: $admin-color-lavendar;
 
 // status green text and border #2CA62C - bg-color #D9EDDB
 // status inactive uses MUTED color - bg-color #FAFAFC | #E5EBF2

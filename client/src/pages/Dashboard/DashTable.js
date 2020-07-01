@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
 import distanceInWords from 'date-fns/distance_in_words'
@@ -6,6 +6,8 @@ import Edit from 'assets/icons/edit_icon.svg';
 import Delete from 'assets/icons/delete_icon.svg';
 import Hide from 'assets/icons/hide_icon.svg';
 import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
+// import { ICONS } from 'assets/ICONS';
+// import { Icon } from 'components';
 
 
 const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText }) => {
@@ -19,7 +21,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
     }
 
     return (
-        <div className="ot-container-dash">
+        <div className="ot-container-dash-r">
             <div className="ot-table" style={{minWidth}}>
                 
                 <div className="ot-row-header">
@@ -28,9 +30,15 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
                         return <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>
                     })}
 
-                    {tableType !== 'users' && (
+                    {/* {tableType !== 'users' && (
                         <p className="ot-header ot-manage">Manage</p>
-                    )}
+                    )} */}
+
+                    <button className="ot-ellipsis hidden">
+                        <div className="dot"></div>
+                        <div className="dot"></div>
+                        <div className="dot"></div>
+                    </button>
                 </div>
 
 
@@ -42,35 +50,55 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
                         <h4 style={{textAlign: 'center', padding: '20px 0'}}>{emptyTableText}</h4>
                     ) : (
 
-                    data.map(d => {
+                    data.map((d, indx) => {
                         if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
                         if(tableType === 'users') {
                             d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
                             d.last_loginn = (d.last_login ? distanceInWords( new Date(), d.last_login, {addSuffix: true}) : 'never');
                         }
                         return (
-                            <div className="ot-row" key={d.id}>
+
+                            <TableRow d={d} sectionKeys={sectionKeys} sections={sections} tableType={tableType} indx={indx} onEdit={onEdit} onHide={onHide} onDelete={onDelete} key={d.id}/>
+                            // <div className="ot-row" key={d.id}>
                         
-                                {sectionKeys.map(section => {
-                                    const isObj = typeof sections[section] === 'object';
-                                    // const sectionLink = sections[section].link;
-                                    return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
-                                })}
+                            //     {sectionKeys.map(section => {
+                            //         const isObj = typeof sections[section] === 'object';
+                            //         // const sectionLink = sections[section].link;
+                            //         return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+                            //     })}
 
-                                {tableType !== 'users' && (
-                                    <p className="ot-cell ot-manage">
-                                        <Auth.User roles={accessAdmin}>
-                                            {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                            <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
-                                            {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
-                                        </Auth.User>
+                            //     {tableType !== 'users' && (
+                            //         <p className="ot-cell ot-manage">
+                            //             <Auth.User roles={accessAdmin}>
+                            //                 {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                            //                 <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+                            //                 {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                            //             </Auth.User>
 
-                                        <Auth.User roles={accessONLYScorekeeper}>
-                                            {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
-                                        </Auth.User>
-                                    </p>
-                                )}
-                            </div>
+                            //             <Auth.User roles={accessONLYScorekeeper}>
+                            //                 {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                            //             </Auth.User>
+                            //         </p>
+                            //     )}
+                                
+                            //     <button className="ot-ellipsis">
+                            //         <div className="dot"></div>
+                            //         <div className="dot"></div>
+                            //         <div className="dot"></div>
+                            //     </button>
+                                
+                            //     {indx === 2 && (
+
+                            //         <div className="ot-options-popout">
+                            //             <ul>
+                            //                 <li>View Profile</li>
+                            //                 <li>Active Status</li>
+                            //                 <li>Edit Permissions</li>
+                            //                 <li>Resend Invite</li>
+                            //             </ul>
+                            //         </div>
+                            //     )}
+                            // </div>
                         )
 
                     }))
@@ -81,7 +109,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
 }
 
 DashTable.defaultProps = {
-    minWidth: null,
+    minWidth: null, // set at 900px in App.scss
     onEdit: () => alert('Edit functionality not hooked up yet'),
     onDelete: () => alert('Delete functionality not hooked up yet'),
     onHide: () => alert('Hide functionality not hooked up yet'),
@@ -123,8 +151,190 @@ const TableLoader = ({count = 5, format, manage}) => {
                 {format.map((flexNum, fidx) => (
                     <p key={fidx} className={`ot-cell ot-flex-${flexNum} shimmer`}></p>
                 ))}
-                {manage && <p className={`ot-cell ot-manage shimmer`}></p>}
+                {/* {manage && <p className={`ot-cell ot-manage shimmer`}></p>} */}
+
+                <button className="ot-ellipsis hidden">
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                </button>
             </div>
         )
     })
 }
+
+
+
+const TableRow = ({d, sectionKeys, sections, tableType, indx, onEdit, onHide, onDelete}) => {
+
+    const [ellipsisOpen, setEllipsisOpen ] = useState(false)
+
+    const listener = e => {
+        if(!e.target.closest(`#row-${indx}`)) {
+            setEllipsisOpen(false);
+        }
+    }
+
+    useEffect(() => {
+        if(ellipsisOpen) {
+            window.addEventListener('click', listener)
+        } else {
+            window.removeEventListener('click', listener);
+        }
+        return () => window.removeEventListener('click', listener);
+
+    }, [ellipsisOpen])
+
+    const renderOptions = () => {
+        switch (tableType) {
+            case 'users':
+                return (
+                    <ul>
+                        <li>View Profile</li>
+                        <li>Active Status</li>
+                        <li>Edit Permissions</li>
+                        <li>Resend Invite</li>
+                    </ul>
+                )
+        
+            default:
+                // return <li className="not-available">No options available</li>
+                return (
+                    <ul>
+                        <Auth.User roles={accessAdmin}>
+                            {/* {!d.hidden_date && <li onClick={() => onEdit(d)}><Icon name={ICONS.EDIT} /> Edit</li> } */}
+                            {!d.hidden_date && <li onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/> Edit</li> }
+                            <li onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/> Delete</li>
+                            {!d.is_active && <li onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/> Hide</li> }
+                        </Auth.User>
+
+                        <Auth.User roles={accessONLYScorekeeper}>
+                            {!d.hidden_date && <li onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/>Edit Boxscore</li> }
+                        </Auth.User>
+                    </ul>
+                )
+        }
+    }
+
+    return (
+        <div className="ot-row" id={`row-${indx}`}>
+            
+            {sectionKeys.map(section => {
+                const isObj = typeof sections[section] === 'object';
+                // const sectionLink = sections[section].link;
+                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+            })}
+
+            {/* {tableType !== 'users' && (
+                <p className="ot-cell ot-manage">
+                    <Auth.User roles={accessAdmin}>
+                        {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                        <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+                        {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+                    </Auth.User>
+
+                    <Auth.User roles={accessONLYScorekeeper}>
+                        {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+                    </Auth.User>
+                </p>
+            )} */}
+            
+            <button className="ot-ellipsis" onClick={() => setEllipsisOpen(!ellipsisOpen)}>
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+            </button>
+            
+            {ellipsisOpen && (
+
+                <div className="ot-options-popout">
+                    { renderOptions() }
+                </div>
+            )}
+        </div>
+    )
+
+
+}
+
+
+// TableRow.defaultProps = {
+//     minWidth: null, // set at 900px in App.scss
+//     onEdit: () => alert('Edit functionality not hooked up yet'),
+//     onDelete: () => alert('Delete functionality not hooked up yet'),
+//     onHide: () => alert('Hide functionality not hooked up yet'),
+// }
+
+// OLD ADMIN TABLE
+
+// const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText }) => {
+
+//     const sectionKeys = Object.keys(sections);
+//     const isLoadingIsBoolean = typeof isLoading === 'boolean';
+
+//     let flexValues;
+//     if(isLoading) {
+//         flexValues = sectionKeys.map(item => typeof sections[item] === 'object' ? sections[item].flex : sections[item])
+//     }
+
+//     return (
+//         <div className="ot-container-dash">
+//             <div className="ot-table" style={{minWidth}}>
+                
+//                 <div className="ot-row-header">
+//                     {sectionKeys.map(sk => {
+//                         const isObj = typeof sections[sk] === 'object';
+//                         return <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>
+//                     })}
+
+//                     {tableType !== 'users' && (
+//                         <p className="ot-header ot-manage">Manage</p>
+//                     )}
+//                 </div>
+
+
+//                 {(isLoadingIsBoolean ? isLoading : isLoading[0]) ? (
+//                     <TableLoader count={(isLoadingIsBoolean ? undefined : isLoading[1])} format={flexValues} manage={tableType !== 'users'} />
+//                 ) : (
+
+//                     data.length <= 0 ? (
+//                         <h4 style={{textAlign: 'center', padding: '20px 0'}}>{emptyTableText}</h4>
+//                     ) : (
+
+//                     data.map(d => {
+//                         if(tableType === 'games') [ d.date, d.start_time ] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
+//                         if(tableType === 'users') {
+//                             d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
+//                             d.last_loginn = (d.last_login ? distanceInWords( new Date(), d.last_login, {addSuffix: true}) : 'never');
+//                         }
+//                         return (
+//                             <div className="ot-row" key={d.id}>
+                        
+//                                 {sectionKeys.map(section => {
+//                                     const isObj = typeof sections[section] === 'object';
+//                                     // const sectionLink = sections[section].link;
+//                                     return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>
+//                                 })}
+
+//                                 {tableType !== 'users' && (
+//                                     <p className="ot-cell ot-manage">
+//                                         <Auth.User roles={accessAdmin}>
+//                                             {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+//                                             <span onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/></span>
+//                                             {!d.is_active && <span onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/></span> }
+//                                         </Auth.User>
+
+//                                         <Auth.User roles={accessONLYScorekeeper}>
+//                                             {!d.hidden_date && <span onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/></span> }
+//                                         </Auth.User>
+//                                     </p>
+//                                 )}
+//                             </div>
+//                         )
+
+//                     }))
+//                 )}
+//             </div>
+//         </div>
+//     )
+// }
