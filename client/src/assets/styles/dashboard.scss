@@ -196,19 +196,19 @@
 //     100% { transform: translateY(100%);}
 // }
 
-// @media only screen and (min-width: 768px) {
+@media only screen and (min-width: 768px) {
 
-//     .dashboard-container {
-//         display: flex;
+    .dashboard-container {
+        display: flex;
 
-//         .dashboard-header {
-//             padding: 10px 20px;
-//             position: relative;
+        // .dashboard-header {
+        //     padding: 10px 20px;
+        //     position: relative;
 
-//             .dashboard-settings-container {
-//                 width: auto;
-//                 right: 10px;
-//             }
-//         }
-//     }
-// }
+        //     .dashboard-settings-container {
+        //         width: auto;
+        //         right: 10px;
+        //     }
+        // }
+    }
+}
