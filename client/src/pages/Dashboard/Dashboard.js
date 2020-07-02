@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { toggleNavSlider } from '../../redux/actions/misc';
 import { logout } from '../../redux/actions/auth'
-import { DashboardNav, HamburgerIcon } from '../../components';
+import { DashboardNav, HamburgerIcon, ProfilePic } from '../../components';
 import DashSeasons from './DashSeasons/DashSeasons';
 import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';
@@ -66,6 +66,7 @@ class Dashboard extends Component {
                         <div className="dashboard-header hide-desktop">
                             <HamburgerIcon onClick={this.props.toggleNavSlider} />
                             <img src={logo} alt="Logo" className="header-logo"/>
+                            <ProfilePic />
                         </div>
 
                         <Route path={`${match.path}/seasons`}   component={DashSeasons} />
