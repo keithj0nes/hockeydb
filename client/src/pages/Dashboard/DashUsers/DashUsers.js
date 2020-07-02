@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from 'redux/actions/users';
-import { Button, SlideOut } from '../../../components';
+import { Button, SlideOut, ProfilePic } from '../../../components';
 import DashTable from '../DashTable';
 
 import './dashusers.scss';
@@ -16,11 +16,15 @@ const DashUsers = props => {
 
     return (
         <div style={{position: 'relative'}}>
+
+            <div className="hide-mobile">
+                <ProfilePic />
+            </div>
             <div className="dashboard-filter-header">
                 <div style={{width: '100%'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Button title="Add User" onClick={() => console.log('add user clicked')} />
-                        <Button title="Show Permissions" onClick={() => setShowPermissions(!showPermissions)} />
+                        {/* <Button title="Show Permissions" onClick={() => setShowPermissions(!showPermissions)} /> */}
 
                     </div>
                 </div>
@@ -45,6 +49,14 @@ const DashUsers = props => {
                         // onHide={this.handleHideSeason}
                         isLoading={props.isLoading}
                         emptyTableText={props.location.search.length > 0 ? 'Sorry, there are no users within your filter criteria' : 'Sorry, no users have been created. Start by adding a user above.'}
+                        popoverData={(
+                            <ul>
+                                <li>View Profile</li>
+                                <li>Active Status</li>
+                                <li onClick={() => setShowPermissions(!showPermissions)}>Edit Permissions</li>
+                                <li>Resend Invite</li>
+                            </ul> 
+                        )}
                     />
                 </div>
             </div>

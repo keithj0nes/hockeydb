@@ -6,11 +6,11 @@ import Edit from 'assets/icons/edit_icon.svg';
 import Delete from 'assets/icons/delete_icon.svg';
 import Hide from 'assets/icons/hide_icon.svg';
 import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
-// import { ICONS } from 'assets/ICONS';
-// import { Icon } from 'components';
+import { ICONS } from 'assets/ICONS';
+import { Icon, Popover } from 'components';
 
 
-const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText }) => {
+const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText, popoverData }) => {
 
     const sectionKeys = Object.keys(sections);
     const isLoadingIsBoolean = typeof isLoading === 'boolean';
@@ -58,7 +58,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHi
                         }
                         return (
 
-                            <TableRow d={d} sectionKeys={sectionKeys} sections={sections} tableType={tableType} indx={indx} onEdit={onEdit} onHide={onHide} onDelete={onDelete} key={d.id}/>
+                            <TableRow d={d} sectionKeys={sectionKeys} sections={sections} tableType={tableType} indx={indx} onEdit={onEdit} onHide={onHide} onDelete={onDelete} key={d.id} popoverData={popoverData}/>
                             // <div className="ot-row" key={d.id}>
                         
                             //     {sectionKeys.map(section => {
@@ -165,56 +165,56 @@ const TableLoader = ({count = 5, format, manage}) => {
 
 
 
-const TableRow = ({d, sectionKeys, sections, tableType, indx, onEdit, onHide, onDelete}) => {
+const TableRow = ({d, sectionKeys, sections, tableType, indx, onEdit, onHide, onDelete, popoverData}) => {
 
     const [ellipsisOpen, setEllipsisOpen ] = useState(false)
 
-    const listener = e => {
-        if(!e.target.closest(`#row-${indx}`)) {
-            setEllipsisOpen(false);
-        }
-    }
+    // const listener = e => {
+    //     if(!e.target.closest(`#row-${indx}`)) {
+    //         setEllipsisOpen(false);
+    //     }
+    // }
 
-    useEffect(() => {
-        if(ellipsisOpen) {
-            window.addEventListener('click', listener)
-        } else {
-            window.removeEventListener('click', listener);
-        }
-        return () => window.removeEventListener('click', listener);
+    // useEffect(() => {
+    //     if(ellipsisOpen) {
+    //         window.addEventListener('click', listener)
+    //     } else {
+    //         window.removeEventListener('click', listener);
+    //     }
+    //     return () => window.removeEventListener('click', listener);
 
-    }, [ellipsisOpen])
+    // }, [ellipsisOpen])
 
-    const renderOptions = () => {
-        switch (tableType) {
-            case 'users':
-                return (
-                    <ul>
-                        <li>View Profile</li>
-                        <li>Active Status</li>
-                        <li>Edit Permissions</li>
-                        <li>Resend Invite</li>
-                    </ul>
-                )
+    // const renderOptions = () => {
+    //     switch (tableType) {
+    //         case 'users':
+    //             return (
+    //                 <ul>
+    //                     <li> <Icon name={ICONS.FILTER} /> View Profile</li>
+    //                     <li>Active Status</li>
+    //                     <li>Edit Permissions</li>
+    //                     <li>Resend Invite</li>
+    //                 </ul>
+    //             )
         
-            default:
-                // return <li className="not-available">No options available</li>
-                return (
-                    <ul>
-                        <Auth.User roles={accessAdmin}>
-                            {/* {!d.hidden_date && <li onClick={() => onEdit(d)}><Icon name={ICONS.EDIT} /> Edit</li> } */}
-                            {!d.hidden_date && <li onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/> Edit</li> }
-                            <li onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/> Delete</li>
-                            {!d.is_active && <li onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/> Hide</li> }
-                        </Auth.User>
+    //         default:
+    //             // return <li className="not-available">No options available</li>
+    //             return (
+    //                 <ul>
+    //                     <Auth.User roles={accessAdmin}>
+    //                         {/* {!d.hidden_date && <li onClick={() => onEdit(d)}><Icon name={ICONS.EDIT} /> Edit</li> } */}
+    //                         {!d.hidden_date && <li onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/> Edit</li> }
+    //                         <li onClick={() => onDelete(d)}><img src={Delete} width="25px" alt=""/> Delete</li>
+    //                         {!d.is_active && <li onClick={() => onHide(d)}><img src={Hide} width="25px" alt=""/> Hide</li> }
+    //                     </Auth.User>
 
-                        <Auth.User roles={accessONLYScorekeeper}>
-                            {!d.hidden_date && <li onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/>Edit Boxscore</li> }
-                        </Auth.User>
-                    </ul>
-                )
-        }
-    }
+    //                     <Auth.User roles={accessONLYScorekeeper}>
+    //                         {!d.hidden_date && <li onClick={() => onEdit(d)}><img src={Edit} width="25px" alt=""/>Edit Boxscore</li> }
+    //                     </Auth.User>
+    //                 </ul>
+    //             )
+    //     }
+    // }
 
     return (
         <div className="ot-row" id={`row-${indx}`}>
@@ -244,18 +244,33 @@ const TableRow = ({d, sectionKeys, sections, tableType, indx, onEdit, onHide, on
                 <div className="dot"></div>
                 <div className="dot"></div>
             </button>
-            
+
+            <Popover isVisible={ellipsisOpen} setIsVisible={setEllipsisOpen} closest={`#row-${indx}`} row>
+                {/* <ul>
+                    <li>View Profile</li>
+                    <li>Active Status</li>
+                    <li>Edit Permissions</li>
+                    <li>Resend Invite</li>
+                </ul> */}
+                {popoverData}
+            </Popover>
+
+{/*             
             {ellipsisOpen && (
 
-                <div className="ot-options-popout">
-                    { renderOptions() }
-                </div>
-            )}
+                // <div className="ot-options-popout">
+                //     { renderOptions() }
+                // </div>
+
+            )} */}
         </div>
     )
 
 
 }
+
+
+
 
 
 // TableRow.defaultProps = {
