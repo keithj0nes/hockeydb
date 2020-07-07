@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const Icon = props => {
+
+    if(!props.name) return null;
+
     const styles = {
         svg: {
             display: 'inline-block',
@@ -12,6 +15,21 @@ export const Icon = props => {
         },
     };
 
+    const renderSVG = (type) => {
+        switch (type) {
+            case 'circle':
+                return <circle {...props.name[type]} />
+            case 'path':
+                return props.name[type].map(r => <path style={styles.path} key={r} d={r} />)
+            case 'rect':
+                return <rect {...props.name[type]} />
+            case 'line':
+                return <line {...props.name[type]} />
+            default:
+                break;
+        }
+    }
+
     return (
         <svg
             style={styles.svg}
@@ -20,8 +38,16 @@ export const Icon = props => {
             // viewBox="0 0 1024 1024"
             viewBox="0 0 16 16"
         >
-            { props.name && typeof props.name !== 'string' ? (
+            { props.name && Array.isArray(props.name) ? (
                 props.name.map(i => <path style={styles.path} key={i} d={i}/> )
+            ) : typeof props.name !== 'string' ? (
+                Object.keys(props.name).map(item => {
+                    return (
+                        <React.Fragment key={item}>
+                            {renderSVG(item)}
+                        </React.Fragment> 
+                    )
+                })
             ) : (
                 <path style={styles.path} d={props.name}></path>
             )}
@@ -32,7 +58,8 @@ export const Icon = props => {
 Icon.propTypes = {
     name: PropTypes.oneOfType([
         PropTypes.string,
-        PropTypes.array
+        PropTypes.array, 
+        PropTypes.object
     ]),    
     size: PropTypes.number,
     color: PropTypes.string,

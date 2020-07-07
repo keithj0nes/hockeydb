@@ -1,0 +1,55 @@
+@import '../assets/styles/variables';
+
+.popover {
+    // background: lightgoldenrodyellow;
+    background: $dash-color-table-bg;
+    position: absolute;
+    top: calc(100% + 10px);
+    // top: 20px;
+    // margin-top: 20px;
+    // margin-top: -80px;  // bottom 2 rows should be set to this
+    // right: 26px;
+    right: 0;
+    padding: 13px;
+    z-index: 200;
+    min-width: 200px;
+    // height: 100%;
+
+    border-radius: 5px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+
+    ul li {
+        font-family: $heading-font;
+        // color: $dash-color-table-ellipsis;
+        color: $dash-color-font;
+
+        font-size: 16px;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        
+        &:hover:not(.not-available) {
+            // color: darken($dash-color-table-ellipsis, 20%)
+            // color: $dash-color-font;
+        color: $dash-color-table-ellipsis;
+
+        }
+
+        &.not-available {
+            cursor: not-allowed;
+        }
+
+        img {
+            margin-right: 16px;
+        }
+    }
+
+    &.row {
+        top: auto;
+        margin-top: 20px;
+        // margin-top: -80px;  // bottom 2 rows should be set to this
+        right: 26px;
+    }
+}

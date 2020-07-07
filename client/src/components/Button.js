@@ -48,7 +48,7 @@
 
 import React from 'react';
 import './button.scss';
-// use this to read variable colors to change in the buttons file
+// use this to read variable colors to change in the buttons
 // import vars from 'assets/styles/_variables.scss';
 
 

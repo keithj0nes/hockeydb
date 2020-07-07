@@ -1,57 +1,55 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Icon, Popover } from 'components';
+import { ICONS } from 'assets/ICONS';
 import './profilepic.scss';
+// import cm from 'assets/icons/icondropdown_arrow.svg';
 
-export const ProfilePic = () => {
+const ProfilePic = ({user}) => {
 
     const [ isDropDownVisibile, setIsDropDownVisible ] = useState(false);
 
-
-
     return (
 
-        <div id="propiccont" style={{position: 'relative'}}>
+        <div id="propiccont" className="profile-pic-container">
 
-            <div style={{height: 40, width: 40, background: 'green', borderRadius: 5}} onClick={() => setIsDropDownVisible(!isDropDownVisibile)}></div>
-            <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont"/>
+            <div className="pic-name" onClick={() => setIsDropDownVisible(!isDropDownVisibile)}>
+
+                <div className="pic-image-filler" ></div>
+                <p className={`hide-mobile name-icon ${isDropDownVisibile && 'active'}`}>{user.first_name} {user.last_name} 
+                    <span>
+                        <Icon name={ICONS.CIRCLE_ARROW} />
+                    </span> 
+                </p>            
+            </div>
+
+            <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont">
+                <ul>
+                    <li>View Profile</li>
+                    <li>Edit Profile</li>
+                    <li>Notifications</li>
+                    <li>Account Settings</li>
+                    <li>Log Out</li>
+                </ul>
+            </Popover>
 
         </div>
     )
 }
 
 
-const Popover = ({isVisible, setIsVisible, closest}) => {
-
-    if(!isVisible) return null;
-
-
-    const listener = e => {
-        // console.log(e.target.closest(closest))
-        if(!e.target.closest(closest)) {
-            setIsVisible(false);
-        }
+const mapStateToProps = state => {
+    console.log(state, 'STAATTE')
+    return {
+        user: state.user.user,
+        currentSeason: state.seasons.currentSeason,
+        navSliderVisible: state.misc.navSliderVisible
     }
-
-    useEffect(() => {
-        if(isVisible) {
-            window.addEventListener('click', listener)
-        } else {
-            window.removeEventListener('click', listener);
-        }
-        return () => window.removeEventListener('click', listener);
-
-    }, [ isVisible ])
-
-
-    return (
-        <div className="popover">
-            <ul>
-                <li>View Profile</li>
-                <li>Edit Profile</li>
-                <li>Notifications</li>
-                <li>Account Settings</li>
-                <li>Log Out</li>
-            </ul>
-        </div>
-    )
-
 }
+
+const mapDispatchToProps = dispatch => ({
+    // toggleNavSlider: () => dispatch(toggleNavSlider()),
+    // logout: () => dispatch(logout())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePic);

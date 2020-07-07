@@ -1,44 +1,71 @@
 @import '../assets/styles/variables';
 
-.popover {
-    // background: lightgoldenrodyellow;
-    background: $dash-color-table-bg;
-    position: absolute;
-    top: calc(100% + 10px);
-    // top: 20px;
-    // margin-top: 20px;
-    // margin-top: -80px;  // bottom 2 rows should be set to this
-    // right: 26px;
-    right: 0;
-    padding: 13px;
-    z-index: 200000;
-    min-width: 200px;
-    // height: 100%;
+.profile-pic-container {
+    // background: lightblue;
+    display: inline-block;
+    position: relative;
+    // float: right;
 
-    border-radius: 5px;
-    box-shadow: 0 12px 24px rgba(0,0,0,0.25);
-
-    ul li {
-        font-family: $heading-font;
-        color: $dash-color-table-ellipsis;
-        font-size: 16px;
-        padding: 6px;
+    .pic-name {
         display: flex;
         align-items: center;
         cursor: pointer;
-
         
-        &:hover:not(.not-available) {
-            // color: darken($dash-color-table-ellipsis, 20%)
-            color: $dash-color-font;
+        .pic-image-filler {
+            height: 40px;
+            width: 40px;
+            background: green;
+            border-radius: 5px;
         }
 
-        &.not-available {
-            cursor: not-allowed;
-        }
+        .name-icon {
+            // display: flex;  // dont display flex in mobile styles otherwise will show up on mobile page
+            align-items: center;
+            // background: pink;
+            // padding: 0 10px;
+            padding-left: 10px;
+            // color: $admin-color-lavendar;
 
-        img {
-            margin-right: 16px;
+            span {
+                display: flex;
+                margin-left: 10px;
+                transition: transform 0.4s;
+
+                // &.rotate-arrow {
+                //     transform: rotate(180deg);
+                // }
+
+                svg {
+                    // fill: $admin-color-lavendar;
+                    fill: $dash-color-font;
+
+                }
+            }
+
+            &:hover,
+            &.active {
+                color: $admin-color-highlite;
+
+                span {
+                    transform: rotate(180deg);
+
+                    svg {
+                        fill: $admin-color-highlite;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media only screen and (min-width: 768px){
+
+    .profile-pic-container {
+        .pic-name {
+            .name-icon {
+                display: flex;
+            }
         }
     }
 }
