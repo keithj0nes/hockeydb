@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const Icon = props => {
+
+    if(!props.name) return null;
+
     const styles = {
         svg: {
             display: 'inline-block',
@@ -18,12 +21,15 @@ export const Icon = props => {
                 return <circle {...props.name[type]} />
             case 'path':
                 return props.name[type].map(r => <path style={styles.path} key={r} d={r} />)
+            case 'rect':
+                return <rect {...props.name[type]} />
+            case 'line':
+                return <line {...props.name[type]} />
             default:
                 break;
         }
     }
 
-    if(!props.name) return null;
     return (
         <svg
             style={styles.svg}

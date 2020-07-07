@@ -1,4 +1,83 @@
 @import '../../../assets/styles/variables';
+
+
+
+.page-header {
+    // height: 200px;
+    width: 100%;
+    // background: yellow;
+    background: $admin-color-white;
+    padding: 12px 16px;
+    // padding-bottom: 0;
+
+    .page-header-title-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+
+        h1 {
+            padding-right: 16px;
+        }
+
+        .icons-container {
+            // background: pink;
+            display: flex;
+            align-items: center;
+            padding-left: 16px;
+    
+            .icon-housing {
+                // padding: 5px;
+                height: 40px;
+                width: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: $admin-color-body;
+                margin-left: 8px;
+                border-radius: 5px;
+
+                &:first-child {
+                    margin-left: 0;
+                }
+                
+                > svg {
+                    fill: $admin-color-lavendar;
+                }
+            }
+
+            .profile-housing {
+                // background: lightblue;
+                // border-left: 2px solid $admin-color-lavendar;
+                border-left: 2px solid $admin-color-body;
+                display: flex;
+                align-items: center;
+                padding-left: 12px;
+                margin-left: 12px;
+            }
+        }
+    }
+
+    .page-header-search {
+        border: none;
+        border-radius: 5px;
+        background: $admin-color-body;
+        font-size: 16px;
+        font-style: italic;
+        padding: 10px;
+        // width: 50%;
+        flex: 1;
+
+        // font-family: $main-font;
+
+        &::placeholder {
+            color: $admin-color-lavendar;
+        }
+    }
+
+}
+
+
 //filtering header
 
 .dashboard-filter-header {
@@ -118,6 +197,12 @@
 
 
 @media only screen and (min-width: 768px){
+
+
+.page-header {
+    padding-bottom: 0;
+}
+
     .dashboard-list-container {
         .dashboard-list {
             .dashboard-list-item {

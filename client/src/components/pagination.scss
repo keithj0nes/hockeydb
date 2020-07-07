@@ -1,0 +1,71 @@
+@import '../assets/styles/variables';
+
+.pagination-container {
+    // background: lightpink;
+    display: flex;
+
+    .right,
+    .left {
+        // background: blue;
+        padding: 0 20px;
+        position: relative;
+
+        &.disabled {
+            // background: gray;
+            // cursor: not-allowed;
+            cursor: default;
+
+            &:after {
+                border-color: $admin-color-muted;
+            }
+        }
+    }
+
+    // .right:disabled,
+    // .left:disabled {
+        
+    // }
+
+    .right:after {
+        content: '';
+        position: absolute;
+        border-right: 2px solid $admin-color-highlite;
+        border-bottom: 2px solid $admin-color-highlite;
+        height: 10px;
+        width: 10px;
+        // background: lightgreen;
+        transform: rotate(-45deg) translate(60%, 0%);
+        top: 45%;
+        right: 50%;
+    }
+
+    .left:after {
+        content: '';
+        position: absolute;
+        border-right: 2px solid $admin-color-highlite;
+        border-bottom: 2px solid $admin-color-highlite;
+        height: 10px;
+        width: 10px;
+        // background: lightgreen;
+        transform: rotate(135deg) translate(-60%, -15%);
+        top: 45%;
+        right: 50%;
+    }
+
+    span {
+        display: inline-block;
+        padding: 4px 10px;
+        font-family: $main-font;
+        // background: teal;
+        margin: 0 6px;
+        cursor: pointer;
+        color: $admin-color-highlite;
+
+        &.current-page {
+            // padding: 5px;
+            background: $admin-color-highlite;
+            border-radius: 5px;
+            color: $admin-color-white;
+        }
+    }
+}

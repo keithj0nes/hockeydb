@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from 'redux/actions/users';
-import { Button, SlideOut, ProfilePic } from '../../../components';
+import { Button, SlideOut, ProfilePic, Pagination, Icon } from '../../../components';
 import DashTable from '../DashTable';
+import { ICONS } from 'assets/ICONS';
 
 import './dashusers.scss';
 
@@ -14,12 +15,53 @@ const DashUsers = props => {
         props.getUsers();
     }, [])
 
+//     totalPages: PropTypes.number.isRequired,
+//     currentPage: PropTypes.number.isRequired,
+//     neighbors: PropTypes.number,
+//     onPageChange: PropTypes.func
+
+const stuff = {
+    totalPages: 12,
+    currentPage: 1,
+    neighbors: 1,
+    limit: 30,
+    onPageChange: () => console.log('changed!')
+}
+
     return (
         <div style={{position: 'relative'}}>
 
-            <div className="hide-mobile">
-                <ProfilePic />
+
+            <div className="page-header">
+
+                <div className="page-header-title-container">
+
+                    <h1>Users</h1> 
+
+                    <input type="text" className="page-header-search hide-mobile" placeholder="Search by name or role" />
+
+                    <div className="icons-container">
+                        <div className="icon-housing" title="Add User">
+                            <Icon name={ICONS.ADD_USER} size={20}/>
+                        </div>
+                        <div className="icon-housing" title="Filter">
+                            <Icon name={ICONS.FILTER} size={20} />
+                        </div>
+                        <div className="hide-mobile">
+                            <div className="profile-housing">
+
+                                <ProfilePic />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="text" className="page-header-search hide-desktop" placeholder="Search by name or role" />
+                
             </div>
+
+
+
             <div className="dashboard-filter-header">
                 <div style={{width: '100%'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -36,10 +78,10 @@ const DashUsers = props => {
                     <DashTable 
                         data={props.users}
                         sections={{ 
-                            'full_name':     { as: 'name', flex: 'two' },
+                            'full_name':     { as: 'name',       flex: 'two' },
                             'email': 'three', 
-                            'admin_type':    { as: 'role', flex: 'one' },
-                            'is_suspendedd': { as: 'status', flex: 'one' },
+                            'admin_type':    { as: 'role',       flex: 'one' },
+                            'is_suspendedd': { as: 'status',     flex: 'one' },
                             'last_loginn':   { as: 'last login', flex: 'one' }
                         }}
                         tableType='users'
@@ -75,6 +117,8 @@ const DashUsers = props => {
 
                 </div>
             </SlideOut>
+
+            <Pagination {...stuff} />
         </div>
     )
 }

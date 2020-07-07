@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Popover } from 'components';
+import { Icon, Popover } from 'components';
+import { ICONS } from 'assets/ICONS';
 import './profilepic.scss';
+// import cm from 'assets/icons/icondropdown_arrow.svg';
 
 const ProfilePic = ({user}) => {
 
@@ -9,10 +11,17 @@ const ProfilePic = ({user}) => {
 
     return (
 
-        <div id="propiccont" style={{position: 'relative'}}>
+        <div id="propiccont" className="profile-pic-container">
 
-            <div style={{height: 40, width: 40, background: 'green', borderRadius: 5}} onClick={() => setIsDropDownVisible(!isDropDownVisibile)}></div>
-            <p className="hide-mobile">{user.first_name} {user.last_name}</p>            
+            <div className="pic-name" onClick={() => setIsDropDownVisible(!isDropDownVisibile)}>
+
+                <div className="pic-image-filler" ></div>
+                <p className={`hide-mobile name-icon ${isDropDownVisibile && 'active'}`}>{user.first_name} {user.last_name} 
+                    <span>
+                        <Icon name={ICONS.CIRCLE_ARROW} />
+                    </span> 
+                </p>            
+            </div>
 
             <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont">
                 <ul>

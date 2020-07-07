@@ -22,3 +22,5 @@ export { Popover } from './Popover';
 
 
 export { default as SlideOut } from './SlideOut';
+export { default as Pagination } from './Pagination';
+
