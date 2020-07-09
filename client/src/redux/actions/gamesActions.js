@@ -10,7 +10,7 @@ export const getGames = filter => async (dispatch, getState) => {
         })
     }
 
-    await wait(3000);
+    // await wait(3000);
 
     const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true)
     if (!data.data) return false;

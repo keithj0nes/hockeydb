@@ -8,7 +8,7 @@ export const getLocations = () => async dispatch => {
 
     dispatch({ type: `locations/${GET_INIT}` })
 
-    await wait(3000);
+    // await wait(3000);
 
     const data = await request('/api/locations', 'GET', {}, true);
     if (!data.data) return false;

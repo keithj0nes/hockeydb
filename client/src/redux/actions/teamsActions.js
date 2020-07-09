@@ -8,7 +8,7 @@ export const getTeams = (filter) => async (dispatch, getState) => {
     console.log('teams -- get ---')
     dispatch({ type: `teams/${GET_INIT}` })
 
-    await wait(3000);
+    // await wait(3000);
 
     const { seasons: { currentSeason }  } = getState();
 
