@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 
 import { createLocation, getLocations, deleteLocation, updateLocation } from '../../../redux/actions/locationsActions';
-import { Button } from '../../../components';
+import { Button, DashPageHeader } from '../../../components';
 // import ListItem from '../ListItem';
 import DashTable from '../DashTable';
 import { toggleModal } from '../../../redux/actions/misc';
@@ -135,10 +135,30 @@ export class DashGames extends Component {
     }
 
     render() {
-     
         const { locations, isLoading } = this.props;
+
+        const pageHeaderInfo = {
+            title: 'Locations',
+            searchPlaceholder: 'Search by location name or address',
+            onChange: () => console.log('changing placeholder text'),
+            buttons: [
+                { 
+                    iconName: 'ADD_USER',
+                    title: 'Add Location',
+                    onClick: () => console.log('clickedddd ADD_USER')
+                },
+                { 
+                    iconName: 'FILTER',
+                    title: 'Filter Locations',
+                    onClick: () => console.log('clickedddd FILTER')
+                }
+            ]
+        }
+
         return (
             <div>
+
+                <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
                 <div className="dashboard-filter-header">
                     <div>
                         <Button title="Add Location" onClick={this.handleAddLocation} />

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dateFormat from 'date-fns/format';
-import { Button } from '../../../components';
+import { Button, DashPageHeader } from '../../../components';
 
 import { createNewsPost, getNewsPostById, updateNewsPostById } from '../../../redux/actions/news';
 import './dashnews.scss';
@@ -146,10 +146,17 @@ export class DashBlogs extends Component {
   }
 
   render() {
-      const { isEditing } = this.state;
+    const { isEditing } = this.state;
+    const pageHeaderInfo = {
+      title: `News - ${this.state.title}`,
+      hideSearchAndButtons: true,
+    }
+
     return (
 
         <>
+
+          <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
             <div className="dashboard-filter-header">
                 <div style={{width: '100%'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>

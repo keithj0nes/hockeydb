@@ -126,7 +126,7 @@ const Pagination = (props) => {
 
             {
                 pageNumbers.map((page, index) => {
-                    console.log(page, 'page!!')
+                    // console.log(page, 'page!!')
 
                     // if (page === LEFT_PAGE) return (
                     //     <span key={index} className="page-item">
