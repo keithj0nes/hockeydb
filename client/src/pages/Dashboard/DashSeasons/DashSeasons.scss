@@ -37,6 +37,15 @@
                 margin-left: 8px;
                 border-radius: 5px;
 
+                &:hover {
+                    background: $admin-color-highlite;
+                    cursor: pointer;
+
+                    > svg {
+                        fill: $admin-color-white;
+                    }
+                }
+
                 &:first-child {
                     margin-left: 0;
                 }

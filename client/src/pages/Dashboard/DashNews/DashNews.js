@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { Button } from '../../../components';
+import { Button, DashPageHeader } from '../../../components';
 // import DashNewsCreate from './DashNewsCreate';
 import DashNewsListItem from './DashNewsListItem';
 
@@ -56,9 +56,29 @@ class DashNews extends Component {
   }
 
   render() {
+
+    const pageHeaderInfo = {
+      title: 'News',
+      searchPlaceholder: 'Search by title or content',
+      onChange: () => console.log('changing placeholder text'),
+      buttons: [
+          { 
+              iconName: 'ADD_USER',
+              title: 'Add News Post',
+              onClick: () => console.log('clickedddd ADD_USER')
+          },
+          { 
+              iconName: 'FILTER',
+              title: 'Filter News Posts',
+              onClick: () => console.log('clickedddd FILTER')
+          }
+      ]
+    }
+
     return (
 
       <>
+        <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
         {/* <div className="dashnews-container"> */}
 
         <div className="dashboard-filter-header">

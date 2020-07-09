@@ -18,8 +18,7 @@ export { Select } from './Select';
 export { Icon } from './Icon';
 export { default as ProfilePic } from './ProfilePic';
 export { Popover } from './Popover';
-
-
+export { DashPageHeader } from './DashPageHeader';
 
 export { default as SlideOut } from './SlideOut';
 export { default as Pagination } from './Pagination';

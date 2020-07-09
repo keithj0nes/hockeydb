@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 // import dateFormat from 'date-fns/format';
 import qs from 'query-string';
-import { Button } from '../../../components';
+import { Button, DashPageHeader } from '../../../components';
 // import DashGamesListItem from './DashGamesListItem';
 // import ListItem from '../ListItem';
 import { getLocations } from '../../../redux/actions/locationsActions';
@@ -155,10 +155,30 @@ export class DashGames extends Component {
       }
 
     render() {
-
         const { games, isLoading } = this.props;
+
+        const pageHeaderInfo = {
+            title: 'Games',
+            searchPlaceholder: 'Search by home, away, location, or division',
+            onChange: () => console.log('changing placeholder text'),
+            buttons: [
+                { 
+                    iconName: 'ADD_USER',
+                    title: 'Add Game',
+                    onClick: () => console.log('clickedddd ADD_USER')
+                },
+                { 
+                    iconName: 'FILTER',
+                    title: 'Filter Games',
+                    onClick: () => console.log('clickedddd FILTER')
+                }
+            ]
+        }
+
         return (
             <div>
+
+                <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
                 <Auth.User roles={accessAdmin}>
                     <div className="dashboard-filter-header">

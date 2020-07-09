@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from 'redux/actions/users';
-import { Button, SlideOut, ProfilePic, Pagination, Icon } from '../../../components';
+import { Button, SlideOut, ProfilePic, Pagination, Icon, DashPageHeader } from '../../../components';
 import DashTable from '../DashTable';
 import { ICONS } from 'assets/ICONS';
 
@@ -20,45 +20,61 @@ const DashUsers = props => {
 //     neighbors: PropTypes.number,
 //     onPageChange: PropTypes.func
 
-const stuff = {
-    totalPages: 12,
-    currentPage: 1,
-    neighbors: 1,
-    limit: 30,
-    onPageChange: () => console.log('changed!')
-}
+
+    const pageHeaderInfo = {
+        title: 'Users',
+        searchPlaceholder: 'Search by name or role',
+        onChange: () => console.log('changing placeholder text'),
+        buttons: [
+            { 
+                iconName: 'ADD_USER',
+                title: 'Add User',
+                onClick: () => console.log('clickedddd ADD_USER')
+            },
+            { 
+                iconName: 'FILTER',
+                title: 'Filter Users',
+                onClick: () => console.log('clickedddd FILTER')
+            }
+        ]
+    }
+
+    const stuff = {
+        totalPages: 12,
+        currentPage: 1,
+        neighbors: 1,
+        limit: 30,
+        onPageChange: () => console.log('changed!')
+    }
 
     return (
         <div style={{position: 'relative'}}>
 
+            <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
-            <div className="page-header">
 
+            {/* <div className="page-header">
                 <div className="page-header-title-container">
-
-                    <h1>Users</h1> 
-
+                    <h1>changin</h1> 
                     <input type="text" className="page-header-search hide-mobile" placeholder="Search by name or role" />
-
                     <div className="icons-container">
                         <div className="icon-housing" title="Add User">
                             <Icon name={ICONS.ADD_USER} size={20}/>
+
                         </div>
                         <div className="icon-housing" title="Filter">
                             <Icon name={ICONS.FILTER} size={20} />
+
                         </div>
                         <div className="hide-mobile">
                             <div className="profile-housing">
-
                                 <ProfilePic />
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <input type="text" className="page-header-search hide-desktop" placeholder="Search by name or role" />
-                
-            </div>
+            </div> */}
 
 
 

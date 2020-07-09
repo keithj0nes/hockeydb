@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import qs from 'query-string';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from 'redux/actions/seasons';
 import { toggleModal, toggleFilter} from 'redux/actions/misc';
-import { Button, Filter } from '../../../components';
+import { Button, Filter, DashPageHeader } from '../../../components';
 import DashTable from '../DashTable';
 import './DashSeasons.scss';
 
@@ -201,8 +201,29 @@ class DashSeasons extends Component {
 
     render() {
         const { seasons, isLoading } = this.props;
+
+        const pageHeaderInfo = {
+            title: 'Seasons',
+            searchPlaceholder: 'Search by season name',
+            onChange: () => console.log('changing placeholder text'),
+            buttons: [
+                { 
+                    iconName: 'ADD_USER',
+                    title: 'Add Season',
+                    onClick: () => console.log('clickedddd ADD_USER')
+                },
+                { 
+                    iconName: 'FILTER',
+                    title: 'Filter Seasons',
+                    onClick: () => console.log('clickedddd FILTER')
+                }
+            ]
+        }
+
         return (
             <>
+                <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
+
                 <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
 

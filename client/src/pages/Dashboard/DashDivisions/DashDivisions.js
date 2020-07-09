@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import qs from 'query-string';
 import { getDivisions, createDivision, updateDivision, deleteDivision } from 'redux/actions/divisions';
 import { toggleModal, toggleFilter} from 'redux/actions/misc';
-import { Button, Filter } from '../../../components';
+import { Button, Filter, DashPageHeader } from '../../../components';
 import DashTable from '../DashTable';
 // import './DashDivisions.scss';
 
@@ -195,9 +195,28 @@ class DashDivisions extends Component {
 
     render() {
         const { divisions, isLoading } = this.props;
+        const pageHeaderInfo = {
+            title: 'Divisions',
+            searchPlaceholder: 'Search by division name',
+            onChange: () => console.log('changing placeholder text'),
+            buttons: [
+                { 
+                    iconName: 'ADD_USER',
+                    title: 'Add Division',
+                    onClick: () => console.log('clickedddd ADD_USER')
+                },
+                { 
+                    iconName: 'FILTER',
+                    title: 'Filter Divisions',
+                    onClick: () => console.log('clickedddd FILTER')
+                }
+            ]
+        }
 
         return (
             <div>
+                <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
+
                 <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teamsActions';
 
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
-import { Button, Filter } from '../../../components';
+import { Button, Filter, DashPageHeader } from '../../../components';
 // import ListItem from '../ListItem';
 // import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 import DashTable from '../DashTable';
@@ -218,36 +218,56 @@ class DashTeams extends Component {
 
 
     render() {
-        const { teams, isLoading } = this.props
+        const { teams, isLoading } = this.props;
+
+        const pageHeaderInfo = {
+            title: 'Teams',
+            searchPlaceholder: 'Search by team name or division',
+            onChange: () => console.log('changing placeholder text'),
+            buttons: [
+                { 
+                    iconName: 'ADD_USER',
+                    title: 'Add team',
+                    onClick: () => console.log('clickedddd ADD_USER')
+                },
+                { 
+                    iconName: 'FILTER',
+                    title: 'Filter Teams',
+                    onClick: () => console.log('clickedddd FILTER')
+                }
+            ]
+        }
 
         return (
             <>
-            <div className="dashboard-filter-header">
-                <div style={{width: '100%'}}>
+                <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Button title="Add Team" onClick={this.handleAddTeam} />
-                        <Button title="Filter" onClick={() => this.checkFilters(true)} />
+                <div className="dashboard-filter-header">
+                    <div style={{width: '100%'}}>
+
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Button title="Add Team" onClick={this.handleAddTeam} />
+                            <Button title="Filter" onClick={() => this.checkFilters(true)} />
+                        </div>
+                        <Filter data={this.state.data} getAction={this.props.getTeams} reloadOn={'season'} history={this.props.history} filterType={'teams'}/>
                     </div>
-                    <Filter data={this.state.data} getAction={this.props.getTeams} reloadOn={'season'} history={this.props.history} filterType={'teams'}/>
                 </div>
-            </div>
 
-            <div className="dashboard-list-container">
-                <div className="dashboard-list">
-                    <DashTable 
-                        data={teams}
-                        sections={{ 'name': 'two', 'division_name': 'one' }}
-                        minWidth={550}
-                        onEdit={this.handleEditTeam}
-                        onDelete={this.handleDeleteTeam}
-                        isLoading={isLoading}
-                        emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no teams within your filter criteria' : 'Sorry, no teams have been created. Start by adding a team above.'}
-                    />
+                <div className="dashboard-list-container">
+                    <div className="dashboard-list">
+                        <DashTable 
+                            data={teams}
+                            sections={{ 'name': 'two', 'division_name': 'one' }}
+                            minWidth={550}
+                            onEdit={this.handleEditTeam}
+                            onDelete={this.handleDeleteTeam}
+                            isLoading={isLoading}
+                            emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no teams within your filter criteria' : 'Sorry, no teams have been created. Start by adding a team above.'}
+                        />
+                    </div>
                 </div>
-            </div>
 
-        </>
+            </>
         )
     }
 }
