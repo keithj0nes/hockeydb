@@ -8,7 +8,7 @@ export const getSeasons = (filter) => async dispatch => {
 
     dispatch({ type: `seasons/${GET_INIT}` })
 
-    await wait(3000);
+    // await wait(3000);
 
     // console.log(filter, 'FILTER GET SEASONS')
 

@@ -8,6 +8,7 @@ import Hide from 'assets/icons/hide_icon.svg';
 import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
 import { ICONS } from 'assets/ICONS';
 import { Icon, Popover } from 'components';
+import { wait } from 'helpers';
 
 
 const DashTable = ({ data, sections, minWidth, isLoading, onEdit, onDelete, onHide, tableType, emptyTableText, popoverData }) => {
@@ -145,11 +146,20 @@ export default DashTable;
 
 
 const TableLoader = ({count = 5, format, manage}) => {
+
+    const [ showShimmer, setShowShimmer ] = useState(false);
+
+    useEffect(() => {
+        let setShowShimmerAfterWaiting = true;
+        wait(500).then(() => setShowShimmerAfterWaiting && setShowShimmer(true));        // wait half a second until showing the shimmer (so there's not a flash of shimmer on load)
+        return () => setShowShimmerAfterWaiting = false;
+    }, [])
+
     return Array(count).fill().map( (_, idx) => {
         return (
             <div className="ot-row" key={idx}>
                 {format.map((flexNum, fidx) => (
-                    <p key={fidx} className={`ot-cell ot-flex-${flexNum} shimmer`}></p>
+                    <p key={fidx} className={`ot-cell ot-flex-${flexNum} ${showShimmer && 'shimmer'}`}></p>
                 ))}
                 {/* {manage && <p className={`ot-cell ot-manage shimmer`}></p>} */}
 

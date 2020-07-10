@@ -1,6 +1,6 @@
 import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-import { wait } from '../../helpers';
+// import { wait } from '../../helpers';
 
 
 
@@ -12,7 +12,7 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
 
     dispatch({ type: `divisions/${GET_INIT}` })
 
-    await wait(3000);
+    // await wait(3000);
 
     const { seasons: { currentSeason }  } = getState();
 

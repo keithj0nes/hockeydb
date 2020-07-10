@@ -8,7 +8,7 @@ export const getUsers = (filter) => async dispatch => {
 
     dispatch({ type: `users/${GET_INIT}` })
 
-    await wait(3000);
+    // await wait(3000);
 
     //use filter variable or empty string if null/undefined
     const data = await request(`/api/admin/users?${filter || ''}`, 'GET', {}, true)
