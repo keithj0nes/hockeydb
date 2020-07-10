@@ -14,7 +14,7 @@ export { default as Header } from './Header';
 export { default as TableLoader } from './TableLoader';
 
 export { Input } from './Input';
-export { Select } from './Select';
+export { Select, DashSelect } from './Select';
 export { Icon } from './Icon';
 export { default as ProfilePic } from './ProfilePic';
 export { Popover } from './Popover';
@@ -22,4 +22,4 @@ export { DashPageHeader } from './DashPageHeader';
 
 export { default as SlideOut } from './SlideOut';
 export { default as Pagination } from './Pagination';
-
+export { Checkbox, DashCheckbox } from './Checkbox';
