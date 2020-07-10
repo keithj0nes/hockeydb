@@ -39,7 +39,6 @@ const ProfilePic = ({user}) => {
 
 
 const mapStateToProps = state => {
-    console.log(state, 'STAATTE')
     return {
         user: state.user.user,
         currentSeason: state.seasons.currentSeason,
