@@ -27,14 +27,14 @@ export const DashPageHeader = ({pageHeaderInfo}) => {
                     { !hideSearchAndButtons && buttons && buttons.map(button => (
                         <div style={{position: 'relative'}} id={button.iconName} key={button.iconName}>
 
-                            <div key={button.iconName} className="icon-housing"  title={button.title} onClick={() => button.onClick()}>
+                            <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => button.onClick()}>
                                 <Icon name={button.iconName} size={button.size || 20} x/>
                             </div>
 
                             {button.popoverUI && (
                                 <Popover isVisible={button.isPopoverVisible} setIsVisible={button.onClick} closest={`#${button.iconName}`}>
                                     {/* {button.popoverUI()} */}
-                                    {button.popoverUI}
+                                    {(props) => button.popoverUI(props)}
                                 </Popover>                        
                             )}
                         </div>

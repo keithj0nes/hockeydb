@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from 'redux/actions/users';
-import { Button, SlideOut, ProfilePic, Pagination, Icon, DashPageHeader } from '../../../components';
+import { Button, SlideOut, ProfilePic, Pagination, Icon, DashPageHeader, DashSelect, DashCheckbox } from '../../../components';
 import DashTable from '../DashTable';
 import { ICONS } from 'assets/ICONS';
 
@@ -10,6 +10,7 @@ import './dashusers.scss';
 const DashUsers = props => {
 
     const [ showPermissions, setShowPermissions ] = useState(false);
+    const [ isFilterVisible, setIsFilterVisible ] = useState(false);
 
     useEffect(() => {
         props.getUsers();
@@ -20,6 +21,62 @@ const DashUsers = props => {
 //     neighbors: PropTypes.number,
 //     onPageChange: PropTypes.func
 
+    const stuff = {
+        totalPages: 12,
+        currentPage: 1,
+        neighbors: 1,
+        limit: 30,
+        onPageChange: () => console.log('changed!')
+    }
+
+    const filterUI = () => {
+        const myOptions = [
+            {id: 1, name: 'haha'},
+            {id: 2, name: 'hihi'},
+            {id: 3, name: 'hehe'},
+            {id: 4, name: 'hoho'},
+            {id: 5, name: 'huhu'},
+        ]
+
+        return (
+            <>
+                <div className="popover-header">
+                    <h2>Filter Options</h2>
+                    <p>Clear X</p>
+                </div>
+
+                <div className="popover-section">
+                    <h5>Role</h5>
+
+                    <DashSelect 
+                        name='optionzz' 
+                        listOfSelects={[{name: 'All', value: ''}, ...myOptions]} 
+                        // onChange={this.handleChange} 
+                        // defaultValue={this.state.filters.division || ''} 
+                        useKey="id" />
+                </div>
+
+                <div className="popover-section">
+                    <h5>Status</h5>
+                    <div className="popover-checkbox-container">
+                        <DashCheckbox name="status" title="Active" />
+                        <DashCheckbox name="status" title="Inactiveed place" />
+                        <DashCheckbox name="status" title="Inactive" />
+                        <DashCheckbox name="status" title="Inactivew" />
+
+                    </div>
+                </div>
+
+                <div className="popover-section">
+                    <h5>Permissions</h5>
+                    <div className="popover-checkbox-container">
+                        <DashCheckbox name="permissions" title="Default" />
+                        <DashCheckbox name="permissions" title="Modified" />
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     const pageHeaderInfo = {
         title: 'Users',
@@ -34,17 +91,12 @@ const DashUsers = props => {
             { 
                 iconName: 'FILTER',
                 title: 'Filter Users',
-                onClick: () => console.log('clickedddd FILTER')
+                // onClick: () => console.log('clickedddd FILTER'),
+                onClick: (val) => setIsFilterVisible( val !== undefined ? val : !isFilterVisible),
+                isPopoverVisible: isFilterVisible,
+                popoverUI: filterUI()
             }
         ]
-    }
-
-    const stuff = {
-        totalPages: 12,
-        currentPage: 1,
-        neighbors: 1,
-        limit: 30,
-        onPageChange: () => console.log('changed!')
     }
 
     return (

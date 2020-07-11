@@ -5,6 +5,7 @@ import { wait } from '../../helpers';
 
 
 export const getSeasons = (filter) => async dispatch => {
+    console.log('geting seasons 🛑🛑🛑🛑')
 
     dispatch({ type: `seasons/${GET_INIT}` })
 
