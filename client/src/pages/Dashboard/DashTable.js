@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
 import distanceInWords from 'date-fns/distance_in_words'
-import Edit from 'assets/icons/edit_icon.svg';
-import Delete from 'assets/icons/delete_icon.svg';
-import Hide from 'assets/icons/hide_icon.svg';
-import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
-import { ICONS } from 'assets/ICONS';
-import { Icon, Popover } from 'components';
+// import Edit from 'assets/icons/edit_icon.svg';
+// import Delete from 'assets/icons/delete_icon.svg';
+// import Hide from 'assets/icons/hide_icon.svg';
+// import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
+// import { ICONS } from 'assets/ICONS';
+import { Popover } from 'components';
 import { wait } from 'helpers';
 
 

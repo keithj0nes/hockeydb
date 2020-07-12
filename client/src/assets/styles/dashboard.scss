@@ -1,7 +1,8 @@
 @import './variables';
 
 .dashboard-container {
-    background: $body_background_color;
+    // background: $body_background_color;
+    background: $admin-color-body;
     // font-family: $main_font;
     min-height: 100vh;
     height: 100%;

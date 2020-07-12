@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, ProfilePic, Popover, DashSelect, DashCheckbox } from './';
+import { Icon, ProfilePic, Popover } from './';
 
 
-const myOptions = [
-    {id: 1, name: 'haha'},
-    {id: 2, name: 'hihi'},
-    {id: 3, name: 'hehe'},
-    {id: 4, name: 'hoho'},
-    {id: 5, name: 'huhu'},
-]
+// const myOptions = [
+//     {id: 1, name: 'haha'},
+//     {id: 2, name: 'hihi'},
+//     {id: 3, name: 'hehe'},
+//     {id: 4, name: 'hoho'},
+//     {id: 5, name: 'huhu'},
+// ]
 export const DashPageHeader = ({pageHeaderInfo}) => {
     const { title, searchPlaceholder, onChange, buttons, hideSearchAndButtons } = pageHeaderInfo;
 

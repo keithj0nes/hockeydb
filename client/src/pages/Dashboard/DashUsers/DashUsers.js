@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from 'redux/actions/users';
-import { Button, SlideOut, ProfilePic, Pagination, Icon, DashPageHeader, DashSelect, DashCheckbox } from '../../../components';
+import { Button, SlideOut, Pagination, DashPageHeader, DashSelect, DashCheckbox } from '../../../components';
 import DashTable from '../DashTable';
-import { ICONS } from 'assets/ICONS';
 
 import './dashusers.scss';
 

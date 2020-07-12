@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teamsActions';
 
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
-import { Button, Filter, DashPageHeader } from '../../../components';
+import { Button, Filter, DashPageHeader, DashFilter } from '../../../components';
 // import ListItem from '../ListItem';
 // import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 import DashTable from '../DashTable';
 import qs from 'query-string';
+import { setQuery } from "helpers";
+
 
 const defaultState = {
     division_id: null,
@@ -19,6 +21,7 @@ const defaultState = {
     },
     filterRequestSent: false,
     isFilterVisible: false,
+    filterData: []
 }
 
 class DashTeams extends Component {
@@ -168,9 +171,18 @@ class DashTeams extends Component {
 
         // this fires checkFilters() when the new season is selected in the filter
         // resetting the divisions array passed to the filter
-        if(prevProps.divisions.length !== this.props.divisions.length){
-            this.checkFilters(false);
+
+        // if(prevProps.divisions.length !== this.props.divisions.length){
+        //     this.checkFilters(false);
+        // }
+
+        const prev = JSON.stringify(prevProps.divisions)
+        const current = JSON.stringify(this.props.divisions);
+
+        if(prev !== current && this.state.isFilterVisible) {
+            this.setFilterDataOpenFilter(true)
         }
+
     }
 
     checkFilters = (toggle) => {
@@ -217,6 +229,77 @@ class DashTeams extends Component {
     }
 
 
+    setFilterDataOpenFilter = (val) => {
+        //set filter data and toggle filter component
+
+        console.log('setting stuffszzz')
+
+        const filterData = [{
+            title: 'Season',
+            options: [{
+                type: 'select',
+                name: 'season',
+                defaultValue: this.state.filters.season || this.props.currentSeason.name,
+                listOfSelects: this.props.seasons,
+                hiddenValue: 'Select a Season',
+                useKey: 'name'
+            }]
+        },{
+            title: 'Division',
+            options: [{
+                type: 'select',
+                name: 'division',
+                defaultValue: this.state.filters.division,
+                listOfSelects: [{name: 'View All', value: ''}, ...this.props.divisions],
+                hiddenValue: 'Select a Division',
+                useKey: 'name'
+            }]
+        },{
+            title: 'Other',
+            options: [{
+                title: 'Hidden Seasons',
+                name: 'show_hidden',
+                type: 'checkbox',
+                defaultValue: this.state.filters.show_hidden || false
+            }
+        ]
+        }]
+
+        this.setState({filterData}, () => {
+            this.setState({isFilterVisible: val !== undefined ? val : !this.state.isFilterVisible});
+        })
+    }
+
+    handleFilterChange = (e) => {
+        // clear filters and close
+        if(e === null) { 
+            this.props.history.push({ search: '' })
+            this.props.getTeams()
+            return this.setState({filters: {}, isFilterVisible: false})
+        }
+
+        console.log(e.target.name, 'E!!')
+
+        const filters = {...this.state.filters};
+
+        if(e.target.value === '' || e.target.checked === false){
+            delete filters[e.target.name];
+        } else {
+            filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        }
+
+        if(e.target.name === 'season'){
+            delete filters['division'];
+        }
+        
+        const search = setQuery(filters);
+        this.props.getTeams(search)
+        this.props.history.push({ search })
+        // this.setState({filters})
+        this.setState({filters}, () => this.setFilterDataOpenFilter(true))
+    }
+
+
     render() {
         const { teams, isLoading } = this.props;
 
@@ -228,12 +311,22 @@ class DashTeams extends Component {
                 { 
                     iconName: 'ADD_USER',
                     title: 'Add team',
-                    onClick: () => console.log('clickedddd ADD_USER')
+                    onClick: this.handleAddTeam
                 },
                 { 
                     iconName: 'FILTER',
                     title: 'Filter Teams',
-                    onClick: () => console.log('clickedddd FILTER')
+                    isActive: this.props.location.search.length > 0,
+                    onClick: (val) => this.setFilterDataOpenFilter(val),
+                    isPopoverVisible: this.state.isFilterVisible,
+                    popoverUI: (closeFilter) => (
+                        <DashFilter 
+                            data={this.state.filterData} 
+                            getAction={this.props.getSeasons} 
+                            closeFilter={closeFilter} 
+                            filterType={'divisions'}
+                            onChange={this.handleFilterChange}/>
+                    )
                 }
             ]
         }
@@ -242,7 +335,9 @@ class DashTeams extends Component {
             <>
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
-                <div className="dashboard-filter-header">
+                <div style={{paddingBottom: 16}} />
+
+                {/* <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
 
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -251,7 +346,7 @@ class DashTeams extends Component {
                         </div>
                         <Filter data={this.state.data} getAction={this.props.getTeams} reloadOn={'season'} history={this.props.history} filterType={'teams'}/>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">

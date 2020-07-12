@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from './';
-import { ICONS } from 'assets/ICONS.js';
+// import { Icon } from './';
+// import { ICONS } from 'assets/ICONS.js';
 import './pagination.scss';
 
-const initialState = {
-    totalPages: 5,
-    currentPage: 1
-}
+// const initialState = {
+//     totalPages: 5,
+//     currentPage: 1
+// }
 
 const [LEFT_PAGE, RIGHT_PAGE] = ['left', 'right'];
 
@@ -193,12 +193,12 @@ const range = (from, to, step = 1) => {
 //     onPageChange: () => alert('onPageChange function not defined')
 // }
 
-// Pagination.propTypes = {
-//     totalPages: PropTypes.number.isRequired,
-//     currentPage: PropTypes.number.isRequired,
-//     limit: PropTypes.number,
-//     neighbors: PropTypes.oneOf([0,1,2]),
-//     onPageChange: PropTypes.func
-// }
+Pagination.propTypes = {
+    totalPages: PropTypes.number.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    limit: PropTypes.number,
+    neighbors: PropTypes.oneOf([0,1,2]),
+    onPageChange: PropTypes.func
+}
 
 export default Pagination;

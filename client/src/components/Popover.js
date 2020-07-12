@@ -22,18 +22,16 @@ export const Popover = ({children, isVisible, setIsVisible, closest, row}) => {
 
     if(!isVisible) return null;
 
-    const customFunc = () => {
+    const closePopover = () => {
         setIsVisible(false)
     }
-
-    console.log(typeof children, 'typeofff')
 
     return (
         <div className={`popover ${row && 'row'}`}>
             {/* {children} */}
 
 
-            { typeof children === 'function' ? children(customFunc) : children }
+            { typeof children === 'function' ? children(closePopover) : children }
         </div>
     )
 }

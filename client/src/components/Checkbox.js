@@ -13,15 +13,12 @@ export const DashCheckbox = ({title, name, defaultValue, onChange}) => {
     const [isChecked, setIsChecked] = useState(false);
 
     const prev = useRef();
-    // create a ref that gets the first 
 
     useEffect(() => {
         prev.current = isChecked;
     }, [])
 
     useEffect(() => {
-        console.log('usefeefct **', defaultValue)
-        // console.log(prev.current, isChecked, 'PREV CURRENT')
         if(defaultValue) {
             setIsChecked(true)
         } else if (prev.current !== isChecked) {

@@ -16,7 +16,7 @@ export { default as TableLoader } from './TableLoader';
 export { Input } from './Input';
 export { Select, DashSelect } from './Select';
 export { Icon } from './Icon';
-export { DashFilter } from './DashFilter';
+export { default as DashFilter } from './DashFilter';
 
 export { default as ProfilePic } from './ProfilePic';
 export { Popover } from './Popover';
