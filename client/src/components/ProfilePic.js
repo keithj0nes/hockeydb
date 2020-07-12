@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Popover } from 'components';
 import { ICONS } from 'assets/ICONS';

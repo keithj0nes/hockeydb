@@ -1,6 +1,6 @@
 import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-import { wait } from '../../helpers';
+// import { wait } from '../../helpers';
 
 export const getGames = filter => async (dispatch, getState) => {
     // if it's from loadmore, dont GET_INIT the whole games data

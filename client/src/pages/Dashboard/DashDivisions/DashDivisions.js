@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import qs from 'query-string';
 import { getDivisions, createDivision, updateDivision, deleteDivision } from 'redux/actions/divisions';
 import { toggleModal, toggleFilter} from 'redux/actions/misc';
-import { Button, Filter, DashPageHeader } from '../../../components';
+import { DashPageHeader, DashFilter } from '../../../components';
 import DashTable from '../DashTable';
+import { setQuery } from "helpers";
+
 // import './DashDivisions.scss';
 
 
@@ -16,6 +18,7 @@ const defaultState = {
     filters: {
         // season: ''
     },
+    isFilterVisible: false
 
 }
 
@@ -163,7 +166,35 @@ class DashDivisions extends Component {
     }
 
 
-    checkFilters = () => {
+    // checkFilters = () => {
+    //     //set filter data and toggle filter component
+
+    //     const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
+
+    //     const filterData = [{
+    //         title: 'Season',
+    //         options: [{
+    //             type: 'select',
+    //             name: 'season',
+    //             defaultValue: m,
+    //             listOfSelects: this.props.seasons,
+    //             hiddenValue: 'Select a season'
+    //         }]
+    //     },{
+    //         title: 'Other',
+    //         options: [{
+    //             title: 'Hidden Divisions',
+    //             name: 'show_hidden',
+    //             type: 'checkbox',
+    //             defaultValue: this.state.filters.show_hidden || false,
+    //         }]
+    //     }]
+
+    //     console.log(this.props.seasons)
+    //     this.setState({filterData}, () => this.props.toggleFilter())
+    // }
+
+    setFilterDataOpenFilter = (val) => {
         //set filter data and toggle filter component
 
         const m = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
@@ -187,14 +218,39 @@ class DashDivisions extends Component {
             }]
         }]
 
-        console.log(this.props.seasons)
-        this.setState({filterData}, () => this.props.toggleFilter())
+        this.setState({filterData}, () => {
+            this.setState({isFilterVisible: val !== undefined ? val : !this.state.isFilterVisible});
+        })
     }
 
+    handleFilterChange = (e) => {
+        // clear filters and close
+        if(e === null) { 
+            this.props.history.push({ search: '' })
+            this.props.getDivisions()
+            return this.setState({filters: {}, isFilterVisible: false})
+        }
+
+        const filters = {...this.state.filters};
+
+        if(e.target.value === '' || e.target.checked === false){
+            delete filters[e.target.name];
+        } else {
+            filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        
+        }
+
+        
+        const search = setQuery(filters);
+        this.props.getDivisions(search)
+        this.props.history.push({ search })
+        this.setState({filters}, () => this.setFilterDataOpenFilter(true))
+    }
 
 
     render() {
         const { divisions, isLoading } = this.props;
+
         const pageHeaderInfo = {
             title: 'Divisions',
             searchPlaceholder: 'Search by division name',
@@ -203,12 +259,22 @@ class DashDivisions extends Component {
                 { 
                     iconName: 'ADD_USER',
                     title: 'Add Division',
-                    onClick: () => console.log('clickedddd ADD_USER')
+                    onClick: this.handleAddDivision
                 },
                 { 
                     iconName: 'FILTER',
                     title: 'Filter Divisions',
-                    onClick: () => console.log('clickedddd FILTER')
+                    isActive: this.props.location.search.length > 0,
+                    onClick: (val) => this.setFilterDataOpenFilter(val),
+                    isPopoverVisible: this.state.isFilterVisible,
+                    popoverUI: (closeFilter) => (
+                        <DashFilter 
+                            data={this.state.filterData} 
+                            getAction={this.props.getDivisions} 
+                            closeFilter={closeFilter} 
+                            filterType={'divisions'}
+                            onChange={this.handleFilterChange}/>
+                    )
                 }
             ]
         }
@@ -217,26 +283,27 @@ class DashDivisions extends Component {
             <div>
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
-                <div className="dashboard-filter-header">
+                <div style={{paddingBottom: 16}} />
+
+
+                {/* <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
 
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <Button title="Add Division" onClick={this.handleAddDivision} />
 
                             <div>
-                                {/* {
+                                {
                                     Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
                                     <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
-                                } */}
+                                }
                                 <Button title="Filter" onClick={this.checkFilters} />
 
                             </div>
                         </div>
-                        {/* <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/> */}
-
                         <Filter data={this.state.filterData} getAction={this.props.getDivisions} history={this.props.history} filterType={'divisions'}/>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">

@@ -1,7 +1,7 @@
 import { request } from './middleware';
 // import { NEW_LOCATION, GET_LOCATIONS, TOGGLE_MODAL, UPDATE_SUCCESS } from '../actionTypes';
 import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-import { wait } from '../../helpers';
+// import { wait } from '../../helpers';
 
 
 export const getLocations = () => async dispatch => {

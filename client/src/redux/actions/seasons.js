@@ -1,7 +1,7 @@
 import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SET_CURRENT_SEASON } from '../actionTypes';
 
-import { wait } from '../../helpers';
+// import { wait } from '../../helpers';
 
 
 export const getSeasons = (filter) => async dispatch => {

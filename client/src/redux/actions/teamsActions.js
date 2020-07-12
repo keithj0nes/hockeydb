@@ -1,11 +1,11 @@
 import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, TOGGLE_MODAL, CLEAR_STATE } from '../actionTypes';
 
-import { wait } from '../../helpers';
+// import { wait } from '../../helpers';
 
 // Dashboard/DashTeams.js  -  Dashboard/DashGames.js 
 export const getTeams = (filter) => async (dispatch, getState) => {
-    console.log('teams -- get ---')
+    // console.log('teams -- get ---')
     dispatch({ type: `teams/${GET_INIT}` })
 
     // await wait(3000);

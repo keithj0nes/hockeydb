@@ -10,8 +10,12 @@ const initialSeasonState = {
 
     //filter
     isVisible: false,
-    
+    // filterOptions: {
+    //     show_hidden: true
+    // }
 };
+
+// FILTER STATE IS BEING MANAGED INSIDE LOCAL COMPONENT
   
 export const seasons = (state = initialSeasonState, { type, payload }) => {
     switch (type) {
@@ -46,6 +50,10 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
         //otherwise just set it to the opposite of what it's currently set to
         return { ...state, isVisible: typeof(payload) !== 'undefined' ? payload : !state.isVisible }
         
+    // case 'seasons/GET_FILTER_OPTIONS':
+    //     return { ...state }
+
+
     default:
         return state;
     }

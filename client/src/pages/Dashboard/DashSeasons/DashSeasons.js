@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import qs from 'query-string';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from 'redux/actions/seasons';
 import { toggleModal, toggleFilter} from 'redux/actions/misc';
-import { Button, Filter, DashPageHeader, DashSelect, DashCheckbox  } from '../../../components';
+import { DashPageHeader, DashFilter } from '../../../components';
 import DashTable from '../DashTable';
+import { setQuery } from "helpers";
 import './DashSeasons.scss';
 
 const defaultState = {
@@ -198,63 +199,69 @@ class DashSeasons extends Component {
         this.setState({filterData}, () => this.props.toggleFilter())
     }
 
+    setFilterDataOpenFilter = (val) => {
+        //set filter data and toggle filter component
 
-
-    filterUI = () => {
-        const myOptions = [
-            {id: 1, name: 'haha'},
-            {id: 2, name: 'hihi'},
-            {id: 3, name: 'hehe'},
-            {id: 4, name: 'hoho'},
-            {id: 5, name: 'huhu'},
+        const filterData = [{
+            title: 'Type',
+            options: [{
+                type: 'select',
+                name: 'type',
+                defaultValue: this.state.filters.type,
+                listOfSelects: this.state.seasonTypes,
+                hiddenValue: 'Select a type',
+                useKey: 'value'
+            }]
+        },{
+            title: 'Other',
+            options: [{
+                title: 'Hidden Seasons',
+                name: 'show_hidden',
+                type: 'checkbox',
+                defaultValue: this.state.filters.show_hidden || false
+            },
+            {
+                title: 'Hiddeme',
+                name: 'show_hiddew',
+                type: 'checkbox',
+                defaultValue: this.state.filters.show_hidde2n || false
+            }
         ]
+        }]
 
-        return (
+        this.setState({filterData}, () => {
+            this.setState({isFilterVisible: val !== undefined ? val : !this.state.isFilterVisible});
+        })
+    }
+
+    handleFilterChange = (e) => {
+        // clear filters and close
+        if(e === null) { 
+            this.props.history.push({ search: '' })
+            this.props.getSeasons()
+            return this.setState({filters: {}, isFilterVisible: false})
+        }
+
+        const filters = {...this.state.filters};
+
+        if(e.target.value === '' || e.target.checked === false){
+            delete filters[e.target.name];
+        } else {
+            filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        }
 
         
-        <>
-            <h3 style={{color: 'orange'}}>EXAMPLE</h3>
-            <div className="popover-header">
-                <h2>Filter Options</h2>
-                <p>Clear X</p>
-            </div>
-
-            <div className="popover-section">
-                <h5>Role</h5>
-
-                <DashSelect 
-                    name='optionzz' 
-                    listOfSelects={[{name: 'All', value: ''}, ...myOptions]} 
-                    // onChange={this.handleChange} 
-                    // defaultValue={this.state.filters.division || ''} 
-                    useKey="id" />
-            </div>
-
-            <div className="popover-section">
-                <h5>Status</h5>
-                <div className="popover-checkbox-container">
-                    <DashCheckbox name="status" title="Active" />
-                    <DashCheckbox name="status" title="Inactiveed place" />
-                    <DashCheckbox name="status" title="Inactive" />
-                    <DashCheckbox name="status" title="Inactivew" />
-
-                </div>
-            </div>
-
-            <div className="popover-section">
-                <h5>Permissions</h5>
-                <div className="popover-checkbox-container">
-                    <DashCheckbox name="permissions" title="Default" />
-                    <DashCheckbox name="permissions" title="Modified" />
-                </div>
-            </div>
-        </>
-    )
-}
+        const search = setQuery(filters);
+        this.props.getSeasons(search)
+        this.props.history.push({ search })
+        this.setState({filters})
+        // this.setState({filters}, () => this.setFilterDataOpenFilter)
+    }
 
 
     render() {
         const { seasons, isLoading } = this.props;
+
 
         const pageHeaderInfo = {
             title: 'Seasons',
@@ -269,9 +276,20 @@ class DashSeasons extends Component {
                 { 
                     iconName: 'FILTER',
                     title: 'Filter Seasons',
-                    onClick: (val) => this.setState({isFilterVisible: val !== undefined ? val : !this.state.isFilterVisible}),
+                    isActive: this.props.location.search.length > 0,
+                    onClick: (val) => {
+                        this.setFilterDataOpenFilter(val); 
+                        // this.setState({isFilterVisible: val !== undefined ? val : !this.state.isFilterVisible});
+                    },
                     isPopoverVisible: this.state.isFilterVisible,
-                    popoverUI: this.filterUI()
+                    popoverUI: (closeFilter) => (
+                        <DashFilter 
+                            data={this.state.filterData} 
+                            getAction={this.props.getSeasons} 
+                            closeFilter={closeFilter} 
+                            filterType={'seasons'}
+                            onChange={this.handleFilterChange}/>
+                    )
                 }
             ]
         }
@@ -280,7 +298,9 @@ class DashSeasons extends Component {
             <>
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
-                <div className="dashboard-filter-header">
+                <div style={{paddingBottom: 16}} />
+
+                {/* <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
 
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -298,7 +318,7 @@ class DashSeasons extends Component {
 
                         <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">
