@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teamsActions';
 
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
-import { Button, Filter, DashPageHeader, DashFilter } from '../../../components';
+import { DashPageHeader, DashFilter } from '../../../components';
 // import ListItem from '../ListItem';
 // import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 import DashTable from '../DashTable';
@@ -277,8 +277,6 @@ class DashTeams extends Component {
             this.props.getTeams()
             return this.setState({filters: {}, isFilterVisible: false})
         }
-
-        console.log(e.target.name, 'E!!')
 
         const filters = {...this.state.filters};
 

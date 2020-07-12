@@ -32,7 +32,7 @@ export const DashPageHeader = ({pageHeaderInfo}) => {
                             </div>
 
                             {button.popoverUI && (
-                                <Popover isVisible={button.isPopoverVisible} setIsVisible={button.onClick} closest={`#${button.iconName}`}>
+                                <Popover isVisible={button.isPopoverVisible} setIsVisible={button.onClick} closest={`#${button.iconName}`} fullWidth>
                                     {/* {button.popoverUI()} */}
                                     {(props) => button.popoverUI(props)}
                                 </Popover>                        

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './popover.scss';
 
-export const Popover = ({children, isVisible, setIsVisible, closest, row}) => {
+export const Popover = ({children, isVisible, setIsVisible, closest, row, fullWidth}) => {
 
     const listener = e => {
         if(!e.target.closest(closest)) {
@@ -26,9 +26,11 @@ export const Popover = ({children, isVisible, setIsVisible, closest, row}) => {
         setIsVisible(false)
     }
 
+    // console.log(children(closePopover))
     return (
-        <div className={`popover ${row && 'row'}`}>
+        <div className={`popover ${row ? 'row' : ''} ${fullWidth ? 'full-width' : ''}`}>
             {/* {children} */}
+
 
 
             { typeof children === 'function' ? children(closePopover) : children }
@@ -37,9 +39,14 @@ export const Popover = ({children, isVisible, setIsVisible, closest, row}) => {
 }
 
 Popover.propTypes = {
-    children: PropTypes.element.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.element,
+        PropTypes.func
+    ]).isRequired,   
     isVisible: PropTypes.bool.isRequired,
     setIsVisible: PropTypes.func.isRequired,
     closest: PropTypes.string.isRequired,       // determines what div wont cause item to close
-    row: PropTypes.bool
+    row: PropTypes.bool,
+    fullWidth: PropTypes.bool
+
 }

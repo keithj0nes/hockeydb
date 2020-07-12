@@ -93,7 +93,7 @@ const DashUsers = props => {
                 // onClick: () => console.log('clickedddd FILTER'),
                 onClick: (val) => setIsFilterVisible( val !== undefined ? val : !isFilterVisible),
                 isPopoverVisible: isFilterVisible,
-                popoverUI: filterUI()
+                popoverUI: () => filterUI()
             }
         ]
     }

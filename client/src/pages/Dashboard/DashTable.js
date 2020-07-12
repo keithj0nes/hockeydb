@@ -262,7 +262,11 @@ const TableRow = ({d, sectionKeys, sections, tableType, indx, onEdit, onHide, on
                     <li>Edit Permissions</li>
                     <li>Resend Invite</li>
                 </ul> */}
-                {popoverData}
+                {/* {popoverData} */}
+                {/* {(close) => (popoverData(d, close))} */}
+
+                { typeof popoverData === 'function' ? (close) => (popoverData(d, close)): popoverData }
+
             </Popover>
 
 {/*             
