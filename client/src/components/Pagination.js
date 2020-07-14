@@ -21,6 +21,10 @@ const Pagination = (props) => {
 
         const { currentPage, totalPages } = pages;
 
+        if (typeof dir === 'number'){
+            return setPages({...pages, currentPage: dir})
+        }
+
         if(dir === 'prev' && currentPage > 1) {
             setPages({...pages, currentPage: currentPage - 1})
         }
@@ -103,74 +107,77 @@ const Pagination = (props) => {
     const pageNumbers = getPageNumbers();
     
     return (
-        <div className="pagination-container">
+        <div className="pagination-full-width">
+            <div className="pagination-container">
 
-            {/* <div style={{background: 'pink', display: 'flex'}}>
-                <Icon name={ICONS.ARROW_LEFT} size={50} />
+                {/* <div style={{background: 'pink', display: 'flex'}}>
+                    <Icon name={ICONS.ARROW_LEFT} size={50} />
 
-                <Icon name={ICONS.ARROW_RIGHT} />
+                    <Icon name={ICONS.ARROW_RIGHT} />
 
-            </div> */}
+                </div> */}
 
-            <span className={`left ${pages.currentPage === 1 && 'disabled'}`} onClick={() => changePage('prev')} ></span>
+                <span className={`left ${pages.currentPage === 1 && 'disabled'}`} onClick={() => changePage('prev')} ></span>
 
-            {/* {Array(pages.totalPages).fill().map((_, i) => {
-                return (
-                    <span 
-                        onClick={() => setPages({...pages, currentPage: i + 1})}
-                        className={i + 1 === pages.currentPage && 'current-page'}>
-                            {i + 1}
-                    </span>
-                )
-            })} */}
-
-            {
-                pageNumbers.map((page, index) => {
-                    // console.log(page, 'page!!')
-
-                    // if (page === LEFT_PAGE) return (
-                    //     <span key={index} className="page-item">
-                    //       {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
-                    //         {/* <span aria-hidden="true">&laquo;</span> */}
-                    //         <span className="sr-only">Previous</span>
-                    //       {/* </a> */}
-                    //     </span>
-                    //   );
-        
-                    //   if (page === RIGHT_PAGE) return (
-                    //     <span key={index} className="page-item">
-                    //       {/* <a className="page-link" href="#" aria-label="Next" onClick={this.handleMoveRight}> */}
-                    //         {/* <span aria-hidden="true">&raquo;</span> */}
-                    //         <span className="sr-only">Next</span>
-                    //       {/* </a> */}
-                    //     </span>
-                    //   );
-
-                    if (page === LEFT_PAGE || page === RIGHT_PAGE) return (
-                        // <span key={index} style={{pointer: 'cursor', color: 'black', padding: 0, display: 'flex', alignItems: 'flex-end'}}>
-                        <span key={index} style={{pointer: 'cursor', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end'}}>
-
-                            {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
-                                {/* <span aria-hidden="true">&laquo;</span> */}
-                                {/* <span className="sr-only" style={{pointer: 'cursor'}}>...</span> */}
-
-                                ...
-                            {/* </a> */}
-                        </span>
-                    );
-        
+                {/* {Array(pages.totalPages).fill().map((_, i) => {
                     return (
-                        <span key={index} className={`page-item${ pages.currentPage === page ? ' current-page' : ''}`}>
-                            {/* <a className="page-link" href="#" onClick={ this.handleClick(page) }>{ page }</a> */}
-                            { page }
+                        <span 
+                            onClick={() => setPages({...pages, currentPage: i + 1})}
+                            className={i + 1 === pages.currentPage && 'current-page'}>
+                                {i + 1}
                         </span>
-                    );
-                })
-            }
+                    )
+                })} */}
 
-            <span className={`right ${pages.currentPage === pages.totalPages && 'disabled'}`} onClick={() => changePage('next')} ></span>
+                {
+                    pageNumbers.map((page, index) => {
+                        // console.log(page, 'page!!')
 
+                        // if (page === LEFT_PAGE) return (
+                        //     <span key={index} className="page-item">
+                        //       {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
+                        //         {/* <span aria-hidden="true">&laquo;</span> */}
+                        //         <span className="sr-only">Previous</span>
+                        //       {/* </a> */}
+                        //     </span>
+                        //   );
+            
+                        //   if (page === RIGHT_PAGE) return (
+                        //     <span key={index} className="page-item">
+                        //       {/* <a className="page-link" href="#" aria-label="Next" onClick={this.handleMoveRight}> */}
+                        //         {/* <span aria-hidden="true">&raquo;</span> */}
+                        //         <span className="sr-only">Next</span>
+                        //       {/* </a> */}
+                        //     </span>
+                        //   );
+
+                        if (page === LEFT_PAGE || page === RIGHT_PAGE) return (
+                            // <span key={index} style={{pointer: 'cursor', color: 'black', padding: 0, display: 'flex', alignItems: 'flex-end'}}>
+                            <span key={index} style={{pointer: 'cursor', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end'}}>
+
+                                {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
+                                    {/* <span aria-hidden="true">&laquo;</span> */}
+                                    {/* <span className="sr-only" style={{pointer: 'cursor'}}>...</span> */}
+
+                                    ...
+                                {/* </a> */}
+                            </span>
+                        );
+            
+                        return (
+                            <span key={index} className={`page-item${ pages.currentPage === page ? ' current-page' : ''}`} onClick={() => changePage(page)}>
+                                {/* <a className="page-link" href="#" onClick={ this.handleClick(page) }>{ page }</a> */}
+                                { page }
+                            </span>
+                        );
+                    })
+                }
+
+                <span className={`right ${pages.currentPage === pages.totalPages && 'disabled'}`} onClick={() => changePage('next')} ></span>
+
+            </div>
         </div>
+
     )
 }
 

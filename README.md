@@ -18,8 +18,19 @@
 
 + cd /client/src, create a &nbsp; `client_config.js` &nbsp; file that looks like: 
 
+        const tierLevels = {
+            ROOKIE:  'ROOKIE',
+            AMATEUR: 'AMATEUR',
+            PRO:     'PRO'
+        }
+
+        // const SITE_LEVEL = tierLevels.ROOKIE;
+        // const SITE_LEVEL = tierLevels.AMATEUR;
+        const SITE_LEVEL = tierLevels.PRO;
+
         module.exports = {
-            ROOT: 'http://localhost:8010'   // must match config.js PORT key above 
+            ROOT: 'http://localhost:8010',   // must match config.js PORT key above 
+            SITE_LEVEL
         }
 
 ### Seed Database
