@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // import { Icon } from './';
 // import { ICONS } from 'assets/ICONS.js';
+import qs from 'query-string';
+import { history } from 'helpers';
 import './pagination.scss';
 
 // const initialState = {
@@ -18,20 +20,28 @@ const Pagination = (props) => {
 
 
     const changePage = dir => {
-
         const { currentPage, totalPages } = pages;
+        let search;
+        if(dir === 'prev' && currentPage === 1) return;
+        if(dir === 'next' && currentPage === totalPages) return;
 
         if (typeof dir === 'number'){
-            return setPages({...pages, currentPage: dir})
+            search = qs.stringify({page: dir})
+            setPages({...pages, currentPage: dir})
         }
 
         if(dir === 'prev' && currentPage > 1) {
+            search = qs.stringify({page: currentPage - 1})
+
             setPages({...pages, currentPage: currentPage - 1})
         }
 
         if(dir === 'next' && currentPage < totalPages) {
+            search = qs.stringify({page: currentPage + 1})
             setPages({...pages, currentPage: currentPage + 1})
         }
+        
+        history.push({search})
     }
 
     const getPageNumbers = () => {

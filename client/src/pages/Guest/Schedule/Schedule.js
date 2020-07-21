@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import { getQuery, setQuery } from '../../../helpers';
 import { getGames } from '../../../redux/actions/gamesActions';
-import { Select, Button } from '../../../components/';
+import { Select, Button, HeadManager } from '../../../components/';
 // import { Auth } from '../../../components/Auth';
 import './schedule.scss';
 
@@ -134,6 +134,7 @@ class Schedule extends Component {
 
         return (
             <div className="schedule-container">
+                <HeadManager subTitle={'Schedule'}/>
 
                 {/* <Auth roles={['super', 'admin', 'scorekeeper']}>
                     This is only shown from auth

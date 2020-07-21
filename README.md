@@ -1,5 +1,6 @@
 # hockeydb
 
+<!-- CMD + Shift + V to view markdown file in VS code -->
 
 ### Install Dependencies
 + From the project's root level, run &nbsp; `npm install`

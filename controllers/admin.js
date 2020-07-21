@@ -311,6 +311,10 @@ const deleteSeason = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Season not found', snack: true })
     }
 
+    if(season.is_active) {
+        return res.status(200).send({ status: 409, error: true, message: 'Cannot delete the currently active season', snack: true })
+    }
+
     const data = await db.seasons.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete season error'))
 
     return res.status(200).send({ status: 200, data, message: 'Season deleted', snack: true })

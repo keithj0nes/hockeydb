@@ -13,7 +13,7 @@ export { default as Header } from './Header';
 
 export { default as TableLoader } from './TableLoader';
 
-export { Input } from './Input';
+export { Input, DashInput } from './Input';
 export { Select, DashSelect } from './Select';
 export { Icon } from './Icon';
 export { default as DashFilter } from './DashFilter';
@@ -21,7 +21,10 @@ export { default as DashFilter } from './DashFilter';
 export { default as ProfilePic } from './ProfilePic';
 export { Popover } from './Popover';
 export { DashPageHeader } from './DashPageHeader';
+export { default as HeadManager } from './HeadManager';
 
 export { default as SlideOut } from './SlideOut';
 export { default as Pagination } from './Pagination';
+export { default as SnackBar } from './SnackBar';
+
 export { Checkbox, DashCheckbox } from './Checkbox';

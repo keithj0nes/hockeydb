@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import GuestTable from '../../../components/GuestTable';
 import Auth, { basicList } from '../../../components/Auth';
 
-const STHome = ({recent, standings}) => {
+const STHome = ({recent, standings, isRookieLevel}) => {
 
     return (
         <>
@@ -15,7 +15,7 @@ const STHome = ({recent, standings}) => {
                         title={'Team Leaders'}
                         data={teamLeaders}
                         minWidth={'50%'}
-                        containerWidth={'50%'}
+                        // containerWidth={'100%'}
                         // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
                         sections={{
                             'category': { as: 'cat', flex: 'two' },
@@ -33,7 +33,7 @@ const STHome = ({recent, standings}) => {
                     // data={teamStandings}
                     data={standings}
                     minWidth={'50%'}
-                    containerWidth={'50%'}
+                    // containerWidth={isRookieLevel ? '50%' : '100%'}
                     // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
 
                     sections={{
@@ -69,7 +69,8 @@ const STHome = ({recent, standings}) => {
 const mapStateToProps = state => {
     return {
         recent: state.teams.singleTeam.recent,
-        standings: state.teams.singleTeam.standings
+        standings: state.teams.singleTeam.standings,
+        // isRookieLevel: state.site_level === 'ROOKIE'
     }
 }
 
