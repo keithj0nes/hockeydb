@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Icon, Popover } from 'components';
 import { ICONS } from 'assets/ICONS';
+import { logout } from 'redux/actions/auth';
+import { history } from 'helpers';
 import './profilepic.scss';
 // import cm from 'assets/icons/icondropdown_arrow.svg';
 
-const ProfilePic = ({user}) => {
+const ProfilePic = ({user, logout}) => {
 
     const [ isDropDownVisibile, setIsDropDownVisible ] = useState(false);
+    // console.log(history)
+
+    const handleLogout = () => {
+        logout();
+        history.push('/');
+    }
 
     return (
 
@@ -25,11 +34,17 @@ const ProfilePic = ({user}) => {
 
             <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont">
                 <ul>
-                    <li>View Profile</li>
-                    <li>Edit Profile</li>
+                    <li>
+                        <Link to='/dashboard/profile'>
+                            View Profile
+                        </Link>
+                    </li>
+                    {/* <li>View Profile</li> */}
+
+                    {/* <li>Edit Profile</li> */}
                     <li>Notifications</li>
                     <li>Account Settings</li>
-                    <li>Log Out</li>
+                    <li onClick={handleLogout}>Log Out</li>
                 </ul>
             </Popover>
 
@@ -48,7 +63,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     // toggleNavSlider: () => dispatch(toggleNavSlider()),
-    // logout: () => dispatch(logout())
+    logout: () => dispatch(logout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePic);

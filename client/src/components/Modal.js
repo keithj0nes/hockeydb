@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { toggleModal } from '../redux/actions/misc';
-import { Button } from '../components';
+import { Button, DashInput, DashSelect } from '../components';
 
 class DeleteModal extends React.Component {
 
@@ -100,6 +100,8 @@ const PromptModal = ({data, toggleModal}) => {
     return (
         <div>
             {data.message && <p>{data.message}</p>}
+
+
             <br/>
             {data.fields.map(field => {
 
@@ -107,16 +109,26 @@ const PromptModal = ({data, toggleModal}) => {
                     <div key={field.name}>
 
                         {field.type === 'input' && (
-                            <div className="modal-field">
-                                <label htmlFor={field.name}>{field.title}</label>
-                                <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
-                            </div>
+                            // <div className="modal-field">
+                            //     <label htmlFor={field.name}>{field.title}</label>
+                            //     <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
+                            // </div>
                             // <Input name={field.name} label={field.title} disabled={field.disabled} onChange={data.onChange} />
+
+                            <div className="modal-field">
+                                <DashInput 
+                                    name={field.name}
+                                    label={field.title}
+                                    defaultValue={field.defaultValue}
+                                    disabled={field.disabled}
+                                    onChange={data.onChange}
+                                />
+                            </div>
                         )}
 
                         {field.type === 'select' && (
                             <div className="modal-field">
-                                <label htmlFor={field.name}>{field.title}</label>
+                                {/* <label htmlFor={field.name}>{field.title}</label>
                                 <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
                                     {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
                                     {field.listOfSelects.map((item, ind) => (
@@ -127,7 +139,18 @@ const PromptModal = ({data, toggleModal}) => {
                                             <option key={ind} value={item.value || item.id}> {item.name} </option>
                                         )
                                     ))}
-                                </select>
+                                </select> */}
+
+                                <DashSelect 
+                                    name={field.name} 
+                                    // listOfSelects={[{name: 'All', value: ''}, ...myOptions]} 
+                                    listOfSelects={field.listOfSelects} 
+                                    onChange={data.onChange} 
+                                    // onChange={handleChange} 
+                                    title={field.title}
+                                    defaultValue={field.defaultValue} 
+                                    useKey={field.useKey} 
+                                />
                             </div>
 
                         )}

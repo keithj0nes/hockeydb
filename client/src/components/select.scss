@@ -11,6 +11,12 @@
     }
 }
 
+.dash-select {
+    label {
+        letter-spacing: 0;
+    }
+}
+
 .dash-select select,
 .custom-select select {
     border: 2px solid #7E92A3;
@@ -18,7 +24,7 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    padding: 8px 10px !important;
+    padding: 10px !important;
     background: white;
     outline: none;
     cursor: pointer;
@@ -49,7 +55,7 @@
 .dash-select .arrow {
     position: absolute;
     right: 16px;
-    top: 10px;
+    top: 13px;
     width: 0; 
     height: 0; 
     border-left: 12px solid transparent;

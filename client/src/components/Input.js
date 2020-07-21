@@ -1,7 +1,7 @@
 import React from 'react';
 import './input.scss';
 
-export const Input = ({name, label, type = 'text', disabled, onChange}) => {
+export const Input = ({name, label, type = 'text', disabled, defaultValue, onChange}) => {
 
     return (
         <div className="custom-input">
@@ -11,6 +11,18 @@ export const Input = ({name, label, type = 'text', disabled, onChange}) => {
         </div>
     )
 }
+
+export const DashInput = ({name, label, type = 'text', disabled, defaultValue, onChange}) => {
+
+    return (
+        <div className="dash-input">
+            {/* <div style={{position: 'relative'}}> */}
+            <label htmlFor={name}>{label}</label>
+            <input name={name} id={name} type={type} defaultValue={defaultValue} disabled={disabled} onChange={onChange}/>
+        </div>
+    )
+}
+
 
 // type 
 // htmlFor

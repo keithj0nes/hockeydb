@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUsers } from 'redux/actions/users';
-import { Button, SlideOut, Pagination, DashPageHeader, DashSelect, DashCheckbox } from '../../../components';
+import { Button, SlideOut, DashPageHeader, DashSelect, DashCheckbox } from '../../../components';
 import DashTable from '../DashTable';
 
 import './dashusers.scss';
@@ -20,13 +20,13 @@ const DashUsers = props => {
 //     neighbors: PropTypes.number,
 //     onPageChange: PropTypes.func
 
-    const stuff = {
-        totalPages: 12,
-        currentPage: 1,
-        neighbors: 1,
-        limit: 30,
-        onPageChange: () => console.log('changed!')
-    }
+    // const stuff = {
+    //     totalPages: 12,
+    //     currentPage: 1,
+    //     neighbors: 1,
+    //     limit: 30,
+    //     onPageChange: () => console.log('changed!')
+    // }
 
     const filterUI = () => {
         const myOptions = [
@@ -149,7 +149,7 @@ const DashUsers = props => {
                             'email': 'three', 
                             'admin_type':    { as: 'role',       flex: 'one' },
                             'is_suspendedd': { as: 'status',     flex: 'one' },
-                            'last_loginn':   { as: 'last login', flex: 'one' }
+                            'last_loginn':   { as: 'last login', flex: 'two' }
                         }}
                         tableType='users'
                         minWidth={800}
@@ -185,7 +185,7 @@ const DashUsers = props => {
                 </div>
             </SlideOut>
 
-            <Pagination {...stuff} />
+            {/* <Pagination {...stuff} /> */}
         </div>
     )
 }

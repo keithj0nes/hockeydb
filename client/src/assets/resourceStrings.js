@@ -1,3 +1,4 @@
 
-export const Site_Name_Full ='Playmaker Leagues';
-export const Site_Name_Short = 'PML';
+// export const Site_Name_Full ='United State Hockey League';
+export const Site_Name_Short = 'USHL';
+export const Site_Name_Full = 'USHL';

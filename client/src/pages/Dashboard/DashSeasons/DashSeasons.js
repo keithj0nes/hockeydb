@@ -47,6 +47,7 @@ class DashSeasons extends Component {
             isVisible: true,
             title: 'Add Season',
             isClosableOnBackgroundClick: false,
+            message: 'heres a long message that i\'m adding so that it appears to have some sort of body to the modal. without this, i cant test for a message. It\'s really not that big of a deal though',
             fields: [
                 {
                     title: 'Name',

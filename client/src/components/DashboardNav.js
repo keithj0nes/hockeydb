@@ -87,31 +87,31 @@ import './dashboardnav.scss';
 //     player: []
 // }
 
-const dashLinks = {
-    admin: [
-        { name: 'Dashboard',  to: '',            icon: ICONS.DASHBOARD },
-        { name: 'Seasons',    to: '/seasons',    icon: ICONS.SEASONS   },
-        { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS },
-        { name: 'Teams',      to: '/teams',      icon: ICONS.TEAMS     },
-        // { name: 'Players',    to: '/players',    icon: 'players'   },
-        { name: 'Games',      to: '/games',      icon: ICONS.GAMES     },
-        { name: 'Locations',  to: '/locations',  icon: ICONS.LOCATIONS },
-        { name: 'Users',      to: '/users',      icon: ICONS.USERS     },
-        { name: 'News',       to: '/news',       icon: ICONS.NEWS      },
-        { name: 'Messages',   to: '/messages',   icon: ICONS.MESSAGES  },
-        { name: 'Pages',      to: '/pages',      icon: ICONS.PAGES     },
-        { name: 'Payments',   to: '/payments',   icon: ICONS.PAYMENTS  },
-        { name: 'Settings',   to: '/settings',   icon: ICONS.SETTINGS  },
-    ],
-    scorekeeper: [
-        { name: 'Players',    to: '/players',    icon: ICONS.USERS     },
-        { name: 'Games',      to: '/games',      icon: ICONS.GAMES     }
-    ],
-    manager: [
-        { name: 'My Teams',   to: '/myteams',    icon: ICONS.TEAMS     },
-    ],
-    player: []
-}
+// const dashLinks = {
+//     admin: [
+//         { name: 'Dashboard',  to: '',            icon: ICONS.DASHBOARD },
+//         { name: 'Seasons',    to: '/seasons',    icon: ICONS.SEASONS   },
+//         { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS },
+//         { name: 'Teams',      to: '/teams',      icon: ICONS.TEAMS     },
+//         // { name: 'Players',    to: '/players',    icon: 'players'   },
+//         { name: 'Games',      to: '/games',      icon: ICONS.GAMES     },
+//         { name: 'Locations',  to: '/locations',  icon: ICONS.LOCATIONS },
+//         { name: 'Users',      to: '/users',      icon: ICONS.USERS     },
+//         { name: 'News',       to: '/news',       icon: ICONS.NEWS      },
+//         { name: 'Messages',   to: '/messages',   icon: ICONS.MESSAGES  },
+//         { name: 'Pages',      to: '/pages',      icon: ICONS.PAGES     },
+//         { name: 'Payments',   to: '/payments',   icon: ICONS.PAYMENTS  },
+//         { name: 'Settings',   to: '/settings',   icon: ICONS.SETTINGS  },
+//     ],
+//     scorekeeper: [
+//         { name: 'Players',    to: '/players',    icon: ICONS.USERS     },
+//         { name: 'Games',      to: '/games',      icon: ICONS.GAMES     }
+//     ],
+//     manager: [
+//         { name: 'My Teams',   to: '/myteams',    icon: ICONS.TEAMS     },
+//     ],
+//     player: []
+// }
 
 
 
@@ -121,13 +121,13 @@ class DashboardNav extends Component {
     // this componentDidMount checks to make sure the URL matches a path the logged in 
     // user can access otherwise it redirects to the first page in the navLinks array
     componentDidMount() {
-        const hasAccess = dashLinks[this.props.admin_type].filter(navLink =>  {
+        const hasAccess = this.props.dashLinks[this.props.admin_type].filter(navLink =>  {
             return this.props.location.pathname.includes(navLink.to)
         })
 
         if(hasAccess.length <= 0) {
-            console.log('Not allowed at this route, redirecting to', `/dashboard${dashLinks[this.props.admin_type][0].to}`)
-            return history.push(`/dashboard${dashLinks[this.props.admin_type][0].to}`)
+            console.log('Not allowed at this route, redirecting to', `/dashboard${this.props.dashLinks[this.props.admin_type][0].to}`)
+            return history.push(`/dashboard${this.props.dashLinks[this.props.admin_type][0].to}`)
         }
     }
 
@@ -170,9 +170,11 @@ class DashboardNav extends Component {
 
                         <h3>Navigation</h3>
                         <ul>
-                            {dashLinks[this.props.admin_type].map(link => (
+                            {this.props.dashLinks[this.props.admin_type].map(link => (
+
+                                !link.hideFromNavigation &&
                                 <li key={link.to}>
-                                    <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={this.props.toggleNavSlider}>
+                                    <NavLink to={`${match.url}${link.to}`} exact={link.to === ''} activeClassName="selected" onClick={this.props.toggleNavSlider}>
                                         <div className="nav-icon-container">
                                             {/* {link.svg} */}
                                             <Icon name={link.icon}/>
