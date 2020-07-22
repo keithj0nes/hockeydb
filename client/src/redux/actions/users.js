@@ -30,3 +30,28 @@ export const getUsers = (filter) => async dispatch => {
 
     return true;
 }
+
+
+
+
+export const createUser = userData => async (dispatch, getState) => {
+
+    console.log(userData, 'CREATE USER YAY')
+    // const { user } = getState();
+
+    // const data = await request(`/api/admin/seasons`, 'POST', {access_token: user.user.access_token, data: seasonData})
+
+    // console.log(data, 'DATA CREATE SEASON!!')
+
+    // if(!data) return false;
+
+    // dispatch({
+    //     type: `seasons/${CREATE_SUCCESS}`,
+    //     payload: data.data
+    // })
+
+    // dispatch({
+    //     type: TOGGLE_MODAL,
+    //     modalProps: { isVisible: false }
+    // })
+}

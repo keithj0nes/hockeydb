@@ -117,8 +117,8 @@ export const request = async (route, method, session, noAuth) => {
             if(redirect === 'current') {
                 const currentPath = history.location.pathname;
                 history.push('/');
-                history.push(currentPath)
-                return false
+                history.push(currentPath);
+                return false;
             }
 
             store.dispatch({

@@ -77,7 +77,7 @@ export class DashGames extends Component {
 
     handleEditLocation = (item) => {
         this.setState({ edit: item })
-        console.log(item, 'itemss')
+        // console.log(item, 'itemss')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -136,6 +136,7 @@ export class DashGames extends Component {
 
     render() {
         const { locations, isLoading } = this.props;
+        // const showingHidden = this.props.location.search.includes('hidden');
 
         const pageHeaderInfo = {
             title: 'Locations',
@@ -190,6 +191,13 @@ export class DashGames extends Component {
                             onDelete={this.handleDeleteLocation}
                             isLoading={isLoading}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no locations within your filter criteria' : 'Sorry, no locations have been created. Start by adding a location above.'}
+                            popoverData={ (d, closePopover) => (
+                                <ul>
+                                    <li onClick={() => {this.handleEditLocation(d); closePopover() }}>Edit Location</li>
+                                    {/* <li onClick={() => {this.handleHideSeason(d); closePopover() }}>{`${showingHidden ? 'Unh' : 'H'}ide Location`}</li> */}
+                                    <li onClick={() => {this.handleDeleteLocation(d); closePopover() }}>Delete Location</li>
+                                </ul> 
+                            )}
                         />
                     </div>
 

@@ -12,7 +12,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { toggleModal } from '../../../redux/actions/misc';
 import DashTable from '../DashTable';
-import Auth, { accessAdmin } from '../../../components/Auth';
+import Auth, { accessAdmin, accessONLYScorekeeper } from '../../../components/Auth';
 
 
 
@@ -152,7 +152,7 @@ export class DashGames extends Component {
 
     handleEditGame = game => {
         this.props.history.push(`${this.props.location.pathname}/${game.id}`, game);
-      }
+    }
 
     render() {
         const { games, isLoading } = this.props;
@@ -196,6 +196,23 @@ export class DashGames extends Component {
                             onEdit={this.handleEditGame}
                             isLoading={isLoading}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no games within your filter criteria' : 'Sorry, no games have been created. Start by adding a games above.'}
+
+                            popoverData={ (d, closePopover) => {
+                                // console.log(d,' ddddd')
+                                return  (
+                                <ul>
+                                    <Auth.User roles={accessAdmin}>
+                                        {!d.hidden_date && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Game</li>}
+                                        {/* {!d.is_active && <li onClick={() => {this.handleHideSeason(d); closePopover() }}>{`${showingHidden ? 'Unh' : 'H'}ide Game`}</li> } */}
+                                        {/* <li onClick={() => {this.handleDeleteSeason(d); closePopover() }}>Delete Game</li> */}
+                                    </Auth.User>
+
+                                    <Auth.User roles={accessONLYScorekeeper}>
+                                        {!d.hidden_date && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Boxscore</li> }
+                                    </Auth.User>
+                                </ul> 
+                            )}
+                            }
                         />
                     </div>
 

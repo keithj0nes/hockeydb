@@ -5,7 +5,7 @@ import { logout } from 'redux/actions/auth'
 import { Button } from './';
 import { history } from '../helpers';
 
-import { ICONS } from 'assets/ICONS';
+// import { ICONS } from 'assets/ICONS';
 
 import { Icon } from 'components';
 
