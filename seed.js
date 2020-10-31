@@ -168,7 +168,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     const setGamesPlayed = async num => {
         const games = await db.query('select * from games order by start_date limit $1', [num || 5]);
 
-        await db.season.update({ id: 1 }, { is_active: true });
+        await db.seasons.update({ id: 1 }, { is_active: true });
 
         return Promise.all(
             Array(games.length).fill().map(async (_, i) => {
