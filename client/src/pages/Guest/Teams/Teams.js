@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getTeamsPageFilters, getTeamsByDivision } from '../../../redux/actions/teamsActions';
+import { getTeamsPageFilters, getTeamsByDivision } from '../../../redux/actions/teams';
 import { Select } from '../../../components/';
 import { getQuery, setQuery } from '../../../helpers';
 import './teams.scss';

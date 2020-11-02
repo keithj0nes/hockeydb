@@ -504,12 +504,8 @@ const createGame = async (req, res) => {
 
 
 const getUsers = async (req, res) => {
-    const db = app.get('db');
-  
-    // console.log(req.query, 'QUERYRYYY')
-  
+    const db = app.get('db');  
     const data = await db.users.find();
-
     res.status(200).send({ status: 200, data, message: 'Retrieved list of Users' });
   }
 

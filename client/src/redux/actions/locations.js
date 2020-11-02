@@ -1,18 +1,12 @@
 import { request } from './middleware';
-// import { NEW_LOCATION, GET_LOCATIONS, TOGGLE_MODAL, UPDATE_SUCCESS } from '../actionTypes';
 import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
-// import { wait } from '../../helpers';
 
 
 export const getLocations = () => async dispatch => {
-
-    dispatch({ type: `locations/${GET_INIT}` })
-
-    // await wait(3000);
-
+    dispatch({ type: `locations/${GET_INIT}` });
     const data = await request('/api/locations', 'GET', {}, true);
     if (!data.data) return false;
-    dispatch({ type: `locations/${GET_SUCCESS}`, payload: data.data })
+    dispatch({ type: `locations/${GET_SUCCESS}`, payload: data.data });
     return true;
 }
 
@@ -20,35 +14,18 @@ export const createLocation = (data) => async (dispatch, getState) => {
     const { user } = getState();
     const post = await request('/api/admin/locations', 'POST', { data, access_token: user.user.access_token });
     if (!post.data) return false;
-
     dispatch({ type: `locations/${CREATE_SUCCESS}`, payload: post.data });
-
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: { isVisible: false }
-    })
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
     return true;
 }
 
 export const updateLocation = (id, locationData) => async (dispatch, getState) => {
     const { user } = getState();
-    const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.user.access_token, data: locationData})
+    const data = await request(`/api/admin/locations/${id}`, 'PUT', {access_token: user.user.access_token, data: locationData});
     if(!data) return false;
-
-    dispatch({
-        type: `locations/${UPDATE_SUCCESS}`,
-        payload: data.data
-    })
-  
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: { isVisible: false }
-    })
-  
-    // if(data.message === 'Season hidden' || data.message === 'Season unhidden'){
-    //     // after hiding/unhiding, getSeasons again with filters
-    //     return 'getSeasons';
-    // }
+    dispatch({ type: `locations/${UPDATE_SUCCESS}`, payload: data.data });
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
+    return true;
 }
 
 export const deleteLocation = id => async (dispatch, getState) => {

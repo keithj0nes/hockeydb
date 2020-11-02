@@ -285,26 +285,6 @@ class DashDivisions extends Component {
 
                 <div style={{paddingBottom: 16}} />
 
-
-                {/* <div className="dashboard-filter-header">
-                    <div style={{width: '100%'}}>
-
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <Button title="Add Division" onClick={this.handleAddDivision} />
-
-                            <div>
-                                {
-                                    Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
-                                    <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
-                                }
-                                <Button title="Filter" onClick={this.checkFilters} />
-
-                            </div>
-                        </div>
-                        <Filter data={this.state.filterData} getAction={this.props.getDivisions} history={this.props.history} filterType={'divisions'}/>
-                    </div>
-                </div> */}
-
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">
 

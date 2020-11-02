@@ -12,7 +12,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '../../../components';
-import { getGameById } from '../../../redux/actions/gamesActions';
+import { getGameById } from '../../../redux/actions/games';
 
 const defaultState = {
     id: null,

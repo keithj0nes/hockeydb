@@ -246,7 +246,7 @@ class DashSeasons extends Component {
 
         
         const search = setQuery(filters);
-        this.props.getSeasons(search)
+        this.props.getSeasons(`?${search}`)
         this.props.history.push({ search })
         this.setState({filters})
         // this.setState({filters}, () => this.setFilterDataOpenFilter)
@@ -295,26 +295,6 @@ class DashSeasons extends Component {
 
                 <div style={{paddingBottom: 16}} />
 
-                {/* <div className="dashboard-filter-header">
-                    <div style={{width: '100%'}}>
-
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <Button title="Add Season" onClick={this.handleAddSeason} />
-
-                            <div>
-                                {
-                                    Object.keys(this.state.filters).length > 0 && this.state.filterRequestSent &&
-                                    <span style={{fontSize: 14}}onClick={this.clearFilters}>Clear Filters</span>
-                                }
-                                <Button title="Filter" onClick={this.checkFilters} />
-
-                            </div>
-                        </div>
-
-                        <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
-                    </div>
-                </div> */}
-
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">
                         <DashTable 
@@ -324,7 +304,6 @@ class DashSeasons extends Component {
                             onEdit={this.handleEditSeason}
                             onDelete={this.handleDeleteSeason}
                             onHide={this.handleHideSeason}
-                            // isLoading={isLoading}
                             isLoading={[isLoading, 15]}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                             popoverData={ (d, closePopover) => (
@@ -334,22 +313,9 @@ class DashSeasons extends Component {
                                     <li onClick={() => {this.handleDeleteSeason(d); closePopover() }}>Delete Season</li>
                                 </ul> 
                             )}
-                            // popoverData={(
-                            //     <ul>
-                            //         <li>Edit Season</li>
-                            //         <li>Hide Season</li>
-                            //         {/* <li onClick={(i) => {this.handleDeleteSeason(i); st() }}>Delete Season</li> */}
-                            //         <li onClick={this.handleDeleteSeason}>Delete Season</li>
-
-                            //     </ul> 
-                            // )}
                         />
                     </div>
                 </div>
-
-
-                {/* <div style={{height: 100, width: 100, background: '#D6D8DB'}}/> */}
-
             </>
         )
     }

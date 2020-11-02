@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teamsActions';
+import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teams';
 import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';

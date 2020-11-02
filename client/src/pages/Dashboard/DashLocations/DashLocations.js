@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-
-import { createLocation, getLocations, deleteLocation, updateLocation } from '../../../redux/actions/locationsActions';
+import { createLocation, getLocations, deleteLocation, updateLocation } from '../../../redux/actions/locations';
 import { Button, DashPageHeader } from '../../../components';
 // import ListItem from '../ListItem';
 import DashTable from '../DashTable';

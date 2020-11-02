@@ -38,7 +38,6 @@ export const loginFromCookie = () => async dispatch => {
 
     //USE THIS FOR SERVER SIDE TOKEN AUTH
     const data = await request('/api/auth/login/cookie', 'POST', {access_token})
-    console.log(data, 'DATA!')
 
     //triggered if user is deactivated / suspended
     if(!data) return dispatch(logout());

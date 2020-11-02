@@ -1,10 +1,8 @@
 @import '../assets/styles/variables';
 
 .profile-pic-container {
-    // background: lightblue;
     display: inline-block;
     position: relative;
-    // float: right;
 
     .pic-name {
         display: flex;
@@ -19,24 +17,15 @@
         }
 
         .name-icon {
-            // display: flex;  // dont display flex in mobile styles otherwise will show up on mobile page
             align-items: center;
-            // background: pink;
-            // padding: 0 10px;
             padding-left: 10px;
-            // color: $admin-color-lavendar;
 
             span {
                 display: flex;
                 margin-left: 10px;
                 transition: transform 0.4s;
 
-                // &.rotate-arrow {
-                //     transform: rotate(180deg);
-                // }
-
                 svg {
-                    // fill: $admin-color-lavendar;
                     fill: $dash-color-font;
 
                 }
@@ -60,7 +49,6 @@
 
 
 @media only screen and (min-width: 768px){
-
     .profile-pic-container {
         .pic-name {
             .name-icon {

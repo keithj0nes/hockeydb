@@ -3,21 +3,7 @@ const helpers = require('./helpers');
 
 const getSeasons = async (req, res) => {
     const db = app.get('db');
-    // let hasErrors = false;
-
-    console.log(req.query, 'QUERYRYYY')
-
     const query = helpers.filter(req.query);
-
-    // const data = await db.seasons.find({...query}, { order: [ {field: 'id', direction: 'desc'}]}).catch(err => console.log(err, 'THIS IS AN ERROR 🛑🛑🛑🛑'));
-
-    // const data = await db.seasons.find({...query}, { order: [ {field: 'id', direction: 'desc'}]})
-    //     // .catch(err => res.status(200).send({ status: 200, data: [], message: 'an error occured'}));
-    //     .catch(err => {
-    //         hasErrors = true
-    //         return res.status(200).send({ status: 200, data: [], message: 'an error occured'});
-
-    //     });
 
     //
     //      NEED TO FIGURE OUT A GOOD WAY TO HANDLE ERRORS FOR THINGS SUCH AS QUERYING TABLE COLUMNS THAT DONT EXIST -
@@ -25,22 +11,15 @@ const getSeasons = async (req, res) => {
     //      this error will redirect to the same page without url query params
     //
 
-    const [ err, data ] = await helpers.tryCatch(db.seasons.find({...query}, { order: [ {field: 'id', direction: 'desc'}]}))
+    const [ err, data ] = await helpers.tryCatch(db.seasons.find({ ...query }, { order: [{field: 'id', direction: 'desc' }] }))
 
-    if(err) {
-        console.log(err, 'ERRORRRRRR 😎')
+    if (err) {
+        console.log(err, 'error in getSeasons')
         return res.status(200).send({ status: 404, data: [], message: 'An error occured with the query', redirect: 'current' });
     }
     
-    console.log(data, 'dta!')
-    // if(hasErrors) {
-    //     return res.status(200).send({ status: 200, data: [], message: 'an error occured'});
-    // }
-
     res.status(200).send({ status: 200, data, message: 'Retrieved list of seasons' })
 }
-
-
 
 
 const getSeasonById = async (req, res) => {
@@ -59,8 +38,6 @@ module.exports = {
     getSeasons,
     getSeasonById
 }
-
-
 
 
 // Comparison

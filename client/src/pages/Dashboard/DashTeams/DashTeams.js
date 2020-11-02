@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teamsActions';
-
+import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teams';
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
 import { DashPageHeader, DashFilter } from '../../../components';
-// import ListItem from '../ListItem';
-// import DashSeasonsListItem from '../DashSeasons/DashSeasonsListItem';
 import DashTable from '../DashTable';
 import qs from 'query-string';
 import { setQuery } from "helpers";
@@ -25,7 +22,6 @@ const defaultState = {
 }
 
 class DashTeams extends Component {
-
    state = defaultState;
 
     componentDidMount() {
@@ -34,7 +30,6 @@ class DashTeams extends Component {
                    return res && this.setState({filters: qs.parse(this.props.location.search)}) //this adds filters to default values
             });
         }
-
         return this.props.getTeams();
     }
 
@@ -45,11 +40,9 @@ class DashTeams extends Component {
             return this.setState({edit: editStateCopy})
         }
         // console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
-        this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })
     }
 
     handleAddTeam = () => {
-
         // this variable sets the default disabled value to the season name
         const defaultValue = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
 
@@ -334,17 +327,6 @@ class DashTeams extends Component {
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
                 <div style={{paddingBottom: 16}} />
-
-                {/* <div className="dashboard-filter-header">
-                    <div style={{width: '100%'}}>
-
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <Button title="Add Team" onClick={this.handleAddTeam} />
-                            <Button title="Filter" onClick={() => this.checkFilters(true)} />
-                        </div>
-                        <Filter data={this.state.data} getAction={this.props.getTeams} reloadOn={'season'} history={this.props.history} filterType={'teams'}/>
-                    </div>
-                </div> */}
 
                 <div className="dashboard-list-container">
                     <div className="dashboard-list">

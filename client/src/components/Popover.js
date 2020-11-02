@@ -26,27 +26,18 @@ export const Popover = ({children, isVisible, setIsVisible, closest, row, fullWi
         setIsVisible(false)
     }
 
-    // console.log(children(closePopover))
     return (
         <div className={`popover ${row ? 'row' : ''} ${fullWidth ? 'full-width' : ''}`}>
-            {/* {children} */}
-
-
-
             { typeof children === 'function' ? children(closePopover) : children }
         </div>
     )
 }
 
 Popover.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.element,
-        PropTypes.func
-    ]).isRequired,   
+    children: PropTypes.oneOfType([ PropTypes.element, PropTypes.func ]).isRequired,   
     isVisible: PropTypes.bool.isRequired,
     setIsVisible: PropTypes.func.isRequired,
     closest: PropTypes.string.isRequired,       // determines what div wont cause item to close
     row: PropTypes.bool,
-    fullWidth: PropTypes.bool
-
+    fullWidth: PropTypes.bool,
 }

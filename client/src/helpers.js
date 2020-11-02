@@ -4,7 +4,6 @@ import qs from 'query-string';
 export const history = createBrowserHistory();
 
 //queries
-
 export const getQuery = (q) => {
     if(!q) q = history.location.search.slice(1);
     const parsed = qs.parse(q);
@@ -20,10 +19,4 @@ export const setQuery = (q, noPush) => {
     return search;
 }
 
-// export const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); 
-
-
-export const wait = ms => new Promise(resolve => {
-    // console.log(`waiting ${ms}ms`); 
-    setTimeout(resolve, ms)}
-); 
+export const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); 

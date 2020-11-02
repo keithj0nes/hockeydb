@@ -6,12 +6,9 @@ import { ICONS } from 'assets/ICONS';
 import { logout } from 'redux/actions/auth';
 import { history } from 'helpers';
 import './profilepic.scss';
-// import cm from 'assets/icons/icondropdown_arrow.svg';
 
 const ProfilePic = ({user, logout}) => {
-
     const [ isDropDownVisibile, setIsDropDownVisible ] = useState(false);
-    // console.log(history)
 
     const handleLogout = () => {
         logout();
@@ -34,16 +31,10 @@ const ProfilePic = ({user, logout}) => {
 
             <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont">
                 <ul>
-                    <li>
-                        <Link to='/dashboard/profile'>
-                            View Profile
-                        </Link>
-                    </li>
-                    {/* <li>View Profile</li> */}
-
-                    {/* <li>Edit Profile</li> */}
+                    <li><Link to='/dashboard/profile'> View Profile </Link></li>
                     <li>Notifications</li>
                     <li>Account Settings</li>
+                    <li><Link to='/'> Back to site </Link></li>
                     <li onClick={handleLogout}>Log Out</li>
                 </ul>
             </Popover>
@@ -62,7 +53,6 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    // toggleNavSlider: () => dispatch(toggleNavSlider()),
     logout: () => dispatch(logout())
 })
 

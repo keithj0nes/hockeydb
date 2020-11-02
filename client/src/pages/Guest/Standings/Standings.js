@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getStandingsPageFilters, getStandings } from '../../../redux/actions/teamsActions';
+import { getStandingsPageFilters, getStandings } from '../../../redux/actions/teams';
 import { Select } from '../../../components/';
 import { getQuery, setQuery } from '../../../helpers';
 import GuestTable from '../../../components/GuestTable';

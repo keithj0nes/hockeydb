@@ -1,44 +1,26 @@
 import { TOGGLE_NAV_SLIDER, TOGGLE_MODAL } from '../actionTypes';
 
 export const toggleNavSlider = () => ({
-    type: TOGGLE_NAV_SLIDER
+    type: TOGGLE_NAV_SLIDER,
 })
 
-// export const toggleModal = (status, message) => ({
-//     type: TOGGLE_MODAL,
-//     payload: {status, message}
-// })
-
-
 export const toggleModal = (modalProps, modalType) => {
-
-    // console.log(modalProps, modalType, 'yoooo!')
     if(!modalProps){
-        modalProps = {isVisible: false};
+        modalProps = { isVisible: false };
     }
-
-    // console.log(modalProps, 'modalprops')
 
     return  {
         type: TOGGLE_MODAL,
         modalProps,
-        modalType
+        modalType,
     }
 }
 
-export const toggleFilter = (section, bool) => {
-    return {
-        type: `${section}/FILTER_IS_VISIBLE`,
-        payload: bool
-    }
-}
+export const toggleFilter = (section, bool) => ({
+    type: `${section}/FILTER_IS_VISIBLE`,
+    payload: bool,
+})
 
-// export const getFilters = () => dispatch => {
-//     console.log('getting all filters!')
-// }
-
-export const closeSnackBar = () => {
-    return {
-        type: 'TOGGLE_SNACKBAR'
-    }
-}
+export const closeSnackBar = () => ({
+    type: 'TOGGLE_SNACKBAR',
+})

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import { getQuery, setQuery } from '../../../helpers';
-import { getGames } from '../../../redux/actions/gamesActions';
+import { getGames } from '../../../redux/actions/games';
 import { Select, Button, HeadManager } from '../../../components/';
 // import { Auth } from '../../../components/Auth';
 import './schedule.scss';

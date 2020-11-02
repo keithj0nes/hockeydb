@@ -23,6 +23,10 @@ const port = process.env.PORT || config.PORT;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    console.log(req.method, '=>', req.url);
+    next()
+});
 
 const admin = require('./controllers/admin');
 const news = require('./controllers/news');
@@ -257,7 +261,7 @@ app.post('/api/auth/signup', auth.signup)
 app.post('/api/auth/invite', auth.invite)
 app.put('/api/auth/invite/:id', auth.reinvite)
 
-// Log out
+// Log out (current logout is not logging out on server side, just client side)
 app.post(`/api/auth/:id/logout`)
 
 // Get logged in user

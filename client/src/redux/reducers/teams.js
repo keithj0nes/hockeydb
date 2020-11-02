@@ -17,7 +17,6 @@ const initialteamstate = {
     teamsByDivision: [],
     //filter
     isVisible: false,
-    
 };
   
 export const teams = (state = initialteamstate, { type, payload }) => {
@@ -27,30 +26,27 @@ export const teams = (state = initialteamstate, { type, payload }) => {
     case `teams/${GET_SUCCESS}`:
         return { ...state, isLoading: false, teams: payload }
     case `teams/${CREATE_SUCCESS}`:
-        // return { ...state, isLoading: false, teams: [payload, ...state.teams]}
         return { ...state, isLoading: false, teams: [...state.teams, payload] }
-
     case `teams/singleTeam/${GET_SUCCESS}`:
         return { ...state, isLoading: false, singleTeam: { ...state.singleTeam, ...payload }}
     case `teams/byDivision/${GET_SUCCESS}`:
         return { ...state, isLoading: false, teamsByDivision: payload}
     case `teams/${UPDATE_SUCCESS}`:
         const newteams = state.teams.map(item => {
-            if(item.id === payload.id){
-                return payload
-            } else if(payload.is_active){
-                return {...item, is_active: false}
+            if (item.id === payload.id) {
+                return payload;
+            } else if (payload.is_active) {
+                return { ...item, is_active: false };
             }
             return item;
         })
-        return  { ...state, isLoading: false, teams: newteams }
+        return  { ...state, isLoading: false, teams: newteams };
     case 'teams/FILTER_IS_VISIBLE':
         //if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)
         //otherwise just set it to the opposite of what it's currently set to
-        return { ...state, isVisible: typeof(payload) !== 'undefined' ? payload : !state.isVisible }
+        return { ...state, isVisible: typeof(payload) !== 'undefined' ? payload : !state.isVisible };
     case `teams/singleTeam/${CLEAR_STATE}`:
-        return { ...state, singleTeam: initialteamstate.singleTeam }
-        
+        return { ...state, singleTeam: initialteamstate.singleTeam };
     default:
         return state;
     }

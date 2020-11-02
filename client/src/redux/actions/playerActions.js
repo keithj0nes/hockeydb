@@ -1,16 +1,11 @@
-// import axios from 'axios';
 import { request } from './middleware';
 import { GET_PLAYERS } from '../actionTypes';
 
-
-
-export const sendPlayers = data => ({ type: GET_PLAYERS, payload: data })
-
 export const getPlayers = () => async dispatch => {
     console.log('in players action');
-    const data = await request('/api/players', 'GET', {}, true)
+    const data = await request('/api/players', 'GET', {}, true);
     if (!data.data) return false;
-    dispatch(sendPlayers(data.data))
+    dispatch({ type: GET_PLAYERS, payload: data.data });
     return true;
 }
 

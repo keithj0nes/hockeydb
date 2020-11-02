@@ -1,19 +1,13 @@
 import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, TOGGLE_MODAL, CLEAR_STATE } from '../actionTypes';
 
-// import { wait } from '../../helpers';
-
 // Dashboard/DashTeams.js  -  Dashboard/DashGames.js 
 export const getTeams = (filter) => async (dispatch, getState) => {
-    // console.log('teams -- get ---')
     dispatch({ type: `teams/${GET_INIT}` })
-
-    // await wait(3000);
-
     const { seasons: { currentSeason }  } = getState();
 
-    //use filter variable if empty string or null/undefined
-
+    // use filter variable if empty string or null/undefined
+    // revisit this!!!!
     if(!filter){
         filter = `season=${currentSeason.name}`;
     } else {
@@ -22,45 +16,23 @@ export const getTeams = (filter) => async (dispatch, getState) => {
         }
     }
 
-    // console.log(filter, 'filter TWOOOOOO')
-
     const data = await request(`/api/teams?${filter || ''}`, 'GET', {}, true);
-
     if (!data.data) return false;
 
-    dispatch({
-        type: `teams/${GET_SUCCESS}`,
-        payload: data.data.teams
-    })
-
-    dispatch({
-        type: `divisions/${GET_SUCCESS}`,
-        payload: data.data.divisions
-    })
-
-    dispatch({
-        type: `seasons/${GET_SUCCESS}`,
-        payload: data.data.seasons
-    })
-
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: { isVisible: false }
-    })
+    dispatch({ type: `teams/${GET_SUCCESS}`, payload: data.data.teams });
+    dispatch({ type: `divisions/${GET_SUCCESS}`, payload: data.data.divisions });
+    dispatch({ type: `seasons/${GET_SUCCESS}`, payload: data.data.seasons });
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
     return true;
 }
 
 
 // Guest/Teams.js
-export const getTeamsByDivision = (filter) => async (dispatch, getState) => {
-
+export const getTeamsByDivision = (filter) => async (dispatch) => {
   const data = await request(`/api/teams/by_division?${filter || ''}`, 'GET', {}, true);
   if (!data.data) return false;
 
-  dispatch({
-      type: `teams/byDivision/${GET_SUCCESS}`,
-      payload: data.data.allTeams
-  })
+  dispatch({ type: `teams/byDivision/${GET_SUCCESS}`, payload: data.data.allTeams });
 
   return data.data.season;
 }
@@ -68,7 +40,6 @@ export const getTeamsByDivision = (filter) => async (dispatch, getState) => {
 
 // Guest/SingleTeam.js
 export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
-
     const team = await request(`/api/teams/${teamId}?${filter || ''}`, 'GET', {}, true)
     if (!team.data) return false;
 
@@ -88,12 +59,9 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
             seasonsSelect: team.data.seasonsSelect,
             standings
         }
-    })
+    });
 
-    dispatch({
-        type: `seasons/${GET_SUCCESS}`,
-        payload: team.data.seasons
-    })
+    dispatch({ type: `seasons/${GET_SUCCESS}`, payload: team.data.seasons });
 
     if(!filter) {
         const activeSeason = team.data.seasons.find(season => season.is_active === true)
@@ -115,12 +83,8 @@ export const createTeam = teamData => async (dispatch, getState) => {
     //     payload: data.data
     // })
 
-    dispatch(getTeams(`season=${teamData.season_name}`))
-
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: { isVisible: false }
-    })
+    dispatch(getTeams(`season=${teamData.season_name}`));
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
 }
 
 
@@ -131,16 +95,12 @@ export const updateTeam = (id, teamData) => async (dispatch, getState) => {
     if(!data) return;
 
     // dispatch({
-    //     type: `teams/${CREATE_SUCCESS}`,
+    //     type: `teams/${UPDATE_SUCCESS}`,
     //     payload: data.data
     // })
 
-    dispatch(getTeams(`season=${teamData.season_name}`))
-
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: { isVisible: false }
-    })
+    dispatch(getTeams(`season=${teamData.season_name}`));
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
 }
 
 
@@ -173,11 +133,8 @@ export const deleteTeam = (id, season) => async (dispatch, getState) => {
 export const getTeamsPageFilters = (filter) => async (dispatch) => {
     const data = await request(`/api/misc/teams_filters?${filter || ''}`, 'GET', {}, true);
     if(!data.data) return false;
-
-    dispatch({ 
-        type: 'SCHEDULE_FILTERS', 
-        payload: { seasons: data.data.seasons, allTeams: data.data.all_teams }
-    })
+    dispatch({ type: 'SCHEDULE_FILTERS', payload: { seasons: data.data.seasons, allTeams: data.data.all_teams } });
+    return true;
 }
 
 
@@ -185,11 +142,8 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
 export const getStandingsPageFilters = (filter) => async (dispatch) => {
     const data = await request(`/api/misc/standings_filters?${filter || ''}`, 'GET', {}, true);
     if(!data.data) return false;
-
-    dispatch({ 
-        type: 'STANDINGS_FILTERS', 
-        payload: { seasons: data.data.seasons, divisions: data.data.divisions }
-    })
+    dispatch({ type: 'STANDINGS_FILTERS', payload: { seasons: data.data.seasons, divisions: data.data.divisions } });
+    return true;
 }
 
 
@@ -197,29 +151,20 @@ export const getStandingsPageFilters = (filter) => async (dispatch) => {
 export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
   const data = await request(`/api/teams/${teamId}/schedule?${filter || ''}`, 'GET', {}, true);
   if(!data.data) return false;
-
-  dispatch({ 
-      type: `teams/singleTeam/${GET_SUCCESS}`, 
-      payload: { 
-          schedule: data.data 
-      }
-  })
+  dispatch({ type: `teams/singleTeam/${GET_SUCCESS}`, payload: { schedule: data.data } });
+  return true;
 }
 
 
 // Guest/SingleTeam.js
-export const clearSingleTeamState = () => {
-    return {
-        type: `teams/singleTeam/${CLEAR_STATE}`
-    }
-}
+export const clearSingleTeamState = () => ({
+    type: `teams/singleTeam/${CLEAR_STATE}`
+})
 
 // Guest/Standings.js
-export const getStandings = (filter) => async (dispatch, getState) => {
-
+export const getStandings = (filter) => async (dispatch) => {
     const data = await request(`/api/standings?${filter || ''}`, 'GET', {}, true);
     if (!data.data) return false;
-
     // heavy lifting - add "rank" key to the teams_in_division list
     // maybe add rank key to the team_season_division table
     const standings = data.data.standings.map((item, ind) => {
@@ -228,10 +173,6 @@ export const getStandings = (filter) => async (dispatch, getState) => {
         })}
     });
 
-    dispatch({
-        type: `standings/${GET_SUCCESS}`,
-        payload: standings
-    })
-  
+    dispatch({ type: `standings/${GET_SUCCESS}`, payload: standings });
     return data.data.season;
   }

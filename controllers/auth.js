@@ -3,7 +3,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const config = require('../config');
 let config;
 if(process.env.NODE_ENV !== 'production') {
     config = require('../config');
@@ -47,14 +46,12 @@ const loginFromCookie = async (req, res) => {
             console.log(err, 'error in passport.authenticate jwt');
             return res.status(200).send({ status: info.status || 401, error: true, message: info.message || "Unauthorized" });
         }
-        console.log('logged in from cookie');
         const season = await db.seasons.findOne({is_active: true});
 
         // NEED TO CHANGE THIS TO BE OPTIMIZED
         const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
         // NEED TO CHANGE THIS TO BE OPTIMIZED
 
-        console.log(user, 'USERRRRR!!!82472947248')
         await db.users.update({id: user.id}, {last_login: new Date()}).catch(err => console.log(err, 'update last_login error on cookie login'))
 
         res.status(200).send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' });
@@ -69,10 +66,7 @@ const login = async (req, res) => {
     const db = app.get('db');
     passport.authenticate('local-login', async (err, user, info) => {
         if (err || !user) {
-            // console.log(err, user, info, 'error')
-            // return res.status(404).send({status: 404, error: true, message: err || 'Incorrect email or password.'})
             return res.status(200).send({ status: info.status || 404, error: true, message: info.message || 'Incorrect email or password.' })
-
         }
 
         req.login(user, { session: false }, async (errr) => {
@@ -81,36 +75,27 @@ const login = async (req, res) => {
                 return res.status(500).send({ status: 500, error: true, message: `An error occurred: ${errr}` })
             }
             // console.log('logging in user: ', user)
-            console.log('logged in from sign in')
-
             const season = await db.seasons.findOne({is_active: true});
-
             // NEED TO CHANGE THIS TO BE OPTIMIZED
             const seasons = await db.seasons.find({"deleted_date =": null}).catch(err => console.log(err));
             // NEED TO CHANGE THIS TO BE OPTIMIZED
-
             await db.users.update({id: user.id}, {last_login: new Date()}).catch(err => console.log(err, 'update last_login error on LOCAL login'))
-
-
-            // console.log(seasons, 'SEASON')
             const access_token = jwt.sign({ user, season, seasons }, JWTSECRET)
             res.status(200).send({ status: 200, data: { user, season, seasons, access_token }, message: 'Welcome! You\'re logged in!' })
         })
-    })(req, res)
+    })(req, res);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const signup = async (req, res) => {
     passport.authenticate('local-signup', async (err, user, info) => {
-        console.log(err, user, info, 'ha!')
         if (err || !user) {
             console.log(err, user, info)
             return res.status(400).send({ status: 400, error: true, message: err || info.message })
         }
-
         return res.status(200).send({ status: 200, data: user, message: 'You have successfully created an account.' })
-    })(req, res)
+    })(req, res);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,15 +123,11 @@ const invite = async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const reinvite = async (req, res) => {
-
     const { id } = req.params;
-
     const user = await db.users.findOne({ id });
-
     if (!user) {
         return res.status(400).send({ status: 400, error: true, message: 'User does not exist.' })
     }
-
     //set invite token with expiry
     const invite_token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name }, JWTSECRET, { expiresIn: '8h' })
     //update invite_token
@@ -164,7 +145,6 @@ const reinvite = async (req, res) => {
 module.exports = {
     authorizeAccessToken,
     authorizeAccessToken2,
-
     login,
     signup,
     invite,
@@ -173,9 +153,7 @@ module.exports = {
 }
 
 
-
-
-//Passport
+// Passport
 
 ////////////////// LOGIN //////////////////
 
@@ -183,11 +161,9 @@ passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
 }, async (email, password, done) => {
-    //Find the user asssociated with the email provided
+    //F ind the user asssociated with the email provided
     const db = app.get('db');
-
     const user = await db.users.findOne({ email })
-
     if (!user) {
         return done(null, false, { message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' })
     }
@@ -198,7 +174,6 @@ passport.use('local-login', new LocalStrategy({
     }
 
     const pw = await db.passwords.findOne({ user_id: user.id })
-
     const comparedPassword = await bcrypt.compare(password, pw.pw)
 
     if (!comparedPassword) {
@@ -217,7 +192,6 @@ passport.use('local-signup', new LocalStrategy({
     passReqToCallback: true
 }, async (req, email, password, done) => {
     const db = app.get('db');
-
     const user = await db.users.findOne({ email })
 
     if (user) {
@@ -231,14 +205,10 @@ passport.use('local-signup', new LocalStrategy({
     }
 
     const newUser = await db.users.insert({ first_name, last_name, is_admin, email });
-
     const hash = await bcrypt.hash(password, 10);
-
     await db.passwords.insert({ user_id: newUser.id, pw: hash })
 
     return done(null, newUser)
-
-
 }))
 
 
@@ -252,29 +222,27 @@ passport.use('jwt', new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     passReqToCallback: true
 }, async(req, token, done) => {
-    console.log(req.roles, 'REQQQQQQQQ')
-    console.log(token.user, 'OKEN>USER')
+    // console.log(req.roles, 'req.roles in JWT')
+    // console.log(token.user, 'token.user in JWT')
     try {
-
-        console.log(req.roles && req.roles.includes(token.user.admin_type), 'INCLUDEZZ')
+        // console.log(req.roles && req.roles.includes(token.user.admin_type), 'INCLUDEZZ');
 
         // if list of roles exists, check to see if the current user's admin_type is in the roles list
-        if(req.roles && !req.roles.includes(token.user.admin_type)){
+        if (req.roles && !req.roles.includes(token.user.admin_type)) {
             console.log("DOES NOT ROLSE")
             // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
-            return done(null, false, {message: 'You do not have permission for this action', redirect: '/dashboard', snack: true })
+            return done(null, false, {message: 'You do not have permission for this action', redirect: '/dashboard', snack: true });
         }
 
         const isSuspended = await checkSuspended(token.user.id);
-        if(!!isSuspended){
-            console.log(isSuspended, 'issupsended')
-            return done(null, false, isSuspended)
+        if (!!isSuspended) {
+            return done(null, false, isSuspended);
         }
         // console.log('yo')
-        return done(null, token.user)
+        return done(null, token.user);
     }
     catch (err) {
-        console.log(err, 'catch!')
+        console.log(err, 'catch!');
     }
 }))
 
@@ -282,12 +250,12 @@ passport.use('jwt', new JWTStrategy({
 // this fires on every admin request - too much?
 const checkSuspended = async (id) => {
     const db = app.get('db');
-    const user = await db.users.findOne({ id })
+    const user = await db.users.findOne({ id });
     if(!user){
-        return { status: 404, message: 'User could not be found', shouldLogOut: true }
+        return { status: 404, message: 'User could not be found', shouldLogOut: true };
     }
     if(user.is_suspended){
-        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true }
+        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true };
     }
     return false;
 }

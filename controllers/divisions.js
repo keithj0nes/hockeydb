@@ -4,23 +4,13 @@ const helpers = require('./helpers');
 const getAllDivisions = async (req, res) => {
   const db = app.get('db');
 
-  console.log(req.query, 'QUERYRYYY')
-
-  // const query = filter(req.query);
-
-  const season_id = await db.seasons.findOne({name: req.query.season, 'deleted_date =': null})
-  console.log(season_id, ' seasonid')
-
-  // const data = await db.divisions.find({season_id: season_id.id, 'hidden_date =': null, 'deleted_date =': null}).catch(err => console.log(err));
-
-  // const query = filter(req.query);
+  const season_id = await db.seasons.findOne({ name: req.query.season, 'deleted_date =': null })
   const query = helpers.filter(req.query, ['season'])
 
-  const data = await db.divisions.find({...query, season_id: season_id.id}, { order: [ {field: 'name', direction: 'asc'}]}).catch(err => console.log(err));
+  const data = await db.divisions.find({ ...query, season_id: season_id.id }, { order: [ {field: 'name', direction: 'asc'}]}).catch(err => console.log(err));
+  const seasons = await db.seasons.find({ 'hidden_date =': null, 'deleted_date =': null }).catch(err => console.log(err));
 
-  const seasons = await db.seasons.find({'hidden_date =': null, 'deleted_date =': null}).catch(err => console.log(err));
-  res.status(200).send({ status: 200, data: {divisions: data, seasons}, message: 'Retrieved list of Divisions' });
-
+  res.status(200).send({ status: 200, data: { divisions: data, seasons }, message: 'Retrieved list of Divisions' });
 }
 
 // const getDivisionById = async (req, res) => {

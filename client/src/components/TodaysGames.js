@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import dateFormat from 'date-fns/format';
 import { Button } from './';
@@ -6,15 +6,14 @@ import './todaysgames.scss';
 import { history } from '../helpers';
 
 
-class TodaysGames extends Component {
-    render() {
-        return (
-            <div className="todays-games-container">
+const TodaysGames = ({ todaysGames }) => {
+    return (
+        <div className="todays-games-container">
                 <h2>Today's games</h2>
 
-                {this.props.todaysGames.length === 0 ? (
+                {todaysGames.length === 0 ? (
                     <h3 style={{textAlign: 'center'}}>No Games Today :(</h3>
-                ) : this.props.todaysGames.map(game => {
+                ) : todaysGames.map(game => {
                     const mydate = dateFormat(game.start_date, 'MM/DD/YYYY h:mmA').split(' ');
                     game.start_time = mydate[1];
                     return (
@@ -43,15 +42,12 @@ class TodaysGames extends Component {
                     />
                 </div>
             </div>
-        )
-    }
+    )
 }
 
 
-const mapStateToProps = state => {
-    return { 
-        todaysGames: state.games.todaysGames
-    }
-}
+const mapStateToProps = state => ({
+    todaysGames: state.games.todaysGames,
+});
 
 export default connect(mapStateToProps)(TodaysGames);

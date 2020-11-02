@@ -3,9 +3,7 @@ import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CRE
 const initialAuthState = {
     user: {},
     isUserLoggedIn: false,
-
 };
-
 
 export const user = (state = initialAuthState, { type, payload }) => {
     switch (type) {
@@ -50,15 +48,6 @@ export const news = (state = initialNewsState, { type, payload }) => {
     }
 }
 
-// case `locations/${UPDATE_SUCCESS}`:
-//         // update item without getting whole list again
-//         const newLocations = state.locations.map(item => {
-//             if(item.id === payload.id){
-//                 return payload
-//             }
-//             return item;
-//         })
-//         return  { ...state, isLoading: false, locations: newLocations }
 
 const initialMiscState = {
     navSliderVisible: false,
@@ -89,16 +78,11 @@ export const misc = (state = initialMiscState, { type, modalProps, modalType, is
     case TOGGLE_NAV_SLIDER:
         return { ...state, navSliderVisible: !state.navSliderVisible }
     case TOGGLE_MODAL:
-        // console.log(modalProps.errors, 'hitting!!')
-        //   console.log(modalProps)
         return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors}
-
-        // return { ...state, isLoading, modalVisible: !state.modalVisible, modalProps: state.modalVisible ? {} : modalProps, modalType: state.modalType ? '' :  modalType}
     case 'SCHEDULE_FILTERS':
         return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload }};
     case 'STANDINGS_FILTERS':
         return { ...state, standingsFilters: { ...state.standingsFilters, ...payload }};
-
     case 'TOGGLE_SNACKBAR':
         return { ...state, snackBar: { ...state.snackBar, isVisible: !state.snackBar.isVisible, ...payload }};
     default:

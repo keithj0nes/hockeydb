@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import GuestTable from '../../../components/GuestTable';
-import { getTeamScheduleById } from '../../../redux/actions/teamsActions';
+import { getTeamScheduleById } from '../../../redux/actions/teams';
 import { getQuery } from '../../../helpers';
 
 

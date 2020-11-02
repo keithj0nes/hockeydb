@@ -9,44 +9,30 @@
     background: $dash-color-table-bg;
     position: absolute;
     top: calc(100% + 10px);
-    // top: 20px;
-    // margin-top: 20px;
-    // margin-top: -80px;  // bottom 2 rows should be set to this
-    // right: 26px;
     right: 0;
     padding: 13px;
     z-index: 200;
     min-width: 200px;
-    // width: calc(100vw - 32px);
-
     border-radius: 5px;
     box-shadow: 0 12px 24px rgba(0,0,0,0.25);
     animation: fadein 0.2s;
     // animation: slideinfromtop2 0.3s ease-in-out, fadein 0.2s;
 
-
     &.full-width {
-        // background: pink;
         width: calc(100vw - 32px);
     }
 
     ul li {
         font-family: $heading-font;
-        // color: $dash-color-table-ellipsis;
         color: $dash-color-font;
-
         font-size: 16px;
         padding: 6px;
         display: flex;
         align-items: center;
         cursor: pointer;
 
-        
-        &:hover:not(.not-available) {
-            // color: darken($dash-color-table-ellipsis, 20%)
-            // color: $dash-color-font;
+        &:hover:not(.not-available), &:hover a {
             color: $dash-color-table-ellipsis;
-
         }
 
         &.not-available {
@@ -61,17 +47,14 @@
     &.row {
         top: auto;
         margin-top: 20px;
-        // margin-top: -80px;  // bottom 2 rows should be set to this
         right: 26px;
     }
 
 
     .popover-header {
-        // background: pink;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        // width: 280px;
         width: 100%;
 
         .clear-btn {
@@ -81,25 +64,21 @@
     }
 
     .popover-section {
-        // background: lightcyan;
         margin: 10px 0;
 
         h5 {
             font-size: 14px;
             padding-bottom: 6px;
-            // padding: 6px 0;
             padding-top: 10px;
         }
 
         .popover-checkbox-container {
-            // background: yellow;
             display: flex;
             flex-wrap: wrap;
 
             > div {
                 flex-basis: 50%;    
                 padding: 5px 0;
-                // padding-bottom: 10px;
             }
         }
     }
@@ -107,7 +86,6 @@
 
 
 @media only screen and (min-width: 768px){
-
     .popover.full-width {
         max-width: 280px;
     }

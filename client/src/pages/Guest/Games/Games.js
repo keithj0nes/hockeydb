@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { getGames } from '../../../redux/actions/gamesActions';
+import { getGames } from '../../../redux/actions/games';
 import dateFormat from 'date-fns/format';
 
 class Games extends Component {
