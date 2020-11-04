@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 import './slideout.scss';
 
 const SlideOut = props => {
-
-    let body = document.getElementsByTagName('body')[0].style;
+    const body = document.getElementsByTagName('body')[0].style;
     body.overflow = 'auto';
     body.position = 'auto';
 
-    let visibility = props.isVisible ? "show" : "hide";
-    if(visibility === "show") {
+    const visibility = props.isVisible ? 'show' : 'hide';
+    if (visibility === 'show') {
         body.overflow = 'hidden';
         body.position = 'relative';
     }
 
-    const sticky = props.sticky ? 'sticky' : ''
+    const sticky = props.sticky ? 'sticky' : '';
 
     return (
         <div className={`slideout-container slideout-container-${visibility} ${sticky} ${props.slideFrom} `}>
@@ -25,23 +24,24 @@ const SlideOut = props => {
                 {props.children}
             </div>
 
-            <div className={`slideout-close-bar ${props.slideFrom}`} onClick={props.onClose}/>
+            <div className={`slideout-close-bar ${props.slideFrom}`} onClick={props.onClose} />
 
         </div>
-    )
-}
+    );
+};
 
 
 SlideOut.defaultProps = {
     isVisible: false,
-    slideFrom: 'left'
-}
+    slideFrom: 'left',
+};
 
 SlideOut.propTypes = {
-    isVisible: PropTypes.bool.isRequired,
+    isVisible: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
     slideFrom: PropTypes.oneOf(['left', 'right']), // add top bottom later
-    sticky: PropTypes.bool // sticks slideout to left side on desktop view
-}
+    sticky: PropTypes.bool, // sticks slideout to left side on desktop view
+    children: PropTypes.element,
+};
 
 export default SlideOut;

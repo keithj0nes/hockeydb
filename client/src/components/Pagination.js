@@ -14,35 +14,34 @@ import './pagination.scss';
 const [LEFT_PAGE, RIGHT_PAGE] = ['left', 'right'];
 
 const Pagination = (props) => {
-
     // const [ pages,  setPages ] = useState(initialState)
-    const [ pages,  setPages ] = useState({...props})
+    const [pages, setPages] = useState({ ...props });
 
 
     const changePage = dir => {
         const { currentPage, totalPages } = pages;
         let search;
-        if(dir === 'prev' && currentPage === 1) return;
-        if(dir === 'next' && currentPage === totalPages) return;
+        if (dir === 'prev' && currentPage === 1) return;
+        if (dir === 'next' && currentPage === totalPages) return;
 
-        if (typeof dir === 'number'){
-            search = qs.stringify({page: dir})
-            setPages({...pages, currentPage: dir})
+        if (typeof dir === 'number') {
+            search = qs.stringify({ page: dir });
+            setPages({ ...pages, currentPage: dir });
         }
 
-        if(dir === 'prev' && currentPage > 1) {
-            search = qs.stringify({page: currentPage - 1})
+        if (dir === 'prev' && currentPage > 1) {
+            search = qs.stringify({ page: currentPage - 1 });
 
-            setPages({...pages, currentPage: currentPage - 1})
+            setPages({ ...pages, currentPage: currentPage - 1 });
         }
 
-        if(dir === 'next' && currentPage < totalPages) {
-            search = qs.stringify({page: currentPage + 1})
-            setPages({...pages, currentPage: currentPage + 1})
+        if (dir === 'next' && currentPage < totalPages) {
+            search = qs.stringify({ page: currentPage + 1 });
+            setPages({ ...pages, currentPage: currentPage + 1 });
         }
-        
-        history.push({search})
-    }
+
+        history.push({ search });
+    };
 
     const getPageNumbers = () => {
         // totalPages: 10,
@@ -58,14 +57,12 @@ const Pagination = (props) => {
         const totalBlocks = totalNumbers + 2;
 
 
-
         if (totalPages > totalBlocks) {
-
             const startPage = Math.max(2, currentPage - neighbors);
             const endPage = Math.min(totalPages - 1, currentPage + neighbors);
-      
+
             let localPages = range(startPage, endPage);
-      
+
             /**
              * hasLeftSpill: has hidden pages to the left
              * hasRightSpill: has hidden pages to the right
@@ -77,45 +74,42 @@ const Pagination = (props) => {
 
 
             switch (true) {
-                // handle: (1) < {5 6} [7] {8 9} (10)
-                case (hasLeftSpill && !hasRightSpill): {
-                    const extraPages = range(startPage - spillOffset, startPage - 1);
-                    localPages = [LEFT_PAGE, ...extraPages, ...localPages];
-                    // localPages = [LEFT_PAGE, ...extraPages, ...localPages];
+            // handle: (1) < {5 6} [7] {8 9} (10)
+            case (hasLeftSpill && !hasRightSpill): {
+                const extraPages = range(startPage - spillOffset, startPage - 1);
+                localPages = [LEFT_PAGE, ...extraPages, ...localPages];
+                // localPages = [LEFT_PAGE, ...extraPages, ...localPages];
 
-                    break;
-                }
-        
-                // handle: (1) {2 3} [4] {5 6} > (10)
-                case (!hasLeftSpill && hasRightSpill): {
-                    const extraPages = range(endPage + 1, endPage + spillOffset);
-                    localPages = [...localPages, ...extraPages, RIGHT_PAGE];
-                    break;
-                }
-        
-                // handle: (1) < {4 5} [6] {7 8} > (10)
-                case (hasLeftSpill && hasRightSpill):
-                default: {
-                    // localPages = [LEFT_PAGE, ...localPages, RIGHT_PAGE];
-                    localPages = [LEFT_PAGE, ...localPages, RIGHT_PAGE];
-                    break;
-                }
+                break;
+            }
+
+            // handle: (1) {2 3} [4] {5 6} > (10)
+            case (!hasLeftSpill && hasRightSpill): {
+                const extraPages = range(endPage + 1, endPage + spillOffset);
+                localPages = [...localPages, ...extraPages, RIGHT_PAGE];
+                break;
+            }
+
+            // handle: (1) < {4 5} [6] {7 8} > (10)
+            case (hasLeftSpill && hasRightSpill):
+            default: {
+                // localPages = [LEFT_PAGE, ...localPages, RIGHT_PAGE];
+                localPages = [LEFT_PAGE, ...localPages, RIGHT_PAGE];
+                break;
+            }
             }
 
             return [1, ...localPages, totalPages];
-
         }
 
 
         return range(1, totalPages);
-
-
-    }
+    };
 
     // console.log(pages, 'PAGES')
 
     const pageNumbers = getPageNumbers();
-    
+
     return (
         <div className="pagination-full-width">
             <div className="pagination-container">
@@ -127,11 +121,11 @@ const Pagination = (props) => {
 
                 </div> */}
 
-                <span className={`left ${pages.currentPage === 1 && 'disabled'}`} onClick={() => changePage('prev')} ></span>
+                <span className={`left ${pages.currentPage === 1 && 'disabled'}`} onClick={() => changePage('prev')} />
 
                 {/* {Array(pages.totalPages).fill().map((_, i) => {
                     return (
-                        <span 
+                        <span
                             onClick={() => setPages({...pages, currentPage: i + 1})}
                             className={i + 1 === pages.currentPage && 'current-page'}>
                                 {i + 1}
@@ -151,7 +145,7 @@ const Pagination = (props) => {
                         //       {/* </a> */}
                         //     </span>
                         //   );
-            
+
                         //   if (page === RIGHT_PAGE) return (
                         //     <span key={index} className="page-item">
                         //       {/* <a className="page-link" href="#" aria-label="Next" onClick={this.handleMoveRight}> */}
@@ -161,21 +155,23 @@ const Pagination = (props) => {
                         //     </span>
                         //   );
 
-                        if (page === LEFT_PAGE || page === RIGHT_PAGE) return (
+                        if (page === LEFT_PAGE || page === RIGHT_PAGE) {
+                            return (
                             // <span key={index} style={{pointer: 'cursor', color: 'black', padding: 0, display: 'flex', alignItems: 'flex-end'}}>
-                            <span key={index} style={{pointer: 'cursor', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end'}}>
+                                <span key={index} style={{ pointer: 'cursor', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end' }}>
 
-                                {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
+                                    {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
                                     {/* <span aria-hidden="true">&laquo;</span> */}
                                     {/* <span className="sr-only" style={{pointer: 'cursor'}}>...</span> */}
 
                                     ...
-                                {/* </a> */}
-                            </span>
-                        );
-            
+                                    {/* </a> */}
+                                </span>
+                            );
+                        }
+
                         return (
-                            <span key={index} className={`page-item${ pages.currentPage === page ? ' current-page' : ''}`} onClick={() => changePage(page)}>
+                            <span key={index} className={`page-item${pages.currentPage === page ? ' current-page' : ''}`} onClick={() => changePage(page)}>
                                 {/* <a className="page-link" href="#" onClick={ this.handleClick(page) }>{ page }</a> */}
                                 { page }
                             </span>
@@ -183,13 +179,13 @@ const Pagination = (props) => {
                     })
                 }
 
-                <span className={`right ${pages.currentPage === pages.totalPages && 'disabled'}`} onClick={() => changePage('next')} ></span>
+                <span className={`right ${pages.currentPage === pages.totalPages && 'disabled'}`} onClick={() => changePage('next')} />
 
             </div>
         </div>
 
-    )
-}
+    );
+};
 
 
 const range = (from, to, step = 1) => {
@@ -200,7 +196,7 @@ const range = (from, to, step = 1) => {
     }
 
     return range;
-}
+};
 
 // Pagination.defaultProps = {
 //     totalPages: 1,
@@ -214,8 +210,8 @@ Pagination.propTypes = {
     totalPages: PropTypes.number.isRequired,
     currentPage: PropTypes.number.isRequired,
     limit: PropTypes.number,
-    neighbors: PropTypes.oneOf([0,1,2]),
-    onPageChange: PropTypes.func
-}
+    neighbors: PropTypes.oneOf([0, 1, 2]),
+    onPageChange: PropTypes.func,
+};
 
 export default Pagination;

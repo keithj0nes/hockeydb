@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_TEAMS, GET_DIVISIONS, } from './actionTypes';
+import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_TEAMS, GET_DIVISIONS } from './actionTypes';
 
 const initialAuthState = {
     user: {},
@@ -8,7 +8,7 @@ const initialAuthState = {
 export const user = (state = initialAuthState, { type, payload }) => {
     switch (type) {
     case AUTH_SET_USER:
-        return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn }
+        return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn };
     default:
         return state;
     }
@@ -18,35 +18,34 @@ export const user = (state = initialAuthState, { type, payload }) => {
 const initialNewsState = {
     news: [],
     newsById: {},
-    newsNum: 0
-}
+    newsNum: 0,
+};
 
 export const news = (state = initialNewsState, { type, payload }) => {
     switch (type) {
     case GET_BLOGS:
         // console.log(payload, 'PAYLOAD')
-        return { ...state, news: payload,  newsNum: state.newsNum +1 };
+        return { ...state, news: payload, newsNum: state.newsNum + 1 };
     case `news/${CREATE_SUCCESS}`:
         // console.log(state.newsNum, 'state.newsnum')
-        return  { ...state, news: [payload, ...state.news],  newsNum: state.newsNum +1};
+        return { ...state, news: [payload, ...state.news], newsNum: state.newsNum + 1 };
 
-    case `news/${UPDATE_SUCCESS}`:
+    case `news/${UPDATE_SUCCESS}`: {
         // update item without getting whole list again
         const newNews = state.news.map(item => {
-            if(item.id === payload.id){
-                return payload
+            if (item.id === payload.id) {
+                return payload;
             }
             return item;
-
-        })
-        return  { ...state, news: newNews, newsNum: state.newsNum +1 }
-
+        });
+        return { ...state, news: newNews, newsNum: state.newsNum + 1 };
+    }
     case `newsById/${GET_SUCCESS}`:
-        return  { ...state, newsById: payload};
+        return { ...state, newsById: payload };
     default:
         return state;
     }
-}
+};
 
 
 const initialMiscState = {
@@ -54,13 +53,13 @@ const initialMiscState = {
     modalVisible: false,
     modalProps: {},
     modalType: '',
-    isLoading: false, 
+    isLoading: false,
     errors: '',
     scheduleFilters: {
         seasons: [],
         divisions: [],
         teams: [],
-        allTeams: []
+        allTeams: [],
     },
     standingsFilters: {
         seasons: [],
@@ -69,30 +68,30 @@ const initialMiscState = {
     snackBar: {
         isVisible: false,
         message: '',
-        type: ''    // oneOfType: error, alert, success
-    }
-}
+        type: '', // oneOfType: error, alert, success
+    },
+};
 
 export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading, payload }) => {
     switch (type) {
     case TOGGLE_NAV_SLIDER:
-        return { ...state, navSliderVisible: !state.navSliderVisible }
+        return { ...state, navSliderVisible: !state.navSliderVisible };
     case TOGGLE_MODAL:
-        return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors}
+        return { ...state, isLoading, modalVisible: modalProps.isVisible, modalProps: modalProps.isVisible ? modalProps : {}, modalType: modalProps.isVisible ? modalType : '', errors: modalProps.errors };
     case 'SCHEDULE_FILTERS':
-        return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload }};
+        return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload } };
     case 'STANDINGS_FILTERS':
-        return { ...state, standingsFilters: { ...state.standingsFilters, ...payload }};
+        return { ...state, standingsFilters: { ...state.standingsFilters, ...payload } };
     case 'TOGGLE_SNACKBAR':
-        return { ...state, snackBar: { ...state.snackBar, isVisible: !state.snackBar.isVisible, ...payload }};
+        return { ...state, snackBar: { ...state.snackBar, isVisible: !state.snackBar.isVisible, ...payload } };
     default:
         return state;
     }
-}
+};
 
 
 const initialStandingsState = {
-    standings: []
+    standings: [],
 };
 
 export const standings = (state = initialStandingsState, { type, payload }) => {
@@ -102,7 +101,7 @@ export const standings = (state = initialStandingsState, { type, payload }) => {
     default:
         return state;
     }
-}
+};
 
 
 const initialPlayersState = {
@@ -117,7 +116,7 @@ export const players = (state = initialPlayersState, { type, payload }) => {
     default:
         return state;
     }
-}
+};
 
 const initialGameState = {
     isLoading: true,
@@ -126,28 +125,29 @@ const initialGameState = {
     gameDetails: null,
     todaysGames: [],
     fromLoadMore: false,
-    totalGamesCount: 0
+    totalGamesCount: 0,
 };
 
 export const games = (state = initialGameState, { type, payload }) => {
     switch (type) {
     case `games/${GET_INIT}`:
-        return { ...state, isLoading: true }
-    case `games/${GET_SUCCESS}`:
+        return { ...state, isLoading: true };
+    case `games/${GET_SUCCESS}`: {
         const { games, fromLoadMore, totalGamesCount } = payload;
 
-        if(fromLoadMore) {
+        if (fromLoadMore) {
             return { ...state, isLoading: false, totalGamesCount, allGames: [...state.allGames, ...games] };
         }
         return { ...state, isLoading: false, totalGamesCount, allGames: games };
+    }
     case `gameById/${GET_SUCCESS}`:
-        return {...state, gameDetails: payload}
+        return { ...state, gameDetails: payload };
     case `todaysgames/${GET_SUCCESS}`:
-        return {...state, todaysGames: payload}
+        return { ...state, todaysGames: payload };
     default:
         return state;
     }
-}
+};
 
 
 const initialTeamsState = {
@@ -162,7 +162,7 @@ export const teams = (state = initialTeamsState, { type, payload }) => {
     default:
         return state;
     }
-}
+};
 
 const initialDivisionsState = {
     allDivisions: [],
@@ -176,22 +176,21 @@ export const divisions = (state = initialDivisionsState, { type, payload }) => {
     default:
         return state;
     }
-}
-
+};
 
 
 const initialUsersState = {
     users: [],
-    isLoading: true
+    isLoading: true,
 };
 
 export const users = (state = initialUsersState, { type, payload }) => {
     switch (type) {
-        case `users/${GET_INIT}`:
-            return { ...state, isLoading: true};
-        case `users/${GET_SUCCESS}`:
-            return { ...state, users: payload, isLoading: false};
-        default:
-            return state;
+    case `users/${GET_INIT}`:
+        return { ...state, isLoading: true };
+    case `users/${GET_SUCCESS}`:
+        return { ...state, users: payload, isLoading: false };
+    default:
+        return state;
     }
-}
+};

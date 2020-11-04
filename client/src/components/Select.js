@@ -1,54 +1,50 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './select.scss';
 
 
-export const Select = ({name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey}) => {
-    return (
-        <div className="custom-select">
-            <label htmlFor="">{title}</label>
-            {/* <select className='custom-select' name={name} defaultValue={defaultValue} onChange={onChange}> */}
-            <select className='custom-select' name={name} value={defaultValue} onChange={onChange}>
+export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
+    <div className="custom-select">
+        <label htmlFor="">{title}</label>
+        <select className="custom-select" name={name} value={defaultValue} onChange={onChange}>
+            {!!hiddenValue && <option value="" hidden>{hiddenValue}</option>}
+            {listOfSelects && listOfSelects.map((item, ind) => (
+                <option key={item[useKey] || item.value} value={item[useKey] || item.value}>{item.name}</option>
+            ))}
+        </select>
+        <span className="arrow" style={title && { top: 30 }} />
+    </div>
+);
 
-                {!!hiddenValue && <option value="" hidden>{hiddenValue}</option>}
-                {/* {listOfSelects && listOfSelects.map((item, ind) => (
-                    <option key={ind} value={item[useKey] || item.value}>{item.name}</option>
-                ))} */}
+export const DashSelect = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
+    <div className="dash-select">
+        <label htmlFor="">{title}</label>
+        <select className="dash-select" name={name} value={defaultValue} onChange={onChange}>
+            {!!hiddenValue && <option value="" hidden>{hiddenValue}</option>}
+            {listOfSelects && listOfSelects.map((item, ind) => (
+                <option key={item[useKey] || item.value} value={item[useKey] || item.value}>{item.name}</option>
+            ))}
+        </select>
+        <span className="arrow" style={title && { top: 37 }} />
+    </div>
+);
 
-                {listOfSelects && listOfSelects.map((item, ind) => {
-                    return (
-                        <option key={ind} value={item[useKey] || item.value}>{item.name}</option>
-                    )
-                })}
-            </select>
-            <span className="arrow" style={title && {top: 30}}/>
-        </div>
-    )
-}
+Select.propTypes = {
+    name: PropTypes.string,
+    defaultValue: PropTypes.string,
+    hiddenValue: PropTypes.string,
+    listOfSelects: PropTypes.array,
+    onChange: PropTypes.func,
+    title: PropTypes.string,
+    useKey: PropTypes.string,
+};
 
-
-export const DashSelect = ({name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey}) => {
-    return (
-        <div className="dash-select">
-            <label htmlFor="">{title}</label>
-            {/* <select className='custom-select' name={name} defaultValue={defaultValue} onChange={onChange}> */}
-
-            {/* <div style={{position: 'relative'}}> */}
-
-            <select className='dash-select' name={name} value={defaultValue} onChange={onChange}>
-
-                {!!hiddenValue && <option value="" hidden>{hiddenValue}</option>}
-                {/* {listOfSelects && listOfSelects.map((item, ind) => (
-                    <option key={ind} value={item[useKey] || item.value}>{item.name}</option>
-                ))} */}
-
-                {listOfSelects && listOfSelects.map((item, ind) => {
-                    return (
-                        <option key={ind} value={item[useKey] || item.value}>{item.name}</option>
-                        )
-                    })}
-            </select>
-            <span className="arrow" style={title && {top: 37}}/>
-                    {/* </div> */}
-        </div>
-    )
-}
+DashSelect.propTypes = {
+    name: PropTypes.string,
+    defaultValue: PropTypes.string,
+    hiddenValue: PropTypes.string,
+    listOfSelects: PropTypes.array,
+    onChange: PropTypes.func,
+    title: PropTypes.string,
+    useKey: PropTypes.string,
+};

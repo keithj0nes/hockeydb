@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Router, Route, Redirect} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Router, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import HeadManager from 'components/HeadManager';
 import { loginFromCookie } from '../../redux/actions/auth';
 import { history } from '../../helpers';
 import Home from '../Guest/Home/Home';
@@ -19,12 +21,10 @@ import Inquiry from '../Guest/Inquiry/Inquiry';
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
-import HeadManager from 'components/HeadManager';
 
 import './App.scss';
 
 class App extends Component {
-
     async componentDidMount() {
         await this.props.loginFromCookie();
     }
@@ -32,24 +32,24 @@ class App extends Component {
     render() {
         return (
             <Router history={history}>
-                <HeadManager/> 
+                <HeadManager />
                 <div className="site-body">
 
                     <Header />
                     <div className="site-container">
-                        <Route exact path="/"       component={Home} />
-                        <Route path='/schedule'     component={Schedule} />
-                        <Route path='/standings'    component={Standings} />
-                        <Route path='/teams'        component={Teams} exact />
-                        <Route path='/teams/:id'    component={SingleTeam} />
-                        <Route path='/boxscore/:id' component={Boxscore} />
-                        <Route path='/login'        component={Login} />
-                        <Route path='/players'      component={Players} />
-                        <Route path='/games'        component={Games} />
-                        <Route path='/inquiry'      component={Inquiry} />
-                        <Route path='/styleguide'   component={Styleguide} />
+                        <Route exact path="/" component={Home} />
+                        <Route path="/schedule" component={Schedule} />
+                        <Route path="/standings" component={Standings} />
+                        <Route path="/teams" component={Teams} exact />
+                        <Route path="/teams/:id" component={SingleTeam} />
+                        <Route path="/boxscore/:id" component={Boxscore} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/players" component={Players} />
+                        <Route path="/games" component={Games} />
+                        <Route path="/inquiry" component={Inquiry} />
+                        <Route path="/styleguide" component={Styleguide} />
                     </div>
-                    <PrivateRoute path='/dashboard' authenticated={this.props.isUserLoggedIn} component={Dashboard} />
+                    <PrivateRoute path="/dashboard" authenticated={this.props.isUserLoggedIn} component={Dashboard} />
                     <Modal />
                 </div>
             </Router>
@@ -58,24 +58,39 @@ class App extends Component {
 }
 
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  
-    return <Route {...rest} render={(props) =>  {
-        return rest.authenticated
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
+        {...rest}
+        render={(props) => (rest.authenticated
             ? <Component {...props} />
-            : <Redirect             to={{
-                pathname: "/login",
-                state: { from: props.location }
-            }} />
-    }}/>
-}
+            : (
+                <Redirect to={{
+                    pathname: '/login',
+                    state: { from: props.location },
+                }}
+                />
+            ))}
+    />
+);
+
+PrivateRoute.propTypes = {
+    component: PropTypes.element,
+    location: PropTypes.object,
+};
+
 
 const mapStateToProps = state => ({
-    isUserLoggedIn: state.user && state.user.isUserLoggedIn
-})
+    isUserLoggedIn: state.user && state.user.isUserLoggedIn,
+});
 
 const mapDispatchToProps = dispatch => ({
     loginFromCookie: () => dispatch(loginFromCookie()),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+
+App.propTypes = {
+    isUserLoggedIn: PropTypes.bool,
+    loginFromCookie: PropTypes.func,
+};

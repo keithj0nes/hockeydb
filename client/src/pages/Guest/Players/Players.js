@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { getPlayers } from '../../../redux/actions/playerActions';
+import { getPlayers } from '../../../redux/actions/players';
 
-export class Players extends Component {
+class Players extends Component {
   componentDidMount() {
     this.props.getPlayers();
     // console.log(this.props.players, 'HEEEREE');

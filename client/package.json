@@ -3,7 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "^2.1.8"
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "babel": "6.23.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-babel": "5.3.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "react-dev-utils": "^10.2.1"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -28,8 +40,8 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "superagent": "^4.1.0",
-    "swipe-js-iso": "^2.1.5"
+    "swipe-js-iso": "^2.1.5",
+    "react-scripts": "^3.4.1"
   },
   "proxy": "http://localhost:8010",
   "scripts": {
@@ -37,23 +49,6 @@
     "build": "NODE_PATH=src/ react-scripts build",
     "test": "NODE_PATH=src/ react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "airbnb-base",
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "rules": {
-      "no-console": 0,
-      "quotes": [
-        "error",
-        "double",
-        {
-          "avoidEscape": true
-        }
-      ]
-    }
   },
   "browserslist": [
     ">0.2%",

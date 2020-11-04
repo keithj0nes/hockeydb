@@ -1,34 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, ProfilePic, Popover } from './';
+import { Icon, ProfilePic, Popover } from '.';
 
 
-export const DashPageHeader = ({pageHeaderInfo}) => {
+export const DashPageHeader = ({ pageHeaderInfo }) => {
     const { title, searchPlaceholder, onChange, buttons, hideSearchAndButtons } = pageHeaderInfo;
 
     return (
         <div className="page-header">
             <div className="page-header-title-container">
-                <h1>{title}</h1> 
+                <h1>{title}</h1>
 
-                {  !hideSearchAndButtons && (
+                { !hideSearchAndButtons && (
                     <input type="text" className="page-header-search hide-mobile" placeholder={searchPlaceholder} onChange={onChange} />
                 )}
 
                 <div className="icons-container">
 
                     { !hideSearchAndButtons && buttons && buttons.map(button => (
-                        <div style={{position: 'relative'}} id={button.iconName} key={button.iconName}>
+                        <div style={{ position: 'relative' }} id={button.iconName} key={button.iconName}>
 
                             <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => button.onClick()}>
-                                <Icon name={button.iconName} size={button.size || 20} x/>
+                                <Icon name={button.iconName} size={button.size || 20} x />
                             </div>
 
                             {button.popoverUI && (
                                 <Popover isVisible={button.isPopoverVisible} setIsVisible={button.onClick} closest={`#${button.iconName}`} fullWidth>
                                     {/* {button.popoverUI()} */}
                                     {(props) => button.popoverUI(props)}
-                                </Popover>                        
+                                </Popover>
                             )}
                         </div>
                     ))}
@@ -40,16 +40,16 @@ export const DashPageHeader = ({pageHeaderInfo}) => {
                     </div>
                 </div>
             </div>
-            {  !hideSearchAndButtons && (
+            { !hideSearchAndButtons && (
                 <input type="text" className="page-header-search hide-desktop" placeholder={searchPlaceholder} onChange={onChange} />
             )}
         </div>
-    )
-}
+    );
+};
 
 DashPageHeader.propTypes = {
-    pageHeaderInfo: PropTypes.object.isRequired
-}
+    pageHeaderInfo: PropTypes.object.isRequired,
+};
 
 // PAGE HEADER INFO STRUCTURE FROM PARENT COMPONENT
 
@@ -59,19 +59,18 @@ DashPageHeader.propTypes = {
 //     searchPlaceholder: 'Search by name or role',
 //     onChange: () => console.log('changing placeholder text'),
 //     buttons: [
-//         { 
+//         {
 //             iconName: 'ADD_USER',
 //             title: 'Add User',
 //             onClick: () => console.log('clickedddd ADD_USER')
 //         },
-//         { 
+//         {
 //             iconName: 'FILTER',
 //             title: 'Filter',
 //             onClick: () => console.log('clickedddd FILTER')
 //         }
 //     ]
 // }
-
 
 
 // <div className="icon-housing" title="Add User">
