@@ -175,7 +175,7 @@ export class DashGames extends Component {
                         <input type="text" onChange={this.handleChange} name="address" placeholder="Location address" />
 
                         <div className="dashboard-add-button-container">
-                            <Button title="Save Location" success onClick={() => { }} />
+                            <Button title="Save Location" type="success" onClick={() => { }} />
                         </div>
                     </form>
 

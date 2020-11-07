@@ -10,24 +10,27 @@ button {
     border-radius: 3px;
     border: none;
     cursor: pointer;
-    // color: #FFFFFF !important;
-    color: #FFFFFF;
-    background: #19AEC0; 
+    color: $white_color;
+    background: $highlite_color; 
+}
+
+button.admin {
+    background: $admin-color-highlite;
 }
 
 button.disabled {
     cursor: not-allowed;
-    color: #7E92A3;
+    color: $muted_color;
     background: #EAEEF5;
 }
 
 button.cancel {
-    color: #7E92A3;
-    background: #FFFFFF;
+    color: $muted_color;
+    background: $white_color;
 }
 
 button.danger {
-    background: #D62B2B;
+    background: $danger_color;
 }
 
 button.outline {
@@ -37,39 +40,14 @@ button.outline {
     border-radius: 3px;
     padding: 10px 20px;
     outline: none;
-    // cursor: pointer;
     font-family: $heading_font;
-    // font-weight: bold;
     letter-spacing: 1.4px;
     background: transparent;
 }
-// button.success {
-
-// }
-
-// button:not(.danger):not(.disabled):not(.cancel):hover {
-//     // background: #2B4272;
-//     background: lighten(#19AEC0, 10%);
-// }
-
-button:not(.disabled):not(.cancel):hover {
-    // background: #2B4272;
-    // background: lighten(#19AEC0, 10%);
-    opacity: 0.8;
+button.success {
+    background: $success_color;
 }
 
-
-
-
-// input[type=button] {
-//     border: 1px solid $muted_color;
-//     color: $muted_color;
-//     text-transform: uppercase;
-//     border-radius: 3px;
-//     padding: 10px 20px;
-//     outline: none;
-//     cursor: pointer;
-//     font-family: $heading_font;
-//     // font-weight: bold;
-//     letter-spacing: 1.4px;
-// }
+button:not(.disabled):not(.cancel):hover {
+    opacity: 0.8;
+}

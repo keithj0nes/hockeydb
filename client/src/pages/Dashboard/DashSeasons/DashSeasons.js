@@ -113,23 +113,6 @@ class DashSeasons extends Component {
         return this.setState({ [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
     }
 
-    // handleFilterChange = e => {
-    //     const copy = {...this.state.filters};
-    //     copy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    //     this.setState({filters: copy})
-    // }
-
-    // handleFilterSubmit = () => {
-    //     // console.log(this.state.filters, 'submitting')
-    //     const filters = qs.stringify(this.state.filters);
-    //     console.log(filters, 'FILTERS')
-    //     this.props.getSeasons(filters)
-    //     this.setState({filterRequestSent: true})
-    //     this.props.history.push({
-    //         search: filters
-    //     })
-    // }
-
     clearFilters = () => {
         this.setState({ filters: {}, filterRequestSent: false }, () => {
             this.props.getSeasons(qs.stringify(this.state.filters));
@@ -141,7 +124,6 @@ class DashSeasons extends Component {
 
     handleEditSeason = (item) => {
         this.setState({ edit: item });
-        // console.log(item, 'itemss')
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -298,16 +280,13 @@ class DashSeasons extends Component {
                             data={seasons}
                             sections={{ name: 'two', type: 'one' }}
                             minWidth={550}
-                            onEdit={this.handleEditSeason}
-                            onDelete={this.handleDeleteSeason}
-                            onHide={this.handleHideSeason}
                             isLoading={[isLoading, 15]}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                             popoverData={(d, closePopover) => (
                                 <ul>
                                     <li onClick={() => { this.handleEditSeason(d); closePopover(); }}>Edit Season</li>
                                     <li onClick={() => { this.handleHideSeason(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Season`}</li>
-                                    <li onClick={() => { this.handleDeleteSeason(d); closePopover(); }}>Delete Season</li>
+                                    {!d.is_active && <li onClick={() => { this.handleDeleteSeason(d); closePopover(); }}>Delete Season</li>}
                                 </ul>
                             )}
                         />

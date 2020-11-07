@@ -1,119 +1,56 @@
-// import React from 'react';
-
-// const Button = ({title, onClick, cancel, danger, success, disabled}) => {
-
-//     //cancel #88C12D;
-//     //delete #C12D2D;
-
-//     let color;
-//     // if(cancel){
-//     //     color = '#88C12D';
-//     // } else 
-//     if (danger){
-//         color = '#C12D2D'; //red
-//     } else if (success){
-//         color = '#72cc2d'; //green
-//     } else {
-//         color = '#50C0F0'; //blue
-//     }
-
-//     const styles = {
-//         background: cancel ? '#fff' : disabled ? '#ccc' : color,
-//         padding: '9px 20px',
-//         fontSize: '15px',
-//         // boxShadow: '10px 10px rgba(51,51,51,0.5)',
-//         boxShadow: '0 4px 10px 0 rgba(51,51,51,0.3)',
-//         border: cancel ? '1px solid #50C0F0' : 'none',
-//         fontFamily: 'Poppins, sans-serif', 
-//         cursor: disabled ? 'not-allowed' : 'pointer',
-//         color: cancel ? '#50C0F0' : '#FFFFFF',
-//         letterSpacing: 1,
-//         borderRadius: 3
-//     }
-
-
-//     return (
-//         <button style={styles} onClick={onClick} disabled={disabled}>{title}</button>
-//     )
-// }
-
-// export default Button; 
-
-
-
-
-
-
-
-
 import React from 'react';
+import PropTypes from 'prop-types';
 import './button.scss';
 // use this to read variable colors to change in the buttons
 // import vars from 'assets/styles/_variables.scss';
 
+// opa (opacity) is for the site.com/styleguide page to perminaently be in the 'hover' state
 
-//opa (opacity) is for the site.com/styleguide page to perminaently be in the 'hover' state
-
-const Button = ({title, onClick, cancel, danger, success, disabled, opa, outline, style}) => {
-    // let color = '#FFFFFF';
-    // let background = '#19AEC0';
-    // if(cancel){
-    //     color = '#7E92A3';
-    //     background = '#FFFFFF';
-    // } else if (danger){
-    //     background = '#D62B2B';
-    // } else if (success){
-    //     console.log('success not coded in button.js')
-    // } else if (disabled) {
-    //     color = '#7E92A3';
-    //     background = '#EAEEF5';
-    // }
-
-    // const styles = {
-    //     background: disabled ? '#EAEEF5' : background,
-    //     padding: '10px 20px',
-    //     minWidth: '150px',
-    //     minHeight: '40px',
-    //     fontSize: '15px',
-    //     fontFamily: 'Poppins, sans-serif', 
-    //     cursor: disabled ? 'not-allowed' : 'pointer',
-    //     color,
-    //     letterSpacing: 1,
-    //     borderRadius: 3,
-    //     border: 'none',
-    // }
-
-    // return (
-    //     <button style={styles} onClick={onClick} disabled={disabled}>{title}</button>
-    // )
-
+const Button = ({ title, onClick, opa, style, type }) => {
     let classNames = '';
 
-    if(cancel) {
+    switch (type) {
+    case 'admin':
+        classNames = 'admin';
+        break;
+    case 'cancel':
         classNames = 'cancel';
-    } else if (disabled) {
+        break;
+    case 'disabled':
         classNames = 'disabled';
-    } else if (danger) {
+        break;
+    case 'danger':
         classNames = 'danger';
-    } else if (success) {
+        break;
+    case 'success':
         classNames = 'success';
-    }  else if (outline) {
-        classNames = 'outline'
+        break;
+    case 'outline':
+        classNames = 'outline';
+        break;
+    default:
+        classNames = '';
+        break;
     }
-    // else if (disabled) {
-    //     classNames = 'disabled';
-    // }
 
     const _style = {
-        opacity: opa ? 0.8 : 1,
-        background: cancel && 'transparent',
-        color: cancel && 'black',
-        ...style // props.style
-    }
+        opacity: opa && 0.8,
+        background: type === 'cancel' && 'transparent',
+        color: type === 'cancel' && 'black',
+        ...style, // props.style
+    };
 
     return (
-        <button className={classNames} style={_style} onClick={onClick} disabled={disabled}>{title}</button>
-    )
-}
+        <button type="button" className={classNames} style={_style} onClick={onClick} disabled={type === 'disabled'}>{title}</button>
+    );
+};
 
-export default Button; 
+export default Button;
+
+Button.propTypes = {
+    title: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+    type: PropTypes.oneOf(['admin', 'cancel', 'disabled', 'danger', 'success', 'outline']),
+    opa: PropTypes.bool,
+    style: PropTypes.object,
+};

@@ -38,7 +38,7 @@ const TodaysGames = ({ todaysGames }) => (
             <Button
                 title="VIEW SCHEDULE"
                 onClick={() => history.push('/schedule')}
-                outline
+                type="outline"
             />
         </div>
     </div>

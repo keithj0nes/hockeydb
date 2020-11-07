@@ -19,9 +19,9 @@ export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChang
 export const DashSelect = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
     <div className="dash-select">
         <label htmlFor="">{title}</label>
-        <select className="dash-select" name={name} value={defaultValue} onChange={onChange}>
+        <select className="dash-select" name={name} defaultValue={defaultValue} onChange={onChange}>
             {!!hiddenValue && <option value="" hidden>{hiddenValue}</option>}
-            {listOfSelects && listOfSelects.map((item, ind) => (
+            {listOfSelects && listOfSelects.map((item) => (
                 <option key={item[useKey] || item.value} value={item[useKey] || item.value}>{item.name}</option>
             ))}
         </select>

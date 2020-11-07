@@ -38,13 +38,13 @@ export const Styleguide = () => (
             <br />
             <Button title="Normal Hovered" opa />
             <br />
-            <Button title="Danger" danger />
+            <Button title="Danger" type="danger" />
             <br />
-            <Button title="Danger Hovered" danger opa />
+            <Button title="Danger Hovered" type="danger" opa />
             <br />
-            <Button title="Disabled" disabled />
+            <Button title="Disabled" type="disabled" />
             <br />
-            <Button title="Cancel" cancel />
+            <Button title="Cancel" type="cancel" />
             <br />
             <br />
             <br />

@@ -89,19 +89,10 @@ class Header extends Component {
 
                         <div className="login">
 
-                            {/* {!this.props.isUserLoggedIn && (
-
-                                <Button
-                                    title="Player Register"
-                                    onClick={() => console.log('clicekd player register')}
-                                    style={{textTransform: 'uppercase'}}
-                                />
-                            )} */}
-
                             <Button
                                 title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
                                 onClick={() => this.linkTo(this.props.isUserLoggedIn ? '/dashboard' : '/login')}
-                                cancel
+                                type="cancel"
                                 style={{ minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', paddingRight: 10 }}
                             />
                         </div>
@@ -125,7 +116,7 @@ class Header extends Component {
                     <Button
                         title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
                         onClick={() => this.linkTo(this.props.isUserLoggedIn ? '/dashboard' : '/login')}
-                        cancel
+                        type="cancel"
                         style={{ minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', padding: '10px 0 10px 10px' }}
                     />
 

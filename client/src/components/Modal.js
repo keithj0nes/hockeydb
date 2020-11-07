@@ -30,66 +30,26 @@ class DeleteModal extends React.Component {
                     <input type="text" name="del" id="del" onChange={this.handleChangeDelete} />
                 </div>
 
-                {/* <button onClick={data.deleteAction} disabled={!this.state.shouldBeDeleted}>Delete</button> */}
-
                 {data.errors && (
                     <p className="modal-error">{data.errors}</p>
                 )}
 
                 <div className="modal-button-container">
-                    <Button title="Cancel" cancel onClick={toggleModal} />
-                    <Button title="Delete" danger onClick={data.deleteAction} disabled={!this.state.shouldBeDeleted} />
+                    <Button title="Cancel" type="cancel" onClick={toggleModal} />
+                    <Button title="Delete" type={!this.state.shouldBeDeleted ? 'disabled' : 'danger'} onClick={data.deleteAction} />
                 </div>
             </div>
         );
     }
 }
-// const DeleteModal = ({data, isLoading}) => {
-//     // var mv = false
-
-//     // const handleChangeDelete = (e, name) => {
-//     //     console.log(e.target.value, 'valueeee')
-
-//     //     if(e.target.value === name){
-//     //         console.log('IT MATCHES!')
-//     //         mv = true
-//     //         return
-//     //     }
-//     //     return mv = false
-//     // }
-
-
-//     return (
-
-//         <div>
-//             <p>{data.message}</p>
-//             <br/> <br/>
-//             <p>{data.toBeDeleted.name}</p>
-//             <br/> <br/>
-
-//             {isLoading && 'Loading...'}
-
-//             <br/>
-
-//             {/* <input type="text" onChange={e => handleChangeDelete(e, data.toBeDeleted.name)}/>     */}
-
-//             <br/>
-
-//             <button onClick={data.deleteAction}>Delete</button>
-//         </div>
-//     )
-// }
 
 const AlertModal = ({ data, toggleModal }) => (
     <div>
         {data.message.split('\n').map((text, ind) => <p key={ind}>{text}</p>)}
         <br /> <br />
 
-        {/* <button onClick={toggleModal}>OK</button> */}
-
         <div className="modal-button-container">
-            {/* <Button title={'Cancel'} cancel onClick={toggleModal} /> */}
-            <Button title="Close" onClick={() => (data.confirmAction ? (data.confirmAction(), toggleModal()) : toggleModal())} />
+            <Button type="admin" title="Close" onClick={() => (data.confirmAction ? (data.confirmAction(), toggleModal()) : toggleModal())} />
         </div>
     </div>
 );
@@ -178,13 +138,9 @@ const PromptModal = ({ data, toggleModal }) => (
             <p className="modal-error">{data.errors}</p>
         )}
 
-
-        {/* <button onClick={data.confirmAction}> SUBMIT </button>
-            ({title, onClick, cancel, danger, success}) */}
-
         <div className="modal-button-container">
-            <Button title="Cancel" cancel onClick={toggleModal} />
-            <Button title={data.confirmActionTitle} onClick={data.confirmAction} />
+            <Button title="Cancel" type="cancel" onClick={toggleModal} />
+            <Button title={data.confirmActionTitle} type="admin" onClick={data.confirmAction} />
         </div>
 
     </div>
@@ -211,15 +167,12 @@ const Modal = ({ modalVisible, toggleModal, modalProps, modalType, isLoading }) 
     body.overflow = 'auto';
     body.position = 'auto';
 
-    // console.log(bodyStyle)
-
     if (!modalVisible) return null;
 
     const handleClose = e => e.currentTarget === e.target && toggleModal();
 
     body.overflow = 'hidden';
     body.position = 'relative';
-    // console.log(modalProps, 'modalProps')
 
     return (
         <div className="modal-container" onClick={modalProps.isClosableOnBackgroundClick ? handleClose : null}>
@@ -234,22 +187,17 @@ const Modal = ({ modalVisible, toggleModal, modalProps, modalType, isLoading }) 
                 <div className="modal-content">
                     {renderModalType(modalType, modalProps, isLoading, toggleModal)}
                 </div>
-
-
-                {/* <button onClick={toggleModal}>CLOSE</button> */}
             </div>
         </div>
     );
 };
 
-const mapStateToProps = state =>
-    // console.log(state, 'state in modal')
-    ({
-        modalVisible: state.misc.modalVisible,
-        modalProps: state.misc.modalProps,
-        modalType: state.misc.modalType,
-        isLoading: state.misc.isLoading,
-    });
+const mapStateToProps = state => ({
+    modalVisible: state.misc.modalVisible,
+    modalProps: state.misc.modalProps,
+    modalType: state.misc.modalType,
+    isLoading: state.misc.isLoading,
+});
 
 
 const mapDispatchToProps = dispatch => ({
@@ -258,10 +206,11 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Modal);
 
 Modal.propTypes = {
-    // title: PropTypes.string.isRequired,
     modalProps: PropTypes.object.isRequired,
     modalVisible: PropTypes.bool.isRequired,
     toggleModal: PropTypes.func.isRequired,
+    modalType: PropTypes.string,
+    isLoading: PropTypes.bool,
 };
 
 
