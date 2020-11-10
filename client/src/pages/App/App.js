@@ -16,11 +16,12 @@ import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
 import Standings from '../Guest/Standings/Standings';
 import Inquiry from '../Guest/Inquiry/Inquiry';
-
+import Notification from '../../components/Notification';
 
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
+import 'antd/dist/antd.css';
 
 import './App.scss';
 
@@ -36,6 +37,8 @@ class App extends Component {
                 <div className="site-body">
 
                     <Header />
+                    <Notification />
+
                     <div className="site-container">
                         <Route exact path="/" component={Home} />
                         <Route path="/schedule" component={Schedule} />

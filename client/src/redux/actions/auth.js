@@ -22,6 +22,11 @@ export const logout = () => (dispatch, getState) => {
     cookie.remove('hockeydb_auth');
     // console.log(cookie.load('hockeydb_auth'), 'load cookie after logout');
     dispatch(setUser({}));
+    console.log('togglin!!')
+    dispatch({
+        type: 'TOGGLE_SNACKBAR',
+        payload: { isVisible: true, message: "You've successfully logged out", type: 'alert' },
+    });
 };
 
 

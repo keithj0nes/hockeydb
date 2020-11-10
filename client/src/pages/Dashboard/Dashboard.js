@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-spaces */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
@@ -51,10 +52,8 @@ const dashboardPageList = {
 }
 
 const Dashboard = (props) => {
-
     const { match } = props;
     return (
-        
         <div className="dashboard-container">
 
             <SlideOut isVisible={props.navSliderVisible} onClose={props.toggleNavSlider} sticky>
@@ -63,7 +62,8 @@ const Dashboard = (props) => {
 
             <div className="dashboard-content">
 
-                <SnackBar />
+                {/* <SnackBar /> */}
+                {/* <Notification /> */}
 
                 <div className="dashboard-header hide-desktop">
                     <HamburgerIcon onClick={props.toggleNavSlider} />

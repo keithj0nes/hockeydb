@@ -12,6 +12,10 @@ ul {
     // margin-left: 20px;
 }
 
+ol, ul, dl, p {
+    margin: 0;
+}
+
 a {
     text-decoration: none;
 }
@@ -28,10 +32,11 @@ button {
 h1, h2, h3, h4, h5, h6 {
     font-family: $heading_font;
     color: $heading_color;
+    margin: 0;
 }
 
 h1 {
-    // font-size: 32px;
+    font-size: 32px;
     // font: Bold 32px/40px;
     line-height: 40px;
     // letter-spacing: 10px;
@@ -792,14 +797,21 @@ input[type=text] {
         button.ot-ellipsis {
             min-width: auto;
             min-height: auto;
-            // border-radius: ;
             background: transparent;
             display: flex;
             align-items: center;
-            // border:1px solid $dash-color-table-ellipsis;
             padding: 6px;
             cursor: pointer;
             outline: none;
+            border: none;
+
+            // could be nice to have border and/or background color on ellipsis houver
+            // border:1px solid transparent;
+            // &:hover {
+            //     border:1px solid $dash-color-table-ellipsis;
+            //     background: #F1F1F5;
+            //     border-radius: 5px;
+            // }
 
             &.hidden {
                 visibility: hidden;

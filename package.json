@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start2": "nodemon server.js & (cd client && npm start)",
+    "st___art2": "nodemon server.js & (cd client && npm start)",
     "start": "nodemon server.js",
     "seed": "node seed.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"

@@ -1,6 +1,8 @@
 @import '../assets/styles/variables';
 
-button {
+button.btn {
+    line-height: unset; // from antd
+
     padding: 10px 20px;
     min-width: 150px;
     min-height: 40px;
@@ -25,8 +27,8 @@ button.disabled {
 }
 
 button.cancel {
-    color: $muted_color;
-    background: $white_color;
+    color: $v4a_main_font_color;
+    background-color: transparent;
 }
 
 button.danger {
@@ -44,6 +46,7 @@ button.outline {
     letter-spacing: 1.4px;
     background: transparent;
 }
+
 button.success {
     background: $success_color;
 }
