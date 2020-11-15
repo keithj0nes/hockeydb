@@ -38,6 +38,8 @@ const locations = require('./controllers/locations');
 const seasons = require('./controllers/seasons');
 const divisions = require('./controllers/divisions');
 const misc = require('./controllers/misc');
+const users = require('./controllers/users');
+
 
 
 // const tierLevels = {
@@ -241,7 +243,7 @@ app.post('/api/admin/games', auth.authorizeAccessToken, admin.createGame)
 // app.put('/api/admin/games/:id', async)
 
 
-app.get('/api/admin/users', admin.getUsers);
+app.get('/api/admin/users', users.getUsers);
 
 
 

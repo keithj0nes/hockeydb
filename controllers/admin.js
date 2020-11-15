@@ -507,8 +507,7 @@ const getUsers = async (req, res) => {
     const db = app.get('db');  
     const data = await db.users.find();
     res.status(200).send({ status: 200, data, message: 'Retrieved list of Users' });
-  }
-
+}
 
 module.exports = {
     createPlayer,
@@ -536,6 +535,4 @@ module.exports = {
     deleteLocation,
 
     createGame,
-
-    getUsers
 }

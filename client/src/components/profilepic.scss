@@ -12,7 +12,8 @@
         .pic-image-filler {
             height: 40px;
             width: 40px;
-            background: green;
+            // background: green;
+            background: lighten(lightseagreen, 10%);
             border-radius: 5px;
         }
 
