@@ -121,7 +121,7 @@ class ListItem extends Component {
                         {sectionKeys.map(section => {
 
                             return !this.state.isEditing ? (
-                                <p key={section} className={`flex-${sections[section]}`}>{item[section]} {item.is_active && section === sectionKeys[0] && '- (current)'}</p>
+                                <p key={section} className={`flex-${sections[section]}`}>{item[section]} {item.is_active && section === sectionKeys[0] && '- (active)'}</p>
                             ) : (
                                 <input key={section} className={`flex-${sections[section]}`} type="text" onChange={this.handleChange} name={`${sections[section]}`} defaultValue={item[section]}/>
                             )

@@ -156,29 +156,29 @@ class DashSeasons extends Component {
         }, 'prompt');
     }
 
-    checkFilters = () => {
-        // set filter data and toggle filter component
-        const filterData = [{
-            title: 'Type',
-            options: [{
-                type: 'select',
-                name: 'type',
-                defaultValue: this.state.filters.type,
-                listOfSelects: this.state.seasonTypes,
-                hiddenValue: 'Select a type',
-            }],
-        }, {
-            title: 'Other',
-            options: [{
-                title: 'Hidden Seasons',
-                name: 'show_hidden',
-                type: 'checkbox',
-                defaultValue: this.state.filters.show_hidden || false,
-            }],
-        }];
+    // checkFilters = () => {
+    //     // set filter data and toggle filter component
+    //     const filterData = [{
+    //         title: 'Type',
+    //         options: [{
+    //             type: 'select',
+    //             name: 'type',
+    //             defaultValue: this.state.filters.type,
+    //             listOfSelects: this.state.seasonTypes,
+    //             hiddenValue: 'Select a type',
+    //         }],
+    //     }, {
+    //         title: 'Other',
+    //         options: [{
+    //             title: 'Hidden Seasons',
+    //             name: 'show_hidden',
+    //             type: 'checkbox',
+    //             defaultValue: this.state.filters.show_hidden || false,
+    //         }],
+    //     }];
 
-        this.setState(() => ({ filterData }), () => this.props.toggleFilter());
-    }
+    //     this.setState(() => ({ filterData }), () => this.props.toggleFilter());
+    // }
 
     setFilterDataOpenFilter = (val) => {
         // set filter data and toggle filter component
@@ -251,6 +251,7 @@ class DashSeasons extends Component {
                     title: 'Filter Seasons',
                     isActive: this.props.location.search.length > 0,
                     onClick: (val) => {
+                        console.log(val, 'val!!')
                         this.setFilterDataOpenFilter(val);
                         // this.setState({isFilterVisible: val !== undefined ? val : !this.state.isFilterVisible});
                     },

@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 import { toggleNavSlider } from '../../redux/actions/misc';
 import { DashboardNav, HamburgerIcon, ProfilePic, SnackBar, SlideOut } from '../../components';
 import DashSeasons from './DashSeasons/DashSeasons';
+import DashSeasons2 from './DashSeasons/DashSeasons2';
 import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
@@ -27,15 +28,17 @@ const dashboardPageList = {
     admin: [
         { name: 'Dashboard',  to: '',            icon: ICONS.DASHBOARD, component: DashHome,                      exact: true,  hideFromNavigation: false },
         { name: 'Seasons',    to: '/seasons',    icon: ICONS.SEASONS,   component: DashSeasons,                   exact: false, hideFromNavigation: false },
+        { name: 'Seasons2',    to: '/seasons2',    icon: ICONS.SEASONS,   component: DashSeasons2,                   exact: false, hideFromNavigation: false },
+
         { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS, component: DashDivisions,                 exact: false, hideFromNavigation: false },
         { name: 'Teams',      to: '/teams',      icon: ICONS.TEAMS,     component: DashTeams,                     exact: false, hideFromNavigation: false },
         // { name: 'Players',    to: '/players',    icon: 'players', component: DashPlayers,                 exact: false, hideFromNavigation: false },
         { name: 'Games',      to: '/games',      icon: ICONS.GAMES,     component: DashGames,                     exact: true,  hideFromNavigation: false },
-        { name: 'Games Dets', to: '/games/:id',  icon: null,            component: DashGamesDetails,              exact: true,  hideFromNavigation: true },
+        { name: 'Games Dets', to: '/games/:id',  icon: null,            component: DashGamesDetails,              exact: true,  hideFromNavigation: true  },
         { name: 'Locations',  to: '/locations',  icon: ICONS.LOCATIONS, component: DashLocations,                 exact: false, hideFromNavigation: false },
         { name: 'Users',      to: '/users',      icon: ICONS.USERS,     component: DashUsers,                     exact: false, hideFromNavigation: false },
         { name: 'News',       to: '/news',       icon: ICONS.NEWS,      component: DashNews,                      exact: true,  hideFromNavigation: false },
-        { name: 'News Dets',  to: '/news/:id',   icon: null,            component: DashNewsCreate,                exact: true,  hideFromNavigation: true },
+        { name: 'News Dets',  to: '/news/:id',   icon: null,            component: DashNewsCreate,                exact: true,  hideFromNavigation: true  },
         { name: 'Messages',   to: '/messages',   icon: ICONS.MESSAGES,  component: () => <h1>MESSAGES PAGE</h1>,  exact: false, hideFromNavigation: false },
         { name: 'Pages',      to: '/pages',      icon: ICONS.PAGES,     component: () => <h1>PAGES PAGE</h1>,     exact: false, hideFromNavigation: false },
         { name: 'Payments',   to: '/payments',   icon: ICONS.PAYMENTS,  component: () => <h1>PAYMENTS PAGE</h1>,  exact: false, hideFromNavigation: false },
@@ -43,7 +46,8 @@ const dashboardPageList = {
     ],
     scorekeeper: [
         { name: 'Players',    to: '/players',    icon: ICONS.USERS,     component: DashPlayers,                   exact: false, hideFromNavigation: false },
-        { name: 'Games',      to: '/games',      icon: ICONS.GAMES,     component: DashGames,                     exact: false, hideFromNavigation: false },
+        { name: 'Games',      to: '/games',      icon: ICONS.GAMES,     component: DashGames,                     exact: true,  hideFromNavigation: false },
+        { name: 'Games Dets', to: '/games/:id',  icon: null,            component: DashGamesDetails,              exact: true,  hideFromNavigation: true  },
     ],
     manager: [
         { name: 'My Teams',   to: '/myteams',    icon: ICONS.TEAMS,     component: () => <h1>MY TEAMS PAGE</h1>,  exact: false, hideFromNavigation: false },

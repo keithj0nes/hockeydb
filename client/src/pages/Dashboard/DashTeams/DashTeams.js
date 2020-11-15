@@ -293,6 +293,7 @@ class DashTeams extends Component {
 
     render() {
         const { teams, isLoading } = this.props;
+        // const showingHidden = this.props.location.search.includes('hidden');
 
         const pageHeaderInfo = {
             title: 'Teams',
@@ -338,6 +339,13 @@ class DashTeams extends Component {
                             onDelete={this.handleDeleteTeam}
                             isLoading={isLoading}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no teams within your filter criteria' : 'Sorry, no teams have been created. Start by adding a team above.'}
+                            popoverData={ (d, closePopover) => (
+                                <ul>
+                                    <li onClick={() => {this.handleEditTeam(d); closePopover() }}>Edit Team</li>
+                                    {/* <li onClick={() => {this.handleHideSeason(d); closePopover() }}>{`${showingHidden ? 'Unh' : 'H'}ide Team`}</li> */}
+                                    <li onClick={() => {this.handleDeleteTeam(d); closePopover() }}>Delete Team</li>
+                                </ul> 
+                            )}
                         />
                     </div>
                 </div>

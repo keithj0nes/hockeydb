@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, ProfilePic, Popover } from '.';
 
+// why are we managing state of filter inside dashSeasons component?
+// let's manage state inside the dash page header component
 
 export const DashPageHeader = ({ pageHeaderInfo }) => {
     const { title, searchPlaceholder, onChange, buttons, hideSearchAndButtons } = pageHeaderInfo;
@@ -17,7 +19,7 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
 
                 <div className="icons-container">
 
-                    { !hideSearchAndButtons && buttons && buttons.map(button => (
+                    {/* { !hideSearchAndButtons && buttons && buttons.map(button => (
                         <div style={{ position: 'relative' }} id={button.iconName} key={button.iconName}>
 
                             <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => button.onClick()}>
@@ -26,12 +28,17 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
 
                             {button.popoverUI && (
                                 <Popover isVisible={button.isPopoverVisible} setIsVisible={button.onClick} closest={`#${button.iconName}`} fullWidth>
-                                    {/* {button.popoverUI()} */}
                                     {(props) => button.popoverUI(props)}
                                 </Popover>
                             )}
                         </div>
-                    ))}
+                    ))} */}
+
+                    { !hideSearchAndButtons && buttons && buttons.map(button => {
+                        return (
+                            <IconComponent key={button.iconName} button={button} />
+                        )
+                    })}
 
                     <div className="hide-mobile">
                         <div className="profile-housing">
@@ -50,6 +57,28 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
 DashPageHeader.propTypes = {
     pageHeaderInfo: PropTypes.object.isRequired,
 };
+
+// remove this ternary below after reformatting to hooks {button.onClick ? (button.onClick(), setIsPopoverVisible(!isPopoverVisible)) : setIsPopoverVisible(!isPopoverVisible) }}>
+
+
+const IconComponent = ({ button }) => {
+    const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+
+    return (
+        <div style={{ position: 'relative' }} id={button.iconName}>
+
+            <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => { return button.onClick ? (button.onClick(), setIsPopoverVisible(!isPopoverVisible)) : setIsPopoverVisible(!isPopoverVisible) }}>
+                <Icon name={button.iconName} size={button.size || 20} x />
+            </div>
+
+            {button.popoverUI && (
+                <Popover isVisible={isPopoverVisible} setIsVisible={setIsPopoverVisible} closest={`#${button.iconName}`} fullWidth>
+                    {(props) => button.popoverUI(props)}
+                </Popover>
+            )}
+        </div>
+    )
+}
 
 // PAGE HEADER INFO STRUCTURE FROM PARENT COMPONENT
 
@@ -83,3 +112,6 @@ DashPageHeader.propTypes = {
 // <Icon name={'FILTER'} size={20} x/>
 
 // </div>
+
+
+{/* {button.popoverUI()} */}

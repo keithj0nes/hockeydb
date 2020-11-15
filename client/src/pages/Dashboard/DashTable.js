@@ -128,7 +128,7 @@ const TableRow = ({ d, sectionKeys, sections, indx, popoverData }) => {
             {sectionKeys.map(section => {
                 const isObj = typeof sections[section] === 'object';
                 // const sectionLink = sections[section].link;
-                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (current)'}</p>;
+                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (active)'}</p>;
             })}
 
             <button type="button" className="ot-ellipsis" onClick={() => setEllipsisOpen(!ellipsisOpen)}>

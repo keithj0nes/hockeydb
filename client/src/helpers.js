@@ -13,7 +13,7 @@ export const getQuery = (q) => {
 };
 
 export const setQuery = (q, noPush) => {
-    if (!q) return null;
+    // if (!q) return null;
     const search = qs.stringify(q);
     if (!noPush) {
         history.push({ search });

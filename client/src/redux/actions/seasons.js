@@ -12,7 +12,7 @@ export const getSeasons = (filter) => async dispatch => {
     return true;
 };
 
-export const createSeason = seasonData => async (dispatch, getState) => {
+export const createSeason = ({ seasonData }) => async (dispatch, getState) => {
     const { user } = getState();
     const data = await request('/api/admin/seasons', 'POST', { access_token: user.user.access_token, data: seasonData });
     if (!data) return false;
@@ -21,7 +21,7 @@ export const createSeason = seasonData => async (dispatch, getState) => {
     return true;
 };
 
-export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
+export const updateSeason = ({ id, seasonData }) => async (dispatch, getState) => {
     const { user } = getState();
     const data = await request(`/api/admin/seasons/${id}`, 'PUT', { access_token: user.user.access_token, data: seasonData });
     if (!data) return false;
@@ -39,25 +39,14 @@ export const updateSeason = (id, seasonData) => async (dispatch, getState) => {
     return true;
 };
 
-export const deleteSeason = id => async (dispatch, getState) => {
+export const deleteSeason = ({ id }) => async (dispatch, getState) => {
     const { user } = getState();
     const data = await request(`/api/admin/seasons/${id}`, 'DELETE', { access_token: user.user.access_token });
     if (!data) return false;
 
-    // Close Delete Modal
-    // dispatch({
-    //     type: TOGGLE_MODAL,
-    // })
-
-    // Open Alert Modal
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: {
-            isVisible: true,
-            title: 'Delete Season',
-            message: data.message,
-        },
-        modalType: 'alert',
-    });
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
+    // // // // // // //
+    // change this to update redux instead of new get request
+    // // // // // // //
     return dispatch(getSeasons());
 };

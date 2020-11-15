@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from 'redux/actions/auth';
 import { Icon } from 'components';
+import { Site_Name_Full } from 'assets/resourceStrings';
 import logo from 'assets/images/logo.png';
 import { history } from '../helpers';
 import './dashboardnav.scss';
@@ -31,7 +32,7 @@ class DashboardNav extends Component {
                         <div className="dashboard-nav-header">
                             <img src={logo} alt="Logo" />
                             <div>
-                                <h2>HockeyDB</h2>
+                                <h2>{Site_Name_Full}</h2>
                                 <p>{this.props.currentSeason && this.props.currentSeason.name}</p>
                             </div>
                         </div>

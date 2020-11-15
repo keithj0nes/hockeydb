@@ -233,6 +233,7 @@ class DashDivisions extends Component {
 
     render() {
         const { divisions, isLoading } = this.props;
+        const showingHidden = this.props.location.search.includes('hidden');
 
         const pageHeaderInfo = {
             title: 'Divisions',
@@ -281,6 +282,13 @@ class DashDivisions extends Component {
                             onHide={this.handleHideDivision}
                             isLoading={isLoading}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no divisions within your filter criteria' : 'Sorry, no divisions have been created. Start by adding a division above.'}
+                            popoverData={ (d, closePopover) => (
+                                <ul>
+                                    <li onClick={() => {this.handleEditDivision(d); closePopover() }}>Edit Division</li>
+                                    <li onClick={() => {this.handleHideDivision(d); closePopover() }}>{`${showingHidden ? 'Unh' : 'H'}ide Division`}</li>
+                                    <li onClick={() => {this.handleDeleteDivision(d); closePopover() }}>Delete Division</li>
+                                </ul> 
+                            )}
                         />
                     </div>
                 </div>

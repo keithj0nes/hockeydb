@@ -49,16 +49,10 @@ export const request = async (route, method, session, noAuth) => {
         return false;
     });
 
-    // console.log(responseRaw, 'resproaw')
-
-    // console.log(responseRaw.data, 'RAW RESPONSE in MIDDLEWARE')
     if (!responseRaw) return false;
     const { status, data, message, shouldLogOut, redirect, snack } = responseRaw.data;
-    // const status = 243;
-    // const message = 'fake message lol';
 
-    // console.log(responseRaw.data, 'AYEEOOOO 🤬🤬🤬')
-
+    console.log({ status, data, message, shouldLogOut, redirect, snack }, '{ status, data, message, shouldLogOut, redirect, snack }')
 
     if (snack) {
         const statusFirst = String(status).charAt(0);
