@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import React from 'react';
 import PropTypes from 'prop-types';
 import './button.scss';
@@ -6,23 +7,28 @@ import './button.scss';
 
 // opa (opacity) is for the site.com/styleguide page to perminaently be in the 'hover' state
 
-const Button = ({ title, onClick, opa, style, type }) => {
+const Button = ({ title, onClick, opa, style, type, htmlType }) => {
     const _style = {
         opacity: opa && 0.8,
         ...style, // props.style
     };
 
     return (
-        <button type="button" className={`btn ${type}`} style={_style} onClick={onClick} disabled={type === 'disabled'}>{title}</button>
+        <button type={htmlType} className={`btn ${type}`} style={_style} onClick={onClick} disabled={type === 'disabled'}>{title}</button>
     );
 };
 
 export default Button;
 
+Button.defaultProps = {
+    htmlType: 'button',
+};
+
 Button.propTypes = {
     title: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func, // .isRequired,
     type: PropTypes.oneOf(['admin', 'cancel', 'disabled', 'danger', 'success', 'outline']),
     opa: PropTypes.bool,
     style: PropTypes.object,
+    htmlType: PropTypes.string,
 };

@@ -1,52 +1,34 @@
 import React from 'react';
-// import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DashSelect, DashCheckbox } from './';
 import { history } from 'helpers';
 
-const DashFilter = ({data, getAction, closeFilter, onChange}) => {
+const DashFilter = ({ data, closeFilter, onChange, filters, setFilters }) => {
 
-    // create local state of filters
-    // const [ filters, setFilters ] = useState({});
+    const handleFilterChange = e => {
+        if (e === null) { 
+            closeFilter();
+            return setFilters({});
+        }
 
-    // <Filter data={this.state.filterData} getAction={this.props.getSeasons} history={this.props.history} filterType={'seasons'}/>
+        const _filters = { ...filters };
 
-    // const handleChange = e => {
-    //     const hFilters = {...filters};
+        if (e.target.value === '' || e.target.checked === false) {
+            delete _filters[e.target.name];
+        } else {
+            _filters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        }
+        return setFilters(_filters);
+    }
 
-    //     console.log(e.target.type, 'TYPEEEE')
-    //     console.log(e.target.checked, 'CHECCKEED')
-    //     console.log(e.target.name, 'NAMEE')
-
-    //     // if no value, delete from the filters copy
-    //     if(e.target.value === '' || e.target.checked === false){
-    //         console.log(' false, hitting ehre')
-    //         delete hFilters[e.target.name];
-    //     } else {
-    //         hFilters[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    //     }
-
-    //     // // delete the divisions key off filters when the props.reloadOn of state.filters is changed
-    //     // if(prevState.filters[this.props.reloadOn] !== filters[this.props.reloadOn]){
-    //     //     delete filters['division'];
-    //     // }
-
-    //     onChange(e)
-
-    //     const search = setQuery(hFilters);
-    //     getAction(search);
-    //     history.push({ search });
-    //     return setFilters(hFilters);
-    // }
-
-    // const clearFilters = () => {
-    //     history.push({search: ''});
-    //     getAction();
-    //     setFilters({});
-    //     closeFilter()
-    // }
-
-    // // need to use redux to hold filter state
+    // use this function until all routes are using hoooks
+    // this function allows the whole site not to crash
+    const changeFunc = params => {
+        if (!!onChange) {
+            return onChange(params);
+        }
+        return handleFilterChange(params);
+    };
 
     return (
         <>
@@ -54,12 +36,11 @@ const DashFilter = ({data, getAction, closeFilter, onChange}) => {
                 <h2>Filter Options</h2>
 
                 {history.location.search.length > 0 && (
-                    <p className="clear-btn" onClick={() => onChange(null)}>Clear X</p>
+                    <p className="clear-btn" onClick={() => changeFunc(null)}>Clear X</p>
                 )}
             </div>
 
             {data.map(d => {
-
                 return (
                     <div className="popover-section" key={d.title}>
                         <h5>{d.title}</h5>
@@ -70,11 +51,8 @@ const DashFilter = ({data, getAction, closeFilter, onChange}) => {
                                     {field.type === 'select' && (
                                         <DashSelect 
                                             name={field.name} 
-                                            // listOfSelects={[{name: 'All', value: ''}, ...myOptions]} 
                                             listOfSelects={field.listOfSelects} 
-                                            onChange={onChange} 
-                                            // onChange={handleChange} 
-
+                                            onChange={changeFunc} 
                                             defaultValue={field.defaultValue} 
                                             useKey={field.useKey} />
                                     )}
@@ -84,10 +62,8 @@ const DashFilter = ({data, getAction, closeFilter, onChange}) => {
                                             <DashCheckbox 
                                                 name={field.name}
                                                 title={field.title}
-                                                defaultValue={field.defaultValue} 
-                                                // onChange={handleChange} />
-                                                onChange={onChange} />
-
+                                                defaultValue={Boolean(field.defaultValue)} 
+                                                onChange={changeFunc} />
                                         </div>
                                     )}
                                 </span>
@@ -96,65 +72,15 @@ const DashFilter = ({data, getAction, closeFilter, onChange}) => {
                     </div>
                 )
             })}
-
-
-            {/* <div className="popover-section">
-                <h5>Type</h5>
-
-                <DashSelect 
-                    name='type' 
-                    // listOfSelects={[{name: 'All', value: ''}, ...myOptions]} 
-                    listOfSelects={this.state.seasonTypes} 
-                    // onChange={this.handleChange} 
-                    defaultValue={this.state.filters.type || ''} 
-                    useKey="value" />
-            </div>
-
-            <div className="popover-section">
-                <h5>Other</h5>
-                <div className="popover-checkbox-container">
-                    <DashCheckbox name="show_hidden" title="Hidden Seasons" defaultValue={this.state.filters.show_hidden || false} />
-                </div>
-            </div> */}
-
-            {/* <div className="popover-section">
-                <h5>Permissions</h5>
-                <div className="popover-checkbox-container">
-                    <DashCheckbox name="permissions" title="Default" />
-                    <DashCheckbox name="permissions" title="Modified"defaultValue={true} />
-                </div>
-            </div> */}
         </>
     )
 }
 
-
 export default DashFilter;
-
-// WORKING ON SAVING FILTER STATE IN REDUX
-
-// what if store local to dash seasons component ?????
-
-
-// const mapStateToProps = (state, {filterType}) => {
-//     // console.log(state, 'STATE')
-//     return {
-//         isVisible: state[filterType].isVisible
-//     }
-// }
-
-// const mapDispatchToProps = (dispatch, {filterType}) => {
-//     return {
-//         // toggleFilter: (bool) => dispatch(toggleFilter(filterType, bool))
-//     }
-// }
-// export default connect(mapStateToProps, mapDispatchToProps)(DashFilter);
-
-
 
 DashFilter.propTypes = {
     data: PropTypes.array.isRequired,
-    getAction: PropTypes.func.isRequired,
-    closeFilter: PropTypes.func.isRequired,
-    filterType: PropTypes.string.isRequired
-}
+    getAction: PropTypes.func, // .isRequired,
+    closeFilter: PropTypes.func, // .isRequired,
+    filterType: PropTypes.string, // .isRequired
+};

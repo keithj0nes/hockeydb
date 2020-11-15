@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 import { toggleNavSlider } from '../../redux/actions/misc';
 import { DashboardNav, HamburgerIcon, ProfilePic, SnackBar, SlideOut } from '../../components';
 import DashSeasons from './DashSeasons/DashSeasons';
+import DashSeasons2 from './DashSeasons/DashSeasons2';
 import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
@@ -27,6 +28,8 @@ const dashboardPageList = {
     admin: [
         { name: 'Dashboard',  to: '',            icon: ICONS.DASHBOARD, component: DashHome,                      exact: true,  hideFromNavigation: false },
         { name: 'Seasons',    to: '/seasons',    icon: ICONS.SEASONS,   component: DashSeasons,                   exact: false, hideFromNavigation: false },
+        { name: 'Seasons2',    to: '/seasons2',    icon: ICONS.SEASONS,   component: DashSeasons2,                   exact: false, hideFromNavigation: false },
+
         { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS, component: DashDivisions,                 exact: false, hideFromNavigation: false },
         { name: 'Teams',      to: '/teams',      icon: ICONS.TEAMS,     component: DashTeams,                     exact: false, hideFromNavigation: false },
         // { name: 'Players',    to: '/players',    icon: 'players', component: DashPlayers,                 exact: false, hideFromNavigation: false },

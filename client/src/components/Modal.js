@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { Form, Input, Select, Checkbox } from 'antd';
 import { toggleModal } from '../redux/actions/misc';
-import { Button, DashInput, DashSelect } from '.';
+import { Button, DashInput, DashSelect, DashCheckbox } from '.';
+import './checkbox.scss';
 
 class DeleteModal extends React.Component {
     state = {
@@ -36,7 +37,7 @@ class DeleteModal extends React.Component {
 
                 <div className="modal-button-container">
                     <Button title="Cancel" type="cancel" onClick={toggleModal} />
-                    <Button title="Delete" type={!this.state.shouldBeDeleted ? 'disabled' : 'danger'} onClick={data.deleteAction} />
+                    <Button title="Delete" type={!this.state.shouldBeDeleted ? 'disabled' : 'danger'} htmlType="submit" onClick={data.deleteAction} />
                 </div>
             </div>
         );
@@ -56,72 +57,37 @@ const AlertModal = ({ data, toggleModal }) => (
 
 
 const PromptModal = ({ data, toggleModal }) => (
-    <div>
+    <Form
+        layout="vertical"
+        className="haha"
+        // use object.assign to merge array of objects into one object
+        initialValues={Object.assign({}, ...data.fields.map(item => ({ [item.name]: item.defaultValue })))}
+        onFinish={data.confirmAction}
+    >
         {data.message && <p>{data.message}</p>}
-
-
         <br />
+
         {data.fields.map(field => (
             <div key={field.name}>
 
                 {field.type === 'input' && (
-                // <div className="modal-field">
-                //     <label htmlFor={field.name}>{field.title}</label>
-                //     <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
-                // </div>
-                // <Input name={field.name} label={field.title} disabled={field.disabled} onChange={data.onChange} />
-
-                    <div className="modal-field">
-                        <DashInput
-                            name={field.name}
-                            label={field.title}
-                            defaultValue={field.defaultValue}
-                            disabled={field.disabled}
-                            onChange={data.onChange}
-                        />
-                    </div>
+                    <Form.Item label={field.title} name={field.name} rules={field.rules}>
+                        <Input placeholder={field.title} />
+                    </Form.Item>
                 )}
 
                 {field.type === 'select' && (
-                    <div className="modal-field">
-                        {/* <label htmlFor={field.name}>{field.title}</label>
-                                <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
-                                    {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
-                                    {field.listOfSelects.map((item, ind) => (
-                                        field.dash && ind !== 0 ? (
-                                            // <option key={ind} value={item.value || item.id}>{item[field.dashValue]} - {item.name} </option>
-                                            <option key={ind} value={JSON.stringify({[field.dash.dashValue]: item[field.dash.dashValue], [field.name]: item.value || item.id})}>{item[field.dash.dashName]} - {item.name} </option>
-                                        ):(
-                                            <option key={ind} value={item.value || item.id}> {item.name} </option>
-                                        )
-                                    ))}
-                                </select> */}
-
-                        <DashSelect
-                            name={field.name}
-                            // listOfSelects={[{name: 'All', value: ''}, ...myOptions]}
-                            listOfSelects={field.listOfSelects}
-                            onChange={data.onChange}
-                            // onChange={handleChange}
-                            title={field.title}
-                            defaultValue={field.defaultValue}
-                            useKey={field.useKey}
-                        />
-                    </div>
-
+                    <Form.Item label={field.title} name={field.name} rules={field.rules}>
+                        <Select placeholder={field.title}>
+                            {field.listOfSelects.map(item => <Select.Option key={item.name} value={item.value}>{item.value}</Select.Option>)}
+                        </Select>
+                    </Form.Item>
                 )}
 
                 {field.type === 'checkbox' && (
-                    <div className="modal-field">
-                        <div style={{ display: 'flex' }}>
-                            {!field.hidden && (
-                                <input type="checkbox" style={{ margin: '5px 10px 0 0' }} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
-                            )}
-                            <label htmlFor={field.name}>{field.title}</label>
-                        </div>
-
-                    </div>
-
+                    <Form.Item name={field.name} valuePropName="checked">
+                        <Checkbox>{field.title}</Checkbox>
+                    </Form.Item>
                 )}
 
                 { !!field.customComponent && (
@@ -130,7 +96,6 @@ const PromptModal = ({ data, toggleModal }) => (
                         {field.customComponent}
                     </div>
                 ) }
-
             </div>
         ))}
 
@@ -140,11 +105,112 @@ const PromptModal = ({ data, toggleModal }) => (
 
         <div className="modal-button-container">
             <Button title="Cancel" type="cancel" onClick={toggleModal} />
-            <Button title={data.confirmActionTitle} type="admin" onClick={data.confirmAction} />
-        </div>
+            <Button htmlType="submit" title={data.confirmActionTitle} type="admin" />
 
-    </div>
+            {/* <Button type="primary" htmlType="submit">
+                Submit
+            </Button> */}
+        </div>
+    </Form>
 );
+
+
+// const PromptModal = ({ data, toggleModal }) => (
+//     <div>
+//         {data.message && <p>{data.message}</p>}
+
+
+//         <br />
+//         {data.fields.map(field => (
+//             <div key={field.name}>
+
+//                 {field.type === 'input' && (
+//                 // <div className="modal-field">
+//                 //     <label htmlFor={field.name}>{field.title}</label>
+//                 //     <input type="text" name={field.name} defaultValue={field.defaultValue} disabled={field.disabled} onChange={data.onChange}/>
+//                 // </div>
+//                 // <Input name={field.name} label={field.title} disabled={field.disabled} onChange={data.onChange} />
+
+//                     <div className="modal-field">
+//                         <DashInput
+//                             name={field.name}
+//                             label={field.title}
+//                             defaultValue={field.defaultValue}
+//                             disabled={field.disabled}
+//                             onChange={data.onChange}
+//                         />
+//                     </div>
+//                 )}
+
+//                 {field.type === 'select' && (
+//                     <div className="modal-field">
+//                         {/* <label htmlFor={field.name}>{field.title}</label>
+//                                 <select className="select-css" name={field.name} defaultValue={field.defaultValue} onChange={data.onChange}>
+//                                     {!!field.hiddenValue && <option value="" hidden>{field.hiddenValue}</option>}
+//                                     {field.listOfSelects.map((item, ind) => (
+//                                         field.dash && ind !== 0 ? (
+//                                             // <option key={ind} value={item.value || item.id}>{item[field.dashValue]} - {item.name} </option>
+//                                             <option key={ind} value={JSON.stringify({[field.dash.dashValue]: item[field.dash.dashValue], [field.name]: item.value || item.id})}>{item[field.dash.dashName]} - {item.name} </option>
+//                                         ):(
+//                                             <option key={ind} value={item.value || item.id}> {item.name} </option>
+//                                         )
+//                                     ))}
+//                                 </select> */}
+
+//                         <DashSelect
+//                             name={field.name}
+//                             // listOfSelects={[{name: 'All', value: ''}, ...myOptions]}
+//                             listOfSelects={field.listOfSelects}
+//                             onChange={data.onChange}
+//                             // onChange={handleChange}
+//                             title={field.title}
+//                             defaultValue={field.defaultValue}
+//                             useKey={field.useKey}
+//                         />
+//                     </div>
+
+//                 )}
+
+//                 {field.type === 'checkbox' && (
+//                     <div className="modal-field">
+//                         <div style={{ display: 'flex' }}>
+//                             {!field.hidden && (
+//                                 <input type="checkbox" style={{ margin: '5px 10px 0 0' }} id={field.name} name={field.name} defaultChecked={field.defaultValue} onChange={data.onChange} />
+//                                 // <DashCheckbox 
+//                                 //     id={field.name}
+//                                 //     name={field.name}
+//                                 //     title={field.title}
+//                                 //     defaultValue={Boolean(field.defaultValue)} 
+//                                 //     onChange={data.onChange} />
+//                             )}
+//                             <label htmlFor={field.name}>{field.title}</label>
+//                         </div>
+
+//                     </div>
+
+//                 )}
+
+//                 { !!field.customComponent && (
+//                     <div className="modal-field">
+//                         <label htmlFor="">{field.title}</label>
+//                         {field.customComponent}
+//                     </div>
+//                 ) }
+
+//             </div>
+//         ))}
+
+//         {data.errors && (
+//             <p className="modal-error">{data.errors}</p>
+//         )}
+
+//         <div className="modal-button-container">
+//             <Button title="Cancel" type="cancel" onClick={toggleModal} />
+//             <Button title={data.confirmActionTitle} type="admin" onClick={data.confirmAction} />
+//         </div>
+
+//     </div>
+// );
 
 
 const renderModalType = (modalType, modalProps, isLoading, toggleModal) => {
