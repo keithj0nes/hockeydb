@@ -32,3 +32,5 @@ export const GET_SUCCESS = 'GET_SUCCESS';
 export const CREATE_SUCCESS = 'CREATE_SUCCESS';
 export const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
 export const CLEAR_STATE = 'CLEAR_STATE';
+
+export const REMOVE_HIDDEN = 'REMOVE_HIDDEN';

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-console */
 import axios from 'axios';
+import { notification } from 'antd';
 import store from '../store';
 import { history } from '../../helpers';
 // import { ROOT } from '../../client_config';
@@ -52,7 +53,6 @@ export const request = async (route, method, session, noAuth) => {
     if (!responseRaw) return false;
     const { status, data, message, shouldLogOut, redirect, snack } = responseRaw.data;
 
-    console.log({ status, data, message, shouldLogOut, redirect, snack }, '{ status, data, message, shouldLogOut, redirect, snack }')
 
     if (snack) {
         const statusFirst = String(status).charAt(0);
@@ -69,10 +69,38 @@ export const request = async (route, method, session, noAuth) => {
             break;
         }
 
-        store.dispatch({
-            type: 'TOGGLE_SNACKBAR',
-            payload: { isVisible: true, message, type },
-        });
+        const options = {
+            message: type.charAt(0).toUpperCase() + type.slice(1),
+            description: message,
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+            placement: 'topRight',
+            duration: type === 'error' ? 0 : undefined,
+        };
+
+        switch (type) {
+        case 'error':
+            notification.error(options);
+            break;
+        case 'alert':
+            notification.info(options);
+            break;
+
+        case 'success':
+            notification.success(options);
+            break;
+        case 'warning':
+            notification.success(options);
+            break;
+        default:
+            notification.open(options);
+        }
+
+        // store.dispatch({
+        //     type: 'TOGGLE_SNACKBAR',
+        //     payload: { isVisible: true, message, type },
+        // });
     }
 
     if (status !== 200) {

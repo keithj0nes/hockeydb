@@ -261,23 +261,28 @@ const updateSeason = async (req, res) => {
     console.log(req.body, 'updateSeason BODY')
     const { id } = req.params;
     
-
-    // Manage hidden request
-    if(req.body.hasOwnProperty('is_hidden')){
-        const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
-        if(season.is_active) {
-            return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season', snack: true })
-        }
-        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
-        console.log(data, 'NOT HIDING NAYMORE data')
-        return res.status(200).send({ status: 200, data: [], message: is_hidden ? 'Season hidden' : 'Season unhidden', snack: true })
-    }
-
     const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
 
     if (!season) {
         return res.status(200).send({ status: 404, error: true, message: 'Season not found', snack: true })
     }
+    
+    // Manage hidden request
+    if(req.body.hasOwnProperty('is_hidden')){
+        // const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
+        if(season.is_active) {
+            return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season', snack: true })
+        }
+        const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
+        console.log(data, 'NOT HIDING NAYMORE data')
+        return res.status(200).send({ status: 200, data: {...data[0], is_hidden}, message: is_hidden ? 'Season hidden' : 'Season unhidden', snack: true })
+    }
+
+    // const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
+
+    // if (!season) {
+    //     return res.status(200).send({ status: 404, error: true, message: 'Season not found', snack: true })
+    // }
     
     if(name) {
         const nameExists = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));

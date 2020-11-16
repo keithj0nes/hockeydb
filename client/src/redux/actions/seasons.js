@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SET_CURRENT_SEASON } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SET_CURRENT_SEASON, REMOVE_HIDDEN } from '../actionTypes';
 
 export const getSeasons = (filter) => async dispatch => {
     dispatch({ type: `seasons/${GET_INIT}` });
@@ -32,10 +32,11 @@ export const updateSeason = ({ id, seasonData }) => async (dispatch, getState) =
         dispatch({ type: SET_CURRENT_SEASON, payload: data.data });
     }
 
-    if (data.message === 'Season hidden' || data.message === 'Season unhidden') {
-        // after hiding/unhiding, getSeasons again with filters
-        return 'getSeasons';
+    if ('is_hidden' in seasonData) {
+        dispatch({ type: `seasons/${REMOVE_HIDDEN}`, payload: data.data.id });
+        return { is_hidden: data.data.is_hidden };
     }
+
     return true;
 };
 

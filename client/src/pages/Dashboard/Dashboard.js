@@ -2,9 +2,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import logo from 'assets/images/logo.png';
+import { ICONS } from 'assets/ICONS';
 import { toggleNavSlider } from '../../redux/actions/misc';
-import { DashboardNav, HamburgerIcon, ProfilePic, SnackBar, SlideOut } from '../../components';
-import DashSeasons from './DashSeasons/DashSeasons';
+import { DashboardNav, HamburgerIcon, ProfilePic, SlideOut } from '../../components';
+// import DashSeasons from './DashSeasons/DashSeasons';
 import DashSeasons2 from './DashSeasons/DashSeasons2';
 import DashDivisions from './DashDivisions/DashDivisions';
 import DashTeams from './DashTeams/DashTeams';
@@ -16,10 +19,6 @@ import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashLocations from './DashLocations/DashLocations';
 import DashUsers from './DashUsers/DashUsers';
 import DashHome from './DashHome/DashHome';
-
-import logo from 'assets/images/logo.png';
-import { ICONS } from 'assets/ICONS';
-
 import '../../assets/styles/dashboard.scss';
 
 
@@ -27,8 +26,8 @@ import '../../assets/styles/dashboard.scss';
 const dashboardPageList = {
     admin: [
         { name: 'Dashboard',  to: '',            icon: ICONS.DASHBOARD, component: DashHome,                      exact: true,  hideFromNavigation: false },
-        { name: 'Seasons',    to: '/seasons',    icon: ICONS.SEASONS,   component: DashSeasons,                   exact: false, hideFromNavigation: false },
-        { name: 'Seasons2',    to: '/seasons2',    icon: ICONS.SEASONS,   component: DashSeasons2,                   exact: false, hideFromNavigation: false },
+        // { name: 'Seasons OLD',    to: '/seasons_old',    icon: ICONS.SEASONS,   component: DashSeasons,                   exact: false, hideFromNavigation: false },
+        { name: 'Seasons',   to: '/seasons',   icon: ICONS.SEASONS,   component: DashSeasons2,                  exact: false, hideFromNavigation: false },
 
         { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS, component: DashDivisions,                 exact: false, hideFromNavigation: false },
         { name: 'Teams',      to: '/teams',      icon: ICONS.TEAMS,     component: DashTeams,                     exact: false, hideFromNavigation: false },
@@ -52,55 +51,55 @@ const dashboardPageList = {
     manager: [
         { name: 'My Teams',   to: '/myteams',    icon: ICONS.TEAMS,     component: () => <h1>MY TEAMS PAGE</h1>,  exact: false, hideFromNavigation: false },
     ],
-    player: []
-}
+    player: [],
+};
 
 const Dashboard = (props) => {
-    const { match } = props;
+    const { match, navSliderVisible, toggleNavSlider, admin_type } = props;
     return (
         <div className="dashboard-container">
 
-            <SlideOut isVisible={props.navSliderVisible} onClose={props.toggleNavSlider} sticky>
+            <SlideOut isVisible={navSliderVisible} onClose={toggleNavSlider} sticky>
                 <DashboardNav {...props} dashLinks={dashboardPageList} />
             </SlideOut>
 
             <div className="dashboard-content">
 
-                {/* <SnackBar /> */}
-                {/* <Notification /> */}
-
                 <div className="dashboard-header hide-desktop">
                     <HamburgerIcon onClick={props.toggleNavSlider} />
-                    <img src={logo} alt="Logo" className="header-logo"/>
+                    <img src={logo} alt="Logo" className="header-logo" />
                     <ProfilePic />
                 </div>
 
-                {dashboardPageList[props.admin_type].map(page => {
-                    return (
-                        <Route 
-                            key={page.to}
-                            path={`${match.path}${page.to}`}
-                            component={page.component}
-                            exact={page.exact}
-                        />
-                    )
-                })}
+                {dashboardPageList[admin_type].map(page => (
+                    <Route
+                        key={page.to}
+                        path={`${match.path}${page.to}`}
+                        component={page.component}
+                        exact={page.exact}
+                    />
+                ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
-const mapStateToProps = state => {
-    return {
-        user: state.user.user,
-        admin_type: state.user.user.admin_type,
-        currentSeason: state.seasons.currentSeason,
-        navSliderVisible: state.misc.navSliderVisible
-    }
-}
+const mapStateToProps = state => ({
+    user: state.user.user,
+    admin_type: state.user.user.admin_type,
+    navSliderVisible: state.misc.navSliderVisible,
+});
 
 const mapDispatchToProps = dispatch => ({
     toggleNavSlider: () => dispatch(toggleNavSlider()),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+
+Dashboard.propTypes = {
+    match: PropTypes.object,
+    navSliderVisible: PropTypes.bool,
+    user: PropTypes.object,
+    admin_type: PropTypes.string,
+    toggleNavSlider: PropTypes.func.isRequired,
+};

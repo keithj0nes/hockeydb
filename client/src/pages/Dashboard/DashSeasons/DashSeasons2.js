@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from 'redux/actions/seasons';
@@ -15,29 +15,15 @@ const defaultState = {
         { name: 'Playoffs', value: 'Playoffs' },
         { name: 'Tournament', value: 'Tournament' },
     ],
-    // name: '',
-    // type: 'Regular',
-    // is_active: false,
-    edit: {},
-    // filters: {
-    //     // type: ''
-    // },
-    filterRequestSent: false,
-    isFilterVisible: false,
     filterData: [],
 };
 
 const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, createSeason, updateSeason, deleteSeason }) => {
     const [state, setState] = useState(defaultState);
     const [filters, setFilters] = useQueryParam({ getMethod: getSeasons });
-
-    // useEffect(() => {
-    //     console.log('setting state on flitler change');
-    //     setState({ ...state, filters });
-    // }, []);
+    const showingHidden = location.search.includes('hidden');
 
     const setFilterDataOpenFilter = (val) => {
-        console.log(filters, 'filters');
         const filterData = [{
             title: 'Type',
             options: [{
@@ -83,28 +69,12 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
                     rules: [{ required: true }],
                 },
             ],
-            onChange: handleChange,
             confirmActionTitle: 'Create Season',
-            // confirmAction: () => { validation() && this.props.createSeason({ name: this.state.name, type: this.state.type }); this.setState(defaultState); },
-            // confirmAction: (e) => console.log(e, 'button clicked')
             confirmAction: (values) => createSeason({ seasonData: values }),
-            // confirmAction: (values) => console.log(values),
-
         }, 'prompt');
     };
 
-    const handleChange = edit => e => {
-        console.log(e.target.value, 'e.target.value')
-        if (!!edit) {
-            const editStateCopy = { ...state.edit };
-            editStateCopy[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-            return setState({ ...state, edit: editStateCopy });
-        }
-        return setState({ ...state, [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
-    };
-
     const handleEditSeason = (item) => {
-        setState({ ...state, edit: item });
         toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: false,
@@ -131,11 +101,22 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
                     defaultValue: item.is_active,
                 },
             ],
-            onChange: handleChange('editing'),
             confirmActionTitle: 'Update Season',
-            // confirmAction: () => this.validation('edit') && this.props.updateSeason(item.id, this.state.edit),
             confirmAction: (values) => updateSeason({ id: item.id, seasonData: values }),
-            // confirmAction: (e) => console.log(e, 'button EDIT clicked'),
+        }, 'prompt');
+    };
+
+    const handleHideSeason = (item) => {
+        toggleModal({
+            isVisible: true,
+            isClosableOnBackgroundClick: true,
+            title: `${item.hidden_date ? 'Unh' : 'H'}ide Season`,
+            message: item.hidden_date
+                ? 'Are you sure you want to unhide this season? This will cause the selected season to be visible on the public page'
+                : 'Are you sure you want to hide this season?\nThis will hide the season from both the admin dashboard and from the public page. You can view all hidden seasons using the filter. This does NOT delete the season',
+            fields: [],
+            confirmActionTitle: `${item.hidden_date ? 'Unh' : 'H'}ide Season`,
+            confirmAction: () => updateSeason({ id: item.id, seasonData: { is_hidden: !!!item.hidden_date } }),
         }, 'prompt');
     };
 
@@ -158,7 +139,6 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
             {
                 iconName: 'ADD_USER',
                 title: 'Add Season',
-                // onClick: () => setFilters({ ...filters, show_hidden: true }),
                 onClick: handleAddSeason,
             },
             {
@@ -186,7 +166,6 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
 
             <div className="dashboard-list-container">
                 <div className="dashboard-list">
-                    <h3>lol</h3>
                     <DashTable
                         data={seasons}
                         sections={{ name: 'two', type: 'one' }}
@@ -195,9 +174,8 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
                         emptyTableText={location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                         popoverData={(d, closePopover) => (
                             <ul>
-                                <li>Item!</li>
                                 <li onClick={() => { handleEditSeason(d); closePopover(); }}>Edit Season</li>
-                                {/* <li onClick={() => { this.handleHideSeason(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Season`}</li> */}
+                                {!d.is_active && <li onClick={() => { handleHideSeason(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Season`}</li>}
                                 {!d.is_active && <li onClick={() => { handleDeleteSeason(d); closePopover(); }}>Delete Season</li>}
                             </ul>
                         )}
@@ -231,7 +209,6 @@ DashSeasons2.propTypes = {
     toggleModal: PropTypes.func.isRequired,
     deleteSeason: PropTypes.func.isRequired,
     updateSeason: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
     isLoading: PropTypes.bool.isRequired,
     location: PropTypes.object,
 };
