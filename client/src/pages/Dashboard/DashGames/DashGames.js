@@ -16,7 +16,7 @@ import DashTable from '../DashTable';
 import Auth, { accessAdmin, accessONLYScorekeeper } from '../../../components/Auth';
 
 
-export class DashGames extends Component {
+class DashGames extends Component {
     state = {
         start_date: new Date(),
         home_team: null,

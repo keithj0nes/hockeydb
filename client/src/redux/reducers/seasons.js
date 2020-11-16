@@ -1,6 +1,6 @@
 // SEASONS REDUCER!!
 
-import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, SET_CURRENT_SEASON } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, SET_CURRENT_SEASON, REMOVE_HIDDEN } from '../actionTypes';
 
 const initialSeasonState = {
     isLoading: true,
@@ -38,6 +38,8 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
         });
         return { ...state, isLoading: false, seasons: newSeasons };
     }
+    case `seasons/${REMOVE_HIDDEN}`:
+        return { ...state, isLoading: false, seasons: state.seasons.filter(item => item.id !== payload) };
     case 'seasons/FILTER_IS_VISIBLE':
         // if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)
         // otherwise just set it to the opposite of what it's currently set to

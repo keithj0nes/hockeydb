@@ -3,7 +3,6 @@ import { history, getQuery, setQuery } from '../helpers';
 
 const useQueryParam = ({ getMethod }) => {
     const [queryParams, setQueryParams] = useState([]);
-    
     useEffect(() => {
         if (history.location.search.length > 0) {
             const [filters, filterString] = getQuery();
