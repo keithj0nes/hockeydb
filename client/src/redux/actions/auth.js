@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
 import cookie from 'react-cookies';
+import jwt from 'jsonwebtoken';
 import { request } from './middleware';
 import { AUTH_SET_USER, SET_CURRENT_SEASON } from '../actionTypes';
 
@@ -34,14 +35,24 @@ export const loginFromCookie = () => async dispatch => {
     const access_token = cookie.load('hockeydb_auth');
     if (!access_token) return false;
 
+    const decoded = jwt.decode(access_token);
+
+    dispatch(setUser({ ...decoded.user, access_token }));
+    dispatch({ type: SET_CURRENT_SEASON, payload: decoded.season });
+
     // USE THIS FOR SERVER SIDE TOKEN AUTH
+    // calling this request gives a flash in the ui
     const data = await request('/api/auth/login/cookie', 'POST', { access_token });
 
     // triggered if user is deactivated / suspended
     if (!data) return dispatch(logout());
 
-    dispatch(setUser({ ...data.data.user, access_token }));
-    dispatch({ type: SET_CURRENT_SEASON, payload: data.data.season });
+    if (decoded.season.id !== data.data.season.id) {
+        dispatch({ type: SET_CURRENT_SEASON, payload: data.data.season });
+    }
+
+    // dispatch(setUser({ ...data.data.user, access_token }));
+    // dispatch({ type: SET_CURRENT_SEASON, payload: data.data.season });
     // dispatch({type: `seasons/${GET_SUCCESS}`, payload: data.data.seasons})
 
     return true;

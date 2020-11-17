@@ -11,7 +11,8 @@ import { logout } from './auth';
 
 // the request function calls to serverside - if errors occur, they will be caught and handled here as an error modal
 export const request = async (route, method, session, noAuth) => {
-    if (!session) {
+// export const request = async ({ route, method, session, public }) => {
+    if (!session && method !== 'DELETE') {
         return alert('no session, please include a session object');
     }
     if (!method) {
@@ -21,17 +22,25 @@ export const request = async (route, method, session, noAuth) => {
         return alert('no route, please include a route string');
     }
 
-    if (!noAuth && !session.access_token) {
+    let access_token;
+
+    if (!noAuth) {
+        access_token = store.getState().user.user.access_token;
+    }
+
+    if (!noAuth && !access_token) {
         return alert('no access token for auth route');
     }
+
+    console.log({ route, access_token }, 'ACCESS TOKEN!!');
 
     const responseRaw = await axios({
         method,
         // url: `${ROOT}${route}`,
-        url: `${route}`,
-        data: session.data,
+        url: route,
+        data: !!session && session.data,
         headers: {
-            Authorization: noAuth ? null : `Bearer ${session.access_token}`,
+            Authorization: noAuth ? null : `Bearer ${access_token || session.access_token}`,
         },
     }).catch(err => {
         console.log(err, 'error in responseRaw');
