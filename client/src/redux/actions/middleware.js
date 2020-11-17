@@ -32,8 +32,6 @@ export const request = async (route, method, session, noAuth) => {
         return alert('no access token for auth route');
     }
 
-    console.log({ route, access_token }, 'ACCESS TOKEN!!');
-
     const responseRaw = await axios({
         method,
         // url: `${ROOT}${route}`,
