@@ -44,7 +44,7 @@ class Login extends React.Component {
 
         return (
             <div>
-                <div className="form">
+                <div className="form" style={{marginLeft: 20}}>
                     <form onSubmit={this.handleSubmit}>
                         <h1>Login</h1>
                         <div className="inputs">
@@ -66,9 +66,9 @@ class Login extends React.Component {
                     </form>
                 </div>
 
-                <button type="button" name="admin" style={{ display: 'block', marginLeft: 20, marginTop: 40 }} onClick={this.handleSubmit2}>Login as <br /> ADMIN</button>
-                <button type="button" name="scorekeeper" style={{ display: 'block', marginLeft: 20, marginTop: 20 }} onClick={this.handleSubmit2}>Login as <br /> SCOREKEEPER</button>
-                <button type="button" name="teammanager" style={{ display: 'block', marginLeft: 20, marginTop: 20 }} onClick={this.handleSubmit2}>Login as <br /> TEAM MANAGER</button>
+                <button className="btn" type="button" name="admin" style={{ display: 'block', marginLeft: 20, marginTop: 40 }} onClick={this.handleSubmit2}>Login as <br /> ADMIN</button>
+                <button className="btn" type="button" name="scorekeeper" style={{ display: 'block', marginLeft: 20, marginTop: 20 }} onClick={this.handleSubmit2}>Login as <br /> SCOREKEEPER</button>
+                <button className="btn" type="button" name="teammanager" style={{ display: 'block', marginLeft: 20, marginTop: 20 }} onClick={this.handleSubmit2}>Login as <br /> TEAM MANAGER</button>
 
             </div>
         );
