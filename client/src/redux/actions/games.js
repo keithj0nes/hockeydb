@@ -7,7 +7,7 @@ export const getGames = filter => async (dispatch, getState) => {
         dispatch({ type: `games/${GET_INIT}` });
     }
 
-    const data = await request(`/api/games?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/games?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
 
     dispatch({ type: 'SCHEDULE_FILTERS', payload: { seasons: data.data.seasons, divisions: data.data.divisions, teams: data.data.teams } });
@@ -21,17 +21,16 @@ export const getGames = filter => async (dispatch, getState) => {
 
 
 export const getGameById = gameId => async (dispatch) => {
-    const game = await request(`/api/games/${gameId}`, 'GET', {}, true);
-    if (!game.data) return false;
-    dispatch({ type: `gameById/${GET_SUCCESS}`, payload: game.data });
+    const data = await request({ url: `/api/teams?${gameId}`, method: 'GET', session: {}, publicRoute: true });
+    if (!data.data) return false;
+    dispatch({ type: `gameById/${GET_SUCCESS}`, payload: data.data });
     return true;
 };
 
 
-export const newGame = (data) => async (dispatch, getState) => {
-    const { user } = getState();
-    const newgame = await request('/api/admin/games', 'POST', { data, access_token: user.user.access_token });
-    if (!newgame.data) return false;
+export const newGame = (gameData) => async (dispatch) => {
+    const data = await request({ url: '/api/admin/games', method: 'POST', session: gameData });
+    if (!data.data) return false;
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
     return dispatch(getGames());
 };

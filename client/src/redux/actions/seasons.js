@@ -4,8 +4,7 @@ import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SE
 export const getSeasons = (filter) => async dispatch => {
     dispatch({ type: `seasons/${GET_INIT}` });
     // use filter variable or empty string if null/undefined
-    const data = await request(`/api/seasons${filter || ''}`, 'GET', {}, true);
-    // const data = await request({ route: `/api/seasons${filter || ''}`, method: 'GET', session: {}, public: true )};
+    const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data) return false;
     dispatch({ type: `seasons/${GET_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
@@ -14,8 +13,7 @@ export const getSeasons = (filter) => async dispatch => {
 };
 
 export const createSeason = ({ seasonData }) => async (dispatch) => {
-    const data = await request('/api/admin/seasons', 'POST', { data: seasonData });
-    // const data = await request({ route: '/api/admin/seasons', method: 'POST', session: { data: seasonData } });
+    const data = await request({ url: '/api/admin/seasons', method: 'POST', session: seasonData });
     if (!data) return false;
     dispatch({ type: `seasons/${CREATE_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
@@ -23,8 +21,7 @@ export const createSeason = ({ seasonData }) => async (dispatch) => {
 };
 
 export const updateSeason = ({ id, seasonData }) => async (dispatch) => {
-    const data = await request(`/api/admin/seasons/${id}`, 'PUT', { data: seasonData });
-    // const data = await request({ route: `/api/admin/seasons/${id}`, method: 'PUT', session: { data: seasonData } });
+    const data = await request({ url: `/api/admin/seasons/${id}`, method: 'PUT', session: seasonData });
     if (!data) return false;
     dispatch({ type: `seasons/${UPDATE_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
@@ -42,8 +39,7 @@ export const updateSeason = ({ id, seasonData }) => async (dispatch) => {
 };
 
 export const deleteSeason = ({ id }) => async (dispatch) => {
-    const data = await request(`/api/admin/seasons/${id}`, 'DELETE');
-    // const data = await request({ route: `/api/admin/seasons/${id}`, method: 'DELETE' });
+    const data = await request({ url: `/api/admin/seasons/${id}`, method: 'DELETE' });
     if (!data) return false;
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
     // // // // // // //

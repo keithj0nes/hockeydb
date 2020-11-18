@@ -15,7 +15,8 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
     }
 
     // use filter variable or empty string if null/undefined
-    const data = await request(`/api/divisions?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/divisions?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+
     if (!data) return false;
 
     dispatch({ type: `divisions/${GET_SUCCESS}`, payload: data.data.divisions });
@@ -26,9 +27,9 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
 };
 
 
-export const createDivision = (divisionData) => async (dispatch, getState) => {
-    const { user } = getState();
-    const data = await request('/api/admin/divisions', 'POST', { data: divisionData, access_token: user.user.access_token });
+export const createDivision = (divisionData) => async (dispatch) => {
+    const data = await request({ url: '/api/admin/divisions', method: 'POST', session: divisionData });
+
     if (!data) return false;
 
     dispatch({ type: `divisions/${CREATE_SUCCESS}`, payload: data.data });
@@ -38,9 +39,8 @@ export const createDivision = (divisionData) => async (dispatch, getState) => {
 };
 
 
-export const updateDivision = (id, divisionData) => async (dispatch, getState) => {
-    const { user } = getState();
-    const data = await request(`/api/admin/divisions/${id}`, 'PUT', { access_token: user.user.access_token, data: divisionData });
+export const updateDivision = (id, divisionData) => async (dispatch) => {
+    const data = await request({ url: `/api/admin/divisions/${id}`, method: 'PUT', session: divisionData });
     if (!data) return false;
 
     // NOT CONNNECTED YET
@@ -55,9 +55,9 @@ export const updateDivision = (id, divisionData) => async (dispatch, getState) =
 };
 
 
-export const deleteDivision = (id, season) => async (dispatch, getState) => {
-    const { user } = getState();
-    const data = await request(`/api/admin/divisions/${id}`, 'DELETE', { access_token: user.user.access_token });
+export const deleteDivision = (id, season) => async (dispatch) => {
+    const data = await request({ url: `/api/admin/divisions/${id}`, method: 'DELETE' });
+
     if (!data) return false;
 
     // Close Delete Modal
@@ -75,5 +75,7 @@ export const deleteDivision = (id, season) => async (dispatch, getState) => {
         },
         modalType: 'alert',
     });
+
+    // fix this using redux state
     return dispatch(getDivisions(season && `season=${season}`));
 };

@@ -8,7 +8,9 @@ import { AUTH_SET_USER, SET_CURRENT_SEASON } from '../actionTypes';
 export const setUser = user => ({ type: AUTH_SET_USER, payload: user });
 
 export const login = loginData => async dispatch => {
-    const data = await request('/api/auth/login', 'POST', { data: loginData }, true);
+    // const data = await request('/api/auth/login', 'POST', { data: loginData }, true);
+    const data = await request({ url: '/api/auth/login', method: 'POST', session: loginData, publicRoute: true });
+
     if (!data) return false;
     cookie.save('hockeydb_auth', data.data.access_token);
     dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));
@@ -42,8 +44,8 @@ export const loginFromCookie = () => async dispatch => {
 
     // USE THIS FOR SERVER SIDE TOKEN AUTH
     // calling this request gives a flash in the ui
-    const data = await request('/api/auth/login/cookie', 'POST', { access_token });
-
+    // const data = await request('/api/auth/login/cookie', 'POST', { access_token });
+    const data = await request({ url: '/api/auth/login/cookie', method: 'POST', session: access_token });
     // triggered if user is deactivated / suspended
     if (!data) return dispatch(logout());
 
