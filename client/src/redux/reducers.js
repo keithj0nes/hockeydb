@@ -65,11 +65,6 @@ const initialMiscState = {
         seasons: [],
         divisions: [],
     },
-    snackBar: {
-        isVisible: false,
-        message: '',
-        type: '', // oneOfType: error, alert, success
-    },
 };
 
 export const misc = (state = initialMiscState, { type, modalProps, modalType, isLoading, payload }) => {
@@ -82,8 +77,6 @@ export const misc = (state = initialMiscState, { type, modalProps, modalType, is
         return { ...state, scheduleFilters: { ...state.scheduleFilters, ...payload } };
     case 'STANDINGS_FILTERS':
         return { ...state, standingsFilters: { ...state.standingsFilters, ...payload } };
-    case 'TOGGLE_SNACKBAR':
-        return { ...state, snackBar: { ...state.snackBar, isVisible: !state.snackBar.isVisible, ...payload } };
     default:
         return state;
     }

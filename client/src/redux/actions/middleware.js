@@ -32,20 +32,13 @@ export const request = async ({ url, method, session, publicRoute }) => {
         return alert('no access token for auth route');
     }
 
-    console.log(session, ' SESSION');
-
-    if(url === '/api/admin/seasons') {
-
-        return null;
-    }
-
     const responseRaw = await axios({
         method,
         // url: `${ROOT}${route}`,
         url,
         data: session,
         headers: {
-            Authorization: publicRoute ? null : `Bearer ${access_token || data.access_token}`,
+            Authorization: publicRoute ? null : `Bearer ${access_token}`,
         },
     }).catch(err => {
         console.log(err, 'error in responseRaw');
@@ -67,9 +60,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
     if (!responseRaw) return false;
     const { status, data, message, shouldLogOut, redirect, snack } = responseRaw.data;
 
-
     if (snack) {
-
         // clean this snack section up
         const statusFirst = String(status).charAt(0);
         let type;
@@ -112,11 +103,6 @@ export const request = async ({ url, method, session, publicRoute }) => {
         default:
             notification.open(options);
         }
-
-        // store.dispatch({
-        //     type: 'TOGGLE_SNACKBAR',
-        //     payload: { isVisible: true, message, type },
-        // });
     }
 
     if (status !== 200) {
@@ -179,9 +165,6 @@ export const request = async ({ url, method, session, publicRoute }) => {
                 modalType: 'alert',
             });
         }
-
-
-        // alert(`status error: ${status} - ${message}`)
         return false;
     }
 

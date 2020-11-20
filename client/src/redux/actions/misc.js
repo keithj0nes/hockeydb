@@ -21,7 +21,3 @@ export const toggleFilter = (section, bool) => ({
     type: `${section}/FILTER_IS_VISIBLE`,
     payload: bool,
 });
-
-export const closeSnackBar = () => ({
-    type: 'TOGGLE_SNACKBAR',
-});

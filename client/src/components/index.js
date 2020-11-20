@@ -12,7 +12,6 @@ export { default as ProfilePic } from './ProfilePic';
 export { default as HeadManager } from './HeadManager';
 export { default as SlideOut } from './SlideOut';
 export { default as Pagination } from './Pagination';
-export { default as SnackBar } from './SnackBar';
 export { Checkbox, DashCheckbox } from './Checkbox';
 export { Popover } from './Popover';
 export { Icon } from './Icon';

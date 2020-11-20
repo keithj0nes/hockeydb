@@ -16,7 +16,7 @@ export const Popover = ({ children, isVisible, setIsVisible, closest, row, fullW
             window.removeEventListener('click', listener, true);
         }
         return () => window.removeEventListener('click', listener, true);
-    }, [isVisible]);
+    }, [isVisible, listener]);
 
     if (!isVisible) return null;
 
