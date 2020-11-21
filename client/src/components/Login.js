@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { login, logout, loginFromCookie } from '../redux/actions/auth';
-
-// import '../../styles/login.scss';
+import { login, loginFromCookie } from '../redux/actions/auth';
 
 class Login extends React.Component {
     state = {
@@ -16,7 +14,13 @@ class Login extends React.Component {
     }
 
     async componentDidMount() {
-        const redirectToReferrer = await this.props.loginFromCookie();
+        console.log('mounting')
+        let redirectToReferrer;
+        if (!!Object.keys(this.props.user).length) {
+            redirectToReferrer = true;
+        } else {
+            redirectToReferrer = await this.props.loginFromCookie();
+        }
         redirectToReferrer && this.setState({ redirectToReferrer });
     }
 
@@ -78,13 +82,11 @@ class Login extends React.Component {
 
 const mapStateToProps = state => ({
     user: state.user && state.user.user,
-    isUserLoggedIn: state.user && state.user.isUserLoggedIn,
 });
 
 
 const mapDispatchToProps = dispatch => ({
     login: loginData => dispatch(login(loginData)),
-    logout: () => dispatch(logout()),
     loginFromCookie: () => dispatch(loginFromCookie()),
 });
 
@@ -95,4 +97,5 @@ Login.propTypes = {
     login: PropTypes.func.isRequired,
     location: PropTypes.object,
     history: PropTypes.object,
+    user: PropTypes.object,
 };

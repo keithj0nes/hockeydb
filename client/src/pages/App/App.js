@@ -26,6 +26,7 @@ import './App.scss';
 
 class App extends Component {
     async componentDidMount() {
+        // try to log in user from cookie on website load
         await this.props.loginFromCookie();
     }
 

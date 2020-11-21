@@ -78,7 +78,7 @@ const login = async (req, res) => {
             const season = await db.seasons.findOne({is_active: true});
             await db.users.update({id: user.id}, {last_login: new Date()}).catch(err => console.log(err, 'update last_login error on LOCAL login'))
             const access_token = jwt.sign({ user, season }, JWTSECRET)
-            res.status(200).send({ status: 200, data: { user, season, seasons, access_token }, message: 'Welcome! You\'re logged in!' })
+            res.status(200).send({ status: 200, data: { user, season, access_token }, message: 'Welcome! You\'re logged in!' })
         })
     })(req, res);
 }
@@ -252,7 +252,8 @@ const checkSuspended = async (id) => {
         return { status: 404, message: 'User could not be found', shouldLogOut: true };
     }
     if(user.is_suspended){
-        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true };
+        // return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', shouldLogOut: true };
+        return { status: 401, message: 'Your account has been disabled. Please contact the league administrator.' };
     }
     return false;
 }
