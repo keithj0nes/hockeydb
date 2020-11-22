@@ -10,35 +10,35 @@ import { logout } from './auth';
 
 
 // the request function calls to serverside - if errors occur, they will be caught and handled here as an error modal
-export const request = async (route, method, session, noAuth) => {
-// export const request = async ({ route, method, session, public }) => {
+// export const request = async (route, method, session, noAuth) => {
+export const request = async ({ url, method, session, publicRoute }) => {
     if (!session && method !== 'DELETE') {
         return alert('no session, please include a session object');
     }
     if (!method) {
         return alert('no method, please include a method string');
     }
-    if (!route) {
+    if (!url) {
         return alert('no route, please include a route string');
     }
 
     let access_token;
 
-    if (!noAuth) {
+    if (!publicRoute) {
         access_token = store.getState().user.user.access_token;
     }
 
-    if (!noAuth && !access_token) {
+    if (!publicRoute && !access_token) {
         return alert('no access token for auth route');
     }
 
     const responseRaw = await axios({
         method,
         // url: `${ROOT}${route}`,
-        url: route,
-        data: !!session && session.data,
+        url,
+        data: session,
         headers: {
-            Authorization: noAuth ? null : `Bearer ${access_token || session.access_token}`,
+            Authorization: publicRoute ? null : `Bearer ${access_token}`,
         },
     }).catch(err => {
         console.log(err, 'error in responseRaw');
@@ -60,8 +60,8 @@ export const request = async (route, method, session, noAuth) => {
     if (!responseRaw) return false;
     const { status, data, message, shouldLogOut, redirect, snack } = responseRaw.data;
 
-
     if (snack) {
+        // clean this snack section up
         const statusFirst = String(status).charAt(0);
         let type;
         switch (statusFirst) {
@@ -103,11 +103,6 @@ export const request = async (route, method, session, noAuth) => {
         default:
             notification.open(options);
         }
-
-        // store.dispatch({
-        //     type: 'TOGGLE_SNACKBAR',
-        //     payload: { isVisible: true, message, type },
-        // });
     }
 
     if (status !== 200) {
@@ -170,9 +165,6 @@ export const request = async (route, method, session, noAuth) => {
                 modalType: 'alert',
             });
         }
-
-
-        // alert(`status error: ${status} - ${message}`)
         return false;
     }
 

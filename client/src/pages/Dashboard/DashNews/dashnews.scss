@@ -1,9 +1,10 @@
+@import '../../../assets/styles/variables';
 .dashnews-container {
 
     // background: yellow;
     background: white;
-    padding: 20px;
-    margin: 20px;
+    padding: 16px;
+    margin: 16px;
 
     .rte-container {
 
@@ -11,6 +12,32 @@
             // font-size: inherit;
             min-width: 0;
             min-height: 0;
+        }
+    }
+
+
+
+    .ql-editor {
+        min-height: 200px;
+    }
+
+    .dash-news-preview-container {
+        // background-color: yellow;
+        border: 1px solid #bbbcbd;
+        border-radius: 5px;
+        max-width: 825px;
+        margin: 0 auto;
+    }
+}
+
+@media only screen and (min-width: 768px){
+    .dashnews-container {
+        .title-postdate-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .dashnews-input {
+            width: 48%;
         }
     }
 }

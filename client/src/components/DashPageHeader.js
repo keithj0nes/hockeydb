@@ -112,6 +112,3 @@ const IconComponent = ({ button }) => {
 // <Icon name={'FILTER'} size={20} x/>
 
 // </div>
-
-
-{/* {button.popoverUI()} */}

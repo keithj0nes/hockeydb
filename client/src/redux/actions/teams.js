@@ -15,7 +15,7 @@ export const getTeams = (filter) => async (dispatch, getState) => {
         filter += `&season=${currentSeason.name}`;
     }
 
-    const data = await request(`/api/teams?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/teams?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
 
     dispatch({ type: `teams/${GET_SUCCESS}`, payload: data.data.teams });
@@ -28,7 +28,7 @@ export const getTeams = (filter) => async (dispatch, getState) => {
 
 // Guest/Teams.js
 export const getTeamsByDivision = (filter) => async (dispatch) => {
-    const data = await request(`/api/teams/by_division?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/teams/by_division${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
 
     dispatch({ type: `teams/byDivision/${GET_SUCCESS}`, payload: data.data.allTeams });
@@ -38,8 +38,8 @@ export const getTeamsByDivision = (filter) => async (dispatch) => {
 
 
 // Guest/SingleTeam.js
-export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
-    const team = await request(`/api/teams/${teamId}?${filter || ''}`, 'GET', {}, true);
+export const getTeamById = (teamId, filter) => async (dispatch) => {
+    const team = await request({ url: `/api/teams/${teamId}?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!team.data) return false;
 
     // add rank key - not stored in db
@@ -69,9 +69,8 @@ export const getTeamById = (teamId, filter) => async (dispatch, getState) => {
 
 
 // Dashboard/DashTeams
-export const createTeam = teamData => async (dispatch, getState) => {
-    const { user } = getState();
-    const data = await request('/api/admin/teams', 'POST', { access_token: user.user.access_token, data: teamData });
+export const createTeam = teamData => async (dispatch) => {
+    const data = await request({ url: '/api/admin/teams', method: 'POST', session: teamData });
     if (!data) return;
 
     // dispatch({
@@ -85,9 +84,8 @@ export const createTeam = teamData => async (dispatch, getState) => {
 
 
 // Dashboard/DashTeams
-export const updateTeam = (id, teamData) => async (dispatch, getState) => {
-    const { user } = getState();
-    const data = await request(`/api/admin/teams/${id}`, 'PUT', { access_token: user.user.access_token, data: teamData });
+export const updateTeam = (id, teamData) => async (dispatch) => {
+    const data = await request({ url: `/api/admin/teams/${id}`, method: 'PUT', session: teamData });
     if (!data) return;
 
     // dispatch({
@@ -101,9 +99,8 @@ export const updateTeam = (id, teamData) => async (dispatch, getState) => {
 
 
 // Dashboard/DashTeams
-export const deleteTeam = (id, season) => async (dispatch, getState) => {
-    const { user } = getState();
-    const data = await request(`/api/admin/teams/${id}`, 'DELETE', { data: season, access_token: user.user.access_token });
+export const deleteTeam = (id, season) => async (dispatch) => {
+    const data = await request({ url: `/api/admin/teams/${id}`, method: 'DELETE' });
     if (!data) return false;
 
     // Close Delete Modal
@@ -127,7 +124,7 @@ export const deleteTeam = (id, season) => async (dispatch, getState) => {
 
 // Guest/Teams.js
 export const getTeamsPageFilters = (filter) => async (dispatch) => {
-    const data = await request(`/api/misc/teams_filters?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/misc/teams_filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: 'SCHEDULE_FILTERS', payload: { seasons: data.data.seasons, allTeams: data.data.all_teams } });
     return true;
@@ -136,7 +133,7 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
 
 // Guest/Standings.js
 export const getStandingsPageFilters = (filter) => async (dispatch) => {
-    const data = await request(`/api/misc/standings_filters?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/misc/standings_filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: 'STANDINGS_FILTERS', payload: { seasons: data.data.seasons, divisions: data.data.divisions } });
     return true;
@@ -145,7 +142,7 @@ export const getStandingsPageFilters = (filter) => async (dispatch) => {
 
 // Guest/STSchedule.js
 export const getTeamScheduleById = (teamId, filter) => async (dispatch) => {
-    const data = await request(`/api/teams/${teamId}/schedule?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/teams/${teamId}/schedule?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: `teams/singleTeam/${GET_SUCCESS}`, payload: { schedule: data.data } });
     return true;
@@ -159,7 +156,7 @@ export const clearSingleTeamState = () => ({
 
 // Guest/Standings.js
 export const getStandings = (filter) => async (dispatch) => {
-    const data = await request(`/api/standings?${filter || ''}`, 'GET', {}, true);
+    const data = await request({ url: `/api/standings?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     // heavy lifting - add "rank" key to the teams_in_division list
     // maybe add rank key to the team_season_division table

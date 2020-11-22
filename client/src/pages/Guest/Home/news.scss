@@ -70,29 +70,33 @@
 
         .news-body {
             
-            p {
-                letter-spacing: 1.4px;
+            p, ol, li {
+                letter-spacing: 1.2px;
                 font-size: 14px;
                 line-height: 24px;
                 // line-height: 32px;
+            }
+
+            ol {
+                margin-left: 24px;
             }
         }
 
         .news-body.show-less {
             position: relative;
-            height: 100px;
-            overflow: hidden;
+            // height: 100px;
+            // overflow: hidden;
 
-            &:after {
-                content: '';
-                height: 50px;
-                width: 100%;
-                position: absolute;
-                bottom: 0;
-                background: -moz-linear-gradient(bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
-                background: -webkit-linear-gradient(bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
-                background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-            }
+            // &:after {
+            //     content: '';
+            //     height: 50px;
+            //     width: 100%;
+            //     position: absolute;
+            //     bottom: 0;
+            //     background: -moz-linear-gradient(bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+            //     background: -webkit-linear-gradient(bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+            //     background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            // }
         }
 
     }

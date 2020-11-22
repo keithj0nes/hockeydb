@@ -21,11 +21,12 @@ import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
 import 'antd/dist/antd.css';
-
+import '../../assets/styles/ant-overrides.scss';
 import './App.scss';
 
 class App extends Component {
     async componentDidMount() {
+        // try to log in user from cookie on website load
         await this.props.loginFromCookie();
     }
 
