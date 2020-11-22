@@ -1,0 +1,29 @@
+@import './variables';
+
+.ant-tag {
+    border-radius: 5px;
+    font-size: 14px;
+    // background-color: $silver_color;
+    // color: $admin-color-lavendar;
+    border: none;
+    padding: 4px 8px;
+    background-color: #EAEBED;
+    color: $main_font_color;
+    cursor: pointer;
+    margin-bottom: 5px;
+    
+    &:hover {
+        color: $white_color;
+        background-color: $v4a_highlite_color;
+    }
+}
+
+.tag-select {
+    .ant-select-selector {
+        padding-top: 5px;
+    }
+    .ant-tag {
+        color: $white_color;
+        cursor: default;
+    }
+}

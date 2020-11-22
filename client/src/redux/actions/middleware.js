@@ -117,7 +117,6 @@ export const request = async ({ url, method, session, publicRoute }) => {
 
         // if a modal is already visible and there's an error, show that error in the current modal
         if (state.misc.modalVisible && !redirect) {
-            console.log(shouldLogOut,' should log out middleware')
             store.dispatch({
                 type: TOGGLE_MODAL,
                 modalProps: {

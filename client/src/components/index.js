@@ -19,3 +19,4 @@ export { Input, DashInput } from './Input';
 export { Select, DashSelect } from './Select';
 export { DashPageHeader } from './DashPageHeader';
 export { HamburgerIcon } from './HamburgerIcon';
+export { NewsPost } from './NewsPost';

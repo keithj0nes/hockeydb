@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { Button, DashPageHeader } from '../../../components';
-// import DashNewsCreate from './DashNewsCreate';
 import DashNewsListItem from './DashNewsListItem';
 
 import { getNews, updateNewsPostOrder } from '../../../redux/actions/news';
@@ -90,7 +89,6 @@ class DashNews extends Component {
 
         </div>
 
-        {/* <DashNewsCreate /> */}
         <div className="dashboard-list-container">
 
         <div className="dashboard-list">
@@ -129,7 +127,8 @@ class DashNews extends Component {
                             item={post} 
                             sections={{'name': 'four'}} 
                             onDelete={() => console.log('clicked delete')}
-                            onEdit={() => this.handleEditNewsPost(post)}
+                            onEdit={() => console.log('clicked edit')}
+                            // onEdit={() => this.handleEditNewsPost(post)}
                             onHide={() => console.log('on hide clicekd')}
                             index={index}
                           />
