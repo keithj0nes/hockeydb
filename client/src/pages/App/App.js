@@ -16,7 +16,7 @@ import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
 import Standings from '../Guest/Standings/Standings';
 import Inquiry from '../Guest/Inquiry/Inquiry';
-
+import PlayerStats from '../Guest/PlayerStats/PlayerStats'
 import { Modal, Header } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
@@ -50,6 +50,7 @@ class App extends Component {
                         <Route path="/games" component={Games} />
                         <Route path="/inquiry" component={Inquiry} />
                         <Route path="/styleguide" component={Styleguide} />
+                        <Route path="/stats" component={PlayerStats} />
                     </div>
                     <PrivateRoute path="/dashboard" authenticated={this.props.isUserLoggedIn} component={Dashboard} />
                     <Modal />

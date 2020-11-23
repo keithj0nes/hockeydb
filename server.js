@@ -166,6 +166,8 @@ app.get('/api/teams/:id/schedule', teams.getTeamSchedule);
 app.get(`/api/players`,     players.getAllPlayers);
 app.get(`/api/players/:id`, players.getPlayerById);
 
+app.get(`/api/stats`, players.getPlayerStats);
+
 
 // Standings 
 app.get(`/api/standings`, teams.getStandings);
