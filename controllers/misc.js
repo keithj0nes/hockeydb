@@ -63,8 +63,15 @@ const getStandingsPageFilters = async (req, res) => {
 
 }
 
+const getNewsTags = async (req, res) => {
+    const db = app.get('db');
+    const data = await db.tags.find();
+    res.status(200).send({ status: 200, data, message: 'Retrieved news gets' })
+}
+
 
 module.exports = {
     getTeamsPageFilters,
-    getStandingsPageFilters
+    getStandingsPageFilters,
+    getNewsTags,
 }

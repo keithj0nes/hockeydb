@@ -190,6 +190,7 @@ app.get(`/api/divisions/`, divisions.getAllDivisions);          // Postman Docs
 // Misc
 app.get('/api/misc/teams_filters',     misc.getTeamsPageFilters);
 app.get('/api/misc/standings_filters', misc.getStandingsPageFilters);
+app.get('/api/misc/news_tags',         misc.getNewsTags);
 
 
 // ⭐ ️ ADMIN  ⭐️

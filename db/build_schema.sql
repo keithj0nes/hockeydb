@@ -54,7 +54,6 @@ CREATE TABLE "news" (
   "id" SERIAL PRIMARY KEY,
   "title" VARCHAR,
   "allow_collapse" BOOLEAN,
-  "tag" VARCHAR,
   "body" VARCHAR,
   "display_order" INTEGER,
   "created_date" TIMESTAMP,
@@ -63,6 +62,17 @@ CREATE TABLE "news" (
   "updated_by" INTEGER,        -- REFERENCES users(id),
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER         -- REFERENCES users(id),
+);
+
+CREATE TABLE "tags" (
+  "id" SERIAL PRIMARY KEY, 
+  "name" VARCHAR
+);
+
+CREATE TABLE "news_tags" (
+  "id" SERIAL PRIMARY KEY,
+  "tag_id" INTEGER,           -- REFERENCES tags(id)
+  "news_id" INTEGER           -- REFERENCES news(id)
 );
 
 CREATE TABLE "players" (
@@ -267,8 +277,8 @@ ALTER TABLE "games" ADD FOREIGN KEY ("away_team") REFERENCES "teams" ("id");
 ALTER TABLE "games" ADD FOREIGN KEY ("location_id") REFERENCES "locations" ("id");
 ALTER TABLE "games" ADD FOREIGN KEY ("scorekeeper_id") REFERENCES "users" ("id");
 
-
-
+ALTER TABLE "news_tags" ADD FOREIGN KEY ("tags_id") REFERENCES "tags" ("id");
+ALTER TABLE "news_tags" ADD FOREIGN KEY ("news_id") REFERENCES "news" ("id");
 
 
 -- CREATE TABLE "goalie_stats" (

@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Form, Input, Select, Tag } from 'antd';
+import dateFormat from 'date-fns/format';
+import { Form, Input, Select, Tag, Breadcrumb } from 'antd';
 import { Button, DashPageHeader, NewsPost } from '../../../components';
-import { createNewsPost, getNewsPostById, updateNewsPostById } from '../../../redux/actions/news';
+import { createNewsPost, getNewsPostById, updateNewsPostById, getNewsTags } from '../../../redux/actions/news';
 import './dashnews.scss';
 
-const defaultTags = [
-    { value: 'announcement' },
-    { value: 'covid' },
-    { value: 'schedule-update' },
-    { value: 'summer' },
-    { value: 'winter' },
-    { value: 'spring' },
-];
 
 const quillModules = {
     toolbar: [
@@ -35,48 +28,67 @@ const quillFormats = [
     'link', 'image',
 ];
 
-
-const DashNewsCreate2 = ({ user, createNewsPost, history, match }) => {
+const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost, updateNewsPostById, getNewsPostById, history, match }) => {
     const [form] = Form.useForm();
     const [isEditing, setIsEditing] = useState(false);
-    const [tagsList, setTagsList] = useState(defaultTags);
-    const [options, setOptions] = useState([]);
+    const [tagsList, setTagsList] = useState([]);
     const [post, setPost] = useState(null);
     const [showPreview, setShowPreview] = useState(false);
 
-    // useEffect(() => {
-    //     console.log('did mount dashnewscreate2');
-    //     if (match.params.id !== 'create') {
-    //         console.log(match.params.id, 'match.params.id')
-    //     }
-    // }, [match]);
+    useEffect(() => {
+        getNewsTags();
+        if (match.params.id !== 'create') {
+            getNewsPostById(match.params.id);
+            setIsEditing(true);
+        }
+    }, [match]);
+
+    useEffect(() => {
+        if (match.params.id !== 'create') {
+            const m = newsTags.filter((item) => !newsById.tags_in_post?.find(item2 => item2.id === item.id));
+            setTagsList(m);
+        } else {
+            setTagsList(newsTags);
+        }
+    }, [newsTags, newsById]);
 
 
-    const clickTag = (e) => {
-        const tag = e.target.textContent;
-        setTagsList(tagsList.filter(item => item.value !== tag));
-        const newOptions = [...options, { value: tag }];
-        setOptions(newOptions);
-        form.setFieldsValue({ tags: newOptions.map(({ value }) => value) });
+    useEffect(() => {
+        if (match.params.id !== 'create') {
+            form.setFieldsValue({ ...newsById, tags_in_post: newsById.tags_in_post?.map(item => item.name) });
+        }
+    }, [newsById]);
+
+    const addTagToSelect = (tag) => {
+        setTagsList(tagsList.filter(item => item.name !== tag.name));
+        const newOptions = !!form.getFieldValue('tags_in_post') ? [...form.getFieldValue('tags_in_post'), tag.name] : [tag.name];
+        form.setFieldsValue({ tags_in_post: newOptions });
     };
 
-    const closeableman = (e) => {
-        setTagsList([...tagsList, { value: e.label }]);
-        setOptions(options.filter(item => item.value !== e.label));
+    const removeTagFromSelect = ({ value }) => {
+        // value in var names references param "value"
+        const mapValueToTagsList = newsTags.find(item => item.name === value);
+        setTagsList([...tagsList, mapValueToTagsList]);
+        const tagSelectWithoutValue = form.getFieldValue('tags_in_post').filter(item => item !== value);
+        form.setFieldsValue({ tags_in_post: tagSelectWithoutValue });
     };
 
     const tagRender = (props) => {
         const { label, value, closable } = props;
         return (
-            <Tag color="#FF815C" closable={closable} onClose={() => closeableman({ value, label })} style={{ marginRight: 3 }}>
+            <Tag color="#FF815C" closable={closable} onClose={() => removeTagFromSelect({ value })} style={{ marginRight: 3 }}>
                 {label}
             </Tag>
         );
     };
 
     const handleSubmit = () => {
-        createNewsPost(post);
-        history.push('/dashboard/news');
+        if (isEditing) {
+            updateNewsPostById(post, match.params.id);
+        } else {
+            createNewsPost(post);
+        }
+        return history.push('/dashboard/news');
     };
 
     const pageHeaderInfo = {
@@ -84,25 +96,43 @@ const DashNewsCreate2 = ({ user, createNewsPost, history, match }) => {
         hideSearchAndButtons: true,
     };
 
+    const onFinish = (values) => {
+        // this map is required to do antd select only allowing array of strings (no array of object)
+        // this map takse a the away of strings ['announcemnt'] and maps them to their object [{ id: 1, name: 'announcemnt' }]
+        const mappedSelectArrayToNewsTagsKeys = values.tags_in_post.map(item => newsTags.find(t => t.name === item));
+        setPost({ ...values, tags_in_post: mappedSelectArrayToNewsTagsKeys });
+        setShowPreview(!showPreview);
+    };
+
+    const isEditingData = isEditing ? { updated_date: new Date() } : { first_name: user.first_name, last_name: user.last_name };
+    const postPreviewData = { ...newsById, ...post, ...isEditingData };
+
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
-            <div className="dashnews-container">
 
-                {isEditing && (
-                    <div style={{ padding: '20px 0', background: 'yellow' }}>
-                        <p> Created By: me hehhe</p>
-                        <p> Created Date: 10/14/2819 8:22 AM</p>
-                        {/* <p> Created By: {this.state.first_name} {this.state.last_name}</p>
-                        <p> Created Date: {dateFormat(this.state.created_date, 'MM/DD/YYYY h:mmA')}</p> */}
-                    </div>
-                )}
+            <Breadcrumb style={{ marginLeft: 16, paddingTop: 16 }}>
+
+                <Breadcrumb.Item>
+                    <Link to="/dashboard/news"> {'<'} Back</Link>
+                </Breadcrumb.Item>
+                {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
+                <Breadcrumb.Item>
+                    <a href="">Application Center</a>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>
+                    <a href="">Application List</a>
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>An Application</Breadcrumb.Item> */}
+            </Breadcrumb>
+
+            <div className="dashnews-container">
 
                 {!showPreview && (
                     <Form
                         form={form}
                         layout="vertical"
-                        onFinish={values => { setPost(values); setShowPreview(!showPreview); }}
+                        onFinish={values => onFinish(values)}
                     >
 
                         <div className="title-postdate-container">
@@ -121,6 +151,13 @@ const DashNewsCreate2 = ({ user, createNewsPost, history, match }) => {
                             </Form.Item> */}
                         </div>
 
+                        {isEditing && (
+                            <div style={{ paddingBottom: 20, background: 'white' }}>
+                                <p> Created By: {newsById.first_name} {newsById.last_name}</p>
+                                <p> Created Date: {dateFormat(newsById.created_date, 'MM/DD/YYYY h:mmA')}</p>
+                            </div>
+                        )}
+
                         <Form.Item>
                             <Form.Item
                                 name="body"
@@ -133,29 +170,25 @@ const DashNewsCreate2 = ({ user, createNewsPost, history, match }) => {
                         </Form.Item>
 
 
-                        <Form.Item label="Tags" name="tags" className="dashnews-input">
+                        <Form.Item label="Tags" name="tags_in_post" className="dashnews-input">
                             <Select
-                                mode="multiple"
+                                mode="tags"
                                 tagRender={tagRender}
                                 open={false}
                                 style={{ width: '100%' }}
                                 placeholder="Select tags"
                                 className="tag-select"
-                            >
-                                {options.map(option => (
-                                    <Select.Option key={option.value}>{option.value}</Select.Option>
-                                ))}
-                            </Select>
-
+                            />
                         </Form.Item>
 
                         <div className="dashnews-input">
-                            {tagsList.map(tag => <Tag onClick={clickTag} key={tag.value}>{tag.value}</Tag>)}
+                            {tagsList.map(tag => <Tag onClick={() => addTagToSelect(tag)} key={tag.id}>{tag.name}</Tag>)}
                         </div>
                         <br />
                         <br />
 
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button title="Cancel" type="cancel" htmlType="button" onClick={() => history.goBack()} />
                             <Button title="Preview Post" type="admin" htmlType="submit" />
                         </div>
 
@@ -165,14 +198,14 @@ const DashNewsCreate2 = ({ user, createNewsPost, history, match }) => {
                 {showPreview && (
                     <>
                         <div className="dash-news-preview-container">
-                            <NewsPost post={{ ...post, first_name: user.first_name, last_name: user.last_name }} />
+                            <NewsPost post={postPreviewData} />
                         </div>
 
                         <br />
                         <br />
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <Button title="Edit" type="cancel" htmlType="button" onClick={() => setShowPreview(false)} />
-                            <Button title="Submit post" type="admin" htmlType="button" onClick={handleSubmit} />
+                            <Button title={isEditing ? 'Edit post' : 'Submit post'} type="admin" htmlType="button" onClick={handleSubmit} />
                         </div>
                     </>
                 )}
@@ -182,15 +215,24 @@ const DashNewsCreate2 = ({ user, createNewsPost, history, match }) => {
 };
 
 
-const mapStateToProps = state => ({
-    user: state.user.user,
-    newsById: state.news.newsById,
-});
+// const mapStateToProps = state => ({
+//     user: state.user.user,
+//     newsById: state.news.newsById,
+// });
+
+const mapStateToProps = state => {
+    return {
+        user: state.user.user,
+        newsById: state.news.newsById,
+        newsTags: state.news.newsTags,
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     createNewsPost: data => dispatch(createNewsPost(data)),
     getNewsPostById: id => dispatch(getNewsPostById(id)),
     updateNewsPostById: (data, id) => dispatch(updateNewsPostById(data, id)),
+    getNewsTags: () => dispatch(getNewsTags()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DashNewsCreate2));
@@ -199,4 +241,10 @@ DashNewsCreate2.propTypes = {
     user: PropTypes.object,
     history: PropTypes.object,
     createNewsPost: PropTypes.func,
+    match: PropTypes.object,
+    newsById: PropTypes.object,
+    updateNewsPostById: PropTypes.func,
+    getNewsPostById: PropTypes.func,
+    getNewsTags: PropTypes.func,
+    newsTags: PropTypes.array,
 };

@@ -19,6 +19,7 @@ const initialNewsState = {
     news: [],
     newsById: {},
     newsNum: 0,
+    newsTags: [],
 };
 
 export const news = (state = initialNewsState, { type, payload }) => {
@@ -42,6 +43,8 @@ export const news = (state = initialNewsState, { type, payload }) => {
     }
     case `newsById/${GET_SUCCESS}`:
         return { ...state, newsById: payload };
+    case `news/tags/${GET_SUCCESS}`:
+        return { ...state, newsTags: payload };
     default:
         return state;
     }
