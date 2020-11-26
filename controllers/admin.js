@@ -144,9 +144,10 @@ const deleteTeam = async (req, res) => {
 
 const createNews = async (req, res) => {
     const db = app.get('db');
+    console.log(req.body, 'REQ.BODY');
 
     const { title, body, allow_collapse, tag } = req.body;
-    console.log(req.user, 'ussser');
+    // console.log(req.user, 'ussser');
 
     let currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
     const query = `UPDATE news SET display_order = (display_order + 1)
@@ -173,8 +174,8 @@ const updateNews = async (req, res) => {
     const { title, body, allow_collapse, tag, fromIndex, toIndex, move } = req.body;
     const { id } = req.params;
 
-    console.log(req.user, 'req.user!!')
-    console.log(req.body, req.params.id, 'UPDATE NEWS*****')
+    // console.log(req.user, 'req.user!!')
+    // console.log(req.body, req.params.id, 'UPDATE NEWS*****')
 
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
 
@@ -200,11 +201,18 @@ const updateNews = async (req, res) => {
     
             const updateUp = await db.query(query, [toIndex, fromIndex]);
             console.log(updateUp, 'UPDATE UP!')
-        }
-    
+        }    
         const updateMove = await db.news.update({ id }, { display_order: toIndex }).catch(err => console.log(err, 'update blog error'));
 
         return res.status(200).send({ status: 200, data: updateMove, message: 'News post order updated'})
+    }
+
+    if (!!req.body.tags_in_post) {
+        await db.news_tags.destroy({ news_id: id });
+        const tagsInPost = req.body.tags_in_post.map(item => {
+            return { news_id: id, tag_id: item.id };
+        })
+        await db.news_tags.insert(tagsInPost);
     }
 
     
