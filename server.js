@@ -57,7 +57,6 @@ const users = require('./controllers/users');
 
 let connectionInfo;
 if (process.env.NODE_ENV === 'production') {
-// if (process.env.DB_URI) {
     const dbUriSplit = process.env.DB_URI.split(/[\:/@]+/)
     connectionInfo = {
         host: dbUriSplit[3],
@@ -71,13 +70,6 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     connectionInfo = config.DB_URI;
 }
-
-// 'postgres',
-// 'gzgkniyt',
-// 'CfKDJ-Qaoz9xHYPyJcnegNnOa2Z1C_Ab',
-// 'drona.db.elephantsql.com',
-// '5432',
-// 'gzgkniyt'
 
 
 let db = null;
