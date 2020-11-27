@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === 'production') {
         user: dbUriSplit[1],
         password: dbUriSplit[2],
         ssl: false,
-        poolSize: 5,
+        poolSize: 2,
     };
 } else {
     connectionInfo = config.DB_URI;
