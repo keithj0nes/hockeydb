@@ -88,7 +88,6 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
         } else {
             createNewsPost(post);
         }
-        return history.push('/dashboard/news');
     };
 
     const pageHeaderInfo = {
@@ -99,12 +98,12 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
     const onFinish = (values) => {
         // this map is required to do antd select only allowing array of strings (no array of object)
         // this map takse a the away of strings ['announcemnt'] and maps them to their object [{ id: 1, name: 'announcemnt' }]
-        const mappedSelectArrayToNewsTagsKeys = values.tags_in_post.map(item => newsTags.find(t => t.name === item));
-        setPost({ ...values, tags_in_post: mappedSelectArrayToNewsTagsKeys });
+        const mappedSelectArrayToNewsTagsKeys = values.tags_in_post?.map(item => newsTags.find(t => t.name === item));
+        setPost({ ...values, tags_in_post: mappedSelectArrayToNewsTagsKeys || [] });
         setShowPreview(!showPreview);
     };
 
-    const isEditingData = isEditing ? { updated_date: new Date() } : { first_name: user.first_name, last_name: user.last_name };
+    const isEditingData = isEditing ? { updated_date: new Date() } : { first_name: user.first_name, last_name: user.last_name, created_date: new Date() };
     const postPreviewData = { ...newsById, ...post, ...isEditingData };
 
     return (
@@ -140,7 +139,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
                                 label="Title"
                                 name="title"
                                 className="dashnews-input"
-                                rules={[{ required: true, message: 'Title is required' }]}
+                                // rules={[{ required: true, message: 'Title is required' }]}
                             >
                                 <Input />
                             </Form.Item>
@@ -163,7 +162,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
                                 name="body"
                                 initialValue=""
                                 noStyle
-                                rules={[{ required: true, message: 'Body is required' }]}
+                                // rules={[{ required: true, message: 'Body is required' }]}
                             >
                                 <ReactQuill formats={quillFormats} modules={quillModules} />
                             </Form.Item>
@@ -172,7 +171,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
 
                         <Form.Item label="Tags" name="tags_in_post" className="dashnews-input">
                             <Select
-                                mode="tags"
+                                mode="multiple"
                                 tagRender={tagRender}
                                 open={false}
                                 style={{ width: '100%' }}

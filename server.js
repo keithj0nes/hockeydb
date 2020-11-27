@@ -53,7 +53,24 @@ const users = require('./controllers/users');
 //Make sure to create a local postgreSQL db called hockeydb
 
 // const connectionInfo = process.env.DATA_BASE_URL || "postgres://@localhost/hockeydb";
-const connectionInfo = process.env.DB_URI || config.DB_URI
+// const connectionInfo = process.env.DB_URI || config.DB_URI;
+
+let connectionInfo;
+if (process.env.NODE_ENV === 'production') {
+    const dbUriSplit = process.env.DB_URI.split(/[\:/@]+/)
+    connectionInfo = {
+        host: dbUriSplit[3],
+        port: dbUriSplit[4],
+        database: dbUriSplit[5],
+        user: dbUriSplit[1],
+        password: dbUriSplit[2],
+        ssl: false,
+        poolSize: 2,
+    };
+} else {
+    connectionInfo = config.DB_URI;
+}
+
 
 let db = null;
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {

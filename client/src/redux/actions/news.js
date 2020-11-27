@@ -1,6 +1,7 @@
 // import axios from 'axios';
 import { request } from './middleware';
 import { GET_BLOGS, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS } from '../actionTypes';
+import { history } from '../../helpers';
 
 export const getNews = () => async dispatch => {
     // const data = await request('/api/news', 'GET', {}, true);
@@ -36,6 +37,7 @@ export const createNewsPost = (newsData) => async (dispatch) => {
     const data = await request({ url: '/api/admin/news', method: 'POST', session: newsData });
     if (!data.data) return false;
     dispatch({ type: `news/${CREATE_SUCCESS}`, payload: data.data });
+    history.push('/dashboard/news');
     return true;
 };
 

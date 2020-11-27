@@ -144,25 +144,29 @@ const deleteTeam = async (req, res) => {
 
 const createNews = async (req, res) => {
     const db = app.get('db');
-    console.log(req.body, 'REQ.BODY');
+    const { title, body, tags_in_post } = req.body;
 
-    const { title, body, allow_collapse, tag } = req.body;
-    // console.log(req.user, 'ussser');
+    if (!title || !body) return res.status(200).send({ status: 404, error: true, message: 'Title and body are required', snack: true });
 
-    let currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
-    const query = `UPDATE news SET display_order = (display_order + 1)
-                   WHERE display_order >= 1`;
+    const currentDate = dateFormat(new Date(), 'MM/DD/YYYY hh:mm:ss');
+    const updateOrderQuery = `
+        UPDATE news 
+        SET display_order = (display_order + 1)
+        WHERE display_order >= 1;
+    `;
+    await db.query(updateOrderQuery);
 
-    await db.query(query);
+    const inserted = await db.news.insert({ title, display_order: 1, body, created_date: currentDate, created_by: (req.user && req.user.id) || 1}).catch(err => console.log(err, 'create news error'))
 
+    if (!!tags_in_post.length) {
+        const tagsInPost = tags_in_post.map(item => {
+            return { news_id: inserted.id, tag_id: item.id };
+        })
+        await db.news_tags.insert(tagsInPost);
+    }
 
-    const inserted = await db.news.insert({ title, display_order: 1, body, allow_collapse, tag, created_date: currentDate, created_by: (req.user && req.user.id) || 1}).catch(err => console.log(err, 'create blog error'))
-    const { id, display_order, created_by, created_date } = inserted;
-    
-    const user = await db.users.findOne({id: created_by})
-    const { user_id, first_name, last_name } = user;
-
-    const data = {id, display_order, title, allow_collapse, tag, body, created_by, created_date, user_id, first_name, last_name};
+    const { id: user_id, first_name, last_name } = req.user;
+    const data = { ...inserted, user_id, first_name, last_name };
  
     return res.status(200).send({ status: 200, data, message: 'News post created', snack: true })
 }
@@ -171,11 +175,8 @@ const createNews = async (req, res) => {
 const updateNews = async (req, res) => {
     const db = app.get('db');
 
-    const { title, body, allow_collapse, tag, fromIndex, toIndex, move } = req.body;
+    const { title, body, allow_collapse, tag, fromIndex, toIndex, move, tags_in_post } = req.body;
     const { id } = req.params;
-
-    // console.log(req.user, 'req.user!!')
-    // console.log(req.body, req.params.id, 'UPDATE NEWS*****')
 
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
 
@@ -207,19 +208,16 @@ const updateNews = async (req, res) => {
         return res.status(200).send({ status: 200, data: updateMove, message: 'News post order updated'})
     }
 
-    if (!!req.body.tags_in_post) {
+    if (!!tags_in_post.length) {
         await db.news_tags.destroy({ news_id: id });
-        const tagsInPost = req.body.tags_in_post.map(item => {
+        const tagsInPost = tags_in_post.map(item => {
             return { news_id: id, tag_id: item.id };
         })
         await db.news_tags.insert(tagsInPost);
     }
 
-    
     const data = await db.news.update({ id }, { title, body, allow_collapse, tag, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update blog error'))
-
     return res.status(200).send({ status: 200, data: data[0], message: 'News post updated', snack: true })
-
 }
 
 const deleteNews = async (req, res) => {
