@@ -8,6 +8,7 @@ const getNews = async (req, res) => {
             n.*,
             u.id as user_id,
             u.first_name, u.last_name,
+            concat(u.first_name, ' ', u.last_name) as full_name,
             coalesce(jsonb_agg(jsonb_build_object('id', t.id, 'name', t.name)) FILTER (WHERE t.id IS NOT NULL), '[]') AS tags_in_post 
         FROM news n
         left JOIN news_tags nt ON nt.news_id = n.id

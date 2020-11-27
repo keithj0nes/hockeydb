@@ -41,13 +41,15 @@ class DashNews extends Component {
 
         const newPostsArr = [...this.state.newsPosts];
         const [removed] = newPostsArr.splice(source.index, 1);
-        newPostsArr.splice(destination.index, 0, removed);
-        this.setState({ newsPosts: newPostsArr }, () => {
-        // console.log({movedId: removed.id, toIndex:destination.index + 1, fromIndex:source.index + 1, move: destination.index + 1 > source.index + 1 ? 'down' : 'up'})
-            const { id } = removed;
-            const data = { toIndex:destination.index + 1, fromIndex: source.index + 1, move: destination.index + 1 > source.index + 1 ? 'down' : 'up' };
-            this.props.updateNewsPostOrder(data, id);
-        });
+        console.log(removed,' removed other')
+
+        // newPostsArr.splice(destination.index, 0, removed);
+        // this.setState({ newsPosts: newPostsArr }, () => {
+        // // console.log({movedId: removed.id, toIndex:destination.index + 1, fromIndex:source.index + 1, move: destination.index + 1 > source.index + 1 ? 'down' : 'up'})
+        //     const { id } = removed;
+        //     const data = { toIndex:destination.index + 1, fromIndex: source.index + 1, move: destination.index + 1 > source.index + 1 ? 'down' : 'up' };
+        //     this.props.updateNewsPostOrder(data, id);
+        // });
     }
 
     handleAddNewsPost = () => {

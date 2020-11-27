@@ -15,6 +15,8 @@ import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
 import DashGamesDetails from './DashGames/DashGamesDetails';
 import DashNews from './DashNews/DashNews';
+import DashNews2 from './DashNews/DashNews2';
+
 import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashNewsCreate2 from './DashNews/DashNewsCreate2';
 import DashLocations from './DashLocations/DashLocations';
@@ -37,7 +39,7 @@ const dashboardPageList = {
         { name: 'Games Dets', to: '/games/:id',  icon: null,            component: DashGamesDetails,              exact: true,  hideFromNavigation: true  },
         { name: 'Locations',  to: '/locations',  icon: ICONS.LOCATIONS, component: DashLocations,                 exact: false, hideFromNavigation: false },
         { name: 'Users',      to: '/users',      icon: ICONS.USERS,     component: DashUsers,                     exact: false, hideFromNavigation: false },
-        { name: 'News',       to: '/news',       icon: ICONS.NEWS,      component: DashNews,                      exact: true,  hideFromNavigation: false },
+        { name: 'News',       to: '/news',       icon: ICONS.NEWS,      component: DashNews2,                      exact: true,  hideFromNavigation: false },
         // { name: 'News Dets',  to: '/news/:id',   icon: null,            component: DashNewsCreate,                exact: true,  hideFromNavigation: true  },
         { name: 'News Dets',  to: '/news/:id',   icon: null,            component: DashNewsCreate2,               exact: true,  hideFromNavigation: true  },
         { name: 'Messages',   to: '/messages',   icon: ICONS.MESSAGES,  component: () => <h1>MESSAGES PAGE</h1>,  exact: false, hideFromNavigation: false },

@@ -23,11 +23,10 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
     return (
         <div className="ot-container-dash-r">
             <div className="ot-table" style={{ minWidth }}>
-
                 <div className="ot-row-header">
 
                     {!!draggableProps && (
-                        <DraggableIcon style={{ visibility: 'hidden' }} />
+                        <DraggableIcon style={{ visibility: 'hidden', height: 0 }} />
                     )}
                     {sectionKeys.map(sk => {
                         const isObj = typeof sections[sk] === 'object';
