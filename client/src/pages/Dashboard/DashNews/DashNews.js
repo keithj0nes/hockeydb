@@ -25,7 +25,10 @@ class DashNews extends Component {
     }
 
     componentDidMount() {
-        this.props.news.length === 0 && this.props.getNews();
+        if (!this.props.news.length) {
+            this.props.getNews();
+        }
+        // this.props.news.length === 0 && this.props.getNews();
     }
 
     onDragEnd = result => {
