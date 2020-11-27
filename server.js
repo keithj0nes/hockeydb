@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === 'production') {
         database: dbUriSplit[5],
         user: dbUriSplit[1],
         password: dbUriSplit[2],
-        ssl: false,
+        ssl: true,
         poolSize: 10,
     };
 } else {
