@@ -6,6 +6,8 @@ import DashNewsListItem from './DashNewsListItem';
 
 import { getNews, updateNewsPostOrder } from '../../../redux/actions/news';
 
+import DashNews2 from './DashNews2';
+
 
 class DashNews extends Component {
     state = {
@@ -66,30 +68,36 @@ class DashNews extends Component {
                 {
                     iconName: 'ADD_USER',
                     title: 'Add News Post',
-                    onClick: () => console.log('clickedddd ADD_USER')
+                    onClick: this.handleAddNewsPost,
                 },
-                {
-                    iconName: 'FILTER',
-                    title: 'Filter News Posts',
-                    onClick: () => console.log('clickedddd FILTER')
-                },
+                // {
+                //     iconName: 'FILTER',
+                //     title: 'Filter News Posts',
+                //     onClick: () => console.log('clickedddd FILTER')
+                // },
             ],
         };
 
         return (
 
             <>
+
+                <DashNews2 />
+
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
+
+                <div style={{ paddingBottom: 16 }} />
+
                 {/* <div className="dashnews-container"> */}
 
-                <div className="dashboard-filter-header">
+                {/* <div className="dashboard-filter-header">
                     <div style={{width: '100%'}}>
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <Button title="Add Post" onClick={this.handleAddNewsPost} />
                         </div>
                     </div>
 
-                </div>
+                </div> */}
 
                 <div className="dashboard-list-container">
 

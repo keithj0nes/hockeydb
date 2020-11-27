@@ -20,6 +20,7 @@ const initialNewsState = {
     newsById: {},
     newsNum: 0,
     newsTags: [],
+    isLoading: false,
 };
 
 export const news = (state = initialNewsState, { type, payload }) => {

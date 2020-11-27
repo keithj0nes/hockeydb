@@ -6,16 +6,12 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
 import distanceInWords from 'date-fns/distance_in_words';
-// import Edit from 'assets/icons/edit_icon.svg';
-// import Delete from 'assets/icons/delete_icon.svg';
-// import Hide from 'assets/icons/hide_icon.svg';
-// import Auth, { accessAdmin, accessONLYScorekeeper } from 'components/Auth';
-// import { ICONS } from 'assets/ICONS';
-import { Popover } from 'components';
+import { Popover, DraggableIcon } from 'components';
 import { wait } from 'helpers';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-
-const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableText, popoverData }) => {
+// currently drag n drop is only being used by DashNews component
+const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableText, popoverData, draggableProps }) => {
     const sectionKeys = Object.keys(sections);
     const isLoadingIsBoolean = typeof isLoading === 'boolean';
 
@@ -29,6 +25,10 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
             <div className="ot-table" style={{ minWidth }}>
 
                 <div className="ot-row-header">
+
+                    {!!draggableProps && (
+                        <DraggableIcon style={{ visibility: 'hidden' }} />
+                    )}
                     {sectionKeys.map(sk => {
                         const isObj = typeof sections[sk] === 'object';
                         return <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>;
@@ -49,17 +49,50 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
                     data.length <= 0 ? (
                         <h4 style={{ textAlign: 'center', padding: '20px 0' }}>{emptyTableText}</h4>
                     ) : (
-
-                        data.map((d, indx) => {
-                            if (tableType === 'games') [d.date, d.start_time] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
-                            if (tableType === 'users') {
-                                d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
-                                d.last_loginn = (d.last_login ? distanceInWords(new Date(), d.last_login, { addSuffix: true }) : 'never');
-                            }
-                            return (
-                                <TableRow d={d} sectionKeys={sectionKeys} sections={sections} tableType={tableType} indx={indx} key={d.id} popoverData={popoverData} />
-                            );
-                        })
+                        // currently drag n drop is only being used by DashNews component
+                        !!draggableProps ? (
+                            <DragDropContext onDragEnd={draggableProps.onDragEnd}>
+                                <Droppable droppableId="news-dnd-container">
+                                    {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            // isDraggingOver={snapshot.isDraggingOver}
+                                        >
+                                            {
+                                                data.map((d, indx) => {
+                                                    return (
+                                                        <Draggable draggableId={d.id} index={indx} key={d.id}>
+                                                            {(provided, snapshot) => (
+                                                                <div
+                                                                    {...provided.draggableProps}
+                                                                    ref={provided.innerRef}
+                                                                    style={{ ...provided.draggableProps.style, display: 'flex', alignItems: 'center', backgroundColor: snapshot.isDragging && '#e4e4e4' }}
+                                                                >
+                                                                    <TableRow d={d} sectionKeys={sectionKeys} sections={sections} tableType={tableType} indx={indx} key={d.id} popoverData={popoverData} draggable={provided} />
+                                                                </div>
+                                                            )}
+                                                        </Draggable>
+                                                    );
+                                                })
+                                            }
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
+                        ) : (
+                            data.map((d, indx) => {
+                                if (tableType === 'games') [d.date, d.start_time] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
+                                if (tableType === 'users') {
+                                    d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
+                                    d.last_loginn = (d.last_login ? distanceInWords(new Date(), d.last_login, { addSuffix: true }) : 'never');
+                                }
+                                return (
+                                    <TableRow d={d} sectionKeys={sectionKeys} sections={sections} tableType={tableType} indx={indx} key={d.id} popoverData={popoverData} />
+                                );
+                            })
+                        )
                     )
                 )}
             </div>
@@ -83,6 +116,9 @@ DashTable.propTypes = {
     ]),
     emptyTableText: PropTypes.string,
     popoverData: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    draggableProps: PropTypes.shape({
+        onDragEnd: PropTypes.func,
+    }),
 };
 
 export default DashTable;
@@ -119,11 +155,15 @@ const TableLoader = ({ count = 5, format }) => {
 };
 
 
-const TableRow = ({ d, sectionKeys, sections, indx, popoverData }) => {
+const TableRow = ({ d, sectionKeys, sections, indx, popoverData, draggable }) => {
     const [ellipsisOpen, setEllipsisOpen] = useState(false);
 
     return (
         <div className="ot-row" id={`row-${indx}`}>
+
+            {!!draggable && (
+                <DraggableIcon {...draggable.dragHandleProps} />
+            )}
 
             {sectionKeys.map(section => {
                 const isObj = typeof sections[section] === 'object';
@@ -150,4 +190,5 @@ TableRow.propTypes = {
     sections: PropTypes.object,
     indx: PropTypes.number,
     popoverData: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+    draggable: PropTypes.object,
 };

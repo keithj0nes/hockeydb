@@ -20,3 +20,4 @@ export { Select, DashSelect } from './Select';
 export { DashPageHeader } from './DashPageHeader';
 export { HamburgerIcon } from './HamburgerIcon';
 export { NewsPost } from './NewsPost';
+export { DraggableIcon } from './DraggableIcon';
