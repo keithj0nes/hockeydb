@@ -53,7 +53,32 @@ const users = require('./controllers/users');
 //Make sure to create a local postgreSQL db called hockeydb
 
 // const connectionInfo = process.env.DATA_BASE_URL || "postgres://@localhost/hockeydb";
-const connectionInfo = process.env.DB_URI || config.DB_URI
+// const connectionInfo = process.env.DB_URI || config.DB_URI;
+
+let connectionInfo;
+if (process.env.NODE_ENV === 'production') {
+// if (process.env.DB_URI) {
+    const dbUriSplit = process.env.DB_URI.split(/[\:/@]+/)
+    connectionInfo = {
+        host: dbUriSplit[3],
+        port: dbUriSplit[4],
+        database: dbUriSplit[5],
+        user: dbUriSplit[1],
+        password: dbUriSplit[2],
+        ssl: false,
+        poolSize: 10,
+    };
+} else {
+    connectionInfo = config.DB_URI;
+}
+
+// 'postgres',
+// 'gzgkniyt',
+// 'CfKDJ-Qaoz9xHYPyJcnegNnOa2Z1C_Ab',
+// 'drona.db.elephantsql.com',
+// '5432',
+// 'gzgkniyt'
+
 
 let db = null;
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {
