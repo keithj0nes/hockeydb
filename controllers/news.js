@@ -11,13 +11,14 @@ const getNews = async (req, res) => {
             concat(u.first_name, ' ', u.last_name) as full_name,
             coalesce(jsonb_agg(jsonb_build_object('id', t.id, 'name', t.name)) FILTER (WHERE t.id IS NOT NULL), '[]') AS tags_in_post 
         FROM news n
-        left JOIN news_tags nt ON nt.news_id = n.id
-        left JOIN tags t ON t.id = nt.tag_id
-
+        LEFT JOIN news_tags nt ON nt.news_id = n.id
+        LEFT JOIN tags t ON t.id = nt.tag_id
         INNER JOIN users u ON u.id = n.created_by
+        WHERE hidden_date IS ${!!req.query.show_hidden ? 'NOT' : ''} null
+        AND deleted_date IS null
         GROUP BY n.id, u.id
         ORDER BY n.display_order;
-    `
+    `;
     const news = await db.query(newsQuery);
     const todays_games = await db.get_todays_games();
     res.status(200).send({ status: 200, data: { news, todays_games }, message: 'Retrieved list of news' })

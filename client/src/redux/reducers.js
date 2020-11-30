@@ -1,4 +1,4 @@
-import { AUTH_SET_USER, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_TEAMS, GET_DIVISIONS } from './actionTypes';
+import { AUTH_SET_USER, REMOVE_HIDDEN, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, GET_PLAYERS, GET_TEAMS, GET_DIVISIONS, DELETE_SUCCESS } from './actionTypes';
 
 const initialAuthState = {
     user: {},
@@ -46,6 +46,10 @@ export const news = (state = initialNewsState, { type, payload }) => {
         return { ...state, newsById: payload };
     case `news/tags/${GET_SUCCESS}`:
         return { ...state, newsTags: payload };
+
+    case `news/${DELETE_SUCCESS}`:
+    case `news/${REMOVE_HIDDEN}`:
+        return { ...state, isLoading: false, news: state.news.filter(item => item.id !== payload.id) };
     default:
         return state;
     }

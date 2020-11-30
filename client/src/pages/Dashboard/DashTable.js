@@ -17,7 +17,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
 
     let flexValues;
     if (isLoading) {
-        flexValues = sectionKeys.map(item => (typeof sections[item] === 'object' ? sections[item].flex : sections[item]));
+        flexValues = sectionKeys.map(item => (typeof sections[item] === 'object' ? sections[item]?.flex : sections[item]));
     }
 
     return (
@@ -25,12 +25,12 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
             <div className="ot-table" style={{ minWidth }}>
                 <div className="ot-row-header">
 
-                    {!!draggableProps && (
+                    {!!draggableProps?.isDraggable && (
                         <DraggableIcon style={{ visibility: 'hidden', height: 0 }} />
                     )}
                     {sectionKeys.map(sk => {
                         const isObj = typeof sections[sk] === 'object';
-                        return <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk].flex : sections[sk]}`}>{isObj ? sections[sk].as : sk.split('_')[0]}</p>;
+                        return <p key={sk} title={sk.replace(/_/g, ' ')} className={`ot-header ot-flex-${isObj ? sections[sk]?.flex : sections[sk]}`}>{isObj ? sections[sk]?.as : sk.split('_')[0]}</p>;
                     })}
 
                     <button type="button" className="ot-ellipsis hidden">
@@ -49,7 +49,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
                         <h4 style={{ textAlign: 'center', padding: '20px 0' }}>{emptyTableText}</h4>
                     ) : (
                         // currently drag n drop is only being used by DashNews component
-                        !!draggableProps ? (
+                        !!draggableProps?.isDraggable ? (
                             <DragDropContext onDragEnd={draggableProps.onDragEnd}>
                                 <Droppable droppableId="news-dnd-container">
                                     {(provided, snapshot) => (
@@ -117,6 +117,7 @@ DashTable.propTypes = {
     popoverData: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
     draggableProps: PropTypes.shape({
         onDragEnd: PropTypes.func,
+        isDraggable: PropTypes.bool,
     }),
 };
 
@@ -161,13 +162,13 @@ const TableRow = ({ d, sectionKeys, sections, indx, popoverData, draggable }) =>
         <div className="ot-row" id={`row-${indx}`}>
 
             {!!draggable && (
-                <DraggableIcon {...draggable.dragHandleProps} />
+                <DraggableIcon {...draggable.dragHandleProps} title="Draggable Row" />
             )}
 
             {sectionKeys.map(section => {
                 const isObj = typeof sections[section] === 'object';
                 // const sectionLink = sections[section].link;
-                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section].flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (active)'}</p>;
+                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section]?.flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (active)'}</p>;
             })}
 
             <button type="button" className="ot-ellipsis" onClick={() => setEllipsisOpen(!ellipsisOpen)}>

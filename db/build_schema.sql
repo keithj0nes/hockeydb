@@ -62,6 +62,8 @@ CREATE TABLE "news" (
   "updated_by" INTEGER,        -- REFERENCES users(id),
   "deleted_date" TIMESTAMP,
   "deleted_by" INTEGER         -- REFERENCES users(id),
+  "hidden_date" TIMESTAMP,
+  "hidden_by" INTEGER,         -- REFERENCES users(id),
 );
 
 CREATE TABLE "tags" (
@@ -233,6 +235,7 @@ ALTER TABLE "passwords" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "news" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "news" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 ALTER TABLE "news" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
+ALTER TABLE "news" ADD FOREIGN KEY ("hidden_by") REFERENCES "users" ("id");
 
 ALTER TABLE "players" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "players" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");

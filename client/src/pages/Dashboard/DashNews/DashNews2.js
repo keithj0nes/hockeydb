@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { toggleModal } from 'redux/actions/misc';
 import { DashPageHeader, DashFilter } from '../../../components';
-import { getNews, updateNewsPostOrder } from '../../../redux/actions/news';
+import { getNews, updateNewsPostOrder, updateNewsPostById, deleteNewsPost } from '../../../redux/actions/news';
 import DashTable from '../DashTable';
 import { useQueryParam } from '../../../components/useQueryParams';
 
 
-const DashNews2 = ({ news, getNews, isLoading, location, updateNewsPostOrder, history }) => {
+const DashNews2 = ({ news, getNews, isLoading, location, toggleModal, updateNewsPostOrder, updateNewsPostById, deleteNewsPost, history }) => {
     const [newsPosts, setNewsPosts] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [filters, setFilters] = useQueryParam({ getMethod: getNews });
+    const showingHidden = location.search.includes('hidden');
 
     if (newsPosts.length !== news.length) setNewsPosts(news);
 
@@ -26,6 +28,31 @@ const DashNews2 = ({ news, getNews, isLoading, location, updateNewsPostOrder, hi
             }],
         }];
         setFilteredData(filterData);
+    };
+
+    const handleHideNewsPost = (item) => {
+        toggleModal({
+            isVisible: true,
+            isClosableOnBackgroundClick: true,
+            title: `${item.hidden_date ? 'Unh' : 'H'}ide News Post`,
+            message: item.hidden_date
+                ? 'Are you sure you want to unhide this news post? This will cause the selected news post to be visible on the public page'
+                : 'Are you sure you want to hide this news post?\nThis will hide the news post from both the admin dashboard and from the public page. You can view all hidden news posts using the filter. This does NOT delete the news post',
+            fields: [],
+            confirmActionTitle: `${item.hidden_date ? 'Unh' : 'H'}ide News Post`,
+            confirmAction: () => updateNewsPostById({ id: item.id, newsData: { is_hidden: !!!item.hidden_date } }),
+        }, 'prompt');
+    };
+
+    const handleDeleteSeason = (item) => {
+        toggleModal({
+            isVisible: true,
+            title: 'Delete News post',
+            message: 'Are you sure you want to delete this news post?\nThis cannot be undone and you will lose any information saved within this news post.\n\nPlease type in the name of the news post below to delete.',
+            toBeDeleted: item,
+            toBeDeletedString: item.title,
+            deleteAction: () => deleteNewsPost({ id: item.id }),
+        }, 'delete');
     };
 
     const onDragEnd = result => {
@@ -61,6 +88,7 @@ const DashNews2 = ({ news, getNews, isLoading, location, updateNewsPostOrder, hi
             {
                 iconName: 'FILTER',
                 title: 'Filter News Posts',
+                isActive: location.search.length > 0,
                 onClick: (val) => setFilterDataOpenFilter(val),
                 popoverUI: (closeFilter) => (
                     <DashFilter
@@ -87,21 +115,20 @@ const DashNews2 = ({ news, getNews, isLoading, location, updateNewsPostOrder, hi
                         sections={{
                             title: 'three',
                             full_name: { as: 'author', flex: 'one' },
-                            created_date: { as: 'published date', flex: 'one' },
+                            // only show the created date if show_hidden filter isnt applied
+                            ...!location.search.includes('show_hidden') && { created_date: { as: 'published date', flex: 'one' } },
                         }}
                         minWidth={680}
                         isLoading={[isLoading, 15]}
-                        emptyTableText={location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
+                        emptyTableText={location.search.length > 0 ? 'Sorry, there are no news posts within your filter criteria' : 'Sorry, no news posts have been created. Start by adding a news post above.'}
                         popoverData={(d, closePopover) => (
                             <ul>
-                                <li>hi</li>
-                                <li>there</li>
                                 <li onClick={() => { handleEditNewsPost(d); closePopover(); }}>Edit Season</li>
-                                {/* {!d.is_active && <li onClick={() => { handleHideSeason(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Season`}</li>} */}
-                                {/* {!d.is_active && <li onClick={() => { handleDeleteSeason(d); closePopover(); }}>Delete Season</li>} */}
+                                <li onClick={() => { handleHideNewsPost(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide News Post`}</li>
+                                <li onClick={() => { handleDeleteSeason(d); closePopover(); }}>Delete News Post</li>
                             </ul>
                         )}
-                        draggableProps={{ onDragEnd }}
+                        draggableProps={{ onDragEnd, isDraggable: !location.search.includes('show_hidden') }}
                     />
                 </div>
             </div>
@@ -121,6 +148,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     getNews: filters => dispatch(getNews(filters)),
     updateNewsPostOrder: (data, id) => dispatch(updateNewsPostOrder(data, id)),
+    toggleModal: (modalProps, modalType) => dispatch(toggleModal(modalProps, modalType)),
+    updateNewsPostById: (id, data) => dispatch(updateNewsPostById(id, data)),
+    deleteNewsPost: id => dispatch(deleteNewsPost(id)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DashNews2));
 
@@ -128,7 +158,10 @@ DashNews2.propTypes = {
     news: PropTypes.array.isRequired,
     getNews: PropTypes.func.isRequired,
     updateNewsPostOrder: PropTypes.func,
+    updateNewsPostById: PropTypes.func,
+    deleteNewsPost: PropTypes.func,
     isLoading: PropTypes.bool.isRequired,
     location: PropTypes.object,
+    toggleModal: PropTypes.func.isRequired,
     history: PropTypes.object,
 };
