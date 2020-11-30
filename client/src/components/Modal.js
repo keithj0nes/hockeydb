@@ -12,7 +12,7 @@ class DeleteModal extends React.Component {
     }
 
     handleChangeDelete = (e, name) => {
-        this.setState({ shouldBeDeleted: e.target.value === this.props.data.toBeDeleted.name });
+        this.props.data.toBeDeletedString ? this.setState({ shouldBeDeleted: e.target.value === this.props.data.toBeDeletedString }) : this.setState({ shouldBeDeleted: e.target.value === this.props.data.toBeDeleted.name });
     }
 
     render() {
@@ -25,7 +25,7 @@ class DeleteModal extends React.Component {
                 {isLoading && 'Loading...'}
 
                 <div className="modal-field">
-                    <label htmlFor="del">{data.toBeDeleted.name}</label>
+                    <label htmlFor="del">{!!data.toBeDeletedString ? data.toBeDeletedString : data.toBeDeleted.name}</label>
                     <input type="text" name="del" id="del" onChange={this.handleChangeDelete} />
                 </div>
 

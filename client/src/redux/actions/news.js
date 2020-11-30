@@ -1,11 +1,10 @@
 // import axios from 'axios';
 import { request } from './middleware';
-import { GET_BLOGS, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS } from '../actionTypes';
+import { GET_BLOGS, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS, DELETE_SUCCESS, TOGGLE_MODAL, REMOVE_HIDDEN } from '../actionTypes';
 import { history } from '../../helpers';
 
-export const getNews = () => async dispatch => {
-    // const data = await request('/api/news', 'GET', {}, true);
-    const data = await request({ url: '/api/news', method: 'GET', session: {}, publicRoute: true });
+export const getNews = (filter) => async dispatch => {
+    const data = await request({ url: `/api/news${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: GET_BLOGS, payload: data.data.news });
     dispatch({ type: `todaysgames/${GET_SUCCESS}`, payload: data.data.todays_games });
@@ -26,10 +25,17 @@ export const getNewsTags = () => async (dispatch) => {
     return true;
 };
 
-export const updateNewsPostById = (newsData, id) => async (dispatch) => {
+export const updateNewsPostById = ({ newsData, id }) => async (dispatch) => {
     const data = await request({ url: `/api/admin/news/${id}`, method: 'PUT', session: newsData });
     if (!data.data) return false;
     dispatch({ type: `news/${UPDATE_SUCCESS}`, payload: data.data });
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
+
+    if ('is_hidden' in newsData) {
+        dispatch({ type: `news/${REMOVE_HIDDEN}`, payload: data.data });
+        return { is_hidden: data.data.is_hidden };
+    }
+
     return true;
 };
 
@@ -57,4 +63,11 @@ export const updateNewsPostOrder = (newsData, id) => async (dispatch) => {
     //   payload: post.data[0]
     // })
     return true;
+};
+
+export const deleteNewsPost = ({ id }) => async (dispatch) => {
+    const data = await request({ url: `/api/admin/news/${id}`, method: 'DELETE' });
+    if (!data) return false;
+    dispatch({ type: `news/${DELETE_SUCCESS}`, payload: data.data });
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
 };

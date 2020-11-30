@@ -350,6 +350,8 @@ input[type=text] {
             margin-top: 10px;
             border-radius: 3px;
             box-shadow: 0px 5px 15px #5C636929;
+            width: 100%;
+            background: pink;
 
             // .ot-cell {
                 // display: table-cell;
@@ -639,6 +641,29 @@ input[type=text] {
 // }
 
 
+.dot {
+    height: 6px;
+    width: 6px;
+    background: $dash-color-table-ellipsis;
+    border-radius: 100%;
+    margin: 0 2px;
+}
+
+.draggable-icon {
+    padding: 6px;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 8px;
+
+    & > div {
+        display: flex;
+        padding-top: 3px;
+
+        &:first-child {
+            padding-top: 0;
+        }
+    }
+}
 
 
 .ot-container-dash-r {
@@ -712,6 +737,7 @@ input[type=text] {
             // background: pink;
             // border-bottom: 1px solid #EFF2F4;
             border-bottom: 1px solid $dash-color-silver;
+            width: 100%;
 
             p.ot-cell {
                 font-size: 14px;

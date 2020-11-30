@@ -175,7 +175,7 @@ const createNews = async (req, res) => {
 const updateNews = async (req, res) => {
     const db = app.get('db');
 
-    const { title, body, allow_collapse, tag, fromIndex, toIndex, move, tags_in_post } = req.body;
+    const { title, body, allow_collapse, tag, fromIndex, toIndex, move, tags_in_post, is_hidden } = req.body;
     const { id } = req.params;
 
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
@@ -208,6 +208,16 @@ const updateNews = async (req, res) => {
         return res.status(200).send({ status: 200, data: updateMove, message: 'News post order updated'})
     }
 
+    // Manage hidden request
+    console.log(req.body,' req.body admin update news post')
+    if (req.body.hasOwnProperty('is_hidden')) {
+        // const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
+        const data = await db.news.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
+        console.log(data, 'NOT HIDING NAYMORE data')
+        return res.status(200).send({ status: 200, data: {...data[0], is_hidden}, message: is_hidden ? 'News post hidden' : 'News post unhidden', snack: true })
+    }
+    
+
     if (!!tags_in_post.length) {
         await db.news_tags.destroy({ news_id: id });
         const tagsInPost = tags_in_post.map(item => {
@@ -222,7 +232,6 @@ const updateNews = async (req, res) => {
 
 const deleteNews = async (req, res) => {
     const db = app.get('db');
-
     const { id } = req.params;
 
     const newsPost = await db.news.findOne({ id }).catch(err => console.log(err));
@@ -231,11 +240,9 @@ const deleteNews = async (req, res) => {
         return res.status(200).send({ status: 404, error: true, message: 'News post not found', snack: true })
     }
 
-    const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete blog error'))
-
-    return res.status(200).send({ status: 200, data, message: 'News post deleted', snack: true })
+    const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete news post error'))
+    return res.status(200).send({ status: 200, data: data[0], message: 'News post deleted', snack: true })
 }
-
 
 
 // ⭐️  Season ⭐️
@@ -290,7 +297,7 @@ const updateSeason = async (req, res) => {
     //     return res.status(200).send({ status: 404, error: true, message: 'Season not found', snack: true })
     // }
     
-    if(name) {
+    if (name) {
         const nameExists = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
     
         if(nameExists.length > 0 && (nameExists[0].id !== season.id )){
@@ -299,7 +306,7 @@ const updateSeason = async (req, res) => {
     }
     
 
-    if(is_active){
+    if (is_active){
         //search current is_active seasons -> set to false
         //set a flag to change global active season
         const findIsActive = await db.seasons.findOne({is_active}).catch(err => console.log(err, 'err in is_active'));
@@ -313,7 +320,6 @@ const updateSeason = async (req, res) => {
 
 const deleteSeason = async (req, res) => {
     const db = app.get('db');
-
     const { id } = req.params;
 
     const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
@@ -327,9 +333,7 @@ const deleteSeason = async (req, res) => {
     }
 
     const data = await db.seasons.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete season error'))
-
     return res.status(200).send({ status: 200, data, message: 'Season deleted', snack: true })
-
 }
 
 
