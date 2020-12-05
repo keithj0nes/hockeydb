@@ -167,8 +167,14 @@ const TableRow = ({ d, sectionKeys, sections, indx, popoverData, draggable }) =>
 
             {sectionKeys.map(section => {
                 const isObj = typeof sections[section] === 'object';
+                let cellData;
+                if (sections[section]?.type === 'date') {
+                    [cellData] = dateFormat(d[section], 'MM/DD/YY h:mmA').split(' ');
+                } else {
+                    cellData = d[section];
+                }
                 // const sectionLink = sections[section].link;
-                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section]?.flex : sections[section]}`}>{d[section]} {d.is_active && section === sectionKeys[0] && '- (active)'}</p>;
+                return <p key={section} className={`ot-cell ot-flex-${isObj ? sections[section]?.flex : sections[section]}`}>{cellData} {d.is_active && section === sectionKeys[0] && '- (active)'}</p>;
             })}
 
             <button type="button" className="ot-ellipsis" onClick={() => setEllipsisOpen(!ellipsisOpen)}>

@@ -14,10 +14,10 @@ import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
 import DashGamesDetails from './DashGames/DashGamesDetails';
-import DashNews from './DashNews/DashNews';
+// import DashNews from './DashNews/DashNews';
 import DashNews2 from './DashNews/DashNews2';
 
-import DashNewsCreate from './DashNews/DashNewsCreate';
+// import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashNewsCreate2 from './DashNews/DashNewsCreate2';
 import DashLocations from './DashLocations/DashLocations';
 import DashUsers from './DashUsers/DashUsers';

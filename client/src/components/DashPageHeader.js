@@ -13,32 +13,15 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
             <div className="page-header-title-container">
                 <h1>{title}</h1>
 
-                { !hideSearchAndButtons && (
+                {/* { !hideSearchAndButtons && (
                     <input type="text" className="page-header-search hide-mobile" placeholder={searchPlaceholder} onChange={onChange} />
-                )}
+                )} */}
 
                 <div className="icons-container">
 
-                    {/* { !hideSearchAndButtons && buttons && buttons.map(button => (
-                        <div style={{ position: 'relative' }} id={button.iconName} key={button.iconName}>
-
-                            <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => button.onClick()}>
-                                <Icon name={button.iconName} size={button.size || 20} x />
-                            </div>
-
-                            {button.popoverUI && (
-                                <Popover isVisible={button.isPopoverVisible} setIsVisible={button.onClick} closest={`#${button.iconName}`} fullWidth>
-                                    {(props) => button.popoverUI(props)}
-                                </Popover>
-                            )}
-                        </div>
-                    ))} */}
-
-                    { !hideSearchAndButtons && buttons && buttons.map(button => {
-                        return (
-                            <IconComponent key={button.iconName} button={button} />
-                        )
-                    })}
+                    { !hideSearchAndButtons && buttons && buttons.map(button => (
+                        <IconComponent key={button.iconName} button={button} />
+                    ))}
 
                     <div className="hide-mobile">
                         <div className="profile-housing">
@@ -47,9 +30,9 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
                     </div>
                 </div>
             </div>
-            { !hideSearchAndButtons && (
+            {/* { !hideSearchAndButtons && (
                 <input type="text" className="page-header-search hide-desktop" placeholder={searchPlaceholder} onChange={onChange} />
-            )}
+            )} */}
         </div>
     );
 };
@@ -67,7 +50,7 @@ const IconComponent = ({ button }) => {
     return (
         <div style={{ position: 'relative' }} id={button.iconName}>
 
-            <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => { return button.onClick ? (button.onClick(), setIsPopoverVisible(!isPopoverVisible)) : setIsPopoverVisible(!isPopoverVisible) }}>
+            <div key={button.iconName} className={`icon-housing ${button.isActive ? 'is-active' : ''}`} title={button.title} onClick={() => (button.onClick ? (button.onClick(), setIsPopoverVisible(!isPopoverVisible)) : setIsPopoverVisible(!isPopoverVisible))}>
                 <Icon name={button.iconName} size={button.size || 20} x />
             </div>
 
@@ -77,8 +60,12 @@ const IconComponent = ({ button }) => {
                 </Popover>
             )}
         </div>
-    )
-}
+    );
+};
+
+IconComponent.propTypes = {
+    button: PropTypes.object.isRequired,
+};
 
 // PAGE HEADER INFO STRUCTURE FROM PARENT COMPONENT
 
