@@ -416,30 +416,22 @@ const deleteDivision = async (req, res) => {
 }
 
 
-
 // ⭐️  Locations ⭐️
 
 
 const createLocation = async (req, res) => {
-    console.log('creating!')
     const db = app.get('db');
-
     const { name, address } = req.body;
 
     const location = await db.locations.where('lower(name) = $1 AND deleted_date IS null', [name.toLowerCase()]).catch(err => console.log(err));
-    // const location = await db.locations.findOne({ name }).catch(err => console.log(err, 'error in create season'));
 
-    console.log(location, 'location!')
-    if (location.length > 0) {
-        return res.status(200).send({ status: 400, error: true, message: 'Location already exists.' })
+    if (!!location.length) {
+        return res.status(200).send({ status: 400, error: true, message: 'Location already exists' })
     }
 
     const data = await db.locations.insert({ name, address, created_date: new Date(), created_by: req.user.id }).catch(err => console.log(err, 'create location error'))
-
     return res.status(200).send({ status: 200, data, message: 'Location created', snack: true })
-
 }
-
 
 const updateLocation = async (req, res) => {
     const db = app.get('db');
@@ -453,42 +445,32 @@ const updateLocation = async (req, res) => {
         return res.status(404).send({ status: 404, error: true, message: 'Location not found', snack: true })
     }
 
-    if(name) {
+    if (name) {
         const nameExists = await db.locations.where('lower(name) = $1', [name.toLowerCase()]).catch(err => console.log(err));
-        if(nameExists.length > 0 && (nameExists[0].id !== location.id )){
+        if (nameExists.length > 0 && (nameExists[0].id !== location.id)) {
             return res.status(200).send({ status: 409, data: [], message: 'Location already exists' })
         }
     }
 
     const data = await db.locations.update({ id }, { name, address, updated_date: new Date(), updated_by: req.user.id }).catch(err => console.log(err, 'update location error'))
-
     return res.status(200).send({ status: 200, data: data[0], message: 'Location updated', snack: true })
-
 }
 
 const deleteLocation = async (req, res) => {
     const db = app.get('db');
-
     const { id } = req.params;
-
     const location = await db.locations.findOne({ id }).catch(err => console.log(err));
 
     if (!location) {
         return res.status(404).send({ status: 404, error: true, message: 'Location not found', snack: true })
     }
 
-    // currently set up to where deleting location will not effect the game played
-    // const gameWithLocation = await db.games.findOne({location_id: location.id});
-    // if(gameWithLocation){
-    //     return res.status(200).send({ status: 409, error: true, message: 'Location cannot be deleted, a game is using this location' })
-    // }
-
     const data = await db.locations.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete location error'))
-
-    return res.status(200).send({ status: 200, data, message: 'Location deleted', snack: true })
-
+    return res.status(200).send({ status: 200, data: data[0], message: 'Location deleted', snack: true })
 }
 
+
+// ⭐️  Games ⭐️
 
 
 const createGame = async (req, res) => {

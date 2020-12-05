@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, DELETE_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 
 
 export const getLocations = (filter) => async dispatch => {
@@ -11,42 +11,26 @@ export const getLocations = (filter) => async dispatch => {
     return true;
 };
 
-export const createLocation = (locationData) => async (dispatch) => {
+export const createLocation = ({ locationData }) => async (dispatch) => {
     const data = await request({ url: '/api/admin/locations', method: 'POST', session: locationData });
-
     if (!data.data) return false;
     dispatch({ type: `locations/${CREATE_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
     return true;
 };
 
-export const updateLocation = (id, locationData) => async (dispatch) => {
+export const updateLocation = ({ id, locationData }) => async (dispatch) => {
     const data = await request({ url: `/api/admin/locations/${id}`, method: 'PUT', session: locationData });
-
     if (!data) return false;
     dispatch({ type: `locations/${UPDATE_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
     return true;
 };
 
-export const deleteLocation = id => async (dispatch) => {
+export const deleteLocation = ({ id }) => async (dispatch) => {
     const data = await request({ url: `/api/admin/locations/${id}`, method: 'DELETE' });
     if (!data) return false;
-    // Close Delete Modal
-    // dispatch({
-    //     type: TOGGLE_MODAL,
-    // })
-
-    // Open Alert Modal
-    dispatch({
-        type: TOGGLE_MODAL,
-        modalProps: {
-            isVisible: true,
-            title: 'Delete Location',
-            message: data.message,
-        },
-        modalType: 'alert',
-    });
-    // return data
-    return dispatch(getLocations());
+    dispatch({ type: `locations/${DELETE_SUCCESS}`, payload: data.data });
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
+    return true;
 };

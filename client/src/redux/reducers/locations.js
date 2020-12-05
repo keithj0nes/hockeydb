@@ -1,7 +1,7 @@
-import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, DELETE_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS } from '../actionTypes';
 
 const initialLocationsState = {
-    isLoading: true,
+    isLoading: false,
     locations: [],
     // filter
     isVisible: false,
@@ -21,6 +21,9 @@ export const locations = (state = initialLocationsState, { type, payload }) => {
         const newLocations = state.locations.map(item => ((item.id === payload.id) ? payload : item));
         return { ...state, isLoading: false, locations: newLocations };
     }
+    case `locations/${DELETE_SUCCESS}`:
+        console.log(payload)
+        return { ...state, isLoading: false, locations: state.locations.filter(item => item.id !== payload.id) };
     case 'locations/FILTER_IS_VISIBLE':
         // if the payload is NOT undefined, use the payload (generally set to false in componentwillunmount)
         // otherwise just set it to the opposite of what it's currently set to
