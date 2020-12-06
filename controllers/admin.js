@@ -270,10 +270,7 @@ const updateSeason = async (req, res) => {
     const db = app.get('db');
 
     const { type, name, is_active, is_hidden } = req.body;
-
-    console.log(req.body, 'updateSeason BODY')
     const { id } = req.params;
-    
     const season = await db.seasons.findOne({ id }).catch(err => console.log(err));
 
     if (!season) {
@@ -287,7 +284,6 @@ const updateSeason = async (req, res) => {
             return res.status(200).send({ status: 409, data: [], message: 'Cannot hide the currently active season', snack: true })
         }
         const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden season error'))
-        console.log(data, 'NOT HIDING NAYMORE data')
         return res.status(200).send({ status: 200, data: {...data[0], is_hidden}, message: is_hidden ? 'Season hidden' : 'Season unhidden', snack: true })
     }
 
@@ -349,6 +345,7 @@ const createDivision = async (req, res) => {
     // const seasonName = season_name.replace(/season_/g, '')
 
     const season_id = await db.seasons.findOne({name: season});
+    if (!season_id) return res.status(200).send({ status: 404, error: true, message: 'Cannot find season' })
 
     // const division = await db.divisions.findOne({ name, season_id }).catch(err => console.log(err, 'error in create season'));
     const division = await db.divisions.where('lower(name) = $1 AND season_id = $2', [name.toLowerCase(), season_id.id]).catch(err => console.log(err, 'error in crete division'));
@@ -370,16 +367,16 @@ const updateDivision = async (req, res) => {
 
     const { name, is_hidden } = req.body;
     const { id } = req.params;
-    
     const division = await db.divisions.findOne({ id }).catch(err => console.log(err));
     
     if (!division) {
         return res.status(200).send({ status: 404, error: true, message: 'Division not found', snack: true })
     }
-        // Manage hidden request
+
+    // Manage hidden request
     if(req.body.hasOwnProperty('is_hidden')){
         const data = await db.divisions.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null }).catch(err => console.log(err, 'update is_hidden division error'))
-        return res.status(200).send({ status: 200, data: data, message: is_hidden ? 'Division hidden' : 'Division unhidden', snack: true })
+        return res.status(200).send({ status: 200, data: data[0], message: is_hidden ? 'Division hidden' : 'Division unhidden', snack: true })
     }
     
     if(name) {
@@ -412,7 +409,7 @@ const deleteDivision = async (req, res) => {
 
     const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'delete Division error'))
 
-    return res.status(200).send({ status: 200, data, message: 'Division deleted', snack: true })
+    return res.status(200).send({ status: 200, data: data[0], message: 'Division deleted', snack: true })
 }
 
 

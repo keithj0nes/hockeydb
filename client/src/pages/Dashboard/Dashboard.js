@@ -9,7 +9,9 @@ import { toggleNavSlider } from '../../redux/actions/misc';
 import { DashboardNav, HamburgerIcon, ProfilePic, SlideOut } from '../../components';
 // import DashSeasons from './DashSeasons/DashSeasons';
 import DashSeasons2 from './DashSeasons/DashSeasons2';
-import DashDivisions from './DashDivisions/DashDivisions';
+// import DashDivisions from './DashDivisions/DashDivisions';
+import DashDivisions2 from './DashDivisions/DashDivisions2';
+
 import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
@@ -34,7 +36,7 @@ const dashboardPageList = {
         // { name: 'Seasons OLD',    to: '/seasons_old',    icon: ICONS.SEASONS,   component: DashSeasons,                   exact: false, hideFromNavigation: false },
         { name: 'Seasons',   to: '/seasons',   icon: ICONS.SEASONS,   component: DashSeasons2,                  exact: false, hideFromNavigation: false },
 
-        { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS, component: DashDivisions,                 exact: false, hideFromNavigation: false },
+        { name: 'Divisions',  to: '/divisions',  icon: ICONS.DIVISIONS, component: DashDivisions2,                 exact: false, hideFromNavigation: false },
         { name: 'Teams',      to: '/teams',      icon: ICONS.TEAMS,     component: DashTeams,                     exact: false, hideFromNavigation: false },
         // { name: 'Players',    to: '/players',    icon: 'players', component: DashPlayers,                 exact: false, hideFromNavigation: false },
         { name: 'Games',      to: '/games',      icon: ICONS.GAMES,     component: DashGames,                     exact: true,  hideFromNavigation: false },

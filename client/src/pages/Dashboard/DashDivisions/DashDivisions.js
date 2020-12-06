@@ -7,6 +7,7 @@ import { toggleModal, toggleFilter } from 'redux/actions/misc';
 import { setQuery } from 'helpers';
 import { DashPageHeader, DashFilter } from '../../../components';
 import DashTable from '../DashTable';
+import DashDivisions2 from './DashDivisions2';
 
 // import './DashDivisions.scss';
 
@@ -266,6 +267,8 @@ class DashDivisions extends Component {
 
         return (
             <div>
+
+                <DashDivisions2 />
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
                 <div style={{ paddingBottom: 16 }} />

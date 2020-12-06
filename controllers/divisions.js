@@ -3,11 +3,12 @@ const helpers = require('./helpers');
 
 const getAllDivisions = async (req, res) => {
   const db = app.get('db');
+  const { season } = req.query;
 
-  const season_id = await db.seasons.findOne({ name: req.query.season, 'deleted_date =': null })
+  const season_id = await db.seasons.findOne({ name: season, 'deleted_date =': null }).catch(err => console.log(err, 'ERRR'))
   const query = helpers.filter(req.query, ['season'])
 
-  const data = await db.divisions.find({ ...query, season_id: season_id.id }, { order: [ {field: 'name', direction: 'asc'}]}).catch(err => console.log(err));
+  const data = await db.divisions.find({ ...query, season_id: season_id.id }, { order: [ {field: 'name', direction: 'asc'}]}).catch(err => console.log(err, 'error'));
   const seasons = await db.seasons.find({ 'hidden_date =': null, 'deleted_date =': null }).catch(err => console.log(err));
 
   res.status(200).send({ status: 200, data: { divisions: data, seasons }, message: 'Retrieved list of Divisions' });
