@@ -1,9 +1,10 @@
 // import axios from 'axios';
 import { request } from './middleware';
-import { GET_BLOGS, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS, DELETE_SUCCESS, TOGGLE_MODAL, REMOVE_HIDDEN } from '../actionTypes';
+import { GET_BLOGS, GET_INIT, GET_SUCCESS, UPDATE_SUCCESS, CREATE_SUCCESS, DELETE_SUCCESS, TOGGLE_MODAL, REMOVE_HIDDEN } from '../actionTypes';
 import { history } from '../../helpers';
 
 export const getNews = (filter) => async dispatch => {
+    dispatch({ type: `news/${GET_INIT}` });
     const data = await request({ url: `/api/news${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: GET_BLOGS, payload: data.data.news });

@@ -70,7 +70,7 @@ const PromptModal = ({ data, toggleModal }) => (
 
                 {field.type === 'input' && (
                     <Form.Item label={field.title} name={field.name} rules={field.rules}>
-                        <Input placeholder={field.title} />
+                        <Input placeholder={field.title} disabled={field.disabled} />
                     </Form.Item>
                 )}
 

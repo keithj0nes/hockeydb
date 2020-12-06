@@ -7,6 +7,7 @@ import { Button, DashPageHeader } from '../../../components';
 // import ListItem from '../ListItem';
 import DashTable from '../DashTable';
 import { toggleModal } from '../../../redux/actions/misc';
+import DashLocation2 from './DashLocations2';
 
 const defaultState = {
     isAddLocationVisible: false,
@@ -162,6 +163,8 @@ export class DashGames extends Component {
 
         return (
             <div>
+
+                <DashLocation2 />
                 <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
                 <div className="dashboard-filter-header">
                     <div>

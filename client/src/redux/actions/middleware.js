@@ -107,14 +107,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
 
     if (status !== 200) {
         console.log(`status error: ${status} - ${message}`);
-        // NOT BEING USED YET
-        // store.dispatch({type: 'REQUEST_METHOD_FAILURE', payload: {status, message}})  //NOT BEING USED YET
-        // NOT BEING USED YET
-
         const state = store.getState();
-        // console.log(state, 'state!')
-
-
         // if a modal is already visible and there's an error, show that error in the current modal
         if (state.misc.modalVisible && !redirect) {
             store.dispatch({
@@ -133,8 +126,6 @@ export const request = async ({ url, method, session, publicRoute }) => {
 
             return false;
         }
-        // store.dispatch({type: TOGGLE_MODAL, payload: {status, message}})
-
 
         if (redirect) {
             console.log(`Redirecting to the ${redirect} page`);
@@ -167,7 +158,6 @@ export const request = async ({ url, method, session, publicRoute }) => {
         }
         return false;
     }
-
 
     if (status === 200) {
         return { data, message };

@@ -25,28 +25,21 @@ const initialNewsState = {
 
 export const news = (state = initialNewsState, { type, payload }) => {
     switch (type) {
+    case `news/${GET_INIT}`:
+        return { ...state, isLoading: true };
     case GET_BLOGS:
-        // console.log(payload, 'PAYLOAD')
-        return { ...state, news: payload, newsNum: state.newsNum + 1 };
+        return { ...state, news: payload, newsNum: state.newsNum + 1, isLoading: false };
     case `news/${CREATE_SUCCESS}`:
-        // console.log(state.newsNum, 'state.newsnum')
-        return { ...state, news: [payload, ...state.news], newsNum: state.newsNum + 1 };
-
+        return { ...state, news: [payload, ...state.news], newsNum: state.newsNum + 1, isLoading: false };
     case `news/${UPDATE_SUCCESS}`: {
         // update item without getting whole list again
-        const newNews = state.news.map(item => {
-            if (item.id === payload.id) {
-                return payload;
-            }
-            return item;
-        });
-        return { ...state, news: newNews, newsNum: state.newsNum + 1 };
+        const updatedNews = state.news.map(item => (item.id === payload.id ? payload : item));
+        return { ...state, news: updatedNews, newsNum: state.newsNum + 1, isLoading: false };
     }
     case `newsById/${GET_SUCCESS}`:
-        return { ...state, newsById: payload };
+        return { ...state, newsById: payload, isLoading: false };
     case `news/tags/${GET_SUCCESS}`:
         return { ...state, newsTags: payload };
-
     case `news/${DELETE_SUCCESS}`:
     case `news/${REMOVE_HIDDEN}`:
         return { ...state, isLoading: false, news: state.news.filter(item => item.id !== payload.id) };

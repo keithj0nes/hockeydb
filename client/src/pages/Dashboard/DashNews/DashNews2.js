@@ -116,7 +116,7 @@ const DashNews2 = ({ news, getNews, isLoading, location, toggleModal, updateNews
                             title: 'three',
                             full_name: { as: 'author', flex: 'one' },
                             // only show the created date if show_hidden filter isnt applied
-                            ...!location.search.includes('show_hidden') && { created_date: { as: 'published date', flex: 'one' } },
+                            ...!location.search.includes('show_hidden') && { created_date: { as: 'published date', flex: 'one', type: 'date' } },
                         }}
                         minWidth={680}
                         isLoading={[isLoading, 15]}

@@ -122,6 +122,7 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
 
     const handleDeleteSeason = (item) => {
         toggleModal({
+            isClosableOnBackgroundClick: true,
             isVisible: true,
             title: 'Delete Season',
             message: 'Are you sure you want to delete this season?\nThis cannot be undone and you will lose any information saved within this season.\n\nPlease type in the name of the season below to delete.',
