@@ -17,9 +17,9 @@ const getAllTeams = async (req, res) => {
   `;
 
   if(orderby) {
-    query += `ORDER BY division_name`
-  } else {
     query += 'ORDER BY lower(teams.name)';
+  } else {
+    query += `ORDER BY division_name, lower(teams.name)`
   }
 
   const data = await db.query(query, [division, orderby]);

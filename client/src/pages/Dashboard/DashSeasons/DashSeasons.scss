@@ -1,15 +1,9 @@
 @import '../../../assets/styles/variables';
 
-
-
 .page-header {
-    // height: 200px;
     width: 100%;
-    // height: 66px;
-    // background: yellow;
     background: $admin-color-white;
     padding: 12px 16px;
-    // padding-bottom: 0;
 
     .page-header-title-container {
         display: flex;
@@ -22,20 +16,17 @@
         }
 
         .icons-container {
-            // background: pink;
             display: flex;
             align-items: center;
             padding-left: 16px;
     
             .icon-housing {
-                // padding: 5px;
                 height: 40px;
                 width: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background: $admin-color-body;
-                // margin-left: 8px;
                 margin-left: 12px;
                 border-radius: 5px;
 
@@ -49,18 +40,12 @@
                     }
                 }
 
-                // &:first-child {
-                //     margin-left: 0;
-                // }
-                
                 > svg {
                     fill: $admin-color-lavendar;
                 }
             }
 
             .profile-housing {
-                // background: lightblue;
-                // border-left: 2px solid $admin-color-lavendar;
                 border-left: 2px solid $admin-color-body;
                 display: flex;
                 align-items: center;
@@ -77,11 +62,8 @@
         font-size: 16px;
         font-style: italic;
         padding: 10px;
-        // width: 50%;
         flex: 1;
         height: 40px;
-
-        // font-family: $main-font;
 
         &::placeholder {
             color: $admin-color-lavendar;
@@ -90,11 +72,9 @@
 
 }
 
-
 //filtering header
 
 .dashboard-filter-header {
-    // background: pink;
     display: flex;
     justify-content: space-between;
     font-size: 20px;
@@ -107,10 +87,7 @@
             align-items: center;
         
         .select-style {
-            // border: 1px solid yellow;
-            // width: 120px;
             min-width: 100px;
-            // width: 1200%;
             border-radius: 3px;
             overflow: hidden;
             background: 'green';
@@ -125,8 +102,6 @@
                 box-shadow: none;
                 background: transparent;
                 background-image: none;
-                // -webkit-appearance: none;
-                // appearance: none;
                 font-size: 16px;
                 &:focus {
                     outline: none;
@@ -137,7 +112,6 @@
 }
 
 .dashboard-add-container {
-    // background: yellow;
     padding: 16px 16px;
 
     input {
@@ -154,31 +128,21 @@
 
 .dashboard-list-container {
     flex: 1;
-    // background: red;
     width: 100%;
-    // height: 70%;
     padding: 16px;
 
     .dashboard-list {
         width: 100%;
-        // height: 100%;
-        // background: $white_color;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
 
         .dashboard-list-item {
-            // height: 200px;
             padding: 10px;
             width: 100%;
             background: $white_color;
-            // background: yellow;
             margin-bottom: 20px;
-            // box-shadow: 0 4px 10px 0 rgba(51,51,51,0.5);
             box-shadow: 0 4px 10px 0 rgba(51,51,51,0.3);
-
-
-
         }
     }
 }
@@ -191,35 +155,21 @@
 
 }
 
-// input[type=text] {
-//     // background: pink;
-//     border: 1px solid black;
-//     border-radius: 3px;
-//     padding: 5px;
-//     font-size: 16px;
-// }
-
-// border-bottom: 1px solid darken($gray_color, 3);
-
 .swiper {
     width: 100%;
     background: 'green';
-    // padding: 20px;
     margin: 60px 0;
 }
 
 
 @media only screen and (min-width: 768px){
-
-
-.page-header {
-    padding-bottom: 0;
-}
+    .page-header {
+        padding-bottom: 0;
+    }
 
     .dashboard-list-container {
         .dashboard-list {
             .dashboard-list-item {
-                // height: 20px;
                 margin-bottom: 0;
                 box-shadow: none;
                 border-bottom: 1px solid $gray_color;
@@ -230,7 +180,6 @@
     .dashboard-body {
         box-shadow: none;
     }
-
 
     .dashboard-add-container {
         background: $white_color;
@@ -250,12 +199,8 @@
         }
     
         .dashboard-add-button-container {
-            // display: flex;
-            // background: red;
             align-self: flex-end;
             width: 100%;
-            // padding: 10px;
-            // justify-content: flex-end;
         }
     }
 }

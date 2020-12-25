@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.4.0",
     "bcrypt": "^3.0.8",
     "body-parser": "^1.18.3",
     "cli-progress": "^3.5.0",

@@ -6,25 +6,18 @@
 }
 
 .pagination-container {
-    // width: 80%;
-    // padding: 16px;
-    // margin: 0 auto;
     display: flex;
     justify-content: space-between;
     width: 100%;
     max-width: 420px;
     align-self: flex-end;
-    // justify-self: flex-end;
 
     .right,
     .left {
-        // background: blue;
         padding: 0 20px;
         position: relative;
 
         &.disabled {
-            // background: gray;
-            // cursor: not-allowed;
             cursor: default;
 
             &:after {
@@ -33,11 +26,6 @@
         }
     }
 
-    // .right:disabled,
-    // .left:disabled {
-        
-    // }
-
     .right:after {
         content: '';
         position: absolute;
@@ -45,7 +33,6 @@
         border-bottom: 2px solid $admin-color-highlite;
         height: 10px;
         width: 10px;
-        // background: lightgreen;
         transform: rotate(-45deg) translate(60%, 0%);
         top: 45%;
         right: 50%;
@@ -58,7 +45,6 @@
         border-bottom: 2px solid $admin-color-highlite;
         height: 10px;
         width: 10px;
-        // background: lightgreen;
         transform: rotate(135deg) translate(-60%, -15%);
         top: 45%;
         right: 50%;
@@ -68,13 +54,10 @@
         display: inline-block;
         padding: 4px 10px;
         font-family: $main-font;
-        // background: teal;
-        // margin: 0 6px;
         cursor: pointer;
         color: $admin-color-highlite;
 
         &.current-page {
-            // padding: 5px;
             background: $admin-color-highlite;
             border-radius: 5px;
             color: $admin-color-white;
@@ -86,7 +69,6 @@
 @media only screen and (min-width: 768px){
 
     .pagination-container {
-        // width: 30%;
         width: auto;
 
         span {

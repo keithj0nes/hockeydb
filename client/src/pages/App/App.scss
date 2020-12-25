@@ -4,12 +4,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-//   font-size: 100%;
 }
 
 ul {
     list-style-type: none;
-    // margin-left: 20px;
 }
 
 ol, ul, dl, p {
@@ -37,9 +35,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
     font-size: 32px;
-    // font: Bold 32px/40px;
     line-height: 40px;
-    // letter-spacing: 10px;
 }
 
 select, input, label {
@@ -55,7 +51,8 @@ select, input, textarea {
 }
 
 
-input[type=text] {
+input[type=text],
+.input-password {
     border: 1px solid $dark_gray_color;
     border-radius: 3px;
     padding: 5px 10px;
@@ -66,13 +63,10 @@ input[type=text] {
     background: $body_background_color;
     flex: 1;
     min-height: 100vh;
-    // min-height: 100%;
-    // background: blue;
 }
 
 .site-container {
     max-width: 1200px;
-    // background-color: yellow;
     margin: 0 auto;
 }
 
@@ -88,7 +82,6 @@ input[type=text] {
     display: flex;
     align-items: center;
     padding: 16px;
-    // padding-top: 20%;
     justify-content: center;
     z-index: 1000;
     // transition: 1s all;
@@ -124,13 +117,9 @@ input[type=text] {
         }
 
         .modal-title {
-            // padding: 12px 16px;
-            // // background: red;
-            // border-bottom: 1px solid $gray_color;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            // width: 280px;
             width: 100%;
             padding: 16px 16px 0 16px;
         }
@@ -153,111 +142,19 @@ input[type=text] {
                 }
             }
 
-
             .modal-button-container {
                 display: flex;
                 justify-content: space-around;
                 padding: 30px 0 12px 0;
-
-            // border-top: 1px solid $gray_color;
-
             }
 
             .modal-error {
                 color: red;
-                // background: yellow;
                 padding: 10px 0;
             }
         }
     }
 }
-
-
-// .modal-container {
-//     background: rgba(0, 0, 0, 0.6);
-//     position: fixed;
-//     top: 0;
-//     bottom: 0;
-//     left: 0;
-//     right: 0;
-//     display: flex;
-//     align-items: center;
-//     padding: 16px;
-//     // padding-top: 20%;
-//     justify-content: center;
-//     z-index: 1000;
-//     // transition: 1s all;
-//     // opacity: 1;
-
-//     // -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
-//     //    -moz-animation: fadein 1s; /* Firefox < 16 */
-//     //     -ms-animation: fadein 1s; /* Internet Explorer */
-//     //      -o-animation: fadein 1s; /* Opera < 12.1 */
-//             animation: fadein 0.2s;
-    
-//     .modal-message {
-//         width: 100%;
-//         max-width: 400px;
-//         // width: 200px;
-//         // height: 300px;
-//         background: #fff;
-//         border-radius: 6px;
-//         position: relative;
-//         animation: slideinfromtop 0.3s ease-in-out, fadein 0.3s;
-
-
-//         .modal-close {
-//             position: absolute;
-//             top: 6px;
-//             right: 9px;
-//             font-size: 20px;
-//             cursor: pointer;
-//             padding: 4px;
-
-//             &:hover {
-//                 opacity: 0.8;
-//             }
-//         }
-
-//         .modal-title {
-//             padding: 12px 16px;
-//             // background: red;
-//             border-bottom: 1px solid $gray_color;
-//         }
-
-//         .modal-content {
-//             padding: 12px 16px;
-
-//             .modal-field {
-//                 padding: 5px 0;
-
-//                 label {
-//                     padding-bottom: 5px;
-//                 }
-//                 input:disabled {
-//                     background: #f1f1f1;
-//                 }
-//             }
-
-
-//             .modal-button-container {
-//                 display: flex;
-//                 justify-content: space-around;
-//                 padding: 30px 0 12px 0;
-
-//             // border-top: 1px solid $gray_color;
-
-//             }
-
-//             .modal-error {
-//                 color: red;
-//                 // background: yellow;
-//                 padding: 10px 0;
-//             }
-//         }
-//     }
-// }
-
 
 @keyframes fadein {
     from { opacity: 0; }
@@ -269,23 +166,12 @@ input[type=text] {
     to   { top: 0px; }
 }
 
-
 .select-css {
 	display: block;
-	// font-size: 16px;
-	// font-family: sans-serif;
-	// font-weight: 700;
-	// color: #444;
-	// line-height: 1.3;
-    // padding: .6em 1.4em .5em .8em;
     padding: 5px 10px;
 	width: 100%;
 	max-width: 100%;
-	// box-sizing: border-box;
-	// margin: 0;
 	border: 1px solid $dark_gray_color;
-	// box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
-	// border-radius: .5em;
 	-moz-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
@@ -320,9 +206,7 @@ input[type=text] {
     background: white;
     overflow: scroll;
     padding: 20px 0 40px 20px;
-    // width: 50%;
     width: 100%;
-    // padding: 20px 0 40px 6px;
 
     h3 {
         text-transform: uppercase;
@@ -332,15 +216,11 @@ input[type=text] {
 
 
     .ot-table {
-        // display: table;
         width: 100%;
         min-width: 900px;
         padding-right: 20px;
-        // padding-right: 6px;
-
 
         .ot-row {
-            // display: table-row;
             display: flex;
             background: white;
             padding: 12px 10px;
@@ -351,14 +231,7 @@ input[type=text] {
             border-radius: 3px;
             box-shadow: 0px 5px 15px #5C636929;
             width: 100%;
-            background: pink;
 
-            // .ot-cell {
-                // display: table-cell;
-                // display: flex;
-                // background: pink;
-
-            // }
             a {
                 color: $highlite_color;
             }
@@ -368,7 +241,6 @@ input[type=text] {
 
                 &:after {
                     content: '';
-                    // position: absolute;
                     display: flex;
                     width: 75%;
                     height: 18px;
@@ -389,16 +261,13 @@ input[type=text] {
         }
 
         .ot-row-header {
-            // display: table-row;
             display: flex;
             padding: 0 10px;
 
             .ot-header {
-                // display: table-cell;
                 font-family: $heading_font;
                 text-transform: uppercase;
                 font-size: 12px;
-                // letter-spacing: 1.2px;
                 color: #7E92A3;
             }
         }
@@ -425,11 +294,9 @@ input[type=text] {
     }
 }
 
-
 .hide-mobile {
     display: none;
 }
-
 
 .dashboard-hamburger-icon {
     cursor: pointer;
@@ -450,56 +317,17 @@ input[type=text] {
 }
 
 
-// container: {
-//     cursor: 'pointer',
-//     // marginLeft: 20,
-//     height: 28,
-//     width: 36,
-//     display: 'flex',
-//     flexDirection: 'column',
-//     justifyContent: 'space-between'
-// },
-// bar1: {
-//     width: '100%',
-//     height: 4,
-//     background: '#000',
-//     borderRadius: 100
-// },
-// bar2: {
-//     width: '80%',
-//     height: 4,
-//     background: '#000',
-//     borderRadius: 100
-// },
-// bar3: {
-//     width: '60%',
-//     height: 4,
-//     background: '#000',
-//     borderRadius: 100
-//     // alignSelf: 'flex-end'
-// }
-
-// .white-bg {
-//     background: white;
-//     width: 100%;
-//     padding: 20px
-// }
-
 @media only screen and (min-width: 768px){
-
     .flex-one {
         flex: 1;
-        // background: pink;
     }
 
     .flex-two {
         flex: 2;
-        // background: blue;
     }
 
     .flex-three {
         flex: 3;
-        // background: yellow;
     }
 
     .flex-four {
@@ -508,7 +336,6 @@ input[type=text] {
 
     .flex-five {
         flex: 5;
-        background: red;
     }
 
     .hide-desktop {
@@ -519,127 +346,6 @@ input[type=text] {
         display: block;
     }
 }
-
-
-// .ot-container-dash {
-//     background: white;
-//     // background: blue;
-//     overflow: scroll;
-//     // padding: 20px 0 40px 20px;
-//     // padding: 20px 0;
-
-//     .ot-table {
-//         // display: table;
-//         width: 100%;
-//         min-width: 900px;
-//         // padding-right: 20px;
-
-//         .ot-manage {
-//             width: 15%;
-//             min-width: 105px;
-//             // background: yellow;
-
-//             span {
-//                 padding-right: 10px;
-
-//                 &:last-child {
-//                     padding-right: 0px;
-//                 }
-                
-//                 img {
-//                     cursor: pointer;
-//                     // background: pink;
-//                 }
-//             }
-//         }
-
-//         .ot-row {
-//             // display: table-row;
-//             display: flex;
-//             background: white;
-//             padding: 12px 10px;
-//             color: $main_color;
-//             // font-size: 14px;
-//             // letter-spacing: 1.2px;
-//             border-bottom: 1px solid #EFF2F4;
-//             // margin-top: 10px;
-//             // border-radius: 3px;
-//             // box-shadow: 0px 5px 15px #5C636929;
-
-//             // .ot-cell {
-//                 // display: table-cell;
-//                 // display: flex;
-//                 // background: pink;
-
-//             // }
-
-//             .shimmer {
-//                 position: relative;
-
-//                 &:after {
-//                     content: '';
-//                     // position: absolute;
-//                     display: flex;
-//                     width: 75%;
-//                     height: 18px;
-//                     background: #ccc;
-//                     animation: shimmer 1.25s infinite;
-//                 }
-//             }
-
-//             @keyframes shimmer {
-//                 0% { background: #ccc; }
-//                 50% { background: #aaa; }
-//                 100% { background: #ccc; }
-//             }
-
-//             // &:hover {
-//             //     background: #f0f0f0;
-//             // }
-//         }
-
-//         .ot-row-header {
-//             // display: table-row;
-//             display: flex;
-//             // padding: 0 10px 10px;
-//             padding: 10px;
-//             border-bottom: 1px solid #EFF2F4;
-            
-//             .ot-header {
-//                 display: flex;
-//                 align-items: center;
-//                 font-size: 16px;
-//                 // display: table-cell;
-//                 font-family: $heading_font;
-//                 text-transform: uppercase;
-//                 // font-size: 12px;
-//                 // letter-spacing: 1.2px;
-//                 color: #7E92A3;
-//             }
-//         }
-//     }
-
-//     .ot-flex-one {
-//         flex: 1;
-//     }
-
-//     .ot-flex-two {
-//         flex: 2;
-//     }
-
-//     .ot-flex-three {
-//         flex: 3;
-//     }
-
-//     .ot-flex-four {
-//         flex: 4;
-//     }
-
-//     .ot-flex-five {
-//         flex: 5;
-//     }
-// }
-
 
 .dot {
     height: 6px;
@@ -665,41 +371,25 @@ input[type=text] {
     }
 }
 
-
 .ot-container-dash-r {
     background: $dash-color-table-bg;
-    // background: white;
     overflow: scroll;
-    // padding: 20px 0 40px 20px;
-    // padding: 20px 0;
 
     .ot-table {
-        // display: table;
         width: 100%;
         min-width: 900px;
-        // padding-right: 20px;
-
 
         .ot-row-header {
-            // display: table-row;
             display: flex;
-            // padding: 0 10px 10px;
             padding: 16px 10px;
-            // border-bottom: 1px solid #EFF2F4;
             border-bottom: 2px solid $dash-color-silver;
-            // border-bottom: 2px solid red;
-
             
             .ot-header {
                 display: flex;
                 align-items: center;
                 font-size: 13px;
-                // display: table-cell;
                 font-family: $main-font;
                 text-transform: uppercase;
-                // font-size: 12px;
-                // letter-spacing: 1.2px;
-                // color: #7E92A3;
                 color: $dash-color-table-header;
                 font-weight: bold;
 
@@ -709,12 +399,9 @@ input[type=text] {
             }
         }
 
-
-
         .ot-manage {
             width: 15%;
             min-width: 105px;
-            // background: yellow;
 
             span {
                 padding-right: 10px;
@@ -725,17 +412,13 @@ input[type=text] {
                 
                 img {
                     cursor: pointer;
-                    // background: pink;
                 }
             }
         }
 
         .ot-row {
             display: flex;
-            // position: relative;
             padding: 12px 10px;
-            // background: pink;
-            // border-bottom: 1px solid #EFF2F4;
             border-bottom: 1px solid $dash-color-silver;
             width: 100%;
 
@@ -765,29 +448,18 @@ input[type=text] {
                 100% { background: #ccc; }
             }
 
-            // &:hover {
-            //     background: #f0f0f0;
-            // }
-
             &:last-child .ot-options-popout  {
-                // background: green;
-                // margin-top: -80px;
                 margin-top: -15%;
             }
 
             .ot-options-popout {
-                // background: lightgoldenrodyellow;
                 background: $dash-color-table-bg;
                 position: absolute;
-                // top: 100%;
-                // top: 20px;
                 margin-top: 20px;
-                // margin-top: -80px;  // bottom 2 rows should be set to this
                 right: 26px;
                 padding: 13px;
                 z-index: 200000;
                 min-width: 200px;
-                // height: 100%;
 
                 border-radius: 5px;
                 box-shadow: 0 12px 24px rgba(0,0,0,0.25);
@@ -803,7 +475,6 @@ input[type=text] {
 
                     
                     &:hover:not(.not-available) {
-                        // color: darken($dash-color-table-ellipsis, 20%)
                         color: $dash-color-font;
                     }
 
@@ -851,8 +522,6 @@ input[type=text] {
                 margin: 0 2px;
             }
         }
-
-
     }
 
     .ot-flex-one {

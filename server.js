@@ -39,6 +39,8 @@ const seasons = require('./controllers/seasons');
 const divisions = require('./controllers/divisions');
 const misc = require('./controllers/misc');
 const users = require('./controllers/users');
+const emailer = require('./controllers/helpers/emailer');
+
 
 
 
@@ -265,6 +267,10 @@ app.post('/api/admin/games', auth.authorizeAccessToken, admin.createGame)
 
 app.get('/api/admin/users', users.getUsers);
 
+// email test
+app.get('/api/admin/emailer', emailer.newUserEmail);
+
+
 
 
 
@@ -282,7 +288,8 @@ app.post('/api/auth/signup', auth.signup)
 //  - NODEMAILER
 //  - ROUTE FOR USER TO ENTER PASSWORD AFTER CLICKING EMAIL LINK
 app.post('/api/auth/invite', auth.invite)
-app.put('/api/auth/invite/:id', auth.reinvite)
+app.post('/api/auth/invite/register', auth.registerFromInvite)
+app.put('/api/auth/invite/:id', auth.resendInvite)
 
 // Log out (current logout is not logging out on server side, just client side)
 app.post(`/api/auth/:id/logout`)

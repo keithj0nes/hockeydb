@@ -13,9 +13,9 @@ const Teams = (props) => {
     useEffect(() => {
 
         if(props.location.search.length > 0) {
-            const [ filters, filterString ] = getQuery();
+            const [ filterss, filterString ] = getQuery();
             // get the teams list here by passing in the filterString
-            setFilters(filters)
+            setFilters(filterss)
             props.getTeamsPageFilters(filterString)
             props.getTeamsByDivision(filterString)
 
@@ -31,7 +31,7 @@ const Teams = (props) => {
             // }
         }
         
-    }, [])
+    }, [filters, props])
 
     const handleChange = e => {
         const _filters = { ...filters };

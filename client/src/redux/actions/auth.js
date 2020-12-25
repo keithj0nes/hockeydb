@@ -65,3 +65,8 @@ export const loginFromCookie = () => async (dispatch, getState) => {
 
     return true;
 };
+
+export const registerFromInvite = ({ userData, token }) => async (dispatch) => {
+    const data = await request({ url: `/api/auth/invite/register?token=${token}`, method: 'POST', session: userData, publicRoute: true });
+    console.log({data})
+};

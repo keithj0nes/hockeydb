@@ -24,7 +24,16 @@ const getUsers = async (req, res) => {
 
     // const query = helpers.filter(newQuery, ['hidden_date =', 'deleted_date =']);
 
-    let myNewStuffz = `SELECT * FROM USERS`
+    let myNewStuffz = `
+        SELECT *, 
+        CONCAT (first_name, ' ', last_name) AS full_name, 
+        CASE
+            when is_suspended = true then 'inactive'
+            when invite_date is not null and last_login is null then 'invited'
+            when reinvite_date is not null then 'reinvited'
+            else 'active'
+            END as status 
+        FROM USERS`;
 
     const newQueryArr = Object.keys(newQuery);
 

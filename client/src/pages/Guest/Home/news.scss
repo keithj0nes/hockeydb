@@ -1,14 +1,12 @@
 @import '../../../assets/styles/variables';
 
 .news-container {
-    // padding: 20px 10px;
     width: 100%;
 
     &-card {
         background: $white_color;
         padding: 20px 10px;
         border-radius: 3px;
-        // margin-bottom: 20px;
         margin-bottom: 30px;
         width: 100%;
 
@@ -61,20 +59,15 @@
                 outline: none;
                 cursor: pointer;
                 font-family: $heading_font;
-                // font-weight: bold;
                 letter-spacing: 1.4px;
             }
         }
 
-
-
         .news-body {
-            
             p, ol, li {
                 letter-spacing: 1.2px;
                 font-size: 14px;
                 line-height: 24px;
-                // line-height: 32px;
             }
 
             ol {
@@ -114,38 +107,28 @@
 }
 
 
-
 @media only screen and (min-width: 768px){
-
-
     .news-container {
-        // padding: 20px 10px;
-    
         &-card {
             padding: 24px;
 
-    .posted-date-container {
-        // padding: 10px 0;
-        // background: yellow;
-        // padding: 100px;
-        display: flex;
-        justify-content: space-between;
+            .posted-date-container {
+                display: flex;
+                justify-content: space-between;
 
-        & > div {
-            display: flex;
-            align-items: center;
+                & > div {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .posted-date:nth-child(2) {
+                    padding-left: 24px;
+                }
+
+                .posted-by {
+                    padding-left: 24px;
+                }
+            }
         }
-
-        .posted-date:nth-child(2) {
-            padding-left: 24px;
-        }
-
-        .posted-by {
-            padding-left: 24px;
-        }
-
     }
-}
-    }
-
 }

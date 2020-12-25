@@ -123,9 +123,9 @@ const DashNews2 = ({ news, getNews, isLoading, location, toggleModal, updateNews
                         emptyTableText={location.search.length > 0 ? 'Sorry, there are no news posts within your filter criteria' : 'Sorry, no news posts have been created. Start by adding a news post above.'}
                         popoverData={(d, closePopover) => (
                             <ul>
-                                <li onClick={() => { handleEditNewsPost(d); closePopover(); }}>Edit Season</li>
-                                <li onClick={() => { handleHideNewsPost(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide News Post`}</li>
-                                <li onClick={() => { handleDeleteSeason(d); closePopover(); }}>Delete News Post</li>
+                                <li onClick={() => { handleEditNewsPost(d); closePopover(); }}>Edit Post</li>
+                                <li onClick={() => { handleHideNewsPost(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Post`}</li>
+                                <li onClick={() => { handleDeleteSeason(d); closePopover(); }}>Delete Post</li>
                             </ul>
                         )}
                         draggableProps={{ onDragEnd, isDraggable: !location.search.includes('show_hidden') }}

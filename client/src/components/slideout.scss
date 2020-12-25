@@ -12,8 +12,6 @@
     display: flex;
     width: 100vw;
     height: 100vh;
-    // height: 100%;
-    // position: absolute;
     position: fixed;
     top: 0;
     left: 0;
@@ -21,7 +19,6 @@
     overflow: scroll;
     height: 100vh;
     height: -webkit-fill-available;
-    // background: green;
 
     &-hide {
         transition-delay: 0.5s;
@@ -58,14 +55,11 @@
     }
 
     .slideout-child-container {
-        // background: palegoldenrod;
         height: 100%;
         height: 100vh;
-        // width: 100%;
         width: 80vw;
         display: flex;
         z-index: 20;
-        // background: green;
         overflow: hidden;
         transition: transform .35s cubic-bezier(.25, .1, .25, .1);
 
@@ -82,10 +76,6 @@
             padding: 10px;
             cursor: pointer;
             color: $main_font_color;
-
-            // &.bluebg {
-            //     color: $white_color;
-            // }
         }
     }
 
@@ -116,24 +106,16 @@
         transform: translate(0vw, 0);
 
     }
-
 }
-
 
 
 @media only screen and (min-width: 768px) {
 
-
     .slideout-container {
-        // background-color: rgba(0,0,0,0.5);
-        // position: absolute;
-        
         &.sticky {
             max-width: 260px;
-
             right: 0;
             left: auto;
-            
             position: sticky;
 
             .slideout-close-bar {
@@ -150,24 +132,7 @@
             width: auto;
         }
 
-        // &-hide {
-        //     // transition-delay: 0s;
-        //     // transform: translate(0vw, 0);
-        //     // transform: translate(0vw, 0);
-
-        // }
-
-        // &-show {
-        //     // transition-delay: 1s !important;
-        // }
-
-        // .slideout-opacity-bg {
-        //     display: none;
-        // }
-
         .slideout-close-bar {
-            // background: blue;
-            // display: none;
             width: 100%;
             z-index: 2;
             cursor: default;

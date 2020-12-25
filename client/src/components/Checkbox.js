@@ -13,7 +13,7 @@ export const DashCheckbox = ({ title, name, defaultValue, onChange }) => {
 
     useEffect(() => {
         prev.current = isChecked;
-    }, []);
+    }, [isChecked]);
 
     useEffect(() => {
         if (defaultValue) {
@@ -22,7 +22,7 @@ export const DashCheckbox = ({ title, name, defaultValue, onChange }) => {
             onChange({ target: { name, type: 'checkbox', checked: isChecked } });
             prev.current = isChecked;
         }
-    }, [defaultValue, isChecked]);
+    }, [defaultValue, isChecked, onChange, name]);
 
     const handleFocus = e => {
         // console.log(e.target.value, 'EEEEE')

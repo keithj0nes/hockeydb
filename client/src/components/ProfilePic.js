@@ -17,7 +17,6 @@ const ProfilePic = ({ user, logout }) => {
     };
 
     return (
-
         <div id="propiccont" className="profile-pic-container">
 
             <div className="pic-name" onClick={() => setIsDropDownVisible(!isDropDownVisibile)}>
@@ -32,7 +31,7 @@ const ProfilePic = ({ user, logout }) => {
 
             <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont">
                 <ul>
-                    <li><Link to="/dashboard/profile"> View Profile </Link></li>
+                    <li><Link to="/dashboard/profile"> My Profile </Link></li>
                     <li>Notifications</li>
                     <li>Account Settings</li>
                     <li><Link to="/"> Back to site </Link></li>

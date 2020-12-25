@@ -3,6 +3,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const emailer = require('./helpers/emailer');
+
 let config;
 if(process.env.NODE_ENV !== 'production') {
     config = require('../config');
@@ -98,45 +100,86 @@ const signup = async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const invite = async (req, res) => {
-    const { email, first_name, last_name } = req.body;
+    const db = app.get('db');
+    const { email, first_name, last_name, user_role } = req.body;
+
+    console.log(req.user, 'req.user') // need to hook up to  auth.authorizeAccessToken, middleware to work
 
     const user = await db.users.findOne({ email });
 
-    if (user) {
-        return res.status(400).send({ status: 400, error: true, message: 'User exists.' })
+    if (!!user) {
+        if (!!user.invite_token) {
+            return res.status(200).send({ status: 400, error: true, message: 'An invite for this user has already been sent out. Please reinvite user' })
+        }
+        return res.status(200).send({ status: 400, error: true, message: 'A user with this account email already exists' })
     }
 
-    //set invite token with expiry
-    const invite_token = jwt.sign({ email, first_name, last_name }, JWTSECRET, { expiresIn: '8h' })
-    //add user by email
-    //add user names
-    //add invite_token
-    const newUser = await db.users.insert({ email, first_name, last_name, invite_token, invite_date: new Date() })
-    //send email 
-    //await for response
-    return res.status(200).send({ status: 200, data: newUser, message: 'User has been invited.' })
+    // set invite token with expiry
+    const invite_token = jwt.sign({ email, first_name, last_name, user_role }, JWTSECRET, { expiresIn: '8h' })
+    // add user by email
+    // add user names
+    // add invite_token
+    // console.log({email, first_name, last_name, user_role, user, invite_token})
+    const newUser = await db.users.insert({ email, first_name, last_name, admin_type: user_role, invite_token, invite_date: new Date() })
+    // send email 
+    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role, invite_token } });
+    // console.log({sendingMail})
+    // await for response
+    return res.status(200).send({ status: 200, data: { ...newUser, full_name: `${first_name} ${last_name}`, status: 'invited' }, message: 'An invitation has been sent',  snack: true })
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const reinvite = async (req, res) => {
+const registerFromInvite = async (req, res) => {
+    const db = app.get('db');
+    const { first_name, last_name, password } = req.body;
+
+    const { token: invite_token } = req.query;
+
+    console.log({first_name, last_name, password, invite_token})
+
+    // check for matching token
+    const user = await db.users.findOne({ invite_token });
+    console.log({user})
+
+    if (!user) {
+        return res.status(200).send({ status: 400, error: true, message: 'Registration code invalid. Please contact your administrator for a new registration code.', snack: true })
+    }
+
+    // confirm user has not already registered
+        // (check to see if password exists)
+    // store password
+    const hash = await bcrypt.hash(password, 10);
+    await db.passwords.insert({ user_id: user.id, pw: hash });
+    // remove token
+    await db.users.update({ id: user.id }, { invite_token: null }).catch(err => console.log(err, 'remove invite_token error'))
+
+    return res.status(200).send({ status: 200, data: [], redirect: `/login?email=${user.email}`, message: 'Account created, you can now log in', snack: true, })
+
+}
+ 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const resendInvite = async (req, res) => {
+    const db = app.get('db');
     const { id } = req.params;
     const user = await db.users.findOne({ id });
     if (!user) {
-        return res.status(400).send({ status: 400, error: true, message: 'User does not exist.' })
+        return res.status(400).send({ status: 400, error: true, message: 'User does not exist.', snack: true })
     }
-    //set invite token with expiry
+    // set invite token with expiry
     const invite_token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name }, JWTSECRET, { expiresIn: '8h' })
-    //update invite_token
-    //update reinvite_date
-    const reInvitedUser = await db.users.update({ id }, { invite_token, reinvite_date: new Date() })
-    //send email 
-    //await for response
-    return res.status(200).send({ status: 200, data: reInvitedUser, message: 'User has been reinvited.' })
+    // update invite_token
+    // update reinvite_date
+    const reInvitedUser = await db.users.update({ id }, { invite_token, reinvite_date: new Date(), invite_date: null })
+    // send email 
+    const { email, first_name, last_name, admin_type } = user;
 
+    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
+
+    // await for response
+    return res.status(200).send({ status: 200, data: { reinvited: true }, message: 'An invitation has been re-sent', snack: true })
 }
-
-
 
 
 module.exports = {
@@ -145,7 +188,8 @@ module.exports = {
     login,
     signup,
     invite,
-    reinvite,
+    registerFromInvite,
+    resendInvite,
     loginFromCookie
 }
 
