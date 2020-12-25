@@ -101,12 +101,15 @@ export const standings = (state = initialStandingsState, { type, payload }) => {
 const initialPlayersState = {
     allPlayers: [],
     selectedPlayer: null,
+    playerStats: []
 };
 
 export const players = (state = initialPlayersState, { type, payload }) => {
     switch (type) {
     case GET_PLAYERS:
         return { ...state, allPlayers: payload };
+    case `playerStats/${GET_SUCCESS}`:
+        return {...state, isLoading: false, playerStats: payload};
     default:
         return state;
     }

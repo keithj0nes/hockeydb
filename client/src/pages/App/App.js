@@ -18,6 +18,7 @@ import Standings from '../Guest/Standings/Standings';
 import Inquiry from '../Guest/Inquiry/Inquiry';
 
 import { Modal, Header, Login, Invite } from '../../components';
+import PlayerStats from '../Guest/PlayerStats/PlayerStats'
 import { Styleguide } from '../../components/Styleguide';
 
 import 'antd/dist/antd.css';
@@ -51,6 +52,7 @@ class App extends Component {
                         <Route path="/games" component={Games} />
                         <Route path="/inquiry" component={Inquiry} />
                         <Route path="/styleguide" component={Styleguide} />
+                        <Route path="/stats" component={PlayerStats} />
                     </div>
                     <PrivateRoute path="/dashboard" authenticated={this.props.isUserLoggedIn} component={Dashboard} />
                     <Modal />
