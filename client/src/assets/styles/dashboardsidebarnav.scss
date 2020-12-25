@@ -1,6 +1,5 @@
 @import './variables';
 
-
 .fade-in-show {
     opacity: 1;
 }
@@ -58,19 +57,16 @@
         display: flex;
         transition: transform .35s cubic-bezier(.25, .1, .25, .1);
 
-        
         .dashboard-nav {
             background: $white_color;
             width: 80vw;
             height: 100%;
             position: relative;
 
-
             &.bluebg {
                 // background: $header_sidenav_color;
                 background: transparent linear-gradient(180deg, #2B4272 0%, #0C1D40 100%) 0% 0% no-repeat padding-box;
             }
-
 
             // slide from right
             &.right {
@@ -105,10 +101,6 @@
                    fill: $main_font_color;
                }
             }
-
-            // .dashboard-nav-header:first-child {
-            //     // background: pink;
-            // }
 
             .selected {
                 color: $main_font_color;
@@ -154,7 +146,6 @@
             cursor: pointer;
         }
     }
-
 }
 
 
@@ -171,8 +162,6 @@
 }
 
 
-
-
 @media only screen and (min-width: 768px) {
 
     // this "filler" takes up the same width as the nav container
@@ -185,7 +174,6 @@
     // }
 
     .dashboard-nav-container {
-        // width: 25%;
         max-width: 260px;
         position: sticky;
 
@@ -206,7 +194,6 @@
                 }
             }
 
-
             .dashboard-nav-close {
                 display: none;
                 width: 20vw;
@@ -219,11 +206,6 @@
     .dashboard-nav-hide { 
         transform: translate(0vw, 0);
     }
-    
-    // .dashboard-nav-show {
-    //     transform: translate(0vw, 0);
-    // }
-    
 }
 
 

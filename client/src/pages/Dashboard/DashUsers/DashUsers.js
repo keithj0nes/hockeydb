@@ -54,19 +54,22 @@ class DashUsers extends Component {
                     title: 'First Name',
                     type: 'input',
                     name: 'first_name',
-                    defaultValue: null
+                    defaultValue: null,
+                    rules: [{ required: true }],
                 },
                 {
                     title: 'Last Name',
                     type: 'input',
                     name: 'last_name',
-                    defaultValue: null
+                    defaultValue: null,
+                    rules: [{ required: true }],
                 },
                 {
                     title: 'Email',
                     type: 'input',
                     name: 'email',
-                    defaultValue: null
+                    defaultValue: null,
+                    rules: [{ required: true }],
                 },
                 // {
                 //     title: 'Type',

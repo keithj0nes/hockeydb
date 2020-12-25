@@ -160,6 +160,23 @@ export const request = async ({ url, method, session, publicRoute }) => {
     }
 
     if (status === 200) {
+        if (redirect) {
+            console.log(`Redirecting to the ${redirect} page`);
+            if (redirect === 'current') {
+                const currentPath = history.location.pathname;
+                history.push('/');
+                history.push(currentPath);
+                return { data, message };
+            }
+
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: { isVisible: false },
+            });
+            history.push(redirect);
+            return { data, message };
+        }
+
         return { data, message };
     }
     return true;

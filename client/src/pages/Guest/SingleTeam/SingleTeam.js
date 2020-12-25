@@ -1,96 +1,97 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teams';
 import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';
-import { Select } from '../../../components/';
+import { Select } from '../../../components';
 import { getQuery, setQuery } from '../../../helpers';
 import Auth, { basicList } from '../../../components/Auth';
 import './singleteam.scss';
 
 
-const SingleTeam = (props) => {
+const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, record, seasonsSelect }) => {
     // console.log(props, 'PROPS IN SINGLE TEAM')
 
-    const [ tabSelected, setTabSelected ] = useState('home');
-    const [ selectedSeason, setSelectedSeason ] = useState(null);
+    const [tabSelected, setTabSelected] = useState('home');
+    const [selectedSeason, setSelectedSeason] = useState(null);
 
     // component did update on pathname change (will fire when going to new team route)
     useEffect(() => {
         // get team info
 
-        window.scrollTo(0,0);
-        if(props.location.search.length > 0) {
+        window.scrollTo(0, 0);
+        if (location.search.length > 0) {
             const [, filterString] = getQuery();
-            props.getTeamById(props.match.params.id, filterString).then(res => {
-                setSelectedSeason(res)
-                setTabSelected('home')
+            getTeamById(match.params.id, filterString).then(res => {
+                setSelectedSeason(res);
+                setTabSelected('home');
             });
-
         } else {
-            props.getTeamById(props.match.params.id).then(res => {
-                setSelectedSeason(res)
-                setTabSelected('home')
-
+            getTeamById(match.params.id).then(res => {
+                setSelectedSeason(res);
+                setTabSelected('home');
             });
         }
 
-        return () => props.clearSingleTeamState();
-    }, [props.location.pathname + props.location.search])
+        return () => clearSingleTeamState();
+    }, []);
+    // FIX: currently useeffect is infinite firing with the below
+    // }, [props.location.pathname, props.location.search, props]);
 
     const handleChange = e => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setSelectedSeason(value);
-        const search = setQuery({[name]:value})
-        props.getTeamById(props.match.params.id, search)
-    }
+        const search = setQuery({ [name]: value });
+        getTeamById(match.params.id, search);
+    };
 
     const renderTabComponent = () => {
-        if(tabSelected === 'home') {
-            // return ( <HomeComponent />)
-            return ( <STHome />)
-        } else if(tabSelected === 'schedule') {
-            // return ( <ScheduleComponent /> )
-            return ( <STSchedule {...props} /> )
-        } else if(tabSelected === 'roster') {
-            return ( <RosterComponent />)
-        } 
-    }
+        if (tabSelected === 'home') {
+            return (<STHome />);
+        }
+        if (tabSelected === 'schedule') {
+            return (<STSchedule match={match} />);
+        }
+        if (tabSelected === 'roster') {
+            return (<STRoster />);
+        }
+        return null;
+    };
 
     return (
-        <>
-            <div className="content-container">
-                <div className="white-bg" style={{marginBottom: 20}}>
-                    <div className="single-team-content">
+        <div className="content-container">
+            <div className="white-bg" style={{ marginBottom: 20 }}>
+                <div className="single-team-content">
 
-                        <div className="single-team-info">
-                            <div className="single-team-logo">
-                                <div className="actual-image"></div>
-                            </div>
-                            <div className="single-team-info">
-                                <h2>{props.team.name || 'Unavailable'}</h2>
-                                <h3>Division: {props.team.division_name}</h3>
-                                <h5>Team Colors: {props.team.colors}</h5>
-                            </div>
+                    <div className="single-team-info">
+                        <div className="single-team-logo">
+                            <div className="actual-image" />
                         </div>
+                        <div className="single-team-info">
+                            <h2>{team.name || 'Unavailable'}</h2>
+                            <h3>Division: {team.division_name}</h3>
+                            <h5>Team Colors: {team.colors}</h5>
+                        </div>
+                    </div>
 
-                        <div className="single-team-record">
-                            <Select 
-                                name='season'   
-                                title="Season"   
-                                listOfSelects={props.seasonsSelect}                                  
-                                onChange={handleChange}  
-                                defaultValue={selectedSeason || ''}   
-                                useKey="id" 
-                            />
+                    <div className="single-team-record">
+                        <Select
+                            name="season"
+                            title="Season"
+                            listOfSelects={seasonsSelect}
+                            onChange={handleChange}
+                            defaultValue={selectedSeason || ''}
+                            useKey="id"
+                        />
 
-        <br/>
+                        <br />
 
-                            <h4>Team Record</h4>
-                            <table>
-                                <thead>
-                                    <tr>
+                        <h4>Team Record</h4>
+                        <table>
+                            <thead>
+                                <tr>
                                     <th title="games played">GP</th>
                                     <th title="wins">W</th>
                                     <th title="losses">L</th>
@@ -98,167 +99,87 @@ const SingleTeam = (props) => {
                                     <th title="goals for">GF</th>
                                     <th title="goals against">GA</th>
                                     <th title="penalty minutes">PIM</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        { Object.keys(props.record).map(rec => <td key={rec}>{props.record[rec] || 0}</td>)}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    { Object.keys(record).map(rec => <td key={rec}>{record[rec] || 0}</td>)}
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <div className="single-team-tabs">
-                    <input id="home" type="radio" name="tabsA" checked={tabSelected === 'home'} onChange={e => setTabSelected(e.target.id)} />
-                    <label htmlFor="home">Team Home</label>
-                        
-                    <input id="schedule" type="radio" name="tabsA" checked={tabSelected === 'schedule'} onChange={e => setTabSelected(e.target.id)} />
-                    <label htmlFor="schedule">Schedule</label>
+            <div className="single-team-tabs">
+                <input id="home" type="radio" name="tabsA" checked={tabSelected === 'home'} onChange={e => setTabSelected(e.target.id)} />
+                <label htmlFor="home">Team Home</label>
+
+                <input id="schedule" type="radio" name="tabsA" checked={tabSelected === 'schedule'} onChange={e => setTabSelected(e.target.id)} />
+                <label htmlFor="schedule">Schedule</label>
 
 
-                    <Auth.Tier tiers={basicList}>
-                        <input id="roster" type="radio" name="tabsA" checked={tabSelected === 'roster'} onChange={e => setTabSelected(e.target.id)} />
-                        <label htmlFor="roster">Roster & Stats</label>
-                    </Auth.Tier>
-                        
-                </div>
-
-                {/* <div className="white-bg"> */}
-                    {renderTabComponent()}
-                {/* </div> */}
+                <Auth.Tier tiers={basicList}>
+                    <input id="roster" type="radio" name="tabsA" checked={tabSelected === 'roster'} onChange={e => setTabSelected(e.target.id)} />
+                    <label htmlFor="roster">Roster & Stats</label>
+                </Auth.Tier>
 
             </div>
 
-           
-        </>
-    )
-}
+            {/* <div className="white-bg"> */}
+            {renderTabComponent()}
+            {/* </div> */}
 
-const mapStateToProps = state => {
-    return {
-        record: state.teams.singleTeam.record,
-        team: state.teams.singleTeam.team || {},
-        seasons: state.seasons.seasons,
-        seasonsSelect: state.teams.singleTeam.seasonsSelect,
-    }
-}
+        </div>
+    );
+};
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getTeamById: (id, filter) => dispatch(getTeamById(id, filter)),
-        clearSingleTeamState: () => dispatch(clearSingleTeamState())
-    }
-}
+const mapStateToProps = state => ({
+    record: state.teams.singleTeam.record,
+    team: state.teams.singleTeam.team || {},
+    seasons: state.seasons.seasons,
+    seasonsSelect: state.teams.singleTeam.seasonsSelect,
+});
+
+const mapDispatchToProps = dispatch => ({
+    getTeamById: (id, filter) => dispatch(getTeamById(id, filter)),
+    clearSingleTeamState: () => dispatch(clearSingleTeamState()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(SingleTeam);
 
-// const seasons = [{
-//     id: 1,
-//     is_active: false,
-//     name: "Fall 2016",
-// },{
-//     id: 2,
-//     is_active: true,
-//     name: "Summer 2016",
-// },{
-//     id: 3,
-//     is_active: false,
-//     name: "Spring 2020",
-// }]
-// const HomeComponent = () => {
-//     return (
-//         <>
-//             <div className="split-50">
+SingleTeam.propTypes = {
+    seasonsSelect: PropTypes.array,
+    getTeamById: PropTypes.func.isRequired,
+    clearSingleTeamState: PropTypes.func.isRequired,
+    record: PropTypes.object,
+    team: PropTypes.object,
+    location: PropTypes.object,
+    match: PropTypes.object,
+};
 
-//                 <GuestTable 
-//                     title={'Team Leaders'}
-//                     data={teamLeaders}
-//                     minWidth={'100%'}
-//                     containerWidth={'100%'}
-//                     // sections={{'category': 'three','player': 'five', 'points': 'one'}} 
-//                     sections={{
-//                         'category': { as: 'cat', flex: 'two' },
-//                         'player': 'five', 
-//                         'points':   { as: 'pts', flex: 'one' }
-//                     }} 
-//                     uniqueKey='category'
-//                 />
-
-//                 <GuestTable 
-//                     title={'Team Standings'}
-//                     data={teamStandings}
-//                     minWidth={'100%'}
-//                     containerWidth={'100%'}
-//                     // sections={{'rank': 'one','team': 'five', 'games_played': 'one', 'points': 'one'}} 
-
-//                     sections={{
-//                         'rank': 'one',
-//                         'team': 'five', 
-//                         'games_played': { as: 'gp',  flex: 'one' }, 
-//                         'points':       { as: 'pts', flex: 'one' }
-//                     }} 
-//                     uniqueKey='rank'
-//                 />
-
-//             </div>
-
-//             <GuestTable 
-//                 title={'Recent Games'}
-//                 data={recentGames}
-//                 tableType="games"
-//                 minWidth={800}
-//                 // sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
-//                 sections={{
-//                     'date': 'one',
-//                     'start_time': 'one', 
-//                     'location_name': 'two', 
-//                     'home_team': { as: 'home', flex: 'two', link: '/teams/home_team_id' }, 
-//                     'away_team': { as: 'away', flex: 'two', link: '/teams/away_team_id' } 
-//                 }} 
-//             />
-//         </>
-//     )
-// }
-
-// const ScheduleComponent = () => {
-//     console.log('mounting now!')
-//     return (
-//         <GuestTable 
-//             title={'Schedule'}
-//             data={recentGames}
-//             tableType="games"
-//             minWidth={800}
-//             sections={{'date': 'one','start_time': 'one', 'location_name': 'two', 'home_team': 'two', 'away_team': 'two', }} 
-//         />
-//     )
-// }
-
-const RosterComponent = () => {
-    return (
-        <GuestTable 
-            title={'Player Stats'}
-            data={playerStats}
-            minWidth={800}
-            // sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}} 
-            uniqueKey={'number'}
-            sections={{
-                'number':               { as: '#',   flex: 'one' },
-                'name': 'five', 
-                'games_played':         { as: 'gp',  flex: 'one' }, 
-                'goals':                { as: 'g',   flex: 'one' }, 
-                'assists':              { as: 'a',   flex: 'one' }, 
-                'points':               { as: 'pts', flex: 'one' }, 
-                'penalties_in_minutes': { as: 'pim', flex: 'one' }, 
-                'game_winning_goals':   { as: 'gwg', flex: 'one' }, 
-                'power_play_goals':     { as: 'ppg', flex: 'one' }, 
-                'short_handed_goals':   { as: 'shg', flex: 'one' }, 
-                'goals_per_game':       { as: 'gpg', flex: 'one' }, 
-            }} 
-        />
-    )
-}
+const STRoster = () => (
+    <GuestTable
+        title="Player Stats"
+        data={playerStats}
+        minWidth={800}
+        // sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}}
+        uniqueKey="number"
+        sections={{
+            number: { as: '#', flex: 'one' },
+            name: 'five',
+            games_played: { as: 'gp', flex: 'one' },
+            goals: { as: 'g', flex: 'one' },
+            assists: { as: 'a', flex: 'one' },
+            points: { as: 'pts', flex: 'one' },
+            penalties_in_minutes: { as: 'pim', flex: 'one' },
+            game_winning_goals: { as: 'gwg', flex: 'one' },
+            power_play_goals: { as: 'ppg', flex: 'one' },
+            short_handed_goals: { as: 'shg', flex: 'one' },
+            goals_per_game: { as: 'gpg', flex: 'one' },
+        }}
+    />
+);
 
 // const recentGames = [
 //     {
@@ -332,16 +253,16 @@ const RosterComponent = () => {
 
 
 const playerStats = [
-    {number: 25, name: 'Tanner Seramur', games_played: 5, goals: 12, assists: 14, points: 26, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 22, name: 'Adrian Kenepah', games_played: 4, goals: 25, assists: 0, points: 25, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 18, name: 'Jerry Johnson', games_played: 4, goals: 2, assists: 22, points: 24, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 30, name: 'Patrick Fedora', games_played: 5, goals: 6, assists: 2, points: 8, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 7, name: 'John Singmore', games_played: 5, goals: 2, assists: 2, points: 4, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 15, name: 'Ian Grute', games_played: 5, goals: 0, assists: 3, points: 3, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 23, name: 'Lee Spikman', games_played: 4, goals: 1, assists: 0, points: 1, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
-    {number: 3, name: 'Glen Brooks', games_played: 5, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0},
+    { number: 25, name: 'Tanner Seramur', games_played: 5, goals: 12, assists: 14, points: 26, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 22, name: 'Adrian Kenepah', games_played: 4, goals: 25, assists: 0, points: 25, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 18, name: 'Jerry Johnson', games_played: 4, goals: 2, assists: 22, points: 24, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 30, name: 'Patrick Fedora', games_played: 5, goals: 6, assists: 2, points: 8, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 7, name: 'John Singmore', games_played: 5, goals: 2, assists: 2, points: 4, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 15, name: 'Ian Grute', games_played: 5, goals: 0, assists: 3, points: 3, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 23, name: 'Lee Spikman', games_played: 4, goals: 1, assists: 0, points: 1, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
+    { number: 3, name: 'Glen Brooks', games_played: 5, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0 },
     // {number: 30, name: 'Patrick Fedora', gp: 5, g: 6, a: 2, p: 8, pim: 0, gwg: 0, ppg: 0, shg: 0, gpg: 0},
-]
+];
 
 
 // const goalieStats = [

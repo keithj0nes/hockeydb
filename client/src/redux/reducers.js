@@ -184,6 +184,12 @@ export const users = (state = initialUsersState, { type, payload }) => {
         return { ...state, isLoading: true };
     case `users/${GET_SUCCESS}`:
         return { ...state, users: payload, isLoading: false };
+    case `users/${CREATE_SUCCESS}`:
+        return { ...state, users: [payload, ...state.users], isLoading: false };
+    case `users/${UPDATE_SUCCESS}/reinvite`: {
+        const updatedUsers = state.users.map(item => ((item.id === payload.user_id) ? { ...item, status: 'reinvited' } : item));
+        return { ...state, users: updatedUsers };
+    }
     default:
         return state;
     }

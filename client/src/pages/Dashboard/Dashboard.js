@@ -11,20 +11,18 @@ import { DashboardNav, HamburgerIcon, ProfilePic, SlideOut } from '../../compone
 import DashSeasons2 from './DashSeasons/DashSeasons2';
 // import DashDivisions from './DashDivisions/DashDivisions';
 import DashDivisions2 from './DashDivisions/DashDivisions2';
-
 import DashTeams from './DashTeams/DashTeams';
 import DashPlayers from './DashPlayers/DashPlayers';
 import DashGames from './DashGames/DashGames';
 import DashGamesDetails from './DashGames/DashGamesDetails';
 // import DashNews from './DashNews/DashNews';
 import DashNews2 from './DashNews/DashNews2';
-
 // import DashNewsCreate from './DashNews/DashNewsCreate';
 import DashNewsCreate2 from './DashNews/DashNewsCreate2';
 // import DashLocations from './DashLocations/DashLocations';
 import DashLocations2 from './DashLocations/DashLocations2';
-
-import DashUsers from './DashUsers/DashUsers';
+// import DashUsers from './DashUsers/DashUsers';
+import DashUsers2 from './DashUsers/DashUsers2';
 import DashHome from './DashHome/DashHome';
 import '../../assets/styles/dashboard.scss';
 
@@ -42,7 +40,8 @@ const dashboardPageList = {
         { name: 'Games',      to: '/games',      icon: ICONS.GAMES,     component: DashGames,                     exact: true,  hideFromNavigation: false },
         { name: 'Games Dets', to: '/games/:id',  icon: null,            component: DashGamesDetails,              exact: true,  hideFromNavigation: true  },
         { name: 'Locations',  to: '/locations',  icon: ICONS.LOCATIONS, component: DashLocations2,                 exact: false, hideFromNavigation: false },
-        { name: 'Users',      to: '/users',      icon: ICONS.USERS,     component: DashUsers,                     exact: false, hideFromNavigation: false },
+        // { name: 'Users',      to: '/users',      icon: ICONS.USERS,     component: DashUsers,                     exact: false, hideFromNavigation: false },
+        { name: 'Users2',      to: '/users2',      icon: ICONS.USERS,     component: DashUsers2,                     exact: false, hideFromNavigation: false },
         { name: 'News',       to: '/news',       icon: ICONS.NEWS,      component: DashNews2,                      exact: true,  hideFromNavigation: false },
         // { name: 'News Dets',  to: '/news/:id',   icon: null,            component: DashNewsCreate,                exact: true,  hideFromNavigation: true  },
         { name: 'News Dets',  to: '/news/:id',   icon: null,            component: DashNewsCreate2,               exact: true,  hideFromNavigation: true  },

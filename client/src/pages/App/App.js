@@ -7,7 +7,7 @@ import { loginFromCookie } from '../../redux/actions/auth';
 import { history } from '../../helpers';
 import Home from '../Guest/Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
-import Login from '../../components/Login';
+// import Login from '../../components/Login';
 import Players from '../Guest/Players/Players';
 import Games from '../Guest/Games/Games';
 import Schedule from '../Guest/Schedule/Schedule';
@@ -17,7 +17,7 @@ import Boxscore from '../Guest/Boxscore/Boxscore';
 import Standings from '../Guest/Standings/Standings';
 import Inquiry from '../Guest/Inquiry/Inquiry';
 
-import { Modal, Header } from '../../components';
+import { Modal, Header, Login, Invite } from '../../components';
 import { Styleguide } from '../../components/Styleguide';
 
 import 'antd/dist/antd.css';
@@ -46,6 +46,7 @@ class App extends Component {
                         <Route path="/teams/:id" component={SingleTeam} />
                         <Route path="/boxscore/:id" component={Boxscore} />
                         <Route path="/login" component={Login} />
+                        <Route path="/invite" component={Invite} />
                         <Route path="/players" component={Players} />
                         <Route path="/games" component={Games} />
                         <Route path="/inquiry" component={Inquiry} />

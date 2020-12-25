@@ -1,5 +1,5 @@
 import { request } from './middleware';
-import { GET_INIT, GET_SUCCESS } from '../actionTypes';
+import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL } from '../actionTypes';
 
 export const getUsers = (filter) => async dispatch => {
     dispatch({ type: `users/${GET_INIT}` });
@@ -9,28 +9,25 @@ export const getUsers = (filter) => async dispatch => {
 
     if (!data) return false;
 
-    const payload = data.data.map(item => ({ ...item, full_name: `${item.first_name} ${item.last_name}` }));
-    dispatch({ type: `users/${GET_SUCCESS}`, payload });
+    // const payload = data.data.map(item => ({ ...item, full_name: `${item.first_name} ${item.last_name}` }));
+    dispatch({ type: `users/${GET_SUCCESS}`, payload: data.data });
     return true;
 };
 
 
-export const createUser = userData => async (dispatch) => {
-    // console.log(userData, 'CREATE USER YAY');
+export const createUser = ({ userData }) => async (dispatch) => {
+    const data = await request({ url: '/api/auth/invite', method: 'POST', session: userData });
+    if (!data) return false;
 
-    // const data = await request(`/api/admin/seasons`, 'POST', {access_token: user.user.access_token, data: seasonData})
+    dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
+    dispatch({ type: `users/${CREATE_SUCCESS}`, payload: data.data });
+    return true;
+};
 
-    // console.log(data, 'DATA CREATE SEASON!!')
+export const resendInvite = ({ user_id }) => async (dispatch) => {
+    console.log(user_id)
+    const data = await request({ url: `/api/auth/invite/${user_id}`, method: 'PUT', session: {} });
+    console.log({data})
 
-    // if(!data) return false;
-
-    // dispatch({
-    //     type: `seasons/${CREATE_SUCCESS}`,
-    //     payload: data.data
-    // })
-
-    // dispatch({
-    //     type: TOGGLE_MODAL,
-    //     modalProps: { isVisible: false }
-    // })
+    dispatch({ type: `users/${UPDATE_SUCCESS}/reinvite`, payload: {...data.data, user_id } });
 };

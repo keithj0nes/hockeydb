@@ -11,7 +11,7 @@ const useQueryParam = ({ getMethod }) => {
         } else {
             getMethod();
         }
-    }, []);
+    }, [getMethod]);
 
     const setQueryParamsCustom = obj => {
         const search = setQuery(obj) || undefined;

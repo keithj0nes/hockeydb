@@ -144,6 +144,8 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
         ],
     };
 
+    console.log(divisions)
+
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
@@ -154,7 +156,7 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
 
                     <DashTable
                         data={divisions}
-                        sections={{ name: 'one' }}
+                        sections={{ name: 'one', teams_count: { flex: 'one', as: 'teams' } }}
                         minWidth={350}
                         isLoading={[isLoading, 15]}
                         emptyTableText={location.search.length > 0 ? 'Sorry, there are no divisions within your filter criteria' : 'Sorry, no divisions have been created. Start by adding a division above.'}

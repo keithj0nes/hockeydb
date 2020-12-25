@@ -12,17 +12,17 @@ const Standings = props => {
 
     useEffect(() => {
         if(props.location.search.length > 0) {
-            const [ filters, filterString ] = getQuery();
+            const [ filterss, filterStringg ] = getQuery();
             // get the standings list here by passing in the filterString
-            setFilters(filters)
-            props.getStandingsPageFilters(filterString)
-            props.getStandings(filterString)
+            setFilters(filterss)
+            props.getStandingsPageFilters(filterStringg)
+            props.getStandings(filterStringg)
 
         } else {
             props.getStandings().then(res => setFilters({...filters, season: res}));
             props.getStandingsPageFilters();
         }
-    }, [])
+    }, [filters, props])
 
 
     const handleChange = e => {

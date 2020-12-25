@@ -84,7 +84,7 @@ const DashTable = ({ data, sections, minWidth, isLoading, tableType, emptyTableT
                             data.map((d, indx) => {
                                 if (tableType === 'games') [d.date, d.start_time] = dateFormat(d.start_date, 'MM/DD/YY h:mmA').split(' ');
                                 if (tableType === 'users') {
-                                    d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
+                                    // d.is_suspended === null ? d.is_suspendedd = '[active]' : d.is_suspendedd = '[inactive]';
                                     d.last_loginn = (d.last_login ? distanceInWords(new Date(), d.last_login, { addSuffix: true }) : 'never');
                                 }
                                 return (
