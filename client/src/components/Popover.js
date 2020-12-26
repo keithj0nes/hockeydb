@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './popover.scss';
 
 export const Popover = ({ children, isVisible, setIsVisible, closest, row, fullWidth }) => {
-    const listener = e => {
+    const listener = useCallback((e) => {
         if (!e.target.closest(closest)) {
             setIsVisible(false);
         }
-    };
+    }, [setIsVisible, closest]);
 
     useEffect(() => {
         if (isVisible) {

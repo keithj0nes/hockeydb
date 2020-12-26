@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUsers, createUser, resendInvite } from 'redux/actions/users';
 import { toggleModal } from 'redux/actions/misc';
-import { Button, SlideOut, DashPageHeader, DashSelect, DashCheckbox, DashFilter } from '../../../components';
+import { Button, SlideOut, DashPageHeader, DashFilter } from '../../../components';
 import DashTable from '../DashTable';
 import { useQueryParam } from '../../../components/useQueryParams';
 // import { setQuery } from 'helpers';

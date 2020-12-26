@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import jwt from 'jsonwebtoken';
 import qs from 'query-string';
 import { Site_Name_Full } from 'assets/resourceStrings';
-import { Form, Input, Select, Checkbox } from 'antd';
+import { Form, Input } from 'antd';
 import { connect } from 'react-redux';
 // import { Redirect } from 'react-router-dom';
 import { Button } from '.';
@@ -19,23 +19,18 @@ const Invite = ({ location, registerFromInvite }) => {
     useEffect(() => {
         try {
             const { token } = qs.parse(location.search.slice(1));
-            console.log(token)
-            // const token = qs.parse(location.search.slice(1))?.jwt;
             const decodedToken = jwt.decode(token);
-            console.log({decodedToken});
 
             if (!decodedToken || Date.now() >= decodedToken.exp * 1000) {
-                console.log('its expired');
                 return setJwtIsExpired(true);
             }
             setUserData(decodedToken);
             setUserToken(token);
-            // form.setFieldsValue({ first_name: decodedToken.first_name });
-            form.setFieldsValue(decodedToken);
+            return form.setFieldsValue(decodedToken);
         } catch (error) {
-            console.log(error, 'an error occured');
+            return console.log(error, 'an error occured');
         }
-    }, []);
+    }, [form, location.search]);
 
     if (jwtIsExpired) {
         return (
@@ -51,7 +46,7 @@ const Invite = ({ location, registerFromInvite }) => {
                 style={{ width: 500, margin: '20px auto' }}
                 onFinish={values => registerFromInvite({ userData: values, token: userToken })}
             >
-                <p>{`You\'ve been invited to join the ${Site_Name_Full}'s admin team as a ${userData.user_role}.`}</p>
+                <p>{`You've been invited to join the ${Site_Name_Full}'s admin team as a ${userData.user_role}.`}</p>
                 <p style={{ marginBottom: 25 }}>Please complete your registration below.</p>
                 <Form.Item label="First name" name="first_name" rules={[{ required: true, message: 'Please enter your first name' }]}>
                     <Input />

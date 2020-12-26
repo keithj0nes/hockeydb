@@ -1,15 +1,5 @@
-// import React, { Component } from 'react';
-
-// class DashGamesDetails extends Component { 
-
-//     render() {
-//         return (
-//             <h1>DashGamesDetails</h1>
-//         )
-//     }
-// }
-
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from '../../../components';
 import { getGameById } from '../../../redux/actions/games';
@@ -32,7 +22,7 @@ const defaultState = {
     location_id: null,
     season_name: '',
     season_id: null,
-}
+};
 
 // const players1 = [
 //     { id: 1, name: 'adrian', played_in_game: false },
@@ -52,77 +42,60 @@ const defaultState = {
 
 
 const DashGamesDetails = ({ history, match, getGameById, gameDetails }) => {
-
     // const [ gameDetails, setGameDetails ] = useState(defaultState)
-    const [ _gameDetails, setGameDetails ] = useState(defaultState)
-
+    const [_gameDetails, setGameDetails] = useState(defaultState);
 
     // console.log(location, 'location!')
-    console.log(_gameDetails, 'gamedetails')
+    console.log(_gameDetails, 'gamedetails');
 
     // component did mount
     useEffect(() => {
         // setGameDetails({...gameDetails, home_team: 'HAHAH', away_team: 'awww'})
         // console.log(gameDetails, 'gamedetails')
+        console.log(match.params.id, 'GET API CALL HERE IN USEEFFECT');
 
-        console.log(match.params.id, 'GET API CALL HERE IN USEEFFECT')
-
-        getGameById(match.params.id)
-        
-
-    }, [])
+        getGameById(match.params.id);
+    }, [match.params.id, getGameById]);
 
     // update game details from redux state
     useEffect(() => {
-
-        console.log(gameDetails, 'in use effect 2')
-        setGameDetails({..._gameDetails, ...gameDetails})
-
-    }, [gameDetails])
-
+        console.log(gameDetails, 'in use effect 2');
+        setGameDetails({ ..._gameDetails, ...gameDetails });
+    }, [gameDetails, _gameDetails]);
 
 
     return (
-
         <>
             <div className="dashboard-filter-header">
-                <div style={{width: '100%'}}>
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div style={{ width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Button title="Back to Games" onClick={history.goBack} />
                     </div>
                 </div>
             </div>
 
-            {/* <div className="dashboard-list-container">
-                <div className="dashboard-list">
-
-            <h1>DashGamesDetails</h1>
-                </div>
-            </div> */}
-
             <div className="dashnews-container">
                 <h1>DashGamesDetails</h1>
-
                 <p>home team: { _gameDetails.home_team_name}</p>
                 <p>away team: { _gameDetails.away_team_name}</p>
-
             </div>
-
-
         </>
-    )
-}
+    );
+};
 
-const mapStateToProps = state => {
-    return {
-        gameDetails: state.games.gameDetails
-    }
-}
+const mapStateToProps = state => ({
+    gameDetails: state.games.gameDetails,
+});
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getGameById: id => dispatch(getGameById(id))
-    }
-}
+const mapDispatchToProps = dispatch => ({
+    getGameById: id => dispatch(getGameById(id)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashGamesDetails);
+
+DashGamesDetails.propTypes = {
+    gameDetails: PropTypes.object,
+    history: PropTypes.object,
+    match: PropTypes.object,
+    getGameById: PropTypes.func,
+};

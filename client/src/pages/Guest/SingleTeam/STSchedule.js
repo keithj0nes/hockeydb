@@ -11,11 +11,10 @@ const STSchedule = ({ schedule, currentTeam, match, getTeamScheduleById }) => {
     useEffect(() => {
         // get team schedule by id
         if (schedule.length <= 0 || match.params.id !== currentTeam) {
-            console.log(match,' match!')
             const [, filterString] = getQuery();
             getTeamScheduleById(match.params.id, filterString);
         }
-    }, []);
+    }, [schedule.length, match.params.id, currentTeam, getTeamScheduleById]);
     // FIX: currently useeffect is infinite firing with the below
     // }, [getTeamScheduleById, schedule, match, currentTeam]);
 
@@ -52,7 +51,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(STSchedule);
 
 STSchedule.propTypes = {
     schedule: PropTypes.array,
-    currentTeam: PropTypes.string,
+    currentTeam: PropTypes.number,
     match: PropTypes.object,
     getTeamScheduleById: PropTypes.func,
 };

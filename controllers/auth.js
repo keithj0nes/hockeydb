@@ -209,10 +209,16 @@ passport.use('local-login', new LocalStrategy({
         return done(null, false, { message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' })
     }
 
-    if(user.is_suspended){
+    if (user.is_suspended){
         // return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
         return done(null, false, { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', internal_message: 'USER_SUSPENDED' })
     }
+
+    if (user.reinvite_date) {
+        await db.users.update({ id: user.id }, { reinvite_date: null }).catch(err => console.log(err, 'update local-login error on sign in'))
+    }
+
+    console.log(user, 'user')
 
     const pw = await db.passwords.findOne({ user_id: user.id })
     const comparedPassword = await bcrypt.compare(password, pw.pw)
