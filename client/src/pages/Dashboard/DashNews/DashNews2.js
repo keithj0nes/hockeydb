@@ -76,7 +76,7 @@ const DashNews2 = ({ news, getNews, isLoading, location, toggleModal, updateNews
     // user case: date formatter to table to format date nicely
 
     const pageHeaderInfo = {
-        title: 'News',
+        title: 'Announcements',
         searchPlaceholder: 'Search by title or content',
         onChange: () => console.log('changing placeholder text'),
         buttons: [

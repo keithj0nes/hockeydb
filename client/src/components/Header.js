@@ -63,7 +63,7 @@ class Header extends Component {
                                 <ul>
                                     {navLinks.map(link => (
                                         <li key={link.to}>
-                                            <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`link pressed to ${link.to}`)}>
+                                            <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
                                                 {link.name}
                                                 {link.subLinks && (<div className="arrow" />)}
                                             </NavLink>
@@ -73,7 +73,7 @@ class Header extends Component {
                                                 <ul className="sub-links">
                                                     {link.subLinks.map(subLink => (
                                                         <li key={subLink.to}>
-                                                            <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={() => console.log(`link pressed to ${link.to}`)}>
+                                                            <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
                                                                 {subLink.name}
                                                             </NavLink>
 

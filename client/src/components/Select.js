@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './select.scss';
 
-
 export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
     <div className="custom-select">
         <label htmlFor="">{title}</label>
@@ -31,7 +30,10 @@ export const DashSelect = ({ name, defaultValue, hiddenValue, listOfSelects, onC
 
 Select.propTypes = {
     name: PropTypes.string,
-    defaultValue: PropTypes.string,
+    defaultValue: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
     hiddenValue: PropTypes.string,
     listOfSelects: PropTypes.array,
     onChange: PropTypes.func,
@@ -41,7 +43,10 @@ Select.propTypes = {
 
 DashSelect.propTypes = {
     name: PropTypes.string,
-    defaultValue: PropTypes.string,
+    defaultValue: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
     hiddenValue: PropTypes.string,
     listOfSelects: PropTypes.array,
     onChange: PropTypes.func,

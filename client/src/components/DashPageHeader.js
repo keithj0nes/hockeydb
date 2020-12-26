@@ -30,9 +30,10 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
                     </div>
                 </div>
             </div>
-            {/* { !hideSearchAndButtons && (
+            {/* { !hideSearchAndButtons && ( */}
+            { !true && (
                 <input type="text" className="page-header-search hide-desktop" placeholder={searchPlaceholder} onChange={onChange} />
-            )} */}
+            )}
         </div>
     );
 };

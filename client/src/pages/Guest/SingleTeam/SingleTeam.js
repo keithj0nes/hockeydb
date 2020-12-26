@@ -36,7 +36,7 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
         }
 
         return () => clearSingleTeamState();
-    }, []);
+    }, [location.search, match.params.id, clearSingleTeamState, getTeamById]);
     // FIX: currently useeffect is infinite firing with the below
     // }, [props.location.pathname, props.location.search, props]);
 

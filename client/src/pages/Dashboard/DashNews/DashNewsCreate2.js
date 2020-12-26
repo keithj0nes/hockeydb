@@ -41,7 +41,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
             getNewsPostById(match.params.id);
             setIsEditing(true);
         }
-    }, [match]);
+    }, [getNewsTags, getNewsPostById, match.params.id]);
 
     useEffect(() => {
         if (match.params.id !== 'create') {
@@ -50,14 +50,14 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
         } else {
             setTagsList(newsTags);
         }
-    }, [newsTags, newsById]);
+    }, [newsTags, newsById, match.params.id]);
 
 
     useEffect(() => {
         if (match.params.id !== 'create') {
             form.setFieldsValue({ ...newsById, tags_in_post: newsById.tags_in_post?.map(item => item.name) });
         }
-    }, [newsById]);
+    }, [newsById, form, match.params.id]);
 
     const addTagToSelect = (tag) => {
         setTagsList(tagsList.filter(item => item.name !== tag.name));
@@ -91,7 +91,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
     };
 
     const pageHeaderInfo = {
-        title: `News - ${isEditing ? 'Edit' : 'Create'}`,
+        title: `Announcements - ${isEditing ? 'Edit' : 'Create'}`,
         hideSearchAndButtons: true,
     };
 
@@ -113,7 +113,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
             <Breadcrumb style={{ marginLeft: 16, paddingTop: 16 }}>
 
                 <Breadcrumb.Item>
-                    <Link to="/dashboard/news"> {'<'} Back</Link>
+                    <Link to="/dashboard/announcements"> {'<'} Back</Link>
                 </Breadcrumb.Item>
                 {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
                 <Breadcrumb.Item>

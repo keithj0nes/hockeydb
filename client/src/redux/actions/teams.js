@@ -28,7 +28,7 @@ export const getTeams = (filter) => async (dispatch, getState) => {
 
 // Guest/Teams.js
 export const getTeamsByDivision = (filter) => async (dispatch) => {
-    const data = await request({ url: `/api/teams/by_division${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+    const data = await request({ url: `/api/teams/by_division?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
 
     dispatch({ type: `teams/byDivision/${GET_SUCCESS}`, payload: data.data.allTeams });
