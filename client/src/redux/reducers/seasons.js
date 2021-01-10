@@ -13,6 +13,13 @@ const initialSeasonState = {
     // filterOptions: {
     //     show_hidden: true
     // }
+    pagination: {
+        totalPages: 0,
+        currentPage: 1,
+        neighbors: 1,
+        // limit: 30,  // being determinted on the backend
+        onPageChange: () => console.log('changed!'),
+    },
 };
 
 // FILTER STATE IS BEING MANAGED INSIDE LOCAL COMPONENT
@@ -23,8 +30,24 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
         return { ...state, currentSeason: payload };
     case `seasons/${GET_INIT}`: // not being used yet
         return { ...state, isLoading: true };
-    case `seasons/${GET_SUCCESS}`:
-        return { ...state, isLoading: false, seasons: payload };
+
+    case `seasons/stop_loading`: // not being used yet
+        return { ...state, isLoading: false };
+
+    case `seasons/${GET_SUCCESS}`: {
+        let _pagination;
+        if (payload.pagination) {
+            const { total_pages, page } = payload.pagination;
+            _pagination = { pagination: { ...state.pagination, totalPages: total_pages, currentPage: page }};
+        }
+        return {
+            ...state,
+            isLoading: false,
+            seasons: payload.seasons,
+            ..._pagination,
+        };
+        // return { ...state, isLoading: false, seasons: payload.seasons, pagination: { ...state.pagination, totalPages: payload.total_pages, currentPage: payload.page } };
+    }
     case `seasons/${CREATE_SUCCESS}`:
         return { ...state, isLoading: false, seasons: [...state.seasons, payload] };
     case `seasons/${UPDATE_SUCCESS}`: {

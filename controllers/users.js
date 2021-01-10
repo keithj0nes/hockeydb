@@ -5,6 +5,7 @@ const getUsers = async (req, res) => {
     const db = app.get('db');
   
     // console.log(req.query, 'QUERYRYYY')
+    getUsers2(req, res);
 
     const newQuery = {};
 
@@ -63,6 +64,36 @@ const getUsers = async (req, res) => {
 
     res.status(200).send({ status: 200, data, message: 'Retrieved list of Users' });
   }
+
+const getUsers2 = async (req, res) => {
+    // try {
+    //     const db = app.get('db');
+    //     const query = helpers.filter(req.query, ['hidden_date =', 'deleted_date =']);
+    //     // const defaults = {
+    //     //     is_suspended: null,
+    //     // }
+    //     console.log({query: req.query})
+    //     const { limit = 50, page = 1, dir = 'asc' } = req.query;
+    //     const offset = (!page || page <= 1) ? 0 : (page-1) * limit;
+    //     const total_count = await db.users.count({ ...query });
+
+    //     const users = await db.users.find({
+    //         ...query
+    //     }, {
+    //         order: [{field: 'id', direction: dir }],
+    //         offset,
+    //         limit,
+    //     });
+
+    //     console.log({total_count})
+
+
+
+        
+    // } catch (error) {
+    //     console.log(error, 'error getuserers2222')
+    // }
+}
 
 
 module.exports = {

@@ -144,7 +144,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
             return false;
         }
 
-        if (!snack) {
+        if (!Object.prototype.hasOwnProperty.call(responseRaw.data, 'snack')) {
             store.dispatch({
                 type: TOGGLE_MODAL,
                 modalProps: {

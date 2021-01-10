@@ -1,12 +1,18 @@
-const config = require('../../config');
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(config.SENDGRID_API_KEY);
+const isProduction = require('../helpers').isProduction;
+let config;
+if (!isProduction) config = require('../../config');
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || config.SENDGRID_API_KEY);
+const testEmail = process.env.TEST_EMAIL || config.TEST_EMAIL;
+const url = process.env.SITE_URL || config.SITE_URL;
+const leagueName = 'United States Hockey League';
+const aOrAn = str => (/^[aeiou]$/i).test(str.charAt(0)) ? 'an' : 'a';
 
 function newUserEmail(email, name){
     const msg = {
-        to: 'keith@raincityambience.com',
-        from: 'keith@raincityambience.com', // Use the email address or domain you verified above
+        to: testEmail,
+        from: testEmail, // Use the email address or domain you verified above
         subject: 'Sending with Twilio SendGrid is Fun',
         text: 'and easy to do anywhere, even with Node.js',
         html: '<strong>and easy to do anywhere, even with Node.js</strong>',
@@ -22,8 +28,8 @@ function newUserEmail(email, name){
 }
 
 const defaultMessage = {
-    to: config.TEST_EMAIL,
-    from: config.TEST_EMAIL,
+    to: testEmail,
+    from: testEmail,
     subject: 'Sending default message',
     html: '<strong>If you get this message, there was an error</strong>',
 };
@@ -45,17 +51,17 @@ const sendmail = async ({ template, data }) => {
 const templates = {
     inviteUser: ({ data }) => {
         const { email, first_name, last_name, user_role, invite_token } = data;
-        const url = "http://localhost:3000/invite";
         return {
-            to: config.TEST_EMAIL,
+            // to: config.TEST_EMAIL,
+            to: isProduction ? email : testEmail,
             from: config.TEST_EMAIL,
-            subject: "You're invited to {{ League Name }}",
+            subject: `You're invited to ${leagueName}`,
             html: `
-                <h1>Welcome to {{ League Name }}</h1>
+                <h1>Welcome to ${leagueName}</h1>
                 <p>Hi ${first_name} ${last_name},</p>
-                <p>You've been added to {{ League Name }} as a ${user_role}.</p>
+                <p>You've been added to ${leagueName} as ${isOrAn(user_role)} ${user_role}.</p>
                 <p>Click the link below to finish your registration:</p>
-                <p><a href=${url}/?token=${invite_token}>${url}</a></p>
+                <p><a href=${url}/invite/?token=${invite_token}>${url}</a></p>
 
                 <p>email sent to: ${email}</p>
             `,

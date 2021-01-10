@@ -174,12 +174,22 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
     );
 };
 
-const mapStateToProps = state => ({
-    divisions: state.divisions.divisions,
-    isLoading: state.divisions.isLoading,
-    seasons: state.seasons.seasons,
-    currentSeason: state.seasons.currentSeason,
-});
+// const mapStateToProps = state => ({
+//     divisions: state.divisions.divisions,
+//     isLoading: state.divisions.isLoading,
+//     seasons: state.seasons.seasons,
+//     currentSeason: state.seasons.currentSeason,
+// });
+
+const mapStateToProps = state => {
+    // console.log(state.seasons)
+    return {
+        divisions: state.divisions.divisions,
+        isLoading: state.divisions.isLoading,
+        seasons: state.seasons.seasons,
+        currentSeason: state.seasons.currentSeason,
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     getDivisions: filters => dispatch(getDivisions(filters)),

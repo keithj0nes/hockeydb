@@ -17,7 +17,7 @@ export const getDivisions = (filter) => async (dispatch, getState) => {
     if (!data) return false;
 
     dispatch({ type: `divisions/${GET_SUCCESS}`, payload: data.data.divisions });
-    dispatch({ type: `seasons/${GET_SUCCESS}`, payload: data.data.seasons });
+    dispatch({ type: `seasons/${GET_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
 
     return true;

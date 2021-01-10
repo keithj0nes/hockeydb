@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from 'redux/actions/seasons';
 import { toggleModal } from 'redux/actions/misc';
-import { DashPageHeader, DashFilter } from '../../../components';
+import { DashPageHeader, DashFilter, Pagination, useQueryParam } from '../../../components';
 import DashTable from '../DashTable';
 import './DashSeasons.scss';
-import { useQueryParam } from '../../../components/useQueryParams';
+import { searchReduce } from '../../../helpers';
 
 const defaultState = {
     seasonTypes: [
@@ -18,7 +18,7 @@ const defaultState = {
     filterData: [],
 };
 
-const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, createSeason, updateSeason, deleteSeason }) => {
+const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, createSeason, updateSeason, deleteSeason, paginationDetails }) => {
     const [state, setState] = useState(defaultState);
     const [filters, setFilters] = useQueryParam({ getMethod: getSeasons });
     const showingHidden = location.search.includes('hidden');
@@ -131,7 +131,6 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
         }, 'delete');
     };
 
-
     const pageHeaderInfo = {
         title: 'Seasons',
         searchPlaceholder: 'Search by season name',
@@ -145,7 +144,9 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
             {
                 iconName: 'FILTER',
                 title: 'Filter Seasons',
-                isActive: location.search.length > 0,
+                // isActive: location.search.length > 0,
+                isActive: searchReduce(),
+
                 onClick: (val) => setFilterDataOpenFilter(val),
                 popoverUI: (closeFilter) => (
                     <DashFilter
@@ -158,6 +159,15 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
             },
         ],
     };
+
+
+    // //////////////////////////////////// //
+
+    // next issue: red screen error when clicking seasons
+    // navigating to another page, and clicking seasons again
+
+    // //////////////////////////////////// //
+
 
     return (
         <>
@@ -183,15 +193,26 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
                     />
                 </div>
             </div>
+            <Pagination {...paginationDetails} setFilters={setFilters} />
         </>
     );
 };
 
 
-const mapStateToProps = state => ({
-    seasons: state.seasons.seasons,
-    isLoading: state.seasons.isLoading,
-});
+// const mapStateToProps = state => ({
+//     seasons: state.seasons.seasons,
+//     isLoading: state.seasons.isLoading,
+//     paginationDetails: state.seasons.pagination,
+// });
+
+const mapStateToProps = state => {
+    // console.log(state.seasons)
+    return {
+        seasons: state.seasons.seasons,
+        isLoading: state.seasons.isLoading,
+        paginationDetails: state.seasons.pagination,
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     getSeasons: filters => dispatch(getSeasons(filters)),
@@ -212,4 +233,5 @@ DashSeasons2.propTypes = {
     updateSeason: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     location: PropTypes.object,
+    paginationDetails: PropTypes.object,
 };

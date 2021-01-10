@@ -1,21 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './checkbox.scss';
+// import { Checkbox as Checkbox2 } from 'antd';
+
 
 export const Checkbox = () => (
     <h2>Checkbox Not styled</h2>
 );
 
+// DashCheckbox needs to be reqorked - will not uncheck if filter box is closed and opened again
+
 export const DashCheckbox = ({ title, name, defaultValue, onChange }) => {
     const [isChecked, setIsChecked] = useState(false);
 
     const prev = useRef();
+    // console.log(prev.current)
 
     useEffect(() => {
-        prev.current = isChecked;
+        if (prev.current === undefined) {
+            prev.current = isChecked;
+        }
     }, [isChecked]);
 
     useEffect(() => {
+        // console.log({isChecked, prev: prev.current})
+
         if (defaultValue) {
             setIsChecked(true);
         } else if (prev.current !== isChecked) {
@@ -41,6 +50,15 @@ export const DashCheckbox = ({ title, name, defaultValue, onChange }) => {
                 {title}
             </label>
         </div>
+
+    // <Checkbox2
+    //     checked={isChecked}
+    //     // onChange={this.onChange}
+    //     // defaultChecked={defaultValue}
+    //     onChange={handleFocus}
+    // >
+    //     {title}
+    // </Checkbox2>
     );
 };
 

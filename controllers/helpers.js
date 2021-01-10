@@ -1,5 +1,13 @@
+const isProduction = process.env.NODE_ENV === 'production';
+
 const filter = (query, excludeFromReqQuery = []) => {
     const q = {...query};
+    // sorting options should be removed
+    delete q.page;
+    delete q.dir;
+    delete q.order_by;
+    delete q.limit;
+
     if(q.show_hidden){
         delete q.show_hidden;
         q['hidden_date !='] = null;
@@ -27,6 +35,7 @@ function tryCatch(promise, additionalObj){
 
 module.exports = {
     filter,
-    tryCatch
+    tryCatch,
+    isProduction,
 }
   
