@@ -59,7 +59,7 @@ const templates = {
             html: `
                 <h1>Welcome to ${leagueName}</h1>
                 <p>Hi ${first_name} ${last_name},</p>
-                <p>You've been added to ${leagueName} as ${isOrAn(user_role)} ${user_role}.</p>
+                <p>You've been added to ${leagueName} as ${aOrAn(user_role)} ${user_role}.</p>
                 <p>Click the link below to finish your registration:</p>
                 <p><a href=${url}/invite/?token=${invite_token}>${url}</a></p>
 
