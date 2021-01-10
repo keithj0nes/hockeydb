@@ -54,7 +54,7 @@ const templates = {
         return {
             // to: config.TEST_EMAIL,
             to: isProduction ? email : testEmail,
-            from: config.TEST_EMAIL,
+            from: testEmail,
             subject: `You're invited to ${leagueName}`,
             html: `
                 <h1>Welcome to ${leagueName}</h1>
