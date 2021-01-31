@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { getTeams, createTeam, updateTeam, deleteTeam } from '../../../redux/actions/teams';
 import { toggleModal, toggleFilter} from '../../../redux/actions/misc';
-import { DashPageHeader, DashFilter } from '../../../components';
+import { DashPageHeader, DashFilter, ColorPicker } from '../../../components';
 import DashTable from '../DashTable';
 import qs from 'query-string';
 import { setQuery } from "helpers";
@@ -40,6 +40,12 @@ class DashTeams extends Component {
             return this.setState({edit: editStateCopy})
         }
         // console.log({[e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value})
+    }
+
+    handleColorPickerChange = colors => {
+        const editStateCopy = { ...this.state.edit };
+        const newStuff = editStateCopy.color_list.map(item => (item.id === colors.id ? colors : item));
+        this.setState({ edit: { ...editStateCopy, color_list: newStuff } });
     }
 
     handleAddTeam = () => {
@@ -97,7 +103,7 @@ class DashTeams extends Component {
 
     handleEditTeam = (item) => {
         this.setState({ edit: item })
-        console.log(item, 'itemss')
+        // console.log(item, 'itemss')
 
         const defaultValue = Object.keys(qs.parse(this.props.location.search)).length > 0 ? qs.parse(this.props.location.search).season : this.props.currentSeason.name;
 
@@ -133,11 +139,24 @@ class DashTeams extends Component {
                     type: 'input',
                     name: 'colors',
                     defaultValue: item.colors
+                },
+                {
+                    title: 'Color Picker',
+
+                    customComponent: (
+                        <>
+                            <div style={{ display: 'flex', marginTop: 3 }}>
+                                {item.color_list?.map(colorItem => (
+                                    <ColorSwatch defaultValue={colorItem} onChange={this.handleColorPickerChange} />
+                                ))}
+                            </div>
+                        </>
+                    )
                 }
             ],
             onChange: this.handleChange('editing'),
             confirmActionTitle: 'Update Team',
-            // confirmAction: () => console.log('edit team confirmation')
+            // confirmAction: () => console.log(item.id, this.state.edit, 'edit team confirmation')
             confirmAction: () => this.validation('edit') && this.props.updateTeam(item.id, this.state.edit),
         }, 'prompt');
     }
@@ -151,10 +170,10 @@ class DashTeams extends Component {
 
     validation = (edit) => {
         if(!!edit){
-            console.log(this.state.edit, 'edit')
+            // console.log(this.state.edit, 'edit')
             return !this.state.edit.name || !Number(this.state.edit.division_id) ? false : true;
         }
-        console.log(this.state.name, Number(this.state.division_id))
+        // console.log(this.state.name, Number(this.state.division_id))
         if (!this.state.name|| !Number(this.state.division_id)) return false;
         return true;
     }
@@ -225,7 +244,7 @@ class DashTeams extends Component {
     setFilterDataOpenFilter = (val) => {
         //set filter data and toggle filter component
 
-        console.log('setting stuffszzz')
+        // console.log('setting stuffszzz')
 
         const filterData = [{
             title: 'Season',
@@ -289,6 +308,8 @@ class DashTeams extends Component {
         // this.setState({filters})
         this.setState({filters}, () => this.setFilterDataOpenFilter(true))
     }
+
+    
 
 
     render() {
@@ -379,3 +400,45 @@ const mapDispatchToProps = dispatch => {
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(DashTeams) 
+
+
+const ColorSwatch = (props) => {
+    const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+    const [editedStuff, setEditedStuff] = useState(null);
+    // console.log(props, 'props!')
+
+    let defVal;
+    if (!!editedStuff) {
+        defVal = { ...editedStuff, hex: editedStuff.color };
+    } else {
+        defVal = { ...props.defaultValue, hex: props.defaultValue.color };
+    }
+
+    const handleChange = val => {
+        setEditedStuff(val)
+        props.onChange(val)
+    }
+
+    return (
+        <>
+            {/* <div title={editedStuff?.name || props.defaultValue.name} onClick={() => setIsColorPickerOpen(true)} key={editedStuff?.color || props.defaultValue.color} style={{ marginRight: 6, border: '1px solid black', height: 30, width: 30, background: editedStuff?.color || props.defaultValue.color }} /> */}
+            <div title={defVal.name} onClick={() => setIsColorPickerOpen(true)} key={defVal.color} style={{ marginRight: 6, border: '1px solid black', height: 30, width: 30, background: defVal.color }} />
+
+            {isColorPickerOpen && (
+                <ColorPicker
+                    onSubmit={handleChange}
+                    // hexCode={this.props.color || '#aaa'}
+                    // colors={colorPickerColors}
+                    // onChange={(color) => {
+                    //     this.handleChange('color', color.hex.slice(1));
+                    // }}
+                    // defaultValue={}
+                    // defaultValue={{ ...props.defaultValue, hex: props.defaultValue.color, ...editedStuff }}
+                    defaultValue={defVal}
+
+                    onClose={setIsColorPickerOpen}
+                />
+            )}
+        </>
+    );
+};

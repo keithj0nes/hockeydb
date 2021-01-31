@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input } from 'antd';
-import { DashPageHeader, Button } from '../../../components';
+import { SketchPicker } from 'react-color';
+import { DashPageHeader, Button, ColorPicker } from '../../../components';
 
 const initState = {
     hasBeenSubmitted: false,
@@ -26,6 +27,8 @@ const initState = {
 
 const DashHome = () => {
     const [state, setState] = useState(initState);
+    const [color, setColor] = useState('#FFFFFF');
+    const [colorPickerOpen, setcolorPickerOpen] = useState(false);
     const pageHeaderInfo = {
         title: 'Dashboard',
         hideSearchAndButtons: true,
@@ -45,10 +48,10 @@ const DashHome = () => {
         };
 
 
-        const pRate = additional_percentage ? stripeFees.p + (parseFloat(additional_percentage.toString().replace(/[^0-9\.]/g, ''), 10) / 100) : stripeFees.p;
-        const cRate = additional_cents ? stripeFees.c + (parseFloat(additional_cents.toString().replace(/[^0-9\.]/g, ''), 10) / 100) : stripeFees.c;
+        const pRate = additional_percentage ? stripeFees.p + (parseFloat(additional_percentage.toString().replace(/[^0-9.]/g, ''), 10) / 100) : stripeFees.p;
+        const cRate = additional_cents ? stripeFees.c + (parseFloat(additional_cents.toString().replace(/[^0-9.]/g, ''), 10) / 100) : stripeFees.c;
 
-        const val = parseFloat(total_price.toString().replace(/[^0-9\.]/g, ''), 10);
+        const val = parseFloat(total_price.toString().replace(/[^0-9.]/g, ''), 10);
         const totalRate = (val * pRate) + cRate;
         const stripeFeeTotals = ((val * stripeFees.p) + stripeFees.c).toFixed(2);
 
@@ -62,8 +65,8 @@ const DashHome = () => {
 
         setState({
             ...state,
-            additionalPercentage: parseFloat(additional_percentage.toString().replace(/[^0-9\.]/g, ''), 10),
-            additionalCents: parseFloat(additional_cents.toString().replace(/[^0-9\.]/g, ''), 10),
+            additionalPercentage: parseFloat(additional_percentage.toString().replace(/[^0-9.]/g, ''), 10),
+            additionalCents: parseFloat(additional_cents.toString().replace(/[^0-9.]/g, ''), 10),
 
             singlePrice: val.toFixed(2),
             singleStripeFees: stripeFeeTotals,
@@ -110,17 +113,61 @@ const DashHome = () => {
     );
     // console.log({stripeCents: state.stripeCents, additionalCents: state.additionalCents});
     // console.log((state.stripeCents) + (state.additionalCents / 100));
+
+    const inlineStyles = {
+        colorPickerPopover: {
+            position: 'absolute',
+            zIndex: '1000',
+            top: '0px',
+            bottom: '0px',
+            right: '0px',
+            left: '0px',
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+    };
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
+            {/* <button id="bt" onClick={() => setcolorPickerOpen(true)}>OPN PICKER</button> */}
+
+            {/* <ColorPicker onSubmit={e => console.log(e)} /> */}
+
+            {/* {colorPickerOpen && (
+                // <div style={inlineStyles.colorPickerPopover}>
+                //     <h2 onClick={() => setcolorPickerOpen(false)} style={{color: 'red'}}>close</h2>
+                <ColorPicker
+                    onSubmit={e => console.log(e)}
+                    // hexCode={this.props.color || '#aaa'}
+                    // colors={colorPickerColors}
+                    // onChange={(color) => {
+                    //     this.handleChange('color', color.hex.slice(1));
+                    // }}
+                    onClose={setcolorPickerOpen}
+                />
+                // </div>
+            )} */}
+
+            {/* <SketchPicker
+                color={color}
+                onChangeComplete={color => setColor(color.hex)}
+                // disableAlpha
+                presetColors={[{ color: '#f00', title: 'red' }, { color: '#ffa', title: 'meh' }]}
+            />
+
+            <p>{color}</p>
+
+            <div style={{ height: 100, width: 200, background: color }} /> */}
 
             <Form
                 layout="vertical"
-                style={{ width: 500, margin: '40px auto' }}
+                style={{ maxWidth: 500, margin: '40px auto' }}
                 onFinish={stripeCalculator}
             >
-                <h2>How to use Pricing Calculator:</h2>
+                <h2>How to use Season Calculator:</h2>
                 <p>Enter a Season Price to calculate the total season price minus Stripe and PML (us) fees. Stripe fees are required by default while PML fees are optional and added on top of the Stripe fees. Use the Estimated Transaction box to multiply each category to an overall season count - IE: fees are $100 and there are 50 people in the league, use the Estimated Transation box to view the overall pricing for 50 people in the league.</p>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>

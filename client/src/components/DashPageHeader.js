@@ -11,7 +11,13 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
     return (
         <div className="page-header">
             <div className="page-header-title-container">
+
+                {/* add season name to side of divisions */}
+
+                {/* <div style={{display: 'flex'}}> */}
                 <h1>{title}</h1>
+                {/* <p>Summer 3028</p> */}
+                {/* </div> */}
 
                 {/* { !hideSearchAndButtons && (
                     <input type="text" className="page-header-search hide-mobile" placeholder={searchPlaceholder} onChange={onChange} />

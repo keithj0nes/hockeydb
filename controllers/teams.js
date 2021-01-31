@@ -67,7 +67,7 @@ const getTeamById = async (req, res) => {
   }
 
   const teamQuery = `
-    select t.id, t.name, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
+    select t.id, t.name, t.color_list, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
     join teams t on t.id = tsd.team_id
     join divisions d on d.id = tsd.division_id
     WHERE tsd.season_id = ${season || season_id.id} AND tsd.team_id = $1

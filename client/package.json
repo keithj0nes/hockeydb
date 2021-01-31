@@ -30,6 +30,7 @@
     "querystring": "^0.2.0",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^10.1.1",
+    "react-color": "^2.19.3",
     "react-cookies": "^0.1.0",
     "react-datepicker": "^2.3.0",
     "react-dom": "^16.13.1",
@@ -42,7 +43,8 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "swipe-js-iso": "^2.1.5"
+    "swipe-js-iso": "^2.1.5",
+    "tinycolor2": "^1.4.2"
   },
   "proxy": "http://localhost:8010",
   "scripts": {

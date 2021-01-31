@@ -24,3 +24,4 @@ export { DraggableIcon } from './DraggableIcon';
 export { useQueryParam } from './useQueryParams';
 export { default as Invite } from './Invite';
 export { default as Login } from './Login';
+export { ColorPicker } from './ColorPicker';

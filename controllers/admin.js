@@ -91,7 +91,7 @@ const createTeam = async (req, res) => {
 
 const updateTeam = async (req, res) => {
     const db = app.get('db');
-    const { name, division_id, colors, season_name } = req.body;
+    const { name, division_id, colors, season_name, color_list } = req.body;
     const { id } = req.params;
 
     const team = await db.teams.findOne({ id }).catch(err => console.log(err));
@@ -99,8 +99,10 @@ const updateTeam = async (req, res) => {
         return res.status(200).send({ status: 404, error: true, message: 'Team not found' })
     }
 
+    console.log(req.body, 'reqbodyyyy')
+
     const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in season updateTeam'));
-    const updatedTeam = await db.teams.update({ id }, { name, colors, updated_date: new Date(), updated_by: req.user.id });
+    const updatedTeam = await db.teams.update({ id }, { name, colors, color_list: JSON.stringify(color_list), updated_date: new Date(), updated_by: req.user.id });
     await db.team_season_division.update({ season_id: season.id, team_id: id }, { division_id });
     return res.status(200).send({ status: 200, data: updatedTeam, message: 'Team updated' });
 }

@@ -544,3 +544,53 @@ input[type=text],
         flex: 5;
     }
 }
+
+
+.color-picker-container {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    display: flex;
+    flex-direction: column;
+    // height: 282,
+    width: 280px;
+    margin-bottom: 100;
+    background: #f1f1f1;
+    z-index: 1001;
+    position: relative;
+    padding: 10px;
+
+    .pointer {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        transform: translate(-5px, 1px);
+        border: 1px solid #FFFFFF;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+        margin-top: -5px;
+    }
+
+    .slider {
+        margin-top: 1px;
+        width: 4px;
+        border-radius: 1px;
+        height: 8px;
+        box-shadow: 0 0 2px rgba(0, 0, 0, .6);
+        background-color: #FFFFFF;
+        transform: translateX(-2px);
+    }
+
+    .saturation {
+        width: 100%;
+        padding-bottom: 75%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .swatch-square {
+        min-width: 20px;
+        min-height: 20px;
+        margin: 1px 2px;
+        cursor: pointer;
+        box-shadow: 0 0 2px rgba(0, 0, 0, .6);
+    }
+
+}
