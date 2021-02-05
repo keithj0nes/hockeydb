@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import jwt from 'jsonwebtoken';
 import qs from 'query-string';
 import { Site_Name_Full } from 'assets/resourceStrings';
+import logo from 'assets/images/logo.png';
 import { Form, Input } from 'antd';
 import { connect } from 'react-redux';
-// import { Redirect } from 'react-router-dom';
 import { Button } from '.';
 import { registerFromInvite } from '../redux/actions/auth';
 
@@ -34,20 +34,29 @@ const Invite = ({ location, registerFromInvite }) => {
 
     if (jwtIsExpired) {
         return (
-            <p>Sorry, looks like your registration code has expired. Please contact your administrator for a new registration code.</p>
+            <div className="box-shadow login-form toggleIn">
+                <p className="text-center">Something went wrong</p>
+                <img src={logo} alt="Logo" className="logo" />
+                <p className="text-center">Sorry, looks like your registration code has expired. Please contact your administrator for a new registration code.</p>
+            </div>
         );
     }
 
     return (
-        <div>
+        <>
             <Form
                 form={form}
                 layout="vertical"
-                style={{ width: 500, margin: '20px auto' }}
+                className="box-shadow login-form toggleIn"
                 onFinish={values => registerFromInvite({ userData: values, token: userToken })}
             >
-                <p>{`You've been invited to join the ${Site_Name_Full}'s admin team as a ${userData.user_role}.`}</p>
-                <p style={{ marginBottom: 25 }}>Please complete your registration below.</p>
+                <p className="text-center">Complete your registration</p>
+
+                <img src={logo} alt="Logo" className="logo" />
+
+                <p className="text-center">{`You've been invited to join the ${Site_Name_Full}'s admin team as a ${userData.user_role}.`}</p>
+                <p className="p-v-m text-center">Please complete your registration below.</p>
+
                 <Form.Item label="First name" name="first_name" rules={[{ required: true, message: 'Please enter your first name' }]}>
                     <Input />
                 </Form.Item>
@@ -56,29 +65,22 @@ const Invite = ({ location, registerFromInvite }) => {
                     <Input />
                 </Form.Item>
 
-                <Form.Item label="Email">
+                <Form.Item label="Email" className="m-b-xxs">
                     <Form.Item name="email" noStyle>
                         <Input placeholder="field.title" disabled />
                     </Form.Item>
-                    <span>You can update your email in Settings</span>
+                    <span className="muted">You can update your email in Settings</span>
                 </Form.Item>
 
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[{ required: true, message: 'Please enter a password' }]}
-                >
-                    <Input.Password
-                        className="input-password"
-                        type="password"
-                    />
+                <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter a password' }]}>
+                    <Input.Password className="input-password" type="password" />
                 </Form.Item>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 20 }}>
-                    <Button htmlType="submit" title="Complete Registration" type="admin" />
+                <div className="m-t-xl">
+                    <Button htmlType="submit" title="COMPLETE REGISTRATION" style={{ width: '100%' }} />
                 </div>
             </Form>
-        </div>
+        </>
     );
 };
 

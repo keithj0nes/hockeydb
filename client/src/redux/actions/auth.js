@@ -16,7 +16,7 @@ export const login = loginData => async dispatch => {
     // cookie.save('hockeydb_auth', data.data.access_token);
     dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));
     dispatch({ type: SET_CURRENT_SEASON, payload: data.data.season });
-
+    history.push('/dashboard');
     return true;
 };
 
@@ -68,5 +68,19 @@ export const loginFromCookie = () => async (dispatch, getState) => {
 
 export const registerFromInvite = ({ userData, token }) => async (dispatch) => {
     const data = await request({ url: `/api/auth/invite/register?token=${token}`, method: 'POST', session: userData, publicRoute: true });
-    console.log({data})
+    if (!data) return false;
+    return true;
+};
+
+export const sendResetPassword = (userData) => async (dispatch) => {
+    const data = await request({ url: '/api/auth/password/reset', method: 'POST', session: userData, publicRoute: true });
+    if (!data) return false;
+    return true;
+};
+
+
+export const updatePassword = ({ userData, token }) => async (dispatch) => {
+    const data = await request({ url: `/api/auth/password/reset/${token}`, method: 'PUT', session: userData, publicRoute: true });
+    if (!data) return false;
+    return true;
 };

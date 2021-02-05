@@ -38,10 +38,10 @@ const sendmail = async ({ template, data }) => {
     const msg = templates[template]({data}) || defaultMessage;
 
     try {
-        const sent = await sgMail.send(msg);
+        const [sent, error] = await sgMail.send(msg);
         // Awesome Logic to check if mail was sent
-        console.log({ sent }, 'sent!');
-        return true;
+        console.log({ sent, error }, 'sendmail!');
+        return sent.statusCode > 200 ? true : false;
     } catch (err) {
         console.log({ err: err.toString() });
         return err;
@@ -52,7 +52,6 @@ const templates = {
     inviteUser: ({ data }) => {
         const { email, first_name, last_name, user_role, invite_token } = data;
         return {
-            // to: config.TEST_EMAIL,
             to: isProduction ? email : testEmail,
             from: testEmail,
             subject: `You're invited to ${leagueName}`,
@@ -62,6 +61,26 @@ const templates = {
                 <p>You've been added to ${leagueName} as ${aOrAn(user_role)} ${user_role}.</p>
                 <p>Click the link below to finish your registration:</p>
                 <p><a href=${url}/invite/?token=${invite_token}>${url}</a></p>
+
+                <p>email sent to: ${email}</p>
+            `,
+        }
+    },
+
+    resetPassword: ({ data }) => {
+        const { email, first_name, last_name, user_role, invite_token } = data;
+        return {
+            to: isProduction ? email : testEmail,
+            from: testEmail,
+            subject: `Reset Password - ${leagueName}`,
+            html: `
+                <h1>${leagueName}</h1>
+                <p>Hi ${first_name},</p>
+                <p>Looks like you requested to reset your password. If you did not make this request, don't worry, can disregard this email</p>
+                <br />
+                <p>Click the link below to update your password and log in:</p>
+                <p><a href=${url}/reset/?token=${invite_token}>${url}</a></p>
+                
 
                 <p>email sent to: ${email}</p>
             `,

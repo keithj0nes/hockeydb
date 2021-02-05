@@ -279,9 +279,13 @@ app.get('/api/admin/emailer', emailer.newUserEmail);
 // AUTH //
 
 // Log in
-app.post(`/api/auth/login`, auth.login)
+app.post('/api/auth/login', auth.login);
 // Sign up
-app.post('/api/auth/signup', auth.signup)
+app.post('/api/auth/signup', auth.signup);
+// Reset password
+// app.post('/api/auth/reset-password', auth.resetPassword);
+app.post('/api/auth/password/reset', auth.sendResetPassword);
+app.put('/api/auth/password/reset/:token', auth.updatePassword);
 
 // Invite user
 // THESE ROUTES NEED:

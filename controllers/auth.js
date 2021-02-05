@@ -68,7 +68,7 @@ const login = async (req, res) => {
     const db = app.get('db');
     passport.authenticate('local-login', async (err, user, info) => {
         if (err || !user) {
-            return res.status(200).send({ status: info.status || 404, error: true, message: info.message || 'Incorrect email or password.' })
+            return res.status(200).send({ status: info.status || 404, error: true, message: info.message || 'Incorrect email or password.', snack: true })
         }
 
         req.login(user, { session: false }, async (errr) => {
@@ -116,14 +116,10 @@ const invite = async (req, res) => {
 
     // set invite token with expiry
     const invite_token = jwt.sign({ email, first_name, last_name, user_role }, JWTSECRET, { expiresIn: '8h' })
-    // add user by email
-    // add user names
-    // add invite_token
-    // console.log({email, first_name, last_name, user_role, user, invite_token})
+    // add user by email / add user names / add invite_token
     const newUser = await db.users.insert({ email, first_name, last_name, admin_type: user_role, invite_token, invite_date: new Date() })
     // send email 
-    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role, invite_token } });
-    // console.log({sendingMail})
+    await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role, invite_token } });
     // await for response
     return res.status(200).send({ status: 200, data: { ...newUser, full_name: `${first_name} ${last_name}`, status: 'invited' }, message: 'An invitation has been sent',  snack: true })
 }
@@ -135,12 +131,15 @@ const registerFromInvite = async (req, res) => {
     const { first_name, last_name, password } = req.body;
 
     const { token: invite_token } = req.query;
+    const decodedToken = jwt.decode(invite_token);
 
-    console.log({first_name, last_name, password, invite_token})
+    if (!decodedToken || Date.now() >= decodedToken.exp * 1000) {
+        // token expired, possibly resend email with new token here
+        return res.status(200).send({ status: 400, error: true, message: 'Registration code has expired. Please contact your administrator for a new registration code.', snack: true })
+    }
 
     // check for matching token
     const user = await db.users.findOne({ invite_token });
-    console.log({user})
 
     if (!user) {
         return res.status(200).send({ status: 400, error: true, message: 'Registration code invalid. Please contact your administrator for a new registration code.', snack: true })
@@ -155,7 +154,6 @@ const registerFromInvite = async (req, res) => {
     await db.users.update({ id: user.id }, { invite_token: null }).catch(err => console.log(err, 'remove invite_token error'))
 
     return res.status(200).send({ status: 200, data: [], redirect: `/login?email=${user.email}`, message: 'Account created, you can now log in', snack: true, })
-
 }
  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,16 +169,78 @@ const resendInvite = async (req, res) => {
     const invite_token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name }, JWTSECRET, { expiresIn: '8h' })
     // update invite_token
     // update reinvite_date
-    const reInvitedUser = await db.users.update({ id }, { invite_token, reinvite_date: new Date(), invite_date: null })
+    await db.users.update({ id }, { invite_token, reinvite_date: new Date(), invite_date: null })
     // send email 
     const { email, first_name, last_name, admin_type } = user;
 
-    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
-
+    const sendingMail = true // await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
+    const message = !!sendingMail ? 'An invitation has been re-sent' : 'Could not send re-invte email, please try again later';
     // await for response
-    return res.status(200).send({ status: 200, data: { reinvited: true }, message: 'An invitation has been re-sent', snack: true })
+
+    /// need to fix this response if error, possibly use try catch
+    return res.status(200).send({ status: 200, data: { reinvited: true }, message, snack: true })
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const sendResetPassword = async (req, res) => {
+    const db = app.get('db');
+    const { email } = req.body;
+
+    // should switch this to use a reset_passowrd_token instead of invite_token
+    const user = await db.users.findOne({ email });
+
+    if (!user) {
+        // may not want to send this message string
+        return res.status(200).send({ status: 400, error: true, message: 'Email does not exist', snack: true })
+    }
+
+    const invite_token = jwt.sign({ email }, JWTSECRET, { expiresIn: '8h' })
+
+    await db.users.update({ id: user.id }, { invite_token })
+
+    const sendingMail = await emailer.sendmail({ template: 'resetPassword', data: { email, first_name: user.first_name, invite_token } });
+
+    if (!sendingMail) {
+        return res.status(200).send({ status: 400, error: true, message: 'Could not send reset password email, please try again later', snack: true })
+    }
+
+    return res.status(200).send({ status: 200, data: { resetSent: true }, message: 'A reset password link has been sent' })
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const updatePassword = async (req, res) => {
+    const db = app.get('db');
+    const { email, password, password_confirmation } = req.body;
+    const { token: invite_token } = req.params;
+
+    if (password !== password_confirmation) {
+        return res.status(200).send({ status: 400, error: true, message: 'Passwords must match.', snack: true })
+    }
+
+    const decodedToken = jwt.decode(invite_token);
+
+    if (!decodedToken || Date.now() >= decodedToken.exp * 1000) {
+        // token expired, possibly resend email with new token here
+        return res.status(200).send({ status: 400, error: true, message: 'Reset password code has expired. Please reset password again.', snack: true })
+    }
+
+    // check for matching token
+    const user = await db.users.findOne({ invite_token });
+
+    if (!user) {
+        return res.status(200).send({ status: 400, error: true, message: 'Reset password code has expired. Please reset password again.', snack: true })
+    }
+
+    // store password
+    const hash = await bcrypt.hash(password, 10);
+    await db.passwords.update({ user_id: user.id }, { pw: hash })
+    // remove token
+    await db.users.update({ id: user.id }, { invite_token: null }).catch(err => console.log(err, 'remove invite_token error'))
+
+    return res.status(200).send({ status: 200, data: [], message: 'Password reset', redirect: '/login', snack: true  })
+}
 
 module.exports = {
     authorizeAccessToken,
@@ -190,7 +250,9 @@ module.exports = {
     invite,
     registerFromInvite,
     resendInvite,
-    loginFromCookie
+    loginFromCookie,
+    sendResetPassword,
+    updatePassword,
 }
 
 
@@ -224,7 +286,7 @@ passport.use('local-login', new LocalStrategy({
     const comparedPassword = await bcrypt.compare(password, pw.pw)
 
     if (!comparedPassword) {
-        return done(null, false, { message: "PASSWORD WRONGGGG" })
+        return done(null, false, { message: 'Invalid password.' })
     }
 
     return done(null, user)

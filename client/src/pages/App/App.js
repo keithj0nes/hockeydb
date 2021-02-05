@@ -7,7 +7,6 @@ import { loginFromCookie } from '../../redux/actions/auth';
 import { history } from '../../helpers';
 import Home from '../Guest/Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
-// import Login from '../../components/Login';
 import Players from '../Guest/Players/Players';
 import Games from '../Guest/Games/Games';
 import Schedule from '../Guest/Schedule/Schedule';
@@ -16,13 +15,15 @@ import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
 import Standings from '../Guest/Standings/Standings';
 import Inquiry from '../Guest/Inquiry/Inquiry';
-
-import { Modal, Header, Login, Invite } from '../../components';
+import { Modal, Header, Login, Invite, ResetPassword } from '../../components';
 import PlayerStats from '../Guest/PlayerStats/PlayerStats'
 import { Styleguide } from '../../components/Styleguide';
 
 import 'antd/dist/antd.css';
 import '../../assets/styles/ant-overrides.scss';
+import '../../assets/styles/layout.scss';
+import '../../assets/styles/_spacing.scss';
+
 import './App.scss';
 
 class App extends Component {
@@ -47,6 +48,7 @@ class App extends Component {
                         <Route path="/teams/:id" component={SingleTeam} />
                         <Route path="/boxscore/:id" component={Boxscore} />
                         <Route path="/login" component={Login} />
+                        <Route path="/reset" component={ResetPassword} />
                         <Route path="/invite" component={Invite} />
                         <Route path="/players" component={Players} />
                         <Route path="/games" component={Games} />

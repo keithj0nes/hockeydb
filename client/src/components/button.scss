@@ -1,5 +1,6 @@
 @import '../assets/styles/variables';
 
+.btn,
 button.btn {
     line-height: unset; // from antd
 
@@ -20,6 +21,7 @@ button.admin {
     background: $admin-color-highlite;
 }
 
+button:disabled,
 button.disabled {
     cursor: not-allowed;
     color: $muted_color;
@@ -49,6 +51,21 @@ button.outline {
 
 button.success {
     background: $success_color;
+}
+
+button.link {
+    line-height: unset; // from antd
+    padding: 0;
+    min-width: auto;
+    min-height: auto;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    letter-spacing: 0;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    text-decoration: underline;
+    color: $highlite_color; 
 }
 
 button:not(.disabled):not(.cancel):hover {
