@@ -36,11 +36,14 @@ const defaultMessage = {
 
 const sendmail = async ({ template, data }) => {
     const msg = templates[template]({data}) || defaultMessage;
-
+    if (!data.email) throw Error('Email is required to send an email');
     try {
         const [sent, error] = await sgMail.send(msg);
-        // Awesome Logic to check if mail was sent
-        console.log({ sent, error }, 'sendmail!');
+        if (!!sent) console.log(`email sent to: ${isProduction ? data.email : testEmail}`);
+        if (!!error) {
+            console.log(`email error: ${error}`);
+            throw error;
+        }
         return sent.statusCode > 200 ? true : false;
     } catch (err) {
         console.log({ err: err.toString() });
@@ -68,7 +71,7 @@ const templates = {
     },
 
     resetPassword: ({ data }) => {
-        const { email, first_name, last_name, user_role, invite_token } = data;
+        const { email, first_name, invite_token } = data;
         return {
             to: isProduction ? email : testEmail,
             from: testEmail,

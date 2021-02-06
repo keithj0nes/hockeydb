@@ -103,7 +103,7 @@ const invite = async (req, res) => {
     const db = app.get('db');
     const { email, first_name, last_name, user_role } = req.body;
 
-    console.log(req.user, 'req.user') // need to hook up to  auth.authorizeAccessToken, middleware to work
+    // console.log(req.user, 'req.user') // need to hook up to  auth.authorizeAccessToken, middleware to work
 
     const user = await db.users.findOne({ email });
 
@@ -173,12 +173,12 @@ const resendInvite = async (req, res) => {
     // send email 
     const { email, first_name, last_name, admin_type } = user;
 
-    const sendingMail = true // await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
-    const message = !!sendingMail ? 'An invitation has been re-sent' : 'Could not send re-invte email, please try again later';
-    // await for response
-
+    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
+    if (!sendingMail) {
+        return res.status(200).send({ status: 400, error: true, message: 'Could not resend invite email, please try again later', snack: true })
+    }
     /// need to fix this response if error, possibly use try catch
-    return res.status(200).send({ status: 200, data: { reinvited: true }, message, snack: true })
+    return res.status(200).send({ status: 200, data: { reinvited: true }, message: 'User has been reinvited.', snack: true })
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ passport.use('local-login', new LocalStrategy({
         await db.users.update({ id: user.id }, { reinvite_date: null }).catch(err => console.log(err, 'update local-login error on sign in'))
     }
 
-    console.log(user, 'user')
+    // console.log(user, 'user')
 
     const pw = await db.passwords.findOne({ user_id: user.id })
     const comparedPassword = await bcrypt.compare(password, pw.pw)
