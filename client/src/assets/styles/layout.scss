@@ -1,0 +1,32 @@
+.f {
+    display: flex;
+}
+
+.f-align-start {
+    display: flex;
+    align-items: flex-start;
+}
+
+.f-align-center {
+    display: flex;
+    align-items: center;
+}
+
+.f-justify-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.f-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.f-justify-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.text-center {
+    text-align: center;
+}

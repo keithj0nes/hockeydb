@@ -1,6 +1,8 @@
 .idea
 .vscode
 /node_modules
+/client/node_modules
+/backend/node_modules
 /config.js
 /client/src/client_config.js
 
@@ -8,7 +10,6 @@
 
 # dependencies
 
-/client/node_modules
 .pnp
 .pnp.js
 
@@ -20,6 +21,8 @@
 
 # misc
 .DS_Store
+.env
+.env.production
 .env.local
 .env.development.local
 .env.test.local

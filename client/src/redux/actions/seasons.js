@@ -2,9 +2,14 @@ import { request } from './middleware';
 import { GET_INIT, GET_SUCCESS, CREATE_SUCCESS, UPDATE_SUCCESS, TOGGLE_MODAL, SET_CURRENT_SEASON, REMOVE_HIDDEN } from '../actionTypes';
 
 export const getSeasons = (filter) => async dispatch => {
-    dispatch({ type: `seasons/${GET_INIT}` });
+    // if less than 1 second of load time, dont show loading - may cause "flashing"
+    const to = setTimeout(() => {
+        dispatch({ type: `seasons/${GET_INIT}` });
+    }, 1000);
     // use filter variable or empty string if null/undefined
     const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+    clearTimeout(to);
+    dispatch({ type: 'seasons/stop_loading' });
     if (!data) return false;
     dispatch({ type: `seasons/${GET_SUCCESS}`, payload: data.data });
     dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });

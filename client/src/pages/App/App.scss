@@ -544,3 +544,114 @@ input[type=text],
         flex: 5;
     }
 }
+
+
+.color-picker-container {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    display: flex;
+    flex-direction: column;
+    // height: 282,
+    width: 280px;
+    margin-bottom: 100;
+    background: #f1f1f1;
+    z-index: 1001;
+    position: relative;
+    padding: 10px;
+
+    .pointer {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        transform: translate(-5px, 1px);
+        border: 1px solid #FFFFFF;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+        margin-top: -5px;
+    }
+
+    .slider {
+        margin-top: 1px;
+        width: 4px;
+        border-radius: 1px;
+        height: 8px;
+        box-shadow: 0 0 2px rgba(0, 0, 0, .6);
+        background-color: #FFFFFF;
+        transform: translateX(-2px);
+    }
+
+    .saturation {
+        width: 100%;
+        padding-bottom: 75%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .swatch-square {
+        min-width: 20px;
+        min-height: 20px;
+        margin: 1px 2px;
+        cursor: pointer;
+        box-shadow: 0 0 2px rgba(0, 0, 0, .6);
+    }
+
+}
+
+.box-shadow {
+    // TODO: decide between these two
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.16);
+    // box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes fadeout2 {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+  
+  @keyframes fadein2 {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+  
+.toggleOut {
+    animation: fadeout2 500ms;
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+  
+.toggleIn {
+    animation: fadein2 500ms;
+    opacity: 1;
+    z-index: 1;
+}
+
+img.logo {
+    display: block;
+    margin: 10px auto;
+    max-height: 60px;
+    max-width: 100px;
+}
+
+
+// this link class is specifically working for login button on home page
+// should refactor this with header.scss to allow only one .link style
+
+a.link {
+    color: $white_color;
+    font-family: $heading_font;
+    text-transform: uppercase;
+
+    &:hover, &:hover .arrow {
+        color: $highlite_color;
+        border-color: $highlite_color;
+    }
+
+    &.selected {
+        background: transparent !important;
+        border-bottom: 2px solid $highlite_color;
+        color: $highlite_color !important;
+
+        &:after {
+            content: none;
+        }
+    }
+}

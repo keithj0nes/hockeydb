@@ -1,84 +1,139 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { login, loginFromCookie } from '../redux/actions/auth';
+// import { Redirect } from 'react-router-dom';
+import { Form, Input } from 'antd';
+import logo from 'assets/images/logo.png';
+import { login, loginFromCookie, sendResetPassword } from '../redux/actions/auth';
+import { Button } from '.';
+import './login.scss';
+import { wait } from '../helpers'
 
-class Login extends React.Component {
-    state = {
-        email: '@hockeydb.com',
-        password: '',
-        //   email: 'admin@hockeydb.com',
-        //   password: 'admin',
-        redirectToReferrer: false,
-    }
+const initialState = {
+    email: '',
+    password: '',
+    redirectToReferrer: false,
+};
 
-    async componentDidMount() {
-        console.log('mounting')
+const Login = ({ loginFromCookie, login, location, history, user, sendResetPassword }) => {
+    const [form] = Form.useForm();
+    const [state, setState] = useState(initialState);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showForm, setShowForm] = useState('login'); // one of login | reset | reset_success
+
+    useEffect(() => {
         let redirectToReferrer;
-        if (!!Object.keys(this.props.user).length) {
-            redirectToReferrer = true;
-        } else {
-            redirectToReferrer = await this.props.loginFromCookie();
+        async function tryLoginAndRedirect() {
+            if (!!Object.keys(user).length) {
+                redirectToReferrer = true;
+            } else {
+                redirectToReferrer = await loginFromCookie();
+            }
+
+            const { from } = location.state || { from: { pathname: 'dashboard' } };
+            if (redirectToReferrer) return history.push(from);
+            return false;
         }
-        redirectToReferrer && this.setState({ redirectToReferrer });
-    }
 
-    handleChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        tryLoginAndRedirect();
+    }, [location.state, history, loginFromCookie, user]);
+
+    const handleSubmit = async values => {
+        login({ email: values.email.toLowerCase(), password: values.password });
     };
 
-    handleSubmit = async (e) => {
+    const handleAutoLogin = async e => {
         e.preventDefault();
-        const loggedIn = await this.props.login({ email: this.state.email.toLowerCase(), password: this.state.password });
-        return loggedIn && this.props.history.push('/dashboard');
+        login({ email: `${e.target.name}@hockeydb.com`, password: e.target.name === 'teammanager' ? 'manager' : e.target.name });
     };
 
-    handleSubmit2 = async (e) => {
-        const loggedIn = await this.props.login({ email: `${e.target.name}@hockeydb.com`, password: e.target.name === 'teammanager' ? 'manager' : e.target.name });
-        return loggedIn && this.props.history.push('/dashboard');
-    }
+    const handleResetPassword = async (values) => {
+        setIsLoading(true);
 
+        await wait(1000);
+        const sendSuccess = await sendResetPassword({ email: values.email.toLowerCase() });
+        setIsLoading(false);
+        if (!sendSuccess) {
+            return;
+        }
+        setState({ ...state, email: values.email.toLowerCase() });
+        setShowForm('reset_success');
+    };
 
-    render() {
-        const { from } = this.props.location.state || { from: { pathname: 'dashboard' } };
-        const { redirectToReferrer } = this.state;
+    return (
+        <>
+            <Form
+                form={form}
+                layout="vertical"
+                onFinish={values => handleSubmit(values)}
+                className={`box-shadow login-form ${showForm === 'login' ? 'toggleIn' : 'toggleOut'}`}
+            >
+                <p className="text-center">Login to your account</p>
 
-        if (redirectToReferrer) return <Redirect to={from} />;
+                <img src={logo} alt="Logo" className="logo" />
 
-        return (
-            <div>
-                <div className="form" style={{marginLeft: 20}}>
-                    <form onSubmit={this.handleSubmit}>
-                        <h1>Login</h1>
-                        <div className="inputs">
-                            <input
-                                placeholder="email"
-                                name="email"
-                                onChange={this.handleChange}
-                                value={this.state.email}
-                            />
-                            <input
-                                placeholder="password"
-                                name="password"
-                                type="password"
-                                onChange={this.handleChange}
-                                value={this.state.password}
-                            />
-                            <input className="btn" type="submit" value="login" />
-                        </div>
-                    </form>
+                <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Email is required' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Password is required' }]}>
+                    <Input type="password" />
+                </Form.Item>
+
+                <div className="m-b-m f-justify-between f-justify-end">
+                    {/* <Form.Item name="remember_me" valuePropName="checked" style={{marginBottom: 0}}>
+                        <Checkbox>Remember Me</Checkbox>
+                    </Form.Item> */}
+                    <Button onClick={() => setShowForm('reset')} htmlType="button" type="link" title="Forgot your password?" />
                 </div>
+                <Button htmlType="submit" title="LOGIN" style={{ width: '100%' }} />
+            </Form>
 
-                <button className="btn" type="button" name="admin" style={{ display: 'block', marginLeft: 20, marginTop: 40 }} onClick={this.handleSubmit2}>Login as <br /> ADMIN</button>
-                <button className="btn" type="button" name="scorekeeper" style={{ display: 'block', marginLeft: 20, marginTop: 20 }} onClick={this.handleSubmit2}>Login as <br /> SCOREKEEPER</button>
-                <button className="btn" type="button" name="teammanager" style={{ display: 'block', marginLeft: 20, marginTop: 20 }} onClick={this.handleSubmit2}>Login as <br /> TEAM MANAGER</button>
 
+            <Form
+                layout="vertical"
+                onFinish={handleResetPassword}
+                className={`box-shadow login-form ${showForm === 'reset' ? 'toggleIn' : 'toggleOut'}`}
+            >
+                <p className="text-center">Forgot your password?</p>
+
+                <img src={logo} alt="Logo" className="logo" />
+
+                <p className="text-center p-b-m">Don’t worry! Resetting your password is easy. Just type in the email you used to register at USHL.</p>
+
+
+                <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Email is required' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Button disabled={isLoading} htmlType="submit" title="SEND PASSWORD RESET" style={{ width: '100%' }} />
+                <p className="p-t-m">
+                    Did you remember your password? &nbsp;
+                    <Button onClick={() => setShowForm('login')} htmlType="button" type="link" title="Try logging in!" />
+                </p>
+            </Form>
+
+            <div className={`box-shadow login-form ${showForm === 'reset_success' ? 'toggleIn' : 'toggleOut'}`}>
+                <p className="text-center">We've sent you an email!</p>
+
+                <img src={logo} alt="Logo" className="logo" />
+
+                <p className="text-center p-b-m">
+                    We have sent a password reset link to <strong>{state.email}</strong>. Please check your email and click the password reset link.
+                </p>
+
+                <Button htmlType="button" title="RETURN TO LOGIN" style={{ width: '100%' }} onClick={() => setShowForm('login')} />
             </div>
-        );
-    }
-}
 
+            <div className="f-align-center f-column" style={{ paddingTop: 535 }}>
+                <Button onClick={handleAutoLogin} name="admin" type="link" title="Login as [Admin]" />
+                <Button onClick={handleAutoLogin} name="scorekeeper" type="link" title="Login as [Scorekeeper]" />
+                <Button onClick={handleAutoLogin} name="teammanager" type="link" title="Login as [Team Manager]" />
+            </div>
+
+        </>
+    );
+};
 
 const mapStateToProps = state => ({
     user: state.user && state.user.user,
@@ -88,6 +143,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     login: loginData => dispatch(login(loginData)),
     loginFromCookie: () => dispatch(loginFromCookie()),
+    sendResetPassword: userData => dispatch(sendResetPassword(userData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
@@ -98,4 +154,5 @@ Login.propTypes = {
     location: PropTypes.object,
     history: PropTypes.object,
     user: PropTypes.object,
+    sendResetPassword: PropTypes.func,
 };

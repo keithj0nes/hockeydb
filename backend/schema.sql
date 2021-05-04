@@ -78,7 +78,7 @@ CREATE TABLE "player_stats" (
 
 
 
--- CREATE TABLE "referees" (
+-- CREATE TABLE "officials" (
 --   "id" int,
 --   "first_name" varchar,
 --   "last_name" varchar,
@@ -86,7 +86,7 @@ CREATE TABLE "player_stats" (
 --   "certification" varchar
 -- );
 
--- CREATE TABLE "referees_games" (
+-- CREATE TABLE "official_game" (
 --   "id" int,
 --   "referee_id" int,
 --   "game_id" int

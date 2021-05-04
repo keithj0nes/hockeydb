@@ -1,12 +1,30 @@
+/* eslint-disable object-property-newline */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
-import { ReactComponent as LeagueLogo } from '../assets/icons/league_logo.svg';
+import logo from 'assets/images/logo.png';
 import { Button } from '.';
 import SlideOut from './SlideOut';
 
 import './header.scss';
+
+// const navLinks = [
+//     { name: 'Home', to: '' },
+//     { name: 'Schedule', to: 'schedule' },
+//     { name: 'Teams', to: 'teams' },
+//     { name: 'Standings', to: 'standings' },
+//     // { name: 'Scoreboard', to: 'scoreboard' },
+//     { name: 'Stats', to: 'stats' },
+//     { name: 'Contact',
+//         to: 'contact',
+//         subLinks: [
+//             { name: 'general inquiry', to: 'inquiry' },
+//             { name: 'league staff', to: 'schedule2' },
+//             { name: 'player registration', to: 'schedule222' },
+//         ],
+//     },
+// ];
 
 const navLinks = [
     { name: 'Home', to: '' },
@@ -15,13 +33,11 @@ const navLinks = [
     { name: 'Standings', to: 'standings' },
     // { name: 'Scoreboard', to: 'scoreboard' },
     { name: 'Stats', to: 'stats' },
-    { name: 'Contact',
-        to: 'contact',
-        subLinks: [
-            { name: 'general inquiry', to: 'inquiry' },
-            { name: 'league staff', to: 'schedule2' },
-            { name: 'player registration', to: 'schedule222' },
-        ],
+    { name: 'More', to: 'more', subLinks: [
+        { name: 'general inquiry', to: 'inquiry' },
+        { name: 'league staff', to: 'schedule2' },
+        { name: 'player registration', to: 'schedule222' },
+    ],
     },
 ];
 
@@ -55,8 +71,8 @@ class Header extends Component {
                     <div className="site-container">
 
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="logo">
-                                <LeagueLogo />
+                            <div style={{ position: 'absolute', top: 0, paddingLeft: 10 }}>
+                                <img src={logo} alt="Logo" className="logo" />
                             </div>
 
                             <nav>
@@ -70,7 +86,7 @@ class Header extends Component {
 
                                             {link.subLinks && (
 
-                                                <ul className="sub-links">
+                                                <ul className="sub-links box-shadow">
                                                     {link.subLinks.map(subLink => (
                                                         <li key={subLink.to}>
                                                             <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
@@ -89,12 +105,16 @@ class Header extends Component {
 
                         <div className="login">
 
-                            <Button
+                            {/* <Button
                                 title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
                                 onClick={() => this.linkTo(this.props.isUserLoggedIn ? '/dashboard' : '/login')}
                                 type="cancel"
                                 style={{ minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', paddingRight: 10 }}
-                            />
+                            /> */}
+
+                            <NavLink to={this.props.isUserLoggedIn ? '/dashboard' : '/login'} style={{ marginRight: 10 }} className="link" exact activeClassName="selected" onClick={() => console.log(`to ${this.props.isUserLoggedIn ? '/dashboard' : '/login'}`)}>
+                                {this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
+                            </NavLink>
                         </div>
                     </div>
                 </div>
@@ -108,17 +128,21 @@ class Header extends Component {
                         <div className="line" />
                     </div>
 
-                    <div className="logo">
-                        <LeagueLogo />
+                    <div className="logo-container">
+                        <img src={logo} alt="Logo" className="logo" />
                     </div>
 
 
-                    <Button
+                    {/* <Button
                         title={this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
                         onClick={() => this.linkTo(this.props.isUserLoggedIn ? '/dashboard' : '/login')}
                         type="cancel"
                         style={{ minWidth: 'auto', textTransform: 'uppercase', color: '#FFFFFF', padding: '10px 0 10px 10px' }}
-                    />
+                    /> */}
+
+                    <NavLink to={this.props.isUserLoggedIn ? '/dashboard' : '/login'} className="link" style={{ padding: '10px 0' }} exact activeClassName="selected" onClick={() => console.log(`to ${this.props.isUserLoggedIn ? '/dashboard' : '/login'}`)}>
+                        {this.props.isUserLoggedIn ? 'Dashboard' : 'Login'}
+                    </NavLink>
 
 
                     <SlideOut isVisible={mobileSliderVisible} onClose={this.toggleMobileSlider}>
@@ -151,8 +175,10 @@ const VisitorSlideOutNav = ({ match, toggleMobileSlider }) => (
 
             <div className="close" onClick={toggleMobileSlider}>&times;</div>
 
-            <div className="logo">
-                <div><LeagueLogo /></div>
+            <div className="logo-container">
+                {/* <div><LeagueLogo /></div> */}
+                <img src={logo} alt="Logo" className="logo" />
+
                 <h2>HockeyDB</h2>
             </div>
 

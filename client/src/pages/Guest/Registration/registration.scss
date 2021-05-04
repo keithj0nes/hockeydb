@@ -1,0 +1,100 @@
+@import '../../../assets/styles/variables';
+@import '../../../assets/styles/spacing';
+
+.registration-container {
+    background: $white_color;
+    margin-top: 20px;
+
+    .section-border {
+        padding-bottom: 10px;
+        // border-bottom: 1px solid $silver_color;
+        border-bottom: 1px solid #F6F8F8;
+    }
+
+    .registration-header {
+        width: 100%;
+        padding: 10px 0;
+        background: $main_color;
+        // background: $heading_color;
+        color: $white_color;
+        text-align: center;
+    }
+
+    .registration-body {
+        padding: size('xs');
+        // padding: size('s');
+
+        .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after,
+        .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
+        .ant-steps-item-process .ant-steps-item-icon {
+            background-color: $highlite_color;
+            border-color: $highlite_color;
+        }
+
+        .ant-steps-item-finish .ant-steps-item-icon,
+        .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+            border-color: $highlite_color;
+            color: $highlite_color;
+        }
+
+        .registration-form {
+            // background: pink;
+            padding: size('xs');
+            border: 1px solid #F6F8F8;
+
+            .fields-group {
+                padding-top: size('l');
+                padding-bottom: size('m');
+
+            }
+            
+        }
+
+        .waiver-container {
+            background: #F6F8F8;
+            padding: size('xs');
+        }
+    }
+}
+
+
+@media only screen and (min-width: 768px){
+    .registration-container {
+        // background: $white_color;
+        // height: 500px;
+    
+        // .registration-header {
+        //     width: 100%;
+        //     padding: 10px 0;
+        //     background: $main_color;
+        //     color: $white_color;
+        //     text-align: center;
+        // }
+    
+        .registration-body {
+            padding: size('l');
+
+            .registration-form {
+                padding: size('m');
+
+                .fields-group {
+                    display: flex;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+
+                    &>* {
+                        width: 48%;
+                        // background: pink;
+                    }
+                }
+
+            }
+            .waiver-container {
+                // background: #f6f0f8;
+                padding: size('m');
+                // max-height: 260px;
+                overflow: scroll;
+            }
+        }
+    }
+}

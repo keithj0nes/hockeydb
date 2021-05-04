@@ -3,16 +3,14 @@ const helpers = require('./helpers');
 
 const getUsers = async (req, res) => {
     const db = app.get('db');
-  
-    // console.log(req.query, 'QUERYRYYY')
 
     const newQuery = {};
 
     // this is not dynamic at all. need to clean this up
 
-    newQuery.is_suspended = req.query['active'] ? 'IS NULL' : req.query['inactive'] ? 'IS NOT NULL' : '';
-    if((req.query['active'] && req.query['inactive']) || (!req.query['active'] && !req.query['inactive']) ) {
-        delete newQuery.is_suspended
+    newQuery.is_suspended = req.query.active ? 'IS NULL' : req.query.inactive ? 'IS NOT NULL' : '';
+    if ((req.query.active && req.query.inactive) || (!req.query.active && !req.query.inactive)) {
+        delete newQuery.is_suspended;
     }
 
     // newQuery.invite_token = req.query['default'] ? 'IS NULL' : req.query['modified'] ? 'IS NOT NULL' : '';
@@ -37,35 +35,32 @@ const getUsers = async (req, res) => {
 
     const newQueryArr = Object.keys(newQuery);
 
-    if(newQueryArr.length > 0) {
-        myNewStuffz += ' WHERE'
+    if (newQueryArr.length > 0) {
+        myNewStuffz += ' WHERE';
 
-        newQueryArr.map((item, ind) => {
-            myNewStuffz += `${ind > 0 ? ' AND ' : ''} ${item} ${newQuery[item]}`
-        })
+        newQueryArr.map((item, ind) => myNewStuffz += `${ind > 0 ? ' AND ' : ''} ${item} ${newQuery[item]}`);
     }
 
     // console.log(myNewStuffz, 'haha')
 
 
     // console.log(query,' QUERY')
-  
+
     // const data = await db.users.find();
     // const [ err, data ] = await helpers.tryCatch(db.users.find({...query}, { order: [ {field: 'id', direction: 'desc'}]}))
-    const [ err, data ] = await helpers.tryCatch(db.query(myNewStuffz));
+    const [err, data] = await helpers.tryCatch(db.query(myNewStuffz));
 
-    if(err) {
-        return console.log(err, 'ERRORRRRRR 😎')
-        // return res.status(200).send({ status: 404, data: [], message: 'An error occured with the query', redirect: 'current' });
+    if (err) {
+        return console.log(err, 'ERRORRRRRR 😎');
+        // return res.send({ status: 404, data: [], message: 'An error occured with the query', redirect: 'current' });
     }
-    
+
     // console.log(data, 'USER DATTAAA!')
 
-    res.status(200).send({ status: 200, data, message: 'Retrieved list of Users' });
-  }
-
+    res.send({ status: 200, data, message: 'Retrieved list of Users' });
+};
 
 module.exports = {
     getUsers,
     // getUsersById
-}
+};

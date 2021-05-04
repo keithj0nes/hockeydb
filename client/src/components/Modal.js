@@ -118,7 +118,7 @@ const renderModalType = (modalType, modalProps, isLoading, toggleModal) => {
     case 'prompt':
         return <PromptModal data={modalProps} isLoading={isLoading} toggleModal={toggleModal} />;
     default:
-        break;
+        return null;
     }
 };
 

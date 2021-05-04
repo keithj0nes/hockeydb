@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import { Icon } from './';
-// import { ICONS } from 'assets/ICONS.js';
-import qs from 'query-string';
-import { history } from 'helpers';
 import './pagination.scss';
 
 // const initialState = {
@@ -11,36 +8,52 @@ import './pagination.scss';
 //     currentPage: 1
 // }
 
-const [LEFT_PAGE, RIGHT_PAGE] = ['left', 'right'];
+const [LEFT_PAGE, RIGHT_PAGE, LIMIT] = ['left', 'right', 50];
 
 const Pagination = (props) => {
     // const [ pages,  setPages ] = useState(initialState)
-    const [pages, setPages] = useState({ ...props });
+    const [pages, setPages] = useState({ limit: LIMIT, ...props });
+
+    useEffect(() => {
+        // console.log('firing')
+        setPages({ limit: LIMIT, ...props });
+    }, [props]);
+
+    // console.log(props, 'pages')
+    if (pages.totalPages <= 1) {
+        return null;
+    }
 
 
     const changePage = dir => {
         const { currentPage, totalPages } = pages;
-        let search;
+        // let search;
         if (dir === 'prev' && currentPage === 1) return;
         if (dir === 'next' && currentPage === totalPages) return;
 
         if (typeof dir === 'number') {
-            search = qs.stringify({ page: dir });
+            // search = qs.stringify({ page: dir });
+            props.setFilters({ page: dir }, true);
             setPages({ ...pages, currentPage: dir });
         }
 
         if (dir === 'prev' && currentPage > 1) {
-            search = qs.stringify({ page: currentPage - 1 });
+            // search = qs.stringify({ page: currentPage - 1 });
+            props.setFilters({ page: currentPage - 1 }, true);
 
             setPages({ ...pages, currentPage: currentPage - 1 });
         }
 
         if (dir === 'next' && currentPage < totalPages) {
-            search = qs.stringify({ page: currentPage + 1 });
+            // search = qs.stringify({ page: currentPage + 1 });
+            props.setFilters({ page: currentPage + 1 }, true);
+            // console.log({ ...pages, currentPage: currentPage + 1 })
             setPages({ ...pages, currentPage: currentPage + 1 });
         }
 
-        history.push({ search });
+        // history.push({ search });
+        // props.setFilters({search});
+        // useQueryParam({ getMethod: props.getMethod });
     };
 
     const getPageNumbers = () => {
@@ -106,81 +119,30 @@ const Pagination = (props) => {
         return range(1, totalPages);
     };
 
-    // console.log(pages, 'PAGES')
-
     const pageNumbers = getPageNumbers();
 
     return (
         <div className="pagination-full-width">
             <div className="pagination-container">
-
-                {/* <div style={{background: 'pink', display: 'flex'}}>
-                    <Icon name={ICONS.ARROW_LEFT} size={50} />
-
-                    <Icon name={ICONS.ARROW_RIGHT} />
-
-                </div> */}
-
                 <span className={`left ${pages.currentPage === 1 && 'disabled'}`} onClick={() => changePage('prev')} />
 
-                {/* {Array(pages.totalPages).fill().map((_, i) => {
-                    return (
-                        <span
-                            onClick={() => setPages({...pages, currentPage: i + 1})}
-                            className={i + 1 === pages.currentPage && 'current-page'}>
-                                {i + 1}
-                        </span>
-                    )
-                })} */}
-
-                {
-                    pageNumbers.map((page, index) => {
-                        // console.log(page, 'page!!')
-
-                        // if (page === LEFT_PAGE) return (
-                        //     <span key={index} className="page-item">
-                        //       {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
-                        //         {/* <span aria-hidden="true">&laquo;</span> */}
-                        //         <span className="sr-only">Previous</span>
-                        //       {/* </a> */}
-                        //     </span>
-                        //   );
-
-                        //   if (page === RIGHT_PAGE) return (
-                        //     <span key={index} className="page-item">
-                        //       {/* <a className="page-link" href="#" aria-label="Next" onClick={this.handleMoveRight}> */}
-                        //         {/* <span aria-hidden="true">&raquo;</span> */}
-                        //         <span className="sr-only">Next</span>
-                        //       {/* </a> */}
-                        //     </span>
-                        //   );
-
-                        if (page === LEFT_PAGE || page === RIGHT_PAGE) {
-                            return (
-                            // <span key={index} style={{pointer: 'cursor', color: 'black', padding: 0, display: 'flex', alignItems: 'flex-end'}}>
-                                <span key={index} style={{ pointer: 'cursor', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end' }}>
-
-                                    {/* <a className="page-link" href="#" aria-label="Previous" onClick={this.handleMoveLeft}> */}
-                                    {/* <span aria-hidden="true">&laquo;</span> */}
-                                    {/* <span className="sr-only" style={{pointer: 'cursor'}}>...</span> */}
-
-                                    ...
-                                    {/* </a> */}
-                                </span>
-                            );
-                        }
-
+                {pageNumbers.map((page, index) => {
+                    if (page === LEFT_PAGE || page === RIGHT_PAGE) {
                         return (
-                            <span key={index} className={`page-item${pages.currentPage === page ? ' current-page' : ''}`} onClick={() => changePage(page)}>
-                                {/* <a className="page-link" href="#" onClick={ this.handleClick(page) }>{ page }</a> */}
-                                { page }
+                            <span key={index} style={{ cursor: 'default', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end' }}>
+                                ...
                             </span>
                         );
-                    })
-                }
+                    }
+
+                    return (
+                        <span key={index} className={`page-item${pages.currentPage === page ? ' current-page' : ''}`} onClick={() => changePage(page)}>
+                            { page }
+                        </span>
+                    );
+                })}
 
                 <span className={`right ${pages.currentPage === pages.totalPages && 'disabled'}`} onClick={() => changePage('next')} />
-
             </div>
         </div>
 
@@ -212,6 +174,7 @@ Pagination.propTypes = {
     limit: PropTypes.number,
     neighbors: PropTypes.oneOf([0, 1, 2]),
     onPageChange: PropTypes.func,
+    setFilters: PropTypes.func,
 };
 
 export default Pagination;

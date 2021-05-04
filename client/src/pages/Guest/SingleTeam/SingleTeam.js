@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Tooltip } from 'antd';
 import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teams';
 import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
@@ -73,6 +74,24 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
                             <h2>{team.name || 'Unavailable'}</h2>
                             <h3>Division: {team.division_name}</h3>
                             <h5>Team Colors: {team.colors}</h5>
+                            <div style={{ display: 'flex', marginTop: 3 }}>
+                                {/* <Tooltip title="White" placement="bottom" color="#0C1D40">
+                                    <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: 'white' }} />
+                                </Tooltip>
+                                <Tooltip title="Black" placement="bottom" color="#0C1D40">
+                                    <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: 'black' }} />
+                                </Tooltip>
+                                <Tooltip title="Red" placement="bottom" color="#0C1D40">
+                                    <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: 'red' }} />
+                                </Tooltip> */}
+
+
+                                {team.color_list?.map(item => (
+                                    <Tooltip title={item.name} placement="bottom" color="#0C1D40">
+                                        <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: item.color }} />
+                                    </Tooltip>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
@@ -92,7 +111,10 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
                         <table>
                             <thead>
                                 <tr>
-                                    <th title="games played">GP</th>
+                                    <Tooltip title="games played" color="#0C1D40">
+                                        <th>GP</th>
+                                    </Tooltip>
+
                                     <th title="wins">W</th>
                                     <th title="losses">L</th>
                                     <th title="points">PTS</th>

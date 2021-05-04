@@ -11,6 +11,7 @@
     width: 100%;
     max-width: 420px;
     align-self: flex-end;
+    margin-top: 20px;
 
     .right,
     .left {
@@ -70,6 +71,8 @@
 
     .pagination-container {
         width: auto;
+        margin-top: 0;
+
 
         span {
             margin: 0 6px
