@@ -11,7 +11,7 @@
     "st___art2": "nodemon server.js & (cd client && npm start)",
     "start": "nodemon server.js",
     "seed": "node seed.js",
-    "heroku-postbuild": "cd .. && cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuildss": "cd .. && cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "author": "",
   "license": "ISC",
