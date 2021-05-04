@@ -61,7 +61,7 @@
         display: flex;
         z-index: 20;
         overflow: hidden;
-        transition: transform .35s cubic-bezier(.25, .1, .25, .1);
+        transition: transform .25s cubic-bezier(.25, .1, .25, .1);
 
         &.right {
             position: absolute;

@@ -15,8 +15,9 @@ import SingleTeam from '../Guest/SingleTeam/SingleTeam';
 import Boxscore from '../Guest/Boxscore/Boxscore';
 import Standings from '../Guest/Standings/Standings';
 import Inquiry from '../Guest/Inquiry/Inquiry';
+import Registration from '../Guest/Registration/Registration';
 import { Modal, Header, Login, Invite, ResetPassword } from '../../components';
-import PlayerStats from '../Guest/PlayerStats/PlayerStats'
+import PlayerStats from '../Guest/PlayerStats/PlayerStats';
 import { Styleguide } from '../../components/Styleguide';
 
 import 'antd/dist/antd.css';
@@ -53,6 +54,7 @@ class App extends Component {
                         <Route path="/players" component={Players} />
                         <Route path="/games" component={Games} />
                         <Route path="/inquiry" component={Inquiry} />
+                        <Route path="/registration" component={Registration} />
                         <Route path="/styleguide" component={Styleguide} />
                         <Route path="/stats" component={PlayerStats} />
                     </div>

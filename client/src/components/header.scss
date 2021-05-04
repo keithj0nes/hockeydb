@@ -1,4 +1,5 @@
 @import '../assets/styles/variables';
+@import '../assets/styles/spacing';
 
 // padding is being called on line 4, need to refactor the dashboard nav css
 .visitor-nav li a {
@@ -14,7 +15,8 @@
 header {
     background: $heading_color;
     width: 100%;
-    padding: 16px 16px;
+    // padding: 16px 16px;
+    padding: 0 size('s');
 
     .hamburger-menu {
         height: 26px;
@@ -68,7 +70,7 @@ header {
     
         }
 
-        .logo {
+        .logo-container {
             padding: 30px;
             display: flex;
             flex-direction: column;
@@ -123,7 +125,7 @@ header {
 
 
             .sub-links {
-                display: none;
+                // display: none;
 
                 li {
                     position: relative;
@@ -178,13 +180,19 @@ header {
 @media only screen and (min-width: 768px){
 
     header {
-        padding: 10px 0;
+        // padding: 10px 0;
+        padding: 0;
+        // height: 48px;
+        height: size('xxl');
 
-        .logo {
+        .logo-container {
             padding: 2px 20px 2px 10px;
             height: auto;
         }
         
+        nav {
+            padding-left: 80px;
+        }
         ul {
             display: flex;
             flex-wrap: wrap;
@@ -194,16 +202,16 @@ header {
                 position: relative;
 
                 a {
-                    padding: 12px 20px !important;
+                    // padding: 12px 20px !important;
+                    margin: 0 size('xs');
                     
                     &:hover {
                         color: $highlite_color;
-                        
                     }
 
                     .arrow {
-                        right: -22px;
-                        top: 26px;
+                        right: -33px;
+                        top: 14px;
                     }
                 }
 
@@ -212,18 +220,24 @@ header {
                     position: absolute;
                     top: 100%;
                     left: 0;
-                    background: $heading_color;
-                    padding: 0 10px;
+                    // background: $heading_color;
+                    background: $white_color;
+                    padding: 0 10px 16px;
                     z-index: 100;
-
-                    li{
-                        padding: 12px 0px;
+                    
+                    li {
+                        // padding: 15px 0px;
+                        padding: 0px;
                         position: relative;
                         width: 100%;
                         white-space: nowrap;
-
+                        
                         a {
-                            padding: 12px 20px !important;
+                            color: $main_color;
+                            // padding: 12px 20px !important;
+                            padding: unset;
+
+                            padding: 4px;
                             
                             &:hover {
                                 color: $highlite_color;
@@ -231,7 +245,9 @@ header {
                         }
 
                         &:first-child {
-                            padding-top: 19px;
+                            // padding-top: 19px;
+                            padding-top: 4px;
+
                         }
                     }
                 }

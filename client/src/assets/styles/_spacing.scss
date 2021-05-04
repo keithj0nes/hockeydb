@@ -30,6 +30,16 @@ $sides: (top, bottom, left, right, horizontal, vertical ); // Leave this variabl
 
 $list: ('xxs': 4, 'xs': 8, 's': 16, 'm': 24, 'l': 32, 'xl': 40, 'xxl': 48);
 
+// usage: height: size('xxl');
+@function size($name){
+    @if not map-get($list, $name+''){
+        @error "Size `#{$name}` not found in map $list";
+    }
+    // @return map-get($list, $name)+px;
+    @return map-get($list, $name) * 1px; //convert to px
+
+}
+
 @each $property, $value in $list {
     @each $side in $sides {
 

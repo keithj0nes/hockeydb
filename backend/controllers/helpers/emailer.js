@@ -1,15 +1,16 @@
+/* eslint-disable no-use-before-define */
 const sgMail = require('@sendgrid/mail');
-const isProduction = require('../helpers').isProduction;
-let config;
-if (!isProduction) config = require('../../config');
+const { isProduction } = require('../helpers');
+// let config;
+// if (!isProduction) config = require('../../config');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || config.SENDGRID_API_KEY);
-const testEmail = process.env.TEST_EMAIL || config.TEST_EMAIL;
-const url = process.env.SITE_URL || config.SITE_URL;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY); // || config.SENDGRID_API_KEY);
+const testEmail = process.env.TEST_EMAIL; // || config.TEST_EMAIL;
+const url = process.env.SITE_URL; // || config.SITE_URL;
 const leagueName = 'United States Hockey League';
-const aOrAn = str => (/^[aeiou]$/i).test(str.charAt(0)) ? 'an' : 'a';
+const aOrAn = str => ((/^[aeiou]$/i).test(str.charAt(0)) ? 'an' : 'a');
 
-function newUserEmail(email, name){
+function newUserEmail(email, name) {
     const msg = {
         to: testEmail,
         from: testEmail, // Use the email address or domain you verified above
@@ -18,13 +19,13 @@ function newUserEmail(email, name){
         html: '<strong>and easy to do anywhere, even with Node.js</strong>',
     };
     sgMail.send(msg).then((sent, error) => {
-      // Awesome Logic to check if mail was sent
-      console.log({sent, error}, 'sent!')
-      return "sent!"
+        // Awesome Logic to check if mail was sent
+        console.log({ sent, error }, 'sent!');
+        return 'sent!'
     }).catch(err => {
-        console.log({err: err.toString()})
+        console.log({ err: err.toString() });
         return err;
-    })
+    });
 }
 
 const defaultMessage = {
@@ -35,7 +36,7 @@ const defaultMessage = {
 };
 
 const sendmail = async ({ template, data }) => {
-    const msg = templates[template]({data}) || defaultMessage;
+    const msg = templates[template]({ data }) || defaultMessage;
     if (!data.email) throw Error('Email is required to send an email');
     try {
         const [sent, error] = await sgMail.send(msg);
@@ -44,12 +45,12 @@ const sendmail = async ({ template, data }) => {
             console.log(`email error: ${error}`);
             throw error;
         }
-        return sent.statusCode > 200 ? true : false;
+        return sent.statusCode > 200;
     } catch (err) {
         console.log({ err: err.toString() });
         return err;
     }
-}
+};
 
 const templates = {
     inviteUser: ({ data }) => {
@@ -67,7 +68,7 @@ const templates = {
 
                 <p>email sent to: ${email}</p>
             `,
-        }
+        };
     },
 
     resetPassword: ({ data }) => {
@@ -79,19 +80,22 @@ const templates = {
             html: `
                 <h1>${leagueName}</h1>
                 <p>Hi ${first_name},</p>
-                <p>Looks like you requested to reset your password. If you did not make this request, don't worry, can disregard this email</p>
+                <p>
+                    Looks like you requested to reset your password.
+                    <br /> 
+                    If you did not make this request, don't worry, you can disregard this email.
+                </p>
                 <br />
                 <p>Click the link below to update your password and log in:</p>
-                <p><a href=${url}/reset/?token=${invite_token}>${url}</a></p>
+                <p><a href=${url}/reset/?token=${invite_token}>${url}/resetpassword</a></p>
                 
-
                 <p>email sent to: ${email}</p>
             `,
-        }
+        };
     },
 };
 
 module.exports = {
     newUserEmail,
     sendmail,
-}
+};

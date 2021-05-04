@@ -1,0 +1,299 @@
+const app = require('../server.js');
+
+const getAllTeams = async (req, res) => {
+    const db = app.get('db');
+    const { division, season, orderby } = req.query;
+
+    const season_id = await db.seasons.findOne({ name: season, 'deleted_date =': null }).catch(err => console.log(err, 'ERROR!!!'));
+    const divisions = await db.divisions.find({ season_id: season_id.id }).catch(err => console.log(err, 'error in getTeams divisions'));
+    const seasons = await db.seasons.find({ 'hidden_date =': null, 'deleted_date =': null }).catch(err => console.log(err));
+
+    let query = `
+        SELECT teams.*, seasons.name AS season_name, seasons.id AS season_id, divisions.name AS division_name, divisions.id AS division_id FROM team_season_division tsd 
+        JOIN teams ON teams.id = tsd.team_id
+        JOIN seasons ON seasons.id = tsd.season_id
+        JOIN divisions ON divisions.id = tsd.division_id
+        WHERE tsd.season_id = ${season_id.id} AND ${!!division ? 'divisions.name = $1' : 'tsd.division_id is not null'}
+    `;
+
+    if (orderby) {
+        query += 'ORDER BY lower(teams.name)';
+    } else {
+        query += 'ORDER BY division_name, lower(teams.name)';
+    }
+
+    const data = await db.query(query, [division, orderby]);
+    return res.send({ status: 200, data: { teams: data, divisions, seasons }, message: 'Retrieved list of teams' });
+};
+
+
+const getAllTeamsByDivision = async (req, res) => {
+    const db = app.get('db');
+    const { season } = req.query;
+    let season_id;
+
+    if (!season || season === 'undefined') {
+        season_id = await db.seasons.findOne({ is_active: true });
+    }
+
+    const query = `
+        SELECT 
+        d.name AS division_name, jsonb_agg(jsonb_build_object('name', t.name, 'id', t.id)) AS teams_in_division 
+        FROM team_season_division tsd
+        INNER join teams t ON t.id = tsd.team_id
+        INNER join divisions d ON d.id = tsd.division_id
+        WHERE tsd.season_id = ${season || season_id.id}
+        GROUP BY d.id, d.name ORDER BY d.name;
+    `;
+
+    const data = await db.query(query);
+    return res.send({ status: 200, data: { allTeams: data, season: season || season_id.id }, message: 'Retrieved list of teams grouped by division' });
+};
+
+const getTeamById = async (req, res) => {
+    const db = app.get('db');
+    const { id } = req.params;
+    const { season } = req.query;
+    let season_id;
+
+    const confirmTeam = await db.teams.findOne({ id }).catch(err => console.log(err));
+    if (!confirmTeam) {
+        return res.send({ status: 404, data: [], message: 'Team cannot be found', redirect: '/teams' });
+    }
+
+    // get schedule
+    if (!season || season === 'undefined') {
+        season_id = await db.seasons.findOne({ is_active: true });
+    }
+
+    const teamQuery = `
+        select t.id, t.name, t.color_list, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
+        join teams t on t.id = tsd.team_id
+        join divisions d on d.id = tsd.division_id
+        WHERE tsd.season_id = ${season || season_id.id} AND tsd.team_id = $1
+    `;
+
+    const team = await db.query(teamQuery, [id]);
+
+    if (team.length <= 0) {
+        return res.send({ status: 404, data: [], message: 'Team did not play in this season', redirect: '/teams' });
+    }
+
+    // this seasons returns ALL seasons for team page
+    const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+
+    // *** this seasons returns ONLY seasons associated with the team - some teams dont play every season ***
+    const seasonsSelectQuery = `
+        select s.id, s.name, s.is_active  from team_season_division tsd
+        join seasons s on s.id = tsd.season_id
+        where tsd.team_id = $1 and deleted_date IS null AND hidden_date IS null ORDER BY id;
+    `;
+    const seasonsSelect = await db.query(seasonsSelectQuery, [id]);
+
+    const recordQuery = `
+        select games_played, wins, losses, points, goals_for, goals_against, penalties_in_minutes from team_season_division where season_id = ${season || season_id.id} AND team_id = $1;
+    `;
+
+    let record = await db.query(recordQuery, [id]);
+
+    if (record.length === 0) {
+        record = [{
+            games_played: 0,
+            wins: 0,
+            losses: 0,
+            points: 0,
+            goals_for: 0,
+            goals_against: 0,
+            penalties_in_minutes: 0,
+        }];
+    }
+
+    const recentQuery = `
+        SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
+        h.name AS home_team, h.id AS home_team_id,
+        a.name AS away_team, a.id AS away_team_id,
+        locations.name AS location_name, locations.id AS location_id,
+        seasons.name AS season_name, divisions.name AS division_name 
+        FROM game_season_division gsd 
+        JOIN games g ON g.id = gsd.game_id
+        JOIN teams h ON h.id = g.home_team
+        JOIN teams a ON a.id = g.away_team
+        JOIN seasons ON seasons.id = gsd.season_id
+        JOIN divisions ON divisions.id = gsd.division_id
+        JOIN locations ON locations.id = g.location_id
+        WHERE gsd.season_id = ${season || season_id.id} AND (h.id = $1 OR a.id = $1) AND g.has_been_played = true
+        ORDER BY g.start_date desc limit 5;
+    `;
+
+    const recent = await db.query(recentQuery, [id]);
+
+    const standingsQuery = `
+        SELECT t.id AS team_id, t.name AS team_name, tsd.games_played, tsd.points, tsd.goals_for 
+        FROM team_season_division tsd
+        JOIN teams t ON t.id = tsd.team_id
+        JOIN divisions d ON d.id = tsd.division_id
+        WHERE tsd.season_id = ${season || season_id.id} AND tsd.division_id = $1
+        ORDER BY points desc, games_played asc, goals_for desc
+        LIMIT 5;
+    `;
+
+
+    let standings = [];
+    if (team.length > 0) {
+        standings = await db.query(standingsQuery, [team[0].division_id]);
+    }
+
+    return res.send({ status: 200, data: { team: team[0], recent, record: record[0], seasons, standings, seasonsSelect }, message: 'Retrieved Team' });
+};
+
+
+const getTeamSchedule = async (req, res) => {
+    const db = app.get('db');
+    const { id } = req.params;
+    const { season } = req.query;
+    let season_id;
+
+    const confirmTeam = await db.teams.findOne({ id }).catch(err => console.log(err));
+    if (!confirmTeam) {
+        return res.send({ status: 404, data: [], message: 'Team cannot be found' });
+    }
+
+    if (!season || season === 'undefined') {
+        season_id = await db.seasons.findOne({ is_active: true });
+    }
+
+    const scheduleQuery = `
+        SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
+        h.name AS home_team, h.id AS home_team_id,
+        a.name AS away_team, a.id AS away_team_id,
+        locations.name AS location_name, locations.id AS location_id,
+        seasons.name AS season_name, divisions.name AS division_name 
+        FROM game_season_division gsd 
+        JOIN games g ON g.id = gsd.game_id
+        JOIN teams h ON h.id = g.home_team
+        JOIN teams a ON a.id = g.away_team
+        JOIN seasons ON seasons.id = gsd.season_id
+        JOIN divisions ON divisions.id = gsd.division_id
+        JOIN locations ON locations.id = g.location_id
+        WHERE gsd.season_id = ${season || season_id.id} AND (h.id = $1 OR a.id = $1) 
+        ORDER BY g.start_date;
+    `;
+
+    const schedule = await db.query(scheduleQuery, [id]);
+    return res.send({ status: 200, data: schedule, message: 'Retrieved Team' });
+};
+
+
+const getStandings = async (req, res) => {
+    const db = app.get('db');
+    const { season, division } = req.query;
+    let season_id;
+    if (!season || season === 'undefined') {
+        season_id = await db.seasons.findOne({ is_active: true });
+    }
+
+    let query = `
+        SELECT 
+        d.name AS division_name, jsonb_agg(jsonb_build_object(
+            'name', t.name, 'id', t.id, 'games_played', tsd.games_played, 'wins', tsd.wins, 'losses', tsd.losses, 'points', tsd.points, 'goals_for', tsd.goals_for, 'goals_against', tsd.goals_against, 'penalties_in_minutes', tsd.penalties_in_minutes
+        ) ORDER BY tsd.points desc, games_played asc, goals_for desc) AS teams_in_division 
+        FROM team_season_division tsd
+        INNER join teams t ON t.id = tsd.team_id
+        INNER join divisions d ON d.id = tsd.division_id
+        WHERE tsd.season_id = ${season || season_id.id}
+    `;
+
+    if (division) {
+        query += 'AND division_id = $1';
+    }
+
+    query += 'GROUP BY d.id, d.name ORDER BY d.name;';
+
+    const data = await db.query(query, [division]);
+    return res.send({ status: 200, data: { standings: data, season: season || season_id.id }, message: 'Retrieved standings' });
+};
+
+
+const createTeam = async (req, res) => {
+    const db = app.get('db');
+
+    const { name, division_id, season_name, colors } = req.body;
+    const team = await db.teams.findOne({ name }).catch(err => console.log(err, 'error'));
+
+    if (team) {
+        return res.send({ status: 400, data: [], message: 'team already exists' });
+    }
+
+    const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in createTeam season'));
+
+    if (!season) {
+        return res.send({ status: 400, data: [], message: 'season does not exist' });
+    }
+
+    const data = await db.teams.insert({ name, colors, created_date: new Date(), created_by: req.user.id });
+    await db.team_season_division.insert({ team_id: data.id, season_id: season.id, division_id });
+    return res.send({ status: 200, data, message: 'Team created' });
+};
+
+const updateTeam = async (req, res) => {
+    const db = app.get('db');
+    const { name, division_id, colors, season_name, color_list } = req.body;
+    const { id } = req.params;
+
+    const team = await db.teams.findOne({ id }).catch(err => console.log(err));
+    if (!team) {
+        return res.send({ status: 404, error: true, message: 'Team not found' });
+    }
+
+    console.log(req.body, 'reqbodyyyy');
+
+    const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in season updateTeam'));
+    const updatedTeam = await db.teams.update({ id }, { name, colors, color_list: JSON.stringify(color_list), updated_date: new Date(), updated_by: req.user.id });
+    await db.team_season_division.update({ season_id: season.id, team_id: id }, { division_id });
+    return res.send({ status: 200, data: updatedTeam, message: 'Team updated' });
+};
+
+const deleteTeam = async (req, res) => {
+    const db = app.get('db');
+    const { id } = req.params;
+    const { season_id, division_id } = req.body;
+
+    console.log(req.body, 'BODY IN DELETE');
+
+    const team = await db.teams.findOne({ id }).catch(err => console.log(err));
+    if (!team) {
+        return res.send({ status: 404, error: true, message: 'Team not found' });
+    }
+
+    // const teamHasGames = await db.query(`
+    //     select * from game_season_division gsd
+    //     join games on games.id = gsd.game_id
+    //     join teams h on h.id = games.home_team
+    //     join teams a on a.id = games.away_team
+    //     where gsd.season_id = $1 AND (h.id = $2 OR a.id = $2);
+    //     `, [season_id, id]);
+
+    // if(teamHasGames.length > 0) {
+    //     console.log('this team has at least one game')
+    // }
+
+    // const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'error'))
+    await db.team_season_division.destroy({ team_id: id, season_id, division_id }).catch(err => console.log(err, 'error in TSD delete'));
+    return res.send({ status: 200, data: req.body, message: 'Team deleted from season' });
+    // if there's no games (and future no players), should we just delete the whole record instead of marking as deleted?
+    // const data = await db.teams.destroy({ id }).catch(err => console.log(err, 'error'))
+    // const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id }).catch(err => console.log(err, 'error'))
+    // return res.send({ status: 200, data, message: 'Team deleted' })
+};
+
+
+module.exports = {
+    getAllTeams,
+    getAllTeamsByDivision,
+    getTeamById,
+    getTeamSchedule,
+    getStandings,
+    createTeam,
+    updateTeam,
+    deleteTeam,
+};
