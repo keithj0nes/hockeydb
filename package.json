@@ -9,9 +9,10 @@
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "st___art2": "nodemon server.js & (cd client && npm start)",
-      "start": "nodemon server.js",
+      "start": "cd backend && nodemon server.js",
       "seed": "node seed.js",
-      "heroku-postbuild": "cd .. && cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+      "herok-postbuild": "cd .. && cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+      "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
     },
     "author": "",
     "license": "ISC",

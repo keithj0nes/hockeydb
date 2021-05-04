@@ -20,17 +20,9 @@ app.use((req, res, next) => {
 });
 
 
-
-
-
 // TO DO:
 
-// ADD RETURN NOTIFICATION ONE OF TYPE:
-// notificationType = 'snack' | 'modal' | 'none'; maybe ???
-
-// SET UP RETURNERROR FUNCTION FOR ERROR CATCH
-
-
+// /// SET UP RETURNERROR FUNCTION FOR ERROR CATCH
 
 
 // controller imports
