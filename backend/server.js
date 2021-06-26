@@ -20,18 +20,19 @@ app.use((req, res, next) => {
 });
 
 
-
-
-
 // TO DO:
 
-// ADD RETURN NOTIFICATION ONE OF TYPE:
-// notificationType = 'snack' | 'modal' | 'none'; maybe ???
+// /// SET UP RETURNERROR FUNCTION FOR ERROR CATCH
 
-// SET UP RETURNERROR FUNCTION FOR ERROR CATCH
+// front end:
 
+// COMPLETE TEAMS PAGE
 
-
+// schedule page
+// when on schedules, filter by different season
+// when clicking on a team, it should show team by that filtered season id
+// when clicking on another team within that team page, should go to that team by filtered season id
+// currently it just sends to the team id without a season id associated with it
 
 // controller imports
 const news = require('./controllers/news');
@@ -65,13 +66,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-// let db = null;
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {
     app.set('db', instance); // add your connection to express
-    // db = app.get('db'); // declare a db object for requests
-}).catch(err => {
-    console.log(err, 'massive err');
-});
+}).catch(err => console.log(err, 'massive err'));
 
 
 // ROUTES //
@@ -222,7 +219,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
     // Handle React routing, return all requests to React app
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
     });
 }
 

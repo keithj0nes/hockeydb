@@ -206,7 +206,7 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
 // });
 
 const mapStateToProps = state => {
-    // console.log(state.seasons)
+    console.log(state.seasons)
     return {
         seasons: state.seasons.seasons,
         isLoading: state.seasons.isLoading,

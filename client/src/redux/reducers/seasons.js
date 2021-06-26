@@ -31,14 +31,14 @@ export const seasons = (state = initialSeasonState, { type, payload }) => {
     case `seasons/${GET_INIT}`: // not being used yet
         return { ...state, isLoading: true };
 
-    case `seasons/stop_loading`: // not being used yet
+    case 'seasons/stop_loading': // not being used yet
         return { ...state, isLoading: false };
 
     case `seasons/${GET_SUCCESS}`: {
         let _pagination;
         if (payload.pagination) {
             const { total_pages, page } = payload.pagination;
-            _pagination = { pagination: { ...state.pagination, totalPages: total_pages, currentPage: page }};
+            _pagination = { pagination: { ...state.pagination, totalPages: total_pages, currentPage: page } };
         }
         return {
             ...state,

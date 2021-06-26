@@ -15,7 +15,7 @@
 }
 
 .single-team-info {
-    width: 100%;
+    // width: 100%;
     display: flex;
 
     .single-team-logo {
@@ -37,28 +37,42 @@
     }
 }
 
-.single-team-record {
+.team-color-square {
+    margin: 0 3px;
+    border: 1px solid black;
+    height: 30px;
+    width: 30px;
+}
+
+.single-team-season-record {
     padding-top: 20px;
 
-    table {
-        font-family: $main_font;
-        border-collapse: collapse;
-        width: 100%;
+    // table {
+    //     font-family: $main_font;
+    //     border-collapse: collapse;
+    //     width: 100%;
 
-        thead tr:first-child {
-            border-bottom: 1px solid gray;
-        }
-        th {
-            color: gray;
-            text-align: left;
-            font-size: 14px;
-        }
+    //     thead tr:first-child {
+    //         border-bottom: 1px solid gray;
+    //     }
+    //     th {
+    //         color: gray;
+    //         text-align: left;
+    //         font-size: 14px;
+    //     }
     
-        td {
-            font-weight: bold;
-            font-size: 18px;
-        }
-    }
+    //     td {
+    //         font-weight: bold;
+    //         font-size: 18px;
+    //     }
+    // }
+}
+
+.single-team-record-header {
+    display: flex;
+    border-bottom: 1px solid $muted-color;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 
@@ -96,13 +110,21 @@
 
     .single-team-content {
         display: flex;
+        justify-content: space-between;
     }
 
-    .single-team-record {
-        table {
-            min-width: 360px;
-        }
+    .single-team-season-record {
+        padding-top: 0;
+        width: 50%;
+        max-width: 400px;
     }
+
+    // .single-team-record-header {
+    //     display: flex;
+    //     border-bottom: 1px solid $muted-color;
+    //     padding-bottom: 4px;
+    //     margin-bottom: 4px;
+    // }
 
     .split-50 {
         display: flex;

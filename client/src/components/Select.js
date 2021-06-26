@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Select as S } from 'antd';
 import './select.scss';
 
 export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
@@ -11,9 +12,21 @@ export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChang
                 <option key={item[useKey] || item.value} value={item[useKey] || item.value}>{item.name}</option>
             ))}
         </select>
-        <span className="arrow" style={title && { top: 30 }} />
+        <span className="arrow" style={title && { top: 36 }} />
     </div>
 );
+
+// export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
+//     <>
+//         <p className="label m-t-m">{title}</p>
+//         <S value={defaultValue} dropdownClassName="ally" style={{ width: '100%', border: '1px solid #7E92A3' }} onChange={value => onChange({ name, value })}>
+//             <S.Option value="2">Jack</S.Option>
+//             {listOfSelects && listOfSelects.map((item, ind) => (
+//                 <S.Option key={item[useKey] || item.value} value={item[useKey] || item.value}>{item.name}</S.Option>
+//             ))}
+//         </S>
+//     </>
+// );
 
 export const DashSelect = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (
     <div className="dash-select">

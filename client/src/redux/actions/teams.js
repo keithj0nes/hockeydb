@@ -58,7 +58,7 @@ export const getTeamById = (teamId, filter) => async (dispatch) => {
         },
     });
 
-    dispatch({ type: `seasons/${GET_SUCCESS}`, payload: team.data.seasons });
+    dispatch({ type: `seasons/${GET_SUCCESS}`, payload: team.data });
 
     if (!filter) {
         const activeSeason = team.data.seasons.find(season => season.is_active === true);

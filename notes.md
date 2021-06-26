@@ -133,3 +133,5 @@ const teamsWithDivisions = await db.teams.join({
   'books.author ILIKE': 'calvino, %'
 });
 ````
+
+Server response notification_type = 'snack' | 'modal' | 'none';

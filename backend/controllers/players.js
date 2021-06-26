@@ -55,7 +55,7 @@ const createPlayer = async (req, res) => {
     }
 
     const createdPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: req.user.id });
-    const createdStats = await db.player_stats.insert({ player_id: createdPlayer.id, team_id: null, season: null, games_played: 0, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0, assists_per_game: 0, points_per_game: 0 });
+    const createdStats = await db.player_stats.insert({ player_id: createdPlayer.id, team_id: null, season_id: null, games_played: 0, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0, assists_per_game: 0, points_per_game: 0 });
     console.log('saved players and stats');
 
     const data = { ...createdStats, ...createdPlayer };

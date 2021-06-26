@@ -316,6 +316,38 @@ input[type=text],
     }
 }
 
+.table-header {
+    font-family: $heading_font;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #7E92A3;
+}
+
+.label {
+    text-align: left;
+    font-size: 14px;
+    letter-spacing: 1.2px;
+}
+
+.flex-one {
+    flex: 1;
+}
+
+.flex-two {
+    flex: 2;
+}
+
+.flex-three {
+    flex: 3;
+}
+
+.flex-four {
+    flex: 4;
+}
+
+.flex-five {
+    flex: 5;
+}
 
 @media only screen and (min-width: 768px){
     .flex-one {

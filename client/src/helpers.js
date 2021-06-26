@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-param-reassign */
 // helper functions
 import { createBrowserHistory } from 'history';
@@ -49,4 +50,10 @@ const reduceForQueryParams = (array, func, acc) => {
     const result = func(acc, array[0]);
     return array.length === 0 ? acc
         : (result || reduceForQueryParams(array.slice(1), func, result));
+};
+
+export const capitalizeWords = (words, splitter = '_') => {
+    return words.split(splitter).map(word => {
+        return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
 };

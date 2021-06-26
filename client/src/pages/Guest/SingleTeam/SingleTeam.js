@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'antd';
 import { getTeamById, clearSingleTeamState } from '../../../redux/actions/teams';
-import GuestTable from '../../../components/GuestTable';
 import STSchedule from './STSchedule';
 import STHome from './STHome';
-import { Select } from '../../../components';
-import { getQuery, setQuery } from '../../../helpers';
+import { Select, Table } from '../../../components';
+import { getQuery, setQuery, capitalizeWords } from '../../../helpers';
 import Auth, { basicList } from '../../../components/Auth';
 import './singleteam.scss';
 
@@ -36,13 +35,14 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
             });
         }
 
-        return () => clearSingleTeamState();
+        // return () => clearSingleTeamState();
     }, [location.search, match.params.id, clearSingleTeamState, getTeamById]);
     // FIX: currently useeffect is infinite firing with the below
     // }, [props.location.pathname, props.location.search, props]);
 
-    const handleChange = e => {
-        const { name, value } = e.target;
+    const handleChange = ({ name, value }) => {
+        // console.log(name, value, 'eeee')
+        // const { name, value } = e.target;
         setSelectedSeason(value);
         const search = setQuery({ [name]: value });
         getTeamById(match.params.id, search);
@@ -61,6 +61,33 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
         return null;
     };
 
+
+    const sections = {
+        games_played: { as: 'GP', flex: 'one' },
+        wins: { as: 'W', flex: 'one' },
+        losses: { as: 'L', flex: 'one' },
+        points: { as: 'PTS', flex: 'one' },
+        goals_for: { as: 'GF', flex: 'one' },
+        goals_against: { as: 'GA', flex: 'one' },
+        penalties_in_minutes: { as: 'PIM', flex: 'one' },
+    };
+
+    const recordValues = Object.keys(record[0] || []).map(item => (
+        <p className={`flex-${sections[item].flex}`} key={item}>
+            {record[0][item]}
+        </p>
+    ));
+
+    const recordHeader = Object.keys(sections || []).map(item => (
+        // <Tooltip title={item.replace(/_/g, ' ')} placement="bottomLeft" color="#0C1D40">
+        <Tooltip title={capitalizeWords(item)} placement="bottomLeft" color="#0C1D40" key={item}>
+            <p className={`table-header flex-${sections[item].flex}`}>
+                {sections[item].as}
+            </p>
+        </Tooltip>
+    ));
+
+
     return (
         <div className="content-container">
             <div className="white-bg" style={{ marginBottom: 20 }}>
@@ -73,29 +100,20 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
                         <div className="single-team-info">
                             <h2>{team.name || 'Unavailable'}</h2>
                             <h3>Division: {team.division_name}</h3>
-                            <h5>Team Colors: {team.colors}</h5>
-                            <div style={{ display: 'flex', marginTop: 3 }}>
-                                {/* <Tooltip title="White" placement="bottom" color="#0C1D40">
-                                    <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: 'white' }} />
-                                </Tooltip>
-                                <Tooltip title="Black" placement="bottom" color="#0C1D40">
-                                    <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: 'black' }} />
-                                </Tooltip>
-                                <Tooltip title="Red" placement="bottom" color="#0C1D40">
-                                    <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: 'red' }} />
-                                </Tooltip> */}
-
-
-                                {team.color_list?.map(item => (
-                                    <Tooltip title={item.name} placement="bottom" color="#0C1D40">
-                                        <div style={{ margin: '0 3px', border: '1px solid black', height: 30, width: 30, background: item.color }} />
+                            <h5>Team Colors: &nbsp;
+                                {team.colors?.map((item, ind) => <span key={item.color}>{item.name} {ind !== team.colors.length - 1 && ' / '}</span>)}
+                            </h5>
+                            <div className="f m-t-xs">
+                                {team.colors?.map(item => (
+                                    <Tooltip title={capitalizeWords(item.name)} placement="bottom" color="#0C1D40" key={item.name}>
+                                        <div className="team-color-square" style={{ background: item.color }} />
                                     </Tooltip>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    <div className="single-team-record">
+                    <div className="single-team-season-record">
                         <Select
                             name="season"
                             title="Season"
@@ -105,30 +123,13 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
                             useKey="id"
                         />
 
-                        <br />
-
-                        <h4>Team Record</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <Tooltip title="games played" color="#0C1D40">
-                                        <th>GP</th>
-                                    </Tooltip>
-
-                                    <th title="wins">W</th>
-                                    <th title="losses">L</th>
-                                    <th title="points">PTS</th>
-                                    <th title="goals for">GF</th>
-                                    <th title="goals against">GA</th>
-                                    <th title="penalty minutes">PIM</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    { Object.keys(record).map(rec => <td key={rec}>{record[rec] || 0}</td>)}
-                                </tr>
-                            </tbody>
-                        </table>
+                        <p className="label m-t-m">Record</p>
+                        <div className="single-team-record-header">
+                            {recordHeader}
+                        </div>
+                        <div className="f">
+                            {recordValues}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,20 +175,19 @@ SingleTeam.propTypes = {
     seasonsSelect: PropTypes.array,
     getTeamById: PropTypes.func.isRequired,
     clearSingleTeamState: PropTypes.func.isRequired,
-    record: PropTypes.object,
+    record: PropTypes.array,
     team: PropTypes.object,
     location: PropTypes.object,
     match: PropTypes.object,
 };
 
 const STRoster = () => (
-    <GuestTable
+    <Table
         title="Player Stats"
         data={playerStats}
         minWidth={800}
-        // sections={{'number': 'one','name': 'five', 'games_played': 'one', 'goals': 'one', 'assists': 'one', 'points': 'one', 'penalties_in_minutes': 'one',}}
         uniqueKey="number"
-        sections={{
+        columns={{
             number: { as: '#', flex: 'one' },
             name: 'five',
             games_played: { as: 'gp', flex: 'one' },

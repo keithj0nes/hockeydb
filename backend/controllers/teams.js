@@ -67,7 +67,7 @@ const getTeamById = async (req, res) => {
     }
 
     const teamQuery = `
-        select t.id, t.name, t.color_list, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
+        select t.id, t.name, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
         join teams t on t.id = tsd.team_id
         join divisions d on d.id = tsd.division_id
         WHERE tsd.season_id = ${season || season_id.id} AND tsd.team_id = $1
@@ -76,7 +76,7 @@ const getTeamById = async (req, res) => {
     const team = await db.query(teamQuery, [id]);
 
     if (team.length <= 0) {
-        return res.send({ status: 404, data: [], message: 'Team did not play in this season', redirect: '/teams' });
+        return res.send({ status: 404, data: [], message: 'Team did not play in this season', redirect: '/teams', notification_type: 'snack' });
     }
 
     // this seasons returns ALL seasons for team page
@@ -94,19 +94,7 @@ const getTeamById = async (req, res) => {
         select games_played, wins, losses, points, goals_for, goals_against, penalties_in_minutes from team_season_division where season_id = ${season || season_id.id} AND team_id = $1;
     `;
 
-    let record = await db.query(recordQuery, [id]);
-
-    if (record.length === 0) {
-        record = [{
-            games_played: 0,
-            wins: 0,
-            losses: 0,
-            points: 0,
-            goals_for: 0,
-            goals_against: 0,
-            penalties_in_minutes: 0,
-        }];
-    }
+    const record = await db.query(recordQuery, [id]);
 
     const recentQuery = `
         SELECT g.id, g.start_date, g.home_score, g.away_score, g.has_been_played,
@@ -143,7 +131,7 @@ const getTeamById = async (req, res) => {
         standings = await db.query(standingsQuery, [team[0].division_id]);
     }
 
-    return res.send({ status: 200, data: { team: team[0], recent, record: record[0], seasons, standings, seasonsSelect }, message: 'Retrieved Team' });
+    return res.send({ status: 200, data: { team: team[0], recent, record, seasons, standings, seasonsSelect }, message: 'Retrieved Team' });
 };
 
 
@@ -237,7 +225,7 @@ const createTeam = async (req, res) => {
 
 const updateTeam = async (req, res) => {
     const db = app.get('db');
-    const { name, division_id, colors, season_name, color_list } = req.body;
+    const { name, division_id, colors, season_name } = req.body;
     const { id } = req.params;
 
     const team = await db.teams.findOne({ id }).catch(err => console.log(err));
@@ -248,7 +236,7 @@ const updateTeam = async (req, res) => {
     console.log(req.body, 'reqbodyyyy');
 
     const season = await db.seasons.findOne({ name: season_name }).catch(err => console.log(err, 'error in season updateTeam'));
-    const updatedTeam = await db.teams.update({ id }, { name, colors, color_list: JSON.stringify(color_list), updated_date: new Date(), updated_by: req.user.id });
+    const updatedTeam = await db.teams.update({ id }, { name, colors: JSON.stringify(colors), updated_date: new Date(), updated_by: req.user.id });
     await db.team_season_division.update({ season_id: season.id, team_id: id }, { division_id });
     return res.send({ status: 200, data: updatedTeam, message: 'Team updated' });
 };

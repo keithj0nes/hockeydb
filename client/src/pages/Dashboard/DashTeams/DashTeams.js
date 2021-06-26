@@ -44,8 +44,8 @@ class DashTeams extends Component {
 
     handleColorPickerChange = colors => {
         const editStateCopy = { ...this.state.edit };
-        const newStuff = editStateCopy.color_list.map(item => (item.id === colors.id ? colors : item));
-        this.setState({ edit: { ...editStateCopy, color_list: newStuff } });
+        const newStuff = editStateCopy.colors.map(item => (item.id === colors.id ? colors : item));
+        this.setState({ edit: { ...editStateCopy, colors: newStuff } });
     }
 
     handleAddTeam = () => {
@@ -146,7 +146,7 @@ class DashTeams extends Component {
                     customComponent: (
                         <>
                             <div style={{ display: 'flex', marginTop: 3 }}>
-                                {item.color_list?.map(colorItem => (
+                                {item.colors?.map(colorItem => (
                                     <ColorSwatch defaultValue={colorItem} onChange={this.handleColorPickerChange} />
                                 ))}
                             </div>

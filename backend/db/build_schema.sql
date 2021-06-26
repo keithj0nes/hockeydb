@@ -32,9 +32,9 @@ CREATE TABLE "users" (
   "last_name" VARCHAR,
   "email" VARCHAR,
   "admin_type" VARCHAR,
-  "is_suspended" BOOLEAN,
+  "is_suspended" BOOLEAN NOT NULL DEFAULT false,
   "suspended_date" TIMESTAMP,
-  "is_admin" BOOLEAN,
+  "is_admin" BOOLEAN NOT NULL DEFAULT false,
   "invite_token" VARCHAR,
   "invite_date" TIMESTAMP,
   "reinvite_date" TIMESTAMP,
@@ -53,7 +53,7 @@ CREATE TABLE "passwords" (
 CREATE TABLE "news" (
   "id" SERIAL PRIMARY KEY,
   "title" VARCHAR,
-  "allow_collapse" BOOLEAN,
+  "allow_collapse" BOOLEAN NOT NULL DEFAULT false,
   "body" VARCHAR,
   "display_order" INTEGER,
   "created_date" TIMESTAMP,
@@ -95,18 +95,18 @@ CREATE TABLE "player_stats" (
   "id" SERIAL PRIMARY KEY,
   "player_id" INTEGER,         -- REFERENCES players(id)
   "team_id" INTEGER,           -- REFERENCES teams(id)
-  "season" varchar,
-  "games_played" INTEGER,
-  "goals" INTEGER,
-  "assists" INTEGER,
-  "points" INTEGER,
-  "penalties_in_minutes" INTEGER,
-  "game_winning_goals" INTEGER,
-  "power_play_goals" INTEGER,
-  "short_handed_goals" INTEGER,
-  "goals_per_game" INTEGER,
-  "assists_per_game" INTEGER,
-  "points_per_game" INTEGER
+  "season_id" varchar,         -- REFERENCES seasons(id)
+  "games_played" INTEGER NOT NULL DEFAULT 0,
+  "goals" INTEGER NOT NULL DEFAULT 0,
+  "assists" INTEGER NOT NULL DEFAULT 0,
+  "points" INTEGER NOT NULL DEFAULT 0,
+  "penalties_in_minutes" INTEGER NOT NULL DEFAULT 0,
+  "game_winning_goals" INTEGER NOT NULL DEFAULT 0,
+  "power_play_goals" INTEGER NOT NULL DEFAULT 0,
+  "short_handed_goals" INTEGER NOT NULL DEFAULT 0,
+  "goals_per_game" INTEGER NOT NULL DEFAULT 0,
+  "assists_per_game" INTEGER NOT NULL DEFAULT 0,
+  "points_per_game" INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE "seasons" (
@@ -121,7 +121,7 @@ CREATE TABLE "seasons" (
   "deleted_by" INTEGER,        -- REFERENCES users(id),
   "hidden_date" TIMESTAMP,
   "hidden_by" INTEGER,         -- REFERENCES users(id),
-  "is_active" BOOLEAN
+  "is_active" BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE "divisions" (
@@ -141,7 +141,7 @@ CREATE TABLE "divisions" (
 CREATE TABLE "teams" (
   "id" SERIAL PRIMARY KEY,
   "name" VARCHAR,
-  "colors" VARCHAR,
+  "colors" JSONB,
   "created_date" TIMESTAMP,
   "created_by" INTEGER,        -- REFERENCES users(id),
   "updated_date" TIMESTAMP,
@@ -150,18 +150,26 @@ CREATE TABLE "teams" (
   "deleted_by" INTEGER         -- REFERENCES users(id),
 );
 
+CREATE TABLE "my_random_table" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR NOT NULL,
+  "colors" JSONB,
+  "score" INTEGER NOT NULL DEFAULT 0,
+  "association" VARCHAR NOT NULL DEFAULT 'USA Hockey',
+);
+
 CREATE TABLE "team_season_division" (
   "id" SERIAL PRIMARY KEY,
   "team_id" INTEGER,           -- REFERENCES teams(id)
   "season_id" INTEGER,         -- REFERENCES seasons(id)
   "division_id" INTEGER,       -- REFERENCES divisions(id)
-  "games_played" INTEGER,
-  "wins" INTEGER,
-  "losses" INTEGER,
-  "points" INTEGER,
-  "goals_for" INTEGER,
-  "goals_against" INTEGER,
-  "penalties_in_minutes" INTEGER
+  "games_played" INTEGER NOT NULL DEFAULT 0,
+  "wins" INTEGER NOT NULL DEFAULT 0,
+  "losses" INTEGER NOT NULL DEFAULT 0,
+  "points" INTEGER NOT NULL DEFAULT 0,
+  "goals_for" INTEGER NOT NULL DEFAULT 0,
+  "goals_against" INTEGER NOT NULL DEFAULT 0,
+  "penalties_in_minutes" INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE "game_season_division" (
@@ -200,26 +208,26 @@ CREATE TABLE "games" (
   "scorekeeper_id" INTEGER,      -- REFERENCES users(id)
   -- POSSIBLY NEEDS SEASON_ID
   "start_date" TIMESTAMP,
-  "home_score" INTEGER,
-  "home_first_score" INTEGER,
-  "home_second_score" INTEGER,
-  "home_third_score" INTEGER,
-  "home_first_sog" INTEGER,
-  "home_second_sog" INTEGER,
-  "home_third_sog" INTEGER,
-  "home_first_pim" INTEGER,
-  "home_second_pim" INTEGER,
-  "home_third_pim" INTEGER,
-  "away_score" INTEGER,
-  "away_first_score" INTEGER,
-  "away_second_score" INTEGER,
-  "away_third_score" INTEGER,
-  "away_first_sog" INTEGER,
-  "away_second_sog" INTEGER,
-  "away_third_sog" INTEGER,
-  "away_first_pim" INTEGER,
-  "away_second_pim" INTEGER,
-  "away_third_pim" INTEGER,
+  "home_score" INTEGER NOT NULL DEFAULT 0,
+  "home_first_score" INTEGER NOT NULL DEFAULT 0,
+  "home_second_score" INTEGER NOT NULL DEFAULT 0,
+  "home_third_score" INTEGER NOT NULL DEFAULT 0,
+  "home_first_sog" INTEGER NOT NULL DEFAULT 0,
+  "home_second_sog" INTEGER NOT NULL DEFAULT 0,
+  "home_third_sog" INTEGER NOT NULL DEFAULT 0,
+  "home_first_pim" INTEGER NOT NULL DEFAULT 0,
+  "home_second_pim" INTEGER NOT NULL DEFAULT 0,
+  "home_third_pim" INTEGER NOT NULL DEFAULT 0,
+  "away_score" INTEGER NOT NULL DEFAULT 0,
+  "away_first_score" INTEGER NOT NULL DEFAULT 0,
+  "away_second_score" INTEGER NOT NULL DEFAULT 0,
+  "away_third_score" INTEGER NOT NULL DEFAULT 0,
+  "away_first_sog" INTEGER NOT NULL DEFAULT 0,
+  "away_second_sog" INTEGER NOT NULL DEFAULT 0,
+  "away_third_sog" INTEGER NOT NULL DEFAULT 0,
+  "away_first_pim" INTEGER NOT NULL DEFAULT 0,
+  "away_second_pim" INTEGER NOT NULL DEFAULT 0,
+  "away_third_pim" INTEGER NOT NULL DEFAULT 0,
   "game_notes" VARCHAR
 );
 
@@ -243,6 +251,7 @@ ALTER TABLE "players" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 
 ALTER TABLE "player_stats" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 ALTER TABLE "player_stats" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
+ALTER TABLE "player_stats" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
 
 ALTER TABLE "seasons" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "seasons" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
