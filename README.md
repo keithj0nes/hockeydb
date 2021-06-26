@@ -3,56 +3,47 @@
 <!-- CMD + Shift + V to view markdown file in VS code -->
 
 ### Install Dependencies
-+ From the project's root level, run &nbsp; `npm install`
-+ Note: You may need to cd /client and run &nbsp; `npm install` &nbsp; as well
+- From the project's root level, run &nbsp; `npm install`
+- cd /backend, run &nbsp; `npm install`
+- cd /client, run &nbsp; `npm install`
 
-### Create Config Files
-+ From the project's root level, create a &nbsp; `config.js` &nbsp; file that looks like:
 
-        module.exports = {
-            PORT: 8010,   // must match client_config.js ROOT key below 
-            JWTSECRET: 'some_secret_key_that_you_want',
-            DB_URI: 'postgres://YOURUSERNAME:YOURPASSWORD@localhost/hockeydb',
-            SITE_URL: 'localhost', // any fake url
-            API_VERSION: '0.0.1'   // any fake version
-        }
+### Create .env Files
+- cd /backend/ and create a `.env` file that looks like:
 
-+ cd /client/src, create a &nbsp; `client_config.js` &nbsp; file that looks like: 
+        # PORT is defined for local development only
+        PORT=8010
+        JWT_SECRET=any_secret_key_that_you_want
+        DB_URI=postgres://YOURUSERNAME:YOURPASSWORD@localhost/hockeydb
+        SITE_URL=http://localhost:3000
+        API_VERSION=0.0.1
+        SENDGRID_API_KEY={{ASK FOR API KEY}}
+        TEST_EMAIL={{YOUR EMAIL}}
 
-        const tierLevels = {
-            ROOKIE:  'ROOKIE',
-            AMATEUR: 'AMATEUR',
-            PRO:     'PRO'
-        }
+- cd /client and create a `.env` file that looks like:
 
-        // const SITE_LEVEL = tierLevels.ROOKIE;
-        // const SITE_LEVEL = tierLevels.AMATEUR;
-        const SITE_LEVEL = tierLevels.PRO;
+        REACT_APP_SITE_LEVEL=AMATEUR
 
-        module.exports = {
-            ROOT: 'http://localhost:8010',   // must match config.js PORT key above 
-            SITE_LEVEL
-        }
 
 ### Seed Database
-+ Make sure PostgreSQL is installed on your computer https://www.postgresql.org/
-+ Create a database called &nbsp; `hockeydb`
-+ From the project's root level, run &nbsp; `npm run seed`
-+ If any errors occur, rerun the seed command
-+ You can input your own counts for teams, players, and games by editing the variables in the seed file:
+- Make sure PostgreSQL is installed on your computer https://www.postgresql.org
+- Create a database called &nbsp; `hockeydb`
+- From the project's root level, run &nbsp; `npm run seed`
+- If any errors occur, rerun the seed command
+- You can input your own counts for teams, players, and games by editing the variables in the seed file:
         
         const counts = {
-                teams:   { min: 4,  max: 10, exact: null },
-                players: { min: 12, max: 16, exact: 5 },
-                games:   { min: 5,  max: 8,  exact: null },  
+            teams:   { min: 4,  max: 10, exact: null },
+            players: { min: 12, max: 16, exact: 5 },
+            games:   { min: 5,  max: 8,  exact: null },  
         }
 
 ### Launch
-+ From the project's root level, run &nbsp; `npm start` (this launches nodemon on the server side)
-+ In a new terminal cd /client and run &nbsp; `npm start`
+- From the project's root level, cd /backend and run &nbsp; `npm start` (this launches nodemon on the server side)
+- In a new terminal cd /client and run &nbsp; `npm start`
 
 ### Admin
-+ If you seeded the database correctly, login credentials are:
+- If you seeded the database correctly, login credentials are:
         
         email: admin@hockeydb.com
         password: admin

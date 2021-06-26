@@ -4,6 +4,8 @@ import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Form, Input, InputNumber, Steps, Collapse } from 'antd';
 import { Button } from 'components';
+import { CheckOutlined } from '@ant-design/icons';
+
 
 import './registration.scss';
 
@@ -56,6 +58,9 @@ const fakeData1 = {
     ]
 };
 
+
+// to do =
+// make NEXT button be submit button that fires the form's onFinish prop
 
 const Registration = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -135,7 +140,7 @@ const step1 = (fakeData) => {
                 <Form
                     // form={form}
                     layout="vertical"
-                    onFinish={values => console.log(values)}
+                    onFinish={values => console.log(values, 'values')}
                     // className=""
                 >
                     <p><strong>Personal Information</strong></p>
@@ -207,6 +212,7 @@ const WaiverCollapse = ({ waiver, fakeData, setFakeData, ...props }) => {
     const [disabled, setDisabled] = useState(false);
     console.log(props)
     console.log(waiver, 'waiver')
+    console.log(fakeData, 'fakd data')
     const handleSubmit = (values) => {
         console.log(values, 'submitting')
 
@@ -226,7 +232,7 @@ const WaiverCollapse = ({ waiver, fakeData, setFakeData, ...props }) => {
         })
     }
     return (
-        <Collapse.Panel {...props} header={waiver.title} key={waiver.id} extra={(<p>{waiver.completed ? 'Completed' : 'Pending Completion'}</p>)}>
+        <Collapse.Panel {...props} header={waiver.title} key={waiver.id} extra={(<p>{waiver.completed ? (<> <CheckOutlined /> Completed </>) : 'Pending Completion'}</p>)}>
             <p className="waiver-container">
                 Lorem ipsum dolor sit amet, or sit amet, consectetur adipiscing elit. Phasellus vitae elit tempor, dapibus purus at, efficitur est. Donec urna tortor, sagittis quis auctor ut, tempor ac mauris. In congue, justo in dignissim sodales, ante magna molestie libero, in tristique nunc metus et leo. Aliquam felis justo, luctus eget condimentum in, volutpat pulvinar orci. Suspendisse iaculis vitae arcu in iaculis. Nullam euismod, mi ac lacinia laoreet, libero nulla dignissim enim, ut finibus ex elit ut elit. Sed non facilisis enim. Praesent et accumsan dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae elit tempor, dapibus purus at, efficitur est. Donec urna tortor, sagittis quis auctor ut, tempor ac mauris. In congue, justo in dignissim sodales, ante magna molestie libero, in tristique nunc metus et leo. Aliquam felis justo, luctus eget condimentum in, volutpat pulvinar orci. Suspendisse iaculis vitae arcu in iaculis. Nullam euismod, mi ac lacinia laoreet, libero nulla dignissim enim, ut finibus ex elit ut elit. Sed non facilisis enim. Praesent et accumsan dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae elit tempor, dapibus purus at, efficitur est. Donec urna tortor, sagittis quis auctor ut, tempor ac mauris. In congue, justo in dignissim sodales, ante magna molestie libero, in tristique nunc metus et leo. Aliquam felis justo, luctus eget condimentum in, volutpat pulvinar orci. Suspendisse iaculis vitae arcu in iaculis. Nullam euismod, mi ac lacinia laoreet, libero nulla dignissim enim, ut finibus ex elit ut elit. Sed non facilisis enim. Praesent et accumsan dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae elit tempor, dapibus purus at, efficitur est. Donec urna tortor, sagittis quis auctor ut, tempor ac mauris. In congue, justo in
             </p>
@@ -242,6 +248,7 @@ const WaiverCollapse = ({ waiver, fakeData, setFakeData, ...props }) => {
                 className="f-align-start"
                 onFieldsChange={(changedFields) => {
                     // const name = changedFields[0]?.name[0]
+                    // console.log(changedFields, 'changed fields')
                     const value = changedFields[0]?.value
 
                     setCanSubmit(expectedName === value)

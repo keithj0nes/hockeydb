@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getTeamsPageFilters } from '../../../redux/actions/teams';
 import { getPlayersStats } from '../../../redux/actions/players';
-import { Select } from '../../../components';
+import { Select, Table } from '../../../components';
 import { getQuery, setQuery } from '../../../helpers';
-import GuestTable from '../../../components/GuestTable';
 // import { useQueryParam } from '../../../components/useQueryParams';
 
 
@@ -61,10 +60,10 @@ const PlayerStats = ({ location, getPlayersStats, getTeamsPageFilters, scheduleF
 
             </div>
 
-            <GuestTable
+            <Table
                 data={playerStats}
                 minWidth={800}
-                sections={{
+                columns={{
                     // 'rank': 'one',
                     first_name: { as: 'name', flex: 'one' },
                     last_name: { flex: 'one' },

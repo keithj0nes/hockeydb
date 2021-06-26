@@ -72,16 +72,18 @@ class Schedule extends Component {
 
 
     renderTableData = () => {
-
         const { games } = this.props;
 
         // if( isLoading ) return (<TableLoader count={10} format={['two', 'one', 'three', 'three', 'three', 'one', 'one']} />);
-        if( games.length <= 0 ) return <h3 style={{textAlign: 'center', marginTop: 50}}>No games fit that search criteria :(</h3>
-            
+        if (games.length <= 0) return <h3 style={{ textAlign: 'center', marginTop: 50 }}>No games fit that search criteria :(</h3>;
+        
         // const season = this.state.filters.season && `?season=${this.state.filters.season}`;
-        const season = this.state.statechanged && `?season=${this.state.filters.season}`; // wonky - added above on line 67
+        // const season = this.state.statechanged && `?season=${this.state.filters.season}`; // wonky - added above on line 67
+        const season = `?season=${this.state.filters.season}`; // wonky - added above on line 67
+
         // const seasonZ = Number(this.state.filters.season) !== this.props.currentSeasonId && `?season=${this.state.filters.season}`;
 
+        console.log(this.props.currentSeasonId, this.state.filters.season, 'this.props.currentSeasonId !== this.state.filters.season')
         return games.map(game => {
                             
             const d = dateFormat(game.start_date, 'ddd, MMM M h:mm A').split(' ');
@@ -95,12 +97,12 @@ class Schedule extends Component {
                     <p className="ot-cell ot-flex-two">{game.start_time}</p>
                     <p className="ot-cell ot-flex-three">{game.location_name}</p>
                     <p className="ot-cell ot-flex-four">
-                        <Link to={{pathname:`/teams/${game.home_team_id}`, search: season}}>
+                        <Link to={{pathname:`/teams/${game.home_team_id}`, search: this.props.currentSeasonId !== this.state.filters.season ? season : ''}}>
                             {game.home_team}
                         </Link>
                     </p>
                     <p className="ot-cell ot-flex-four">
-                        <Link to={{pathname:`/teams/${game.away_team_id}`, search: season}}>
+                        <Link to={{pathname:`/teams/${game.away_team_id}`, search: this.props.currentSeasonId !== this.state.filters.season ? season : ''}}>
                             {game.away_team}
                         </Link>
                     </p>
@@ -178,6 +180,7 @@ class Schedule extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state.seasons)
     return {
         // isLoading: state.games.isLoading,
         totalGamesCount: state.games.totalGamesCount,

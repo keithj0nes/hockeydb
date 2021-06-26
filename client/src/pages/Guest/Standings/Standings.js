@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getStandingsPageFilters, getStandings } from '../../../redux/actions/teams';
-import { Select } from '../../../components';
+import { Select, Table } from '../../../components';
 import { getQuery, setQuery } from '../../../helpers';
-import GuestTable from '../../../components/GuestTable';
 
 // clean this file up
 
@@ -72,10 +71,10 @@ const Standings = ({ location, getStandingsPageFilters, getStandings, currentSea
                         <div key={t.division_name} style={{ background: 'white', margin: '0 10px' }}>
                             <h2 style={{ paddingLeft: 20 }}>{t.division_name}</h2>
 
-                            <GuestTable
+                            <Table
                                 data={t.teams_in_division}
                                 minWidth={800}
-                                sections={{
+                                columns={{
                                     rank: 'one',
                                     name: { as: 'name', flex: 'four', link: { to: '/teams', key: 'id', search: season } },
                                     games_played: { as: 'gp', flex: 'one' },

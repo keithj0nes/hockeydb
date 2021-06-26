@@ -6,7 +6,7 @@ const initialteamstate = {
     isLoading: true,
     teams: [],
     singleTeam: {
-        record: {},
+        record: [],
         team: {},
         seasonsSelect: [],
         schedule: [],
