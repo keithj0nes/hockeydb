@@ -95,7 +95,6 @@ const deletePlayer = async (req, res) => {
 };
 
 
-
 module.exports = {
     getAllPlayers,
     getPlayerById,

@@ -30,18 +30,39 @@ export const request = async ({ url, method, session, publicRoute }) => {
             Authorization: publicRoute ? null : `Bearer ${access_token}`,
         },
     }).catch(err => {
-        console.log(err, 'error in responseRaw');
+        console.log(err.response, 'error in responseRaw');
 
-        store.dispatch({
-            type: TOGGLE_MODAL,
-            modalProps: {
-                isVisible: true,
-                title: 'Error',
-                isClosableOnBackgroundClick: true,
-                message: 'Cannot connect to the server \n Confirm server is running \n Error code: 500',
-            },
-            modalType: 'alert',
-        });
+        const { status, message, notification_type } = err.response.data;
+
+        switch (notification_type) {
+        case 'snack': {
+            const options = {
+                message: 'Error',
+                description: message,
+                onClick: () => {
+                    console.log('Notification Clicked!');
+                },
+                placement: 'topRight',
+                duration: 0,
+            };
+            notification.error(options);
+            break;
+        }
+        default:
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: {
+                    isVisible: true,
+                    title: `Error - Status ${status || 500}`,
+                    isClosableOnBackgroundClick: true,
+                    // message: `Cannot connect to the server \n Confirm server is running \n Error code: ${status}`,
+                    message: message || 'Cannot connect to the server \n Confirm server is running',
+                },
+                modalType: 'alert',
+            });
+            break;
+        }
+
 
         return false;
     });

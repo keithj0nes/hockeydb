@@ -48,20 +48,22 @@ const DashGamesDetails = ({ history, match, getGameById, gameDetails }) => {
     // console.log(location, 'location!')
     console.log(_gameDetails, 'gamedetails');
 
+    // commented out due to infinite load currently
+
     // component did mount
-    useEffect(() => {
-        // setGameDetails({...gameDetails, home_team: 'HAHAH', away_team: 'awww'})
-        // console.log(gameDetails, 'gamedetails')
-        console.log(match.params.id, 'GET API CALL HERE IN USEEFFECT');
+    // useEffect(() => {
+    //     // setGameDetails({...gameDetails, home_team: 'HAHAH', away_team: 'awww'})
+    //     // console.log(gameDetails, 'gamedetails')
+    //     console.log(match.params.id, 'GET API CALL HERE IN USEEFFECT');
 
-        getGameById(match.params.id);
-    }, [match.params.id, getGameById]);
+    //     getGameById(match.params.id);
+    // }, [match.params.id, getGameById]);
 
-    // update game details from redux state
-    useEffect(() => {
-        console.log(gameDetails, 'in use effect 2');
-        setGameDetails({ ..._gameDetails, ...gameDetails });
-    }, [gameDetails, _gameDetails]);
+    // // update game details from redux state
+    // useEffect(() => {
+    //     console.log(gameDetails, 'in use effect 2');
+    //     setGameDetails({ ..._gameDetails, ...gameDetails });
+    // }, [gameDetails, _gameDetails]);
 
 
     return (

@@ -1,6 +1,5 @@
 /* eslint-disable no-multi-spaces */
 const express = require('express');
-const bodyParser = require('body-parser');
 const massive = require('massive');
 const cors = require('cors');
 const path = require('path');
@@ -12,8 +11,8 @@ module.exports = app;
 const port = process.env.PORT;
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     console.log(req.method, '=>', req.url);
     next();
@@ -24,15 +23,6 @@ app.use((req, res, next) => {
 
 // /// SET UP RETURNERROR FUNCTION FOR ERROR CATCH
 
-// front end:
-
-// COMPLETE TEAMS PAGE
-
-// schedule page
-// when on schedules, filter by different season
-// when clicking on a team, it should show team by that filtered season id
-// when clicking on another team within that team page, should go to that team by filtered season id
-// currently it just sends to the team id without a season id associated with it
 
 // controller imports
 const news = require('./controllers/news');
@@ -211,6 +201,28 @@ app.put('/api/auth/:id');
 
 // Login from cookie
 app.post('/api/auth/login/cookie', auth.loginFromCookie);
+
+// 404
+app.use((req, res) => {
+    res.status(404).json({ status: 404, message: 'Route not found' });
+});
+
+// Error handler
+
+// to use, throw an object in the controller and pass the error to next(err) in the catch
+// throw {status: 404, message: 'Seasons received an error', notification_type: 'snack'}
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+    console.log(err, 'errrrrr')
+    const errorObject = {
+        status: err.status || 500,
+        message: err.message ? err.message : err,
+        error: true,
+        notification_type: err.notification_type || 'modal',
+    };
+    console.log(errorObject)
+    res.status(errorObject.status).json(errorObject);
+});
 
 // Used for production
 if (process.env.NODE_ENV === 'production') {

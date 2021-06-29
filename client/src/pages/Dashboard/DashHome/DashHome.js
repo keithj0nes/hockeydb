@@ -27,6 +27,7 @@ const initState = {
 
 const DashHome = () => {
     const [state, setState] = useState(initState);
+    const [calculatorVisible, setCalculatorVisible] = useState(false);
     const [color, setColor] = useState('#FFFFFF');
     const [colorPickerOpen, setcolorPickerOpen] = useState(false);
     const pageHeaderInfo = {
@@ -132,6 +133,11 @@ const DashHome = () => {
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
 
+            <Button
+                title={calculatorVisible ? 'Hide Calculator' : 'Show Calculator'}
+                onClick={() => setCalculatorVisible(!calculatorVisible)}
+            />
+
             {/* <button id="bt" onClick={() => setcolorPickerOpen(true)}>OPN PICKER</button> */}
 
             {/* <ColorPicker onSubmit={e => console.log(e)} /> */}
@@ -162,103 +168,106 @@ const DashHome = () => {
 
             <div style={{ height: 100, width: 200, background: color }} /> */}
 
-            <Form
-                layout="vertical"
-                style={{ maxWidth: 500, margin: '40px auto' }}
-                onFinish={stripeCalculator}
-            >
-                <h2>How to use Season Calculator:</h2>
-                <p>Enter a Season Price to calculate the total season price minus Stripe and PML (us) fees. Stripe fees are required by default while PML fees are optional and added on top of the Stripe fees. Use the Estimated Transaction box to multiply each category to an overall season count - IE: fees are $100 and there are 50 people in the league, use the Estimated Transation box to view the overall pricing for 50 people in the league.</p>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
-                    <Form.Item label="Season Price" name="total_price" style={{ width: '48%' }}>
-                        <Input placeholder="Enter Price" />
-                    </Form.Item>
+            {calculatorVisible && (
+                <Form
+                    layout="vertical"
+                    style={{ margin: '40px 16px', padding: 10, background: 'white' }}
+                    onFinish={stripeCalculator}
+                >
+                    <h2>How to use Season Calculator:</h2>
+                    <p>Enter a Season Price to calculate the total season price minus Stripe and PML (us) fees. Stripe fees are required by default while PML fees are optional and added on top of the Stripe fees. Use the Estimated Transaction box to multiply each category to an overall season count - IE: fees are $100 and there are 50 people in the league, use the Estimated Transation box to view the overall pricing for 50 people in the league.</p>
 
-                    <Form.Item label="Estimated Transactions" name="estimated_transactions" style={{ width: '48%' }}>
-                        <Input placeholder="Enter Transations Count" />
-                    </Form.Item>
-                </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
+                        <Form.Item label="Season Price" name="total_price" style={{ width: '48%' }}>
+                            <Input placeholder="Enter Price" />
+                        </Form.Item>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Form.Item label="Estimated Transactions" name="estimated_transactions" style={{ width: '48%' }}>
+                            <Input placeholder="Enter Transations Count" />
+                        </Form.Item>
+                    </div>
 
-                    <Form.Item label="Additional Percentage" name="additional_percentage" style={{ width: '48%' }}>
-                        <Input placeholder="Enter Percentage" />
-                    </Form.Item>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                    <Form.Item label="Additional Cents" name="additional_cents" style={{ width: '48%' }}>
-                        <Input placeholder="Enter Cents" />
-                    </Form.Item>
-                </div>
+                        <Form.Item label="Additional Percentage" name="additional_percentage" style={{ width: '48%' }}>
+                            <Input placeholder="Enter Percentage" />
+                        </Form.Item>
 
-                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-                    <Button htmlType="submit" title="Calculate" type="admin" />
-                </div>
+                        <Form.Item label="Additional Cents" name="additional_cents" style={{ width: '48%' }}>
+                            <Input placeholder="Enter Cents" />
+                        </Form.Item>
+                    </div>
 
-                <div style={{ marginTop: 40 }} />
+                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <Button htmlType="submit" title="Calculate" type="admin" />
+                    </div>
 
-                <div style={{ width: '33%', float: 'left', textAlign: 'center' }}>
-                    <p style={{ fontSize: 20 }}>Stripe Rate:</p>
-                    <p style={{ fontSize: 15 }}>{state.stripePercentage}% + {state.stripeCents.toFixed(2)}c</p>
-                </div>
+                    <div style={{ marginTop: 40 }} />
 
-                <div style={{ width: '33%', float: 'left', textAlign: 'center' }}>
-                    <p style={{ fontSize: 20 }}>Additional Rate:</p>
-                    <p style={{ fontSize: 15 }}>{state.additionalPercentage}% + {state.additionalCents}c</p>
-                </div>
+                    <div style={{ width: '33%', float: 'left', textAlign: 'center' }}>
+                        <p style={{ fontSize: 20 }}>Stripe Rate:</p>
+                        <p style={{ fontSize: 15 }}>{state.stripePercentage}% + {state.stripeCents.toFixed(2)}c</p>
+                    </div>
 
-                <div style={{ width: '33%', float: 'left', textAlign: 'center' }}>
-                    <p style={{ fontSize: 20 }}>Total Rate:</p>
-                    <p style={{ fontSize: 15 }}>{state.stripePercentage + state.additionalPercentage}% + {(state.stripeCents + (state.additionalCents / 100)).toFixed(2)}c</p>
-                </div>
+                    <div style={{ width: '33%', float: 'left', textAlign: 'center' }}>
+                        <p style={{ fontSize: 20 }}>Additional Rate:</p>
+                        <p style={{ fontSize: 15 }}>{state.additionalPercentage}% + {state.additionalCents}c</p>
+                    </div>
 
-                {/* <p>Stripe Rate: {state.stripePercentage}% + {state.stripeCents.toFixed(2)}c</p>
-                <p>Additional Rate: {state.additionalPercentage}% + {state.additionalCents}c</p>
-                <p>Total Rate: {state.stripePercentage + state.additionalPercentage}% + {(state.stripeCents + (state.additionalCents / 100)).toFixed(2)}c</p> */}
-                <p style={{ clear: 'both', paddingTop: 12 }}>To get the full amount entered in the input above, enter: ${state.singleToGetDesiredPrice}</p>
+                    <div style={{ width: '33%', float: 'left', textAlign: 'center' }}>
+                        <p style={{ fontSize: 20 }}>Total Rate:</p>
+                        <p style={{ fontSize: 15 }}>{state.stripePercentage + state.additionalPercentage}% + {(state.stripeCents + (state.additionalCents / 100)).toFixed(2)}c</p>
+                    </div>
 
-                <div style={{ marginTop: 40 }} />
+                    {/* <p>Stripe Rate: {state.stripePercentage}% + {state.stripeCents.toFixed(2)}c</p>
+                    <p>Additional Rate: {state.additionalPercentage}% + {state.additionalCents}c</p>
+                    <p>Total Rate: {state.stripePercentage + state.additionalPercentage}% + {(state.stripeCents + (state.additionalCents / 100)).toFixed(2)}c</p> */}
+                    <p style={{ clear: 'both', paddingTop: 12 }}>To get the full amount entered in the input above, enter: ${state.singleToGetDesiredPrice}</p>
 
-
-                {/* {state.hasBeenSubmitted && (
-                    <>
-                        <p>Total Stripe Fees: {state.singleStripeFees}</p>
-                        <p>Total PML Fees: {state.singlePMLFees}</p>
-                        <p>Total Combined Fees: {state.singleCombinedFees}</p>
-                        <p>Total League Income: {state.singleIncomeForLeague}</p>
-                        <p>To get the amount entered in the input above, enter: {state.singleToGetDesiredPrice} </p>
-                    </>
-                )} */}
-
-                {state.hasBeenSubmitted && (
-                    <>
-                        <h3>Single Participant Totals</h3>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                            {card({ title: 'Total Stripe Fees', number: state.singleStripeFees, prefix: '$' })}
-                            {card({ title: 'Total PML Fees', number: state.singlePMLFees, prefix: '$' })}
-                            {card({ title: 'Total Combined Fees', number: state.singleCombinedFees, prefix: '$' })}
-                            {card({ title: 'Total League Income', number: state.singleIncomeForLeague, prefix: '$' })}
-                            {/* {card({ title: 'Total Stripe Fees', number: state.singleStripeFees })} */}
-                            {/* {card({ title: 'To get the amount entered in the input above', number: state.singleToGetDesiredPrice, prefix: '$' })} */}
-                        </div>
+                    <div style={{ marginTop: 40 }} />
 
 
-                    </>
-                )}
+                    {/* {state.hasBeenSubmitted && (
+                        <>
+                            <p>Total Stripe Fees: {state.singleStripeFees}</p>
+                            <p>Total PML Fees: {state.singlePMLFees}</p>
+                            <p>Total Combined Fees: {state.singleCombinedFees}</p>
+                            <p>Total League Income: {state.singleIncomeForLeague}</p>
+                            <p>To get the amount entered in the input above, enter: {state.singleToGetDesiredPrice} </p>
+                        </>
+                    )} */}
 
-                {state.hasEstimatedAmount && (
-                    <>
-                        <h3>Overall Season Totals</h3>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                            {card({ title: 'Overall Stripe Fees', number: state.seasonStripeFees, prefix: '$' })}
-                            {card({ title: 'Overall PML Fees', number: state.seasonPMLFees, prefix: '$' })}
-                            {card({ title: 'Overall Combined Fees', number: state.seasonCombinedFees, prefix: '$' })}
-                            {card({ title: 'Overall League Income', number: state.seasonIncomeForLeague, prefix: '$' })}
-                        </div>
-                    </>
-                )}
+                    {state.hasBeenSubmitted && (
+                        <>
+                            <h3>Single Participant Totals</h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                                {card({ title: 'Total Stripe Fees', number: state.singleStripeFees, prefix: '$' })}
+                                {card({ title: 'Total PML Fees', number: state.singlePMLFees, prefix: '$' })}
+                                {card({ title: 'Total Combined Fees', number: state.singleCombinedFees, prefix: '$' })}
+                                {card({ title: 'Total League Income', number: state.singleIncomeForLeague, prefix: '$' })}
+                                {/* {card({ title: 'Total Stripe Fees', number: state.singleStripeFees })} */}
+                                {/* {card({ title: 'To get the amount entered in the input above', number: state.singleToGetDesiredPrice, prefix: '$' })} */}
+                            </div>
 
-            </Form>
+
+                        </>
+                    )}
+
+                    {state.hasEstimatedAmount && (
+                        <>
+                            <h3>Overall Season Totals</h3>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                                {card({ title: 'Overall Stripe Fees', number: state.seasonStripeFees, prefix: '$' })}
+                                {card({ title: 'Overall PML Fees', number: state.seasonPMLFees, prefix: '$' })}
+                                {card({ title: 'Overall Combined Fees', number: state.seasonCombinedFees, prefix: '$' })}
+                                {card({ title: 'Overall League Income', number: state.seasonIncomeForLeague, prefix: '$' })}
+                            </div>
+                        </>
+                    )}
+
+                </Form>
+            )}
 
         </>
     );

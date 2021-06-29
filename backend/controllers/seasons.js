@@ -2,7 +2,7 @@ const app = require('../server.js');
 const helpers = require('./helpers');
 
 
-const getSeasons = async (req, res) => {
+const getSeasons = async (req, res, next) => {
     try {
         const db = app.get('db');
         const query = helpers.filter(req.query);
@@ -27,6 +27,7 @@ const getSeasons = async (req, res) => {
         return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons' });
     } catch (error) {
         console.log(error);
+        // return next(error)
         let errorDetails;
         switch (error.routine) {
         case 'errorMissingColumn':
