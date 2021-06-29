@@ -144,8 +144,6 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
         ],
     };
 
-    console.log(divisions)
-
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
@@ -165,7 +163,7 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
                                 <li onClick={() => { handleEditDivision(d); closePopover(); }}>Edit Division</li>
                                 <li onClick={() => { handleHideDivision(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Division`}</li>
                                 <li onClick={() => { handleDeleteDivision(d); closePopover(); }}>Delete Division</li>
-                            </ul> 
+                            </ul>
                         )}
                     />
                 </div>
@@ -174,22 +172,12 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
     );
 };
 
-// const mapStateToProps = state => ({
-//     divisions: state.divisions.divisions,
-//     isLoading: state.divisions.isLoading,
-//     seasons: state.seasons.seasons,
-//     currentSeason: state.seasons.currentSeason,
-// });
-
-const mapStateToProps = state => {
-    // console.log(state.seasons)
-    return {
-        divisions: state.divisions.divisions,
-        isLoading: state.divisions.isLoading,
-        seasons: state.seasons.seasons,
-        currentSeason: state.seasons.currentSeason,
-    };
-};
+const mapStateToProps = state => ({
+    divisions: state.divisions.divisions,
+    isLoading: state.divisions.isLoading,
+    seasons: state.seasons.seasons,
+    currentSeason: state.seasons.currentSeason,
+});
 
 const mapDispatchToProps = dispatch => ({
     getDivisions: filters => dispatch(getDivisions(filters)),
@@ -203,6 +191,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashDivisions2);
 
 DashDivisions2.propTypes = {
     divisions: PropTypes.array,
+    seasons: PropTypes.array,
     getDivisions: PropTypes.func,
     createDivision: PropTypes.func,
     toggleModal: PropTypes.func.isRequired,
