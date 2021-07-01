@@ -197,6 +197,17 @@ app.put('/api/auth/:id');
 // Login from cookie
 app.post('/api/auth/login/cookie', auth.loginFromCookie);
 
+// Used for production
+if (process.env.NODE_ENV === 'production') {
+    console.log('running in herooku');
+    // Serve any static files
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    // Handle React routing, return all requests to React app
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    });
+}
+
 // 404
 app.use((req, res) => {
     res.status(404).json({ status: 404, message: 'Route not found' });
@@ -222,16 +233,5 @@ app.use((err, req, res, next) => {
     console.log('\x1B[0;31m ----------------------- END ERROR -----------------------\x1B[0m');
     res.status(errorObject.status).json(errorObject);
 });
-
-// Used for production
-if (process.env.NODE_ENV === 'production') {
-    console.log('running in herooku');
-    // Serve any static files
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    // Handle React routing, return all requests to React app
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-    });
-}
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
