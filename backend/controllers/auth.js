@@ -22,6 +22,7 @@ const authorizeAccessToken2 = (roles) => async (req, res, next) => {
         req.user = user;
         console.log(req.user, 'USER!');
         // return next();
+        return true;
     })(req, res, next);
 };
 
@@ -49,12 +50,12 @@ const loginFromCookie = async (req, res) => {
         const season = await db.seasons.findOne({ is_active: true });
 
         // NEED TO CHANGE THIS TO BE OPTIMIZED
-        const seasons = await db.seasons.find({ 'deleted_date =': null }).catch(err => console.log(err));
+        const seasons = await db.seasons.find({ 'deleted_date =': null }).catch(error => console.log(error));
         // NEED TO CHANGE THIS TO BE OPTIMIZED
 
-        await db.users.update({ id: user.id }, { last_login: new Date() }).catch(err => console.log(err, 'update last_login error on cookie login'));
+        await db.users.update({ id: user.id }, { last_login: new Date() }).catch(error => console.log(error, 'update last_login error on cookie login'));
 
-        res.send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' });
+        return res.send({ status: 200, data: { user, season, seasons }, message: 'Welcome back! You\'re logged in on refresh!' });
     })(req, res);
 };
 
@@ -69,16 +70,16 @@ const login = async (req, res) => {
             return res.send({ status: info.status || 404, error: true, message: info.message || 'Incorrect email or password.', notification_type: 'snack' });
         }
 
-        req.login(user, { session: false }, async (errr) => {
+        return req.login(user, { session: false }, async (errr) => {
             if (errr) {
                 console.log(errr, 'errr');
                 return res.send({ status: 500, error: true, message: `An error occurred: ${errr}` });
             }
 
             const season = await db.seasons.findOne({ is_active: true });
-            await db.users.update({ id: user.id }, { last_login: new Date() }).catch(err => console.log(err, 'update last_login error on LOCAL login'));
+            await db.users.update({ id: user.id }, { last_login: new Date() }).catch(error => console.log(error, 'update last_login error on LOCAL login'));
             const access_token = jwt.sign({ user, season }, JWT_SECRET);
-            res.send({ status: 200, data: { user, season, access_token }, message: 'Welcome! You\'re logged in!' });
+            return res.send({ status: 200, data: { user, season, access_token }, message: 'Welcome! You\'re logged in!' });
         });
     })(req, res);
 };
@@ -348,6 +349,7 @@ passport.use('jwt', new JWTStrategy({
         return done(null, token.user);
     } catch (err) {
         console.log(err, 'catch!');
+        return false;
     }
 }));
 

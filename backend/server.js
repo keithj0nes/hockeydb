@@ -19,11 +19,6 @@ app.use((req, res, next) => {
 });
 
 
-// TO DO:
-
-// /// SET UP RETURNERROR FUNCTION FOR ERROR CATCH
-
-
 // controller imports
 const news = require('./controllers/news');
 const auth = require('./controllers/auth');
@@ -80,7 +75,7 @@ app.get('/api/games/:id', games.getGameById);
 
 // Teams
 app.get('/api/teams/',             teams.getAllTeams);
-app.get('/api/teams/by_division',  teams.getAllTeamsByDivision);
+app.get('/api/teams/by-division',  teams.getAllTeamsByDivision);
 app.get('/api/teams/:id',          teams.getTeamById);
 app.get('/api/teams/:id/schedule', teams.getTeamSchedule);
 // app.get('/api/teams/:id/roster', teams.getTeamSchedule);
@@ -113,9 +108,9 @@ app.get('/api/divisions/', divisions.getAllDivisions);
 // app.get('/api/divisions/:season_id', divisions.getDivisionById);
 
 // Misc
-app.get('/api/misc/teams_filters',     misc.getTeamsPageFilters);
-app.get('/api/misc/standings_filters', misc.getStandingsPageFilters);
-app.get('/api/misc/news_tags',         misc.getNewsTags);
+app.get('/api/misc/teams-filters',     misc.getTeamsPageFilters);
+app.get('/api/misc/standings-filters', misc.getStandingsPageFilters);
+app.get('/api/misc/news-tags',         misc.getNewsTags);
 
 
 // ADMIN
@@ -213,14 +208,18 @@ app.use((req, res) => {
 // throw {status: 404, message: 'Seasons received an error', notification_type: 'snack'}
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-    console.log(err, 'errrrrr')
+    const date = new Date();
     const errorObject = {
         status: err.status || 500,
         message: err.message ? err.message : err,
         error: true,
         notification_type: err.notification_type || 'modal',
+        date,
     };
-    console.log(errorObject)
+    console.log('\x1B[0;31m ------------------------- ERROR ------------------------- \x1B[0m');
+    console.log('The error occurend on', date.toString());
+    console.log(errorObject);
+    console.log('\x1B[0;31m ----------------------- END ERROR -----------------------\x1B[0m');
     res.status(errorObject.status).json(errorObject);
 });
 
