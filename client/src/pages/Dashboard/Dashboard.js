@@ -48,7 +48,9 @@ const dashLinks = {
         { name: 'My Teams',   to: '/myteams',    icon: ICONS.TEAMS,     component: () => <h1>MY TEAMS PAGE</h1>,  exact: false, hideFromNavigation: false },
         { name: 'Players',    to: '/players',    icon: ICONS.USERS,     component: DashPlayers,                   exact: false, hideFromNavigation: false },
     ],
-    player: [],
+    player: [
+        { name: 'Players',    to: '/players',    icon: ICONS.USERS,     component: DashPlayers,                   exact: false, hideFromNavigation: false },
+    ],
 };
 
 const Dashboard = (props) => {
@@ -68,7 +70,7 @@ const Dashboard = (props) => {
                     <ProfilePic />
                 </div>
 
-                {dashLinks[admin_type].map(page => (
+                {dashLinks[admin_type || 'player'].map(page => (
                     <Route
                         key={page.to}
                         path={`${match.path}${page.to}`}

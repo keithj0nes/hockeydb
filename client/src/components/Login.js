@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { Redirect } from 'react-router-dom';
 import { Form, Input } from 'antd';
 import logo from 'assets/images/logo.png';
-import { login, loginFromCookie, sendResetPassword } from '../redux/actions/auth';
+import { login, loginFromCookie, sendResetPassword, createAccount } from '../redux/actions/auth';
 import { Button } from '.';
 import './login.scss';
-import { wait } from '../helpers'
+import { wait } from '../helpers';
 
 const initialState = {
     email: '',
@@ -15,11 +14,12 @@ const initialState = {
     redirectToReferrer: false,
 };
 
-const Login = ({ loginFromCookie, login, location, history, user, sendResetPassword }) => {
+const Login = ({ loginFromCookie, login, location, history, user, sendResetPassword, createAccount }) => {
     const [form] = Form.useForm();
+    const [createForm] = Form.useForm();
     const [state, setState] = useState(initialState);
     const [isLoading, setIsLoading] = useState(false);
-    const [showForm, setShowForm] = useState('login'); // one of login | reset | reset_success
+    const [showForm, setShowForm] = useState('login'); // one of login | reset | reset_success | create
 
     useEffect(() => {
         let redirectToReferrer;
@@ -39,12 +39,25 @@ const Login = ({ loginFromCookie, login, location, history, user, sendResetPassw
     }, [location.state, history, loginFromCookie, user]);
 
     const handleSubmit = async values => {
-        login({ email: values.email.toLowerCase(), password: values.password });
+        login({ email: values.email.toLowerCase(), password: values.password, redirect: location.state?.from.pathname });
+    };
+
+    const handleCreateSubmit = async values => {
+        setIsLoading(true);
+        await wait(1000);
+
+        const createSuccess = await createAccount({ ...values, email: values.email.toLowerCase() });
+        setIsLoading(false);
+        if (!createSuccess) {
+            return;
+        }
+        createForm.resetFields();
+        setShowForm('login');
     };
 
     const handleAutoLogin = async e => {
         e.preventDefault();
-        login({ email: `${e.target.name}@hockeydb.com`, password: e.target.name === 'teammanager' ? 'manager' : e.target.name });
+        login({ email: `${e.currentTarget.name}@hockeydb.com`, password: e.currentTarget.name === 'teammanager' ? 'manager' : e.currentTarget.name, redirect: location.state?.from.pathname });
     };
 
     const handleResetPassword = async (values) => {
@@ -87,6 +100,11 @@ const Login = ({ loginFromCookie, login, location, history, user, sendResetPassw
                     <Button onClick={() => setShowForm('reset')} htmlType="button" type="link" title="Forgot your password?" />
                 </div>
                 <Button htmlType="submit" title="LOGIN" style={{ width: '100%' }} />
+
+                <div className="m-t-m f-justify-between">
+                    <p>Don&apos;t have an account?</p>
+                    <Button onClick={() => setShowForm('create')} htmlType="button" type="link" title="Create account" />
+                </div>
             </Form>
 
 
@@ -106,15 +124,53 @@ const Login = ({ loginFromCookie, login, location, history, user, sendResetPassw
                     <Input />
                 </Form.Item>
 
-                <Button disabled={isLoading} htmlType="submit" title="SEND PASSWORD RESET" style={{ width: '100%' }} />
+                <Button loading={isLoading} htmlType="submit" title="SEND PASSWORD RESET" style={{ width: '100%' }} />
                 <p className="p-t-m">
                     Did you remember your password? &nbsp;
                     <Button onClick={() => setShowForm('login')} htmlType="button" type="link" title="Try logging in!" />
                 </p>
             </Form>
 
+            <Form
+                form={createForm}
+                layout="vertical"
+                className={`box-shadow login-form ${showForm === 'create' ? 'toggleIn' : 'toggleOut'}`}
+                onFinish={handleCreateSubmit}
+            >
+                <p className="text-center">Create your account</p>
+
+                <img src={logo} alt="Logo" className="logo" />
+
+                <p className="text-center p-b-m">Creating an account will allow you to register for the league</p>
+                {/* <p className="p-v-m text-center">Please complete your registration below.</p> */}
+
+                <Form.Item label="First name" name="first_name" rules={[{ required: true, message: 'Please enter your first name' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Last name" name="last_name" rules={[{ required: true, message: 'Please enter your last name' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter your email' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter a password' }]}>
+                    <Input.Password className="input-password" type="password" />
+                </Form.Item>
+
+                <div className="m-t-xl">
+                    <Button htmlType="submit" title="CREATE ACCOUNT" style={{ width: '100%' }} loading={isLoading} />
+                </div>
+                <div className="m-t-m f-justify-between">
+                    <p>Already have an account?</p>
+                    <Button onClick={() => setShowForm('login')} htmlType="button" type="link" title="Log in" />
+                </div>
+            </Form>
+
             <div className={`box-shadow login-form ${showForm === 'reset_success' ? 'toggleIn' : 'toggleOut'}`}>
-                <p className="text-center">We've sent you an email!</p>
+                <p className="text-center">We&apos;ve sent you an email!</p>
 
                 <img src={logo} alt="Logo" className="logo" />
 
@@ -125,7 +181,7 @@ const Login = ({ loginFromCookie, login, location, history, user, sendResetPassw
                 <Button htmlType="button" title="RETURN TO LOGIN" style={{ width: '100%' }} onClick={() => setShowForm('login')} />
             </div>
 
-            <div className="f-align-center f-column" style={{ paddingTop: 535 }}>
+            <div className="f-align-center f-column">
                 <Button onClick={handleAutoLogin} name="admin" type="link" title="Login as [Admin]" />
                 <Button onClick={handleAutoLogin} name="scorekeeper" type="link" title="Login as [Scorekeeper]" />
                 <Button onClick={handleAutoLogin} name="teammanager" type="link" title="Login as [Team Manager]" />
@@ -140,11 +196,19 @@ const mapStateToProps = state => ({
 });
 
 
-const mapDispatchToProps = dispatch => ({
-    login: loginData => dispatch(login(loginData)),
-    loginFromCookie: () => dispatch(loginFromCookie()),
-    sendResetPassword: userData => dispatch(sendResetPassword(userData)),
-});
+// const mapDispatchToProps = dispatch => ({
+//     login: loginData => dispatch(login(loginData)),
+//     loginFromCookie: () => dispatch(loginFromCookie()),
+//     sendResetPassword: userData => dispatch(sendResetPassword(userData)),
+//     createAccount
+// });
+
+const mapDispatchToProps = {
+    login,
+    loginFromCookie,
+    sendResetPassword,
+    createAccount,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
@@ -155,4 +219,5 @@ Login.propTypes = {
     history: PropTypes.object,
     user: PropTypes.object,
     sendResetPassword: PropTypes.func,
+    createAccount: PropTypes.func,
 };

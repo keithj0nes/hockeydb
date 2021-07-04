@@ -101,7 +101,7 @@ export const standings = (state = initialStandingsState, { type, payload }) => {
 const initialPlayersState = {
     allPlayers: [],
     selectedPlayer: null,
-    playerStats: []
+    playerStats: [],
 };
 
 export const players = (state = initialPlayersState, { type, payload }) => {
@@ -109,7 +109,7 @@ export const players = (state = initialPlayersState, { type, payload }) => {
     case GET_PLAYERS:
         return { ...state, allPlayers: payload };
     case `playerStats/${GET_SUCCESS}`:
-        return {...state, isLoading: false, playerStats: payload};
+        return { ...state, isLoading: false, playerStats: payload };
     default:
         return state;
     }
@@ -186,7 +186,7 @@ export const users = (state = initialUsersState, { type, payload }) => {
     case `users/${GET_INIT}`:
         return { ...state, isLoading: true };
     case `users/${GET_SUCCESS}`:
-        return { ...state, users: payload, isLoading: false };
+        return { ...state, users: payload.users, isLoading: false };
     case `users/${CREATE_SUCCESS}`:
         return { ...state, users: [payload, ...state.users], isLoading: false };
     case `users/${UPDATE_SUCCESS}/reinvite`: {

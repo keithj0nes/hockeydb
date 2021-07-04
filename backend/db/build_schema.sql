@@ -34,7 +34,6 @@ CREATE TABLE "users" (
   "admin_type" VARCHAR,
   "is_suspended" BOOLEAN NOT NULL DEFAULT false,
   "suspended_date" TIMESTAMP,
-  "is_admin" BOOLEAN NOT NULL DEFAULT false,
   "invite_token" VARCHAR,
   "invite_date" TIMESTAMP,
   "reinvite_date" TIMESTAMP,
@@ -48,6 +47,18 @@ CREATE TABLE "passwords" (
   "user_id" INTEGER,        -- REFERENCES users(id),
   "salt" VARCHAR,
   "pw" VARCHAR
+);
+
+CREATE TABLE "roles" (
+  "id" SERIAL PRIMARY KEY, 
+  "name" VARCHAR,
+  "description" VARCHAR
+);
+
+CREATE TABLE "user_role" (
+  "id" SERIAL PRIMARY KEY, 
+  "user_id" INTEGER NOT NULL,
+  "role_id" INTEGER NOT NULL
 );
 
 CREATE TABLE "news" (
@@ -292,6 +303,8 @@ ALTER TABLE "games" ADD FOREIGN KEY ("scorekeeper_id") REFERENCES "users" ("id")
 ALTER TABLE "news_tags" ADD FOREIGN KEY ("tags_id") REFERENCES "tags" ("id");
 ALTER TABLE "news_tags" ADD FOREIGN KEY ("news_id") REFERENCES "news" ("id");
 
+ALTER TABLE "user_role" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "user_role" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
 
 -- CREATE TABLE "goalie_stats" (
 --   "id" int,

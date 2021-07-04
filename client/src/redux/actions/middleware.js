@@ -68,7 +68,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
     });
 
     if (!responseRaw) return false;
-    const { status, data, message, shouldLogOut, redirect, snack, notification_type } = responseRaw.data;
+    const { status, data, message, shouldLogOut, redirect, snack, notification_type, notification_duration } = responseRaw.data;
 
     if (snack) {
         console.error(`There should be no more snack: true keys \n Please use notification_type: "snack" in your backend response \n ${method} => ${url}`);
@@ -82,6 +82,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
         type = 'success';
         break;
     case '4':
+    case '5':
         type = 'error';
         break;
     default:
@@ -98,7 +99,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
                 console.log('Notification Clicked!');
             },
             placement: 'topRight',
-            duration: type === 'error' ? 0 : undefined,
+            duration: type === 'error' ? 0 : notification_duration,
         };
 
         switch (type) {

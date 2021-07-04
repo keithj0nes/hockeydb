@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
@@ -90,9 +91,9 @@ const signup = async (req, res) => {
     passport.authenticate('local-signup', async (err, user, info) => {
         if (err || !user) {
             console.log(err, user, info);
-            return res.send({ status: 400, error: true, message: err || info.message });
+            return res.send({ status: 400, error: true, message: err || info.message, notification_type: 'snack' });
         }
-        return res.send({ status: 200, data: user, message: 'You have successfully created an account.' });
+        return res.send({ status: 200, data: [], message: 'Account created, please log in', notification_type: 'snack' });
     })(req, res);
 };
 
@@ -143,6 +144,8 @@ const registerFromInvite = async (req, res) => {
     if (!user) {
         return res.send({ status: 400, error: true, message: 'Registration code invalid. Please contact your administrator for a new registration code.', notification_type: 'snack' });
     }
+
+    await db.users.update({ id: user.id }, { first_name, last_name });
 
     // confirm user has not already registered
     // (check to see if password exists)
@@ -213,7 +216,7 @@ const sendResetPassword = async (req, res) => {
 
 const updatePassword = async (req, res) => {
     const db = app.get('db');
-    const { email, password, password_confirmation } = req.body;
+    const { password, password_confirmation } = req.body;
     const { token: invite_token } = req.params;
 
     if (password !== password_confirmation) {
@@ -265,32 +268,35 @@ passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
 }, async (email, password, done) => {
-    // F ind the user asssociated with the email provided
-    const db = app.get('db');
-    const user = await db.users.findOne({ email });
-    if (!user) {
-        return done(null, false, { message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' });
+    try {
+        const db = app.get('db');
+        const user = await db.users.findOne({ email });
+        if (!user) {
+            return done(null, false, { status: 400, message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' });
+        }
+
+        if (user.is_suspended) {
+            // return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
+            return done(null, false, { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', internal_message: 'USER_SUSPENDED' });
+        }
+
+        if (user.reinvite_date) {
+            await db.users.update({ id: user.id }, { reinvite_date: null }).catch(err => console.log(err, 'update local-login error on sign in'));
+        }
+
+        const pw = await db.passwords.findOne({ user_id: user.id });
+        const comparedPassword = await bcrypt.compare(password, pw.pw);
+
+        if (!comparedPassword) {
+            return done(null, false, { status: 400, message: 'Invalid password.' });
+        }
+
+        return done(null, user);
+    } catch (error) {
+        console.log('LOCAL-LOGIN ERROR: ', error);
+        return done(null, false, { status: 500, message: 'Could not login' });
     }
-
-    if (user.is_suspended) {
-        // return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
-        return done(null, false, { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', internal_message: 'USER_SUSPENDED' });
-    }
-
-    if (user.reinvite_date) {
-        await db.users.update({ id: user.id }, { reinvite_date: null }).catch(err => console.log(err, 'update local-login error on sign in'));
-    }
-
-    // console.log(user, 'user')
-
-    const pw = await db.passwords.findOne({ user_id: user.id });
-    const comparedPassword = await bcrypt.compare(password, pw.pw);
-
-    if (!comparedPassword) {
-        return done(null, false, { message: 'Invalid password.' });
-    }
-
-    return done(null, user);
+    // Find the user asssociated with the email provided
 }));
 
 
@@ -301,24 +307,25 @@ passport.use('local-signup', new LocalStrategy({
     passwordField: 'password',
     passReqToCallback: true,
 }, async (req, email, password, done) => {
-    const db = app.get('db');
-    const user = await db.users.findOne({ email });
+    try {
+        const db = app.get('db');
+        const user = await db.users.findOne({ email });
 
-    if (user) {
-        return done(null, false, { message: 'Email being used. Please sign in.' });
+        if (user) {
+            return done(null, false, { status: 409, message: 'Account with this email already exists, please sign in.' });
+        }
+
+        const { first_name, last_name } = req.body;
+
+        const newUser = await db.users.insert({ first_name, last_name, email, created_date: new Date() });
+        const hash = await bcrypt.hash(password, 10);
+        await db.passwords.insert({ user_id: newUser.id, pw: hash });
+
+        return done(null, newUser);
+    } catch (error) {
+        console.log('LOCAL-SIGNUP ERROR: ', error);
+        return done(null, false, { status: 500, message: 'Could not create account' });
     }
-
-    const { first_name, last_name, is_admin, password_confirmation } = req.body;
-
-    if (password !== password_confirmation) {
-        return done(null, false, { message: 'Passwords must match.' });
-    }
-
-    const newUser = await db.users.insert({ first_name, last_name, is_admin, email });
-    const hash = await bcrypt.hash(password, 10);
-    await db.passwords.insert({ user_id: newUser.id, pw: hash });
-
-    return done(null, newUser);
 }));
 
 
@@ -338,7 +345,7 @@ passport.use('jwt', new JWTStrategy({
         if (req.roles && !req.roles.includes(token.user.admin_type)) {
             console.log('DOES NOT ROLSE');
             // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
-            return done(null, false, { message: 'You do not have permission for this action', redirect: '/dashboard', notification_type: 'snack' });
+            return done(null, false, { status: 401, message: 'You do not have permission for this action', redirect: '/dashboard', notification_type: 'snack' });
         }
 
         const isSuspended = await checkSuspended(token.user.id);

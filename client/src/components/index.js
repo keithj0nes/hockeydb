@@ -27,3 +27,4 @@ export { default as ResetPassword } from './ResetPassword';
 export { default as Login } from './Login';
 export { ColorPicker } from './ColorPicker';
 export { default as Table } from './Table';
+export { default as Banner } from './Banner';

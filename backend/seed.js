@@ -24,16 +24,16 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
         games: { min: 5, max: 8, exact: null }, // games per team - exact has priority
     };
     const admins = [
-        // {email: 'owner@hockeydb.com',       is_admin: true,  admin_type: 'owner'},         // not doing anything with this yet
-        { email: 'admin@hockeydb.com', is_admin: true, admin_type: 'admin' },
-        { email: 'scorekeeper@hockeydb.com', is_admin: true, admin_type: 'scorekeeper' }, // not doing anything with this yet
-        { email: 'teammanager@hockeydb.com', is_admin: true, admin_type: 'manager' }, // not doing anything with this yet
+        // {email: 'owner@hockeydb.com',  admin_type: 'owner'},         // not doing anything with this yet
+        { email: 'admin@hockeydb.com', admin_type: 'admin' },
+        { email: 'scorekeeper@hockeydb.com', admin_type: 'scorekeeper' }, // not doing anything with this yet
+        { email: 'teammanager@hockeydb.com', admin_type: 'manager' }, // not doing anything with this yet
     ];
 
 
     // create admins
     const createAdmins = async () => Promise.all(admins.map(async admin => {
-        const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: admin.admin_type, is_admin: admin.is_admin, email: admin.email });
+        const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: admin.admin_type, email: admin.email });
         const password = admin.admin_type;
         const hash = await bcrypt.hash(password, 10);
         await db.passwords.insert({ user_id: insertedAdmin.id, pw: hash });
@@ -269,10 +269,10 @@ function colorRandomizer() {
 //         games:   { min: 5,  max: 8,  exact: 2 },         // games per team - exact has priority
 //     }
 //     const admins = [
-//         // {email: 'owner@hockeydb.com',       is_admin: true,  admin_type: 'owner'},         // not doing anything with this yet
-//         { email: 'admin@hockeydb.com',       is_admin: true,  admin_type: 'admin' },
-//         { email: 'scorekeeper@hockeydb.com', is_admin: true,  admin_type: 'scorekeeper' },    // not doing anything with this yet
-//         { email: 'teammanager@hockeydb.com', is_admin: true,  admin_type: 'manager' }         // not doing anything with this yet
+//         // {email: 'owner@hockeydb.com',         admin_type: 'owner'},         // not doing anything with this yet
+//         { email: 'admin@hockeydb.com',         admin_type: 'admin' },
+//         { email: 'scorekeeper@hockeydb.com',   admin_type: 'scorekeeper' },    // not doing anything with this yet
+//         { email: 'teammanager@hockeydb.com',   admin_type: 'manager' }         // not doing anything with this yet
 //     ]
 
 
@@ -280,7 +280,7 @@ function colorRandomizer() {
 //     const createAdmins = async () => {
 //         return Promise.all( admins.map(async admin => {
 
-//             const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: admin.admin_type, is_admin: admin.is_admin, email: admin.email});
+//             const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: admin.admin_type, email: admin.email});
 //             const password = admin.admin_type;
 //             const hash = await bcrypt.hash(password, 10);
 //             await db.passwords.insert({ user_id: insertedAdmin.id, pw: hash });

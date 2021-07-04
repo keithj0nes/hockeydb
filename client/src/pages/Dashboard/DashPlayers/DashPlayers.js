@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashPageHeader, Button, ColorPicker } from '../../../components';
+import { DashPageHeader, Banner } from '../../../components';
 
 
 const DashPlayers = () => {
@@ -10,6 +10,7 @@ const DashPlayers = () => {
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
+            <Banner />
             <h1>DASH PLAYERS COMPONENT</h1>
         </>
     );

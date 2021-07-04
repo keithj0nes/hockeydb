@@ -13,11 +13,11 @@ class DashboardNav extends Component {
     // this componentDidMount checks to make sure the URL matches a path the logged in
     // user can access otherwise it redirects to the first page in the navLinks array
     componentDidMount() {
-        const hasAccess = this.props.dashLinks[this.props.admin_type].filter(navLink => this.props.location.pathname.includes(navLink.to));
-
+        const hasAccess = this.props.dashLinks[this.props.admin_type || 'player'].filter(navLink => this.props.location.pathname.includes(navLink.to));
         if (hasAccess.length <= 0) {
-            console.log('Not allowed at this route, redirecting to', `/dashboard${this.props.dashLinks[this.props.admin_type][0].to}`);
-            return history.push(`/dashboard${this.props.dashLinks[this.props.admin_type][0].to}`);
+            console.log('Not allowed at this route, redirecting to', `/dashboard${this.props.dashLinks[this.props.admin_type || 'player'][0].to}`);
+            // this timeout to ensures redirect happens
+            setTimeout(() => history.push(`/dashboard${this.props.dashLinks[this.props.admin_type || 'player'][0].to}`), 200);
         }
         return true;
     }
@@ -39,7 +39,7 @@ class DashboardNav extends Component {
 
                         <h3>Navigation</h3>
                         <ul>
-                            {this.props.dashLinks[this.props.admin_type].map(link => (
+                            {this.props.dashLinks[this.props.admin_type || 'player'].map(link => (
                                 !link.hideFromNavigation
                                 && (
                                     <li key={link.to}>

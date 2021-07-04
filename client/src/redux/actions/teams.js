@@ -133,7 +133,7 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
 
 // Guest/Standings.js
 export const getStandingsPageFilters = (filter) => async (dispatch) => {
-    const data = await request({ url: `/api/misc/standing-filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+    const data = await request({ url: `/api/misc/standings-filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: 'STANDINGS_FILTERS', payload: { seasons: data.data.seasons, divisions: data.data.divisions } });
     return true;
