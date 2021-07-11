@@ -1,12 +1,12 @@
 /* eslint-disable no-multi-spaces */
-import React from 'react';
+import React, { useState } from 'react';
+import { Layout, Menu, Drawer } from 'antd';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import logo from 'assets/images/logo.png';
 import { ICONS } from 'assets/ICONS';
-import { toggleNavSlider } from '../../redux/actions/misc';
-import { DashboardNav, HamburgerIcon, ProfilePic, SlideOut } from '../../components';
+import { HamburgerIcon, ProfilePic, Icon } from '../../components';
 import DashSeasons2 from './DashSeasons/DashSeasons2';
 import DashDivisions2 from './DashDivisions/DashDivisions2';
 import DashTeams from './DashTeams/DashTeams';
@@ -18,8 +18,11 @@ import DashNewsCreate2 from './DashNews/DashNewsCreate2';
 import DashLocations2 from './DashLocations/DashLocations2';
 import DashUsers2 from './DashUsers/DashUsers2';
 import DashHome from './DashHome/DashHome';
+import { Site_Name_Full } from '../../assets/resourceStrings';
+
 import '../../assets/styles/dashboard.scss';
 
+const { Content, Footer, Sider } = Layout;
 
 const dashLinks = {
     admin: [
@@ -53,52 +56,104 @@ const dashLinks = {
     ],
 };
 
+
 const Dashboard = (props) => {
-    const { match, navSliderVisible, toggleNavSlider, admin_type } = props;
+    const { match, admin_type, currentSeason } = props;
+    const [visible, setVisible] = useState(false);
+
+    const DashboardMenu = (
+        <div className="dashboard-nav-menu">
+            <div>
+                <div className="dashboard-nav-header2">
+                    <img src={logo} alt={`${Site_Name_Full} Logo`} className="m-r-s" />
+                    <div>
+                        <h2>{Site_Name_Full}</h2>
+                        <p>{currentSeason?.name || 'No season selected'}</p>
+                    </div>
+                </div>
+                <h3>Navigation</h3>
+                <Menu defaultSelectedKeys={['1']} className="menu">
+                    {dashLinks[admin_type || 'player'].map(link => (
+                        !link.hideFromNavigation && (
+                            <Menu.Item key={link.to}>
+                                <NavLink to={`${match.url}${link.to}`} exact={link.to === ''} activeClassName="selected2">
+                                    <div className="icon-container">
+                                        <Icon name={link.icon} />
+                                    </div>
+                                    {link.name}
+                                </NavLink>
+                            </Menu.Item>
+                        )
+                    ))}
+                </Menu>
+            </div>
+
+            <div className="text-center p-b-xs p-t-xl">
+                <a className="powered-by" href="#a">Powered by Playmaker Leagues</a>
+            </div>
+        </div>
+    );
+
     return (
-        <div className="dashboard-container">
+        <Layout className="dashboard-container">
+            <Sider
+                width={260}
+                trigger={null}
+                breakpoint="md"
+                collapsedWidth="0"
+            >
+                {DashboardMenu}
+            </Sider>
 
-            <SlideOut isVisible={navSliderVisible} onClose={toggleNavSlider} sticky>
-                <DashboardNav {...props} dashLinks={dashLinks} />
-            </SlideOut>
+            {/* MOBILE SLIDEOUT */}
+            <Drawer
+                width="80%"
+                placement="left"
+                onClick={() => setVisible(false)}
+                onClose={() => setVisible(false)}
+                visible={visible}
+            >
+                {DashboardMenu}
+            </Drawer>
+            <Layout>
 
-            <div className="dashboard-content">
-
+                {/* MOBILE HEADER */}
                 <div className="dashboard-header hide-desktop">
-                    <HamburgerIcon onClick={props.toggleNavSlider} />
+                    <HamburgerIcon onClick={() => setVisible(!visible)} />
                     <img src={logo} alt="Logo" className="header-logo" />
                     <ProfilePic />
                 </div>
 
-                {dashLinks[admin_type || 'player'].map(page => (
-                    <Route
-                        key={page.to}
-                        path={`${match.path}${page.to}`}
-                        component={page.component}
-                        exact={page.exact}
-                    />
-                ))}
-            </div>
-        </div>
+                <Content>
+                    {dashLinks[admin_type || 'player'].map(page => (
+                        <Route
+                            key={page.to}
+                            path={`${match.path}${page.to}`}
+                            component={page.component}
+                            exact={page.exact}
+                        />
+                    ))}
+                </Content>
+
+                <Footer className="text-center">
+                    {Site_Name_Full} ©{new Date().getFullYear()} <br />
+                    All rights reserved
+                </Footer>
+            </Layout>
+        </Layout>
     );
 };
 
 const mapStateToProps = state => ({
-    user: state.user.user,
     admin_type: state.user.user.admin_type,
     navSliderVisible: state.misc.navSliderVisible,
+    currentSeason: state.seasons.currentSeason,
 });
 
-const mapDispatchToProps = dispatch => ({
-    toggleNavSlider: () => dispatch(toggleNavSlider()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps)(Dashboard);
 
 Dashboard.propTypes = {
     match: PropTypes.object,
-    navSliderVisible: PropTypes.bool,
-    user: PropTypes.object,
     admin_type: PropTypes.string,
-    toggleNavSlider: PropTypes.func.isRequired,
+    currentSeason: PropTypes.object,
 };

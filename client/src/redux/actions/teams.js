@@ -28,7 +28,7 @@ export const getTeams = (filter) => async (dispatch, getState) => {
 
 // Guest/Teams.js
 export const getTeamsByDivision = (filter) => async (dispatch) => {
-    const data = await request({ url: `/api/teams/by_division?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+    const data = await request({ url: `/api/teams/by-division?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
 
     dispatch({ type: `teams/byDivision/${GET_SUCCESS}`, payload: data.data.allTeams });
@@ -124,7 +124,7 @@ export const deleteTeam = (id, season) => async (dispatch) => {
 
 // Guest/Teams.js
 export const getTeamsPageFilters = (filter) => async (dispatch) => {
-    const data = await request({ url: `/api/misc/teams_filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+    const data = await request({ url: `/api/misc/teams-filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: 'SCHEDULE_FILTERS', payload: { seasons: data.data.seasons, allTeams: data.data.all_teams } });
     return true;
@@ -133,7 +133,7 @@ export const getTeamsPageFilters = (filter) => async (dispatch) => {
 
 // Guest/Standings.js
 export const getStandingsPageFilters = (filter) => async (dispatch) => {
-    const data = await request({ url: `/api/misc/standings_filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
+    const data = await request({ url: `/api/misc/standings-filters?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!data.data) return false;
     dispatch({ type: 'STANDINGS_FILTERS', payload: { seasons: data.data.seasons, divisions: data.data.divisions } });
     return true;

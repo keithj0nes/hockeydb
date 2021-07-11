@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Router, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -7,6 +7,7 @@ import { loginFromCookie } from '../../redux/actions/auth';
 import { history } from '../../helpers';
 import Home from '../Guest/Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
+import Dashboard2 from '../Dashboard/Dashboard2';
 import Players from '../Guest/Players/Players';
 import Games from '../Guest/Games/Games';
 import Schedule from '../Guest/Schedule/Schedule';
@@ -18,7 +19,6 @@ import Inquiry from '../Guest/Inquiry/Inquiry';
 import Registration from '../Guest/Registration/Registration';
 import { Modal, Header, Login, Invite, ResetPassword } from '../../components';
 import PlayerStats from '../Guest/PlayerStats/PlayerStats';
-import { Styleguide } from '../../components/Styleguide';
 
 import 'antd/dist/antd.css';
 import '../../assets/styles/ant-overrides.scss';
@@ -27,44 +27,44 @@ import '../../assets/styles/_spacing.scss';
 
 import './App.scss';
 
-class App extends Component {
-    async componentDidMount() {
-        // try to log in user from cookie on website load
-        await this.props.loginFromCookie();
-    }
 
-    render() {
-        return (
-            <Router history={history}>
-                <HeadManager />
-                <div className="site-body">
+const App = ({ isUserLoggedIn, loginFromCookie }) => {
+    useEffect(() => {
+        async function _loginFromCookie() {
+            await loginFromCookie();
+        }
+        _loginFromCookie();
+    }, []);
 
-                    <Header />
-
-                    <div className="site-container">
-                        <Route exact path="/" component={Home} />
-                        <Route path="/schedule" component={Schedule} />
-                        <Route path="/standings" component={Standings} />
-                        <Route path="/teams" component={Teams} exact />
-                        <Route path="/teams/:id" component={SingleTeam} />
-                        <Route path="/boxscore/:id" component={Boxscore} />
-                        <Route path="/login" component={Login} />
-                        <Route path="/reset" component={ResetPassword} />
-                        <Route path="/invite" component={Invite} />
-                        <Route path="/players" component={Players} />
-                        <Route path="/games" component={Games} />
-                        <Route path="/inquiry" component={Inquiry} />
-                        <Route path="/registration" component={Registration} />
-                        <Route path="/styleguide" component={Styleguide} />
-                        <Route path="/stats" component={PlayerStats} />
-                    </div>
-                    <PrivateRoute path="/dashboard" authenticated={this.props.isUserLoggedIn} component={Dashboard} />
-                    <Modal />
+    return (
+        <Router history={history}>
+            <HeadManager />
+            <div className="site-body">
+                <Header />
+                <div className="site-container">
+                    <Route exact path="/" component={Home} />
+                    <Route path="/schedule" component={Schedule} />
+                    <Route path="/standings" component={Standings} />
+                    <Route path="/teams" component={Teams} exact />
+                    <Route path="/teams/:id" component={SingleTeam} />
+                    <Route path="/boxscore/:id" component={Boxscore} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/reset" component={ResetPassword} />
+                    <Route path="/invite" component={Invite} />
+                    <Route path="/players" component={Players} />
+                    <Route path="/games" component={Games} />
+                    <Route path="/inquiry" component={Inquiry} />
+                    {/* <Route path="/registration" component={Registration} /> */}
+                    <PrivateRoute path="/registration" authenticated={isUserLoggedIn} component={Registration} />
+                    <Route path="/stats" component={PlayerStats} />
                 </div>
-            </Router>
-        );
-    }
-}
+                <PrivateRoute path="/dashboard/old" authenticated={isUserLoggedIn} component={Dashboard} />
+                <PrivateRoute path="/dashboard" authenticated={isUserLoggedIn} component={Dashboard2} />
+                <Modal />
+            </div>
+        </Router>
+    );
+};
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => (

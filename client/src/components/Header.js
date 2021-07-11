@@ -6,6 +6,7 @@ import { withRouter, NavLink } from 'react-router-dom';
 import logo from 'assets/images/logo.png';
 import { Site_Name_Full } from 'assets/resourceStrings';
 import SlideOut from './SlideOut';
+import { Banner } from '.';
 
 import './header.scss';
 
@@ -34,73 +35,79 @@ const Header = ({ match, location, isUserLoggedIn }) => {
 
     if (location.pathname.includes('/dashboard')) return null;
     return (
-        <header>
+        <>
+            <header>
 
-            {/* DESKTOP HEADER */}
+                {/* DESKTOP HEADER */}
 
-            <div className="hide-mobile">
-                <div className="site-container">
-                    <NavLink to="" style={{ position: 'absolute', top: 0, paddingLeft: 10 }}>
-                        <img src={logo} alt="Logo" className="logo" />
-                    </NavLink>
-
-                    <nav>
-                        <ul>
-                            {navLinks.map(link => (
-                                <li key={link.to}>
-                                    <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
-                                        {link.name}
-                                        {link.subLinks && (<div className="arrow" />)}
-                                    </NavLink>
-
-                                    {link.subLinks && (
-
-                                        <ul className="sub-links box-shadow">
-                                            {link.subLinks.map(subLink => (
-                                                <li key={subLink.to}>
-                                                    <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
-                                                        {subLink.name}
-                                                    </NavLink>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
-
-                    <div className="login">
-                        <NavLink to={isUserLoggedIn ? '/dashboard' : '/login'} style={{ marginRight: 10 }} className="link" exact activeClassName="selected" onClick={() => console.log(`to ${isUserLoggedIn ? '/dashboard' : '/login'}`)}>
-                            {isUserLoggedIn ? 'Dashboard' : 'Login'}
+                <div className="hide-mobile">
+                    <div className="site-container">
+                        <NavLink to="" style={{ position: 'absolute', top: 0, paddingLeft: 10 }}>
+                            <img src={logo} alt="Logo" className="logo" />
                         </NavLink>
+
+                        <nav>
+                            <ul>
+                                {navLinks.map(link => (
+                                    <li key={link.to}>
+                                        <NavLink to={`${match.url}${link.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
+                                            {link.name}
+                                            {link.subLinks && (<div className="arrow" />)}
+                                        </NavLink>
+
+                                        {link.subLinks && (
+
+                                            <ul className="sub-links box-shadow">
+                                                {link.subLinks.map(subLink => (
+                                                    <li key={subLink.to}>
+                                                        <NavLink to={`${match.url}${subLink.to}`} exact activeClassName="selected" onClick={() => console.log(`to ${link.to}`)}>
+                                                            {subLink.name}
+                                                        </NavLink>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
+
+                        <div className="login">
+                            <NavLink to={isUserLoggedIn ? '/dashboard' : '/login'} style={{ marginRight: 10 }} className="link" exact activeClassName="selected" onClick={() => console.log(`to ${isUserLoggedIn ? '/dashboard' : '/login'}`)}>
+                                {isUserLoggedIn ? 'Dashboard' : 'Login'}
+                            </NavLink>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            {/* MOBILE HEADER */}
-            <div className="hide-desktop">
-                <div className="hamburger-menu" onClick={toggleMobileSlider}>
-                    <div className="line" />
-                    <div className="line" />
-                    <div className="line" />
+                {/* MOBILE HEADER */}
+                <div className="hide-desktop">
+                    <div className="hamburger-menu" onClick={toggleMobileSlider}>
+                        <div className="line" />
+                        <div className="line" />
+                        <div className="line" />
+                    </div>
+
+                    <div className="logo-container">
+                        <img src={logo} alt="Logo" className="logo" />
+                    </div>
+
+                    <NavLink to={isUserLoggedIn ? '/dashboard' : '/login'} className="link" style={{ padding: '10px 0' }} exact activeClassName="selected" onClick={() => console.log(`to ${isUserLoggedIn ? '/dashboard' : '/login'}`)}>
+                        {isUserLoggedIn ? 'Dashboard' : 'Login'}
+                    </NavLink>
+
+                    <SlideOut isVisible={mobileSliderVisible} onClose={toggleMobileSlider}>
+                        <VisitorSlideOutNav match={match} toggleMobileSlider={toggleMobileSlider} />
+                    </SlideOut>
                 </div>
 
-                <div className="logo-container">
-                    <img src={logo} alt="Logo" className="logo" />
-                </div>
+            </header>
 
-                <NavLink to={isUserLoggedIn ? '/dashboard' : '/login'} className="link" style={{ padding: '10px 0' }} exact activeClassName="selected" onClick={() => console.log(`to ${isUserLoggedIn ? '/dashboard' : '/login'}`)}>
-                    {isUserLoggedIn ? 'Dashboard' : 'Login'}
-                </NavLink>
-
-                <SlideOut isVisible={mobileSliderVisible} onClose={toggleMobileSlider}>
-                    <VisitorSlideOutNav match={match} toggleMobileSlider={toggleMobileSlider} />
-                </SlideOut>
+            <div className="site-container">
+                <Banner />
             </div>
-
-        </header>
+        </>
     );
 };
 

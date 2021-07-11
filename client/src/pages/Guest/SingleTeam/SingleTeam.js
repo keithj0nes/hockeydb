@@ -11,7 +11,7 @@ import Auth, { basicList } from '../../../components/Auth';
 import './singleteam.scss';
 
 
-const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, record, seasonsSelect }) => {
+const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, record, seasonsSelect, currentSeasonId }) => {
     // console.log(props, 'PROPS IN SINGLE TEAM')
 
     const [tabSelected, setTabSelected] = useState('home');
@@ -40,11 +40,11 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
     // FIX: currently useeffect is infinite firing with the below
     // }, [props.location.pathname, props.location.search, props]);
 
-    const handleChange = ({ name, value }) => {
-        // console.log(name, value, 'eeee')
-        // const { name, value } = e.target;
+    const handleChange = ({ target }) => {
+        const { value, name } = target;
         setSelectedSeason(value);
-        const search = setQuery({ [name]: value });
+        // remove season={id} from query params if season is current
+        const search = setQuery(currentSeasonId !== Number(value) ? { [name]: value } : null);
         getTeamById(match.params.id, search);
     };
 
@@ -162,6 +162,7 @@ const mapStateToProps = state => ({
     team: state.teams.singleTeam.team || {},
     seasons: state.seasons.seasons,
     seasonsSelect: state.teams.singleTeam.seasonsSelect,
+    currentSeasonId: state.seasons.currentSeason?.id,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -179,6 +180,7 @@ SingleTeam.propTypes = {
     team: PropTypes.object,
     location: PropTypes.object,
     match: PropTypes.object,
+    currentSeasonId: PropTypes.number,
 };
 
 const STRoster = () => (

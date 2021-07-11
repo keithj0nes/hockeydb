@@ -30,24 +30,45 @@ export const request = async ({ url, method, session, publicRoute }) => {
             Authorization: publicRoute ? null : `Bearer ${access_token}`,
         },
     }).catch(err => {
-        console.log(err, 'error in responseRaw');
+        console.log(err.response, 'error in responseRaw');
 
-        store.dispatch({
-            type: TOGGLE_MODAL,
-            modalProps: {
-                isVisible: true,
-                title: 'Error',
-                isClosableOnBackgroundClick: true,
-                message: 'Cannot connect to the server \n Confirm server is running \n Error code: 500',
-            },
-            modalType: 'alert',
-        });
+        const { status, message, notification_type } = err.response.data;
+
+        switch (notification_type) {
+        case 'snack': {
+            const options = {
+                message: 'Error',
+                description: message,
+                onClick: () => {
+                    console.log('Notification Clicked!');
+                },
+                placement: 'topRight',
+                duration: 0,
+            };
+            notification.error(options);
+            break;
+        }
+        default:
+            store.dispatch({
+                type: TOGGLE_MODAL,
+                modalProps: {
+                    isVisible: true,
+                    title: `Error - Status ${status || 500}`,
+                    isClosableOnBackgroundClick: true,
+                    // message: `Cannot connect to the server \n Confirm server is running \n Error code: ${status}`,
+                    message: message || 'Cannot connect to the server \n Confirm server is running',
+                },
+                modalType: 'alert',
+            });
+            break;
+        }
+
 
         return false;
     });
 
     if (!responseRaw) return false;
-    const { status, data, message, shouldLogOut, redirect, snack, notification_type } = responseRaw.data;
+    const { status, data, message, shouldLogOut, redirect, snack, notification_type, notification_duration } = responseRaw.data;
 
     if (snack) {
         console.error(`There should be no more snack: true keys \n Please use notification_type: "snack" in your backend response \n ${method} => ${url}`);
@@ -61,6 +82,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
         type = 'success';
         break;
     case '4':
+    case '5':
         type = 'error';
         break;
     default:
@@ -77,7 +99,7 @@ export const request = async ({ url, method, session, publicRoute }) => {
                 console.log('Notification Clicked!');
             },
             placement: 'topRight',
-            duration: type === 'error' ? 0 : undefined,
+            duration: type === 'error' ? 0 : notification_duration,
         };
 
         switch (type) {

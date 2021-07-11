@@ -8,13 +8,11 @@ import { getQuery } from '../../../helpers';
 
 const STHome = ({ recent, standings, currentSeasonId }) => {
     const [state, setState] = useState({});
+    const [, filterString] = getQuery();
     useEffect(() => {
-        const [filterParsed, filterString] = getQuery();
-        setState({ ...filterParsed, filterString });
-    }, []);
-
-    const search = currentSeasonId !== state.season ? state.filterString : '';
-
+        setState({ filterString });
+    }, [filterString]);
+    const search = currentSeasonId !== Number(state.season) ? state.filterString : '';
     return (
         <>
             <div className="split-50">

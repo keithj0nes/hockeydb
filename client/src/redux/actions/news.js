@@ -20,7 +20,7 @@ export const getNewsPostById = id => async (dispatch) => {
 };
 
 export const getNewsTags = () => async (dispatch) => {
-    const data = await request({ url: '/api/misc/news_tags', method: 'GET', session: {}, publicRoute: false });
+    const data = await request({ url: '/api/misc/news-tags', method: 'GET', session: {}, publicRoute: false });
     if (!data.data) return false;
     dispatch({ type: `news/tags/${GET_SUCCESS}`, payload: data.data });
     return true;
