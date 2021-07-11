@@ -7,6 +7,7 @@ import { loginFromCookie } from '../../redux/actions/auth';
 import { history } from '../../helpers';
 import Home from '../Guest/Home/Home';
 import Dashboard from '../Dashboard/Dashboard';
+import Dashboard2 from '../Dashboard/Dashboard2';
 import Players from '../Guest/Players/Players';
 import Games from '../Guest/Games/Games';
 import Schedule from '../Guest/Schedule/Schedule';
@@ -57,7 +58,8 @@ const App = ({ isUserLoggedIn, loginFromCookie }) => {
                     <PrivateRoute path="/registration" authenticated={isUserLoggedIn} component={Registration} />
                     <Route path="/stats" component={PlayerStats} />
                 </div>
-                <PrivateRoute path="/dashboard" authenticated={isUserLoggedIn} component={Dashboard} />
+                <PrivateRoute path="/dashboard/old" authenticated={isUserLoggedIn} component={Dashboard} />
+                <PrivateRoute path="/dashboard" authenticated={isUserLoggedIn} component={Dashboard2} />
                 <Modal />
             </div>
         </Router>
