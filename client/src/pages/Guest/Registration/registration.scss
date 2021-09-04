@@ -1,6 +1,55 @@
 @import '../../../assets/styles/variables';
 @import '../../../assets/styles/spacing';
 
+.registration-register-as {
+
+    .register-as-btn {
+        color: black;
+        border: 1px solid black;
+        background: lightgray;
+        height: 200px;
+        width: 100%;
+        // max-width: 160px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 20px;
+
+        // &:first-child {
+        //     margin-left: 0;
+        // }
+
+        // &:last-child {
+        //     margin-right: 0;
+        // }
+
+
+        span {
+            display: block;
+            margin: 0 auto;
+            
+            &:first-child {
+                text-transform: uppercase;
+                font-size: 13px;
+            }
+
+            &:nth-last-child(2) {
+                font-size: size('m');
+            }
+
+            &:last-child {
+                text-transform: uppercase;
+                border-radius: 50px;
+                width: 100px;
+                border: 1px solid red;
+                background-color: pink;
+                text-align: center;
+                margin-top: 20px;
+            }
+        }
+    }
+
+}
+
 .registration-container {
     background: $white_color;
     margin-top: 20px;
@@ -57,6 +106,13 @@
     }
 }
 
+// custom size
+@media only screen and (min-width: 460px) {
+    .registration-register-as .register-as-btn {
+        max-width: 160px;
+    }
+}
+
 
 @media only screen and (min-width: 768px){
     .registration-container {
@@ -94,6 +150,11 @@
                 padding: size('m');
                 // max-height: 260px;
                 overflow: scroll;
+            }
+
+            .sign-download-container {
+                display: flex;
+                justify-content: space-between;
             }
         }
     }

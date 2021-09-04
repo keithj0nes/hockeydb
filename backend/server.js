@@ -194,6 +194,47 @@ app.post('/api/auth');
 // Edit user
 app.put('/api/auth/:id');
 
+app.get('/api/auth/accounts', async (req, res) => {
+    const db = app.get('db');
+
+    // optimize this query so we dont have to run javascript after query happens
+    // query = get all players from previous registrations associated with logged in account
+
+    // select u.first_name, u.last_name, p.*, r.* from registrations r
+    // join players p on p.id = r.player_id
+    // join users u on u.id = r.user_id
+    // where u.id = 16 order by r.player_id desc;
+    const query = `
+
+        select u.first_name, u.last_name, t.name as previous_team, p.*, r.* from registrations r
+        join players p on p.id = r.player_id
+        left join players_teams pt on pt.player_id = p.id
+        left join teams t on t.id = pt.team_id
+        join users u on u.id = r.user_id
+        where u.id = 16 order by r.player_id desc;
+    `;
+
+    const data = await db.query(query);
+
+    // console.log(data, 'dataaa')
+
+    // const m = data.filter(item => )
+
+    const arr = [];
+    data.reduce((acc, curr) => {
+        if (acc.indexOf(curr.player_id) === -1) {
+            acc.push(curr.player_id);
+            arr.push(curr);
+        }
+        return acc;
+    }, []);
+
+    // console.log(arr, 'rrrrrr')
+
+    return res.send({ status: 200, data: arr, message: 'Retrieved list of associated accounts' });
+});
+
+
 // Login from cookie
 app.post('/api/auth/login/cookie', auth.loginFromCookie);
 

@@ -33,7 +33,6 @@ const Table = ({ data, columns, minWidth, containerWidth, title, uniqueKey, empt
 
                     {data.map(d => (
                         <div className="ot-row" key={uniqueKey ? d[uniqueKey] : d.id}>
-                            {console.log(d, 'ddddd')}
                             {sectionKeys.map(section => {
                                 const isObj = typeof columns[section] === 'object';
                                 const sectionLink = columns[section].link;

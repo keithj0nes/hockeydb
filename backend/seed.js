@@ -15,12 +15,12 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
 
     // hard variables
     const typesOfSeasons = ['Regular', 'Playoffs', 'Tournament'];
-    const seedSeasons = ['Summer 2016', 'Fall 2016'];
+    const seedSeasons = ['Summer 2016', 'Fall 2016', 'Summer 2017'];
     const divisionList = [['1A', '2B', '3C'], ['AAA', 'AA', 'A']];
     const locationsList = ['Kingsgate Arena', 'Showare Stadium', 'Key Arena', 'Center Ice Arena', 'The Cooler', 'The Igloo', 'The Coliseum'];
     const counts = {
         teams: { min: 4, max: 10, exact: null }, // teams per division - exact has priority
-        players: { min: 12, max: 16, exact: 5 }, // players per team - exact has priority
+        players: { min: 9, max: 16, exact: null }, // players per team - exact has priority
         games: { min: 5, max: 8, exact: null }, // games per team - exact has priority
     };
     const admins = [
@@ -96,7 +96,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
         const last_name = faker.name.lastName();
         const email = faker.internet.email();
         const insertedPlayer = await db.players.insert({ first_name, last_name, email, created_date: new Date(), created_by: insertedAdmin.id });
-        await db.player_stats.insert({ player_id: insertedPlayer.id, team_id: insertedTeam.id, season_id: null, games_played: 0, goals: 0, assists: 0, points: 0, penalties_in_minutes: 0, game_winning_goals: 0, power_play_goals: 0, short_handed_goals: 0, goals_per_game: 0, assists_per_game: 0, points_per_game: 0 });
+        await db.player_stats.insert({ player_id: insertedPlayer.id, team_id: insertedTeam.id, season_id: null, games_played: randomr(10, 20), goals: randomr(30), assists: randomr(40), points: randomr(10, 30), penalties_in_minutes: randomr(11), game_winning_goals: randomr(6), power_play_goals: randomr(4), short_handed_goals: randomr(0, 1), goals_per_game: 0, assists_per_game: 0, points_per_game: 0 });
         await db.players_teams.insert({ player_id: insertedPlayer.id, team_id: insertedTeam.id, season_id: insertedSeason.id });
         return true;
     };
@@ -142,7 +142,8 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     // create locations
     const createLocations = async (admin) => Promise.all(locationsList.map(async location => {
         const address = `${faker.address.streetAddress()}, ${faker.address.city()}, ${faker.address.stateAbbr()}`;
-        return await db.locations.insert({ name: location, address, created_date: new Date(), created_by: admin.id }).catch(err => console.log(err, 'create location error'));
+        const createdLocation = await db.locations.insert({ name: location, address, created_date: new Date(), created_by: admin.id }).catch(err => console.log(err, 'create location error'));
+        return createdLocation;
     }));
 
 

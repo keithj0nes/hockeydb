@@ -57,3 +57,29 @@ export const capitalizeWords = (words, splitter = '_') => {
         return word[0].toUpperCase() + word.substring(1).toLowerCase();
     }).join(' ');
 };
+
+// static mapClassNames(classNames, classProps = {}) {
+
+//     if (typeof classNames === 'object') {
+//         classProps = {...classNames};
+//         classNames = ''
+//     }
+
+//     classNames += ' ';
+
+//     for (let [name, active] of Object.entries(classProps)) {
+//         if (active) {
+//             classNames += name;
+//             classNames += ' '
+//         }
+//     }
+//     return classNames
+// }
+
+
+// usage :
+
+// mapClassNames("step", {
+//     "active-step": isActive,
+//     "middle-step-border": index === 1,
+// })
