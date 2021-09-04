@@ -3,12 +3,16 @@ import { AUTH_SET_USER, REMOVE_HIDDEN, TOGGLE_NAV_SLIDER, GET_BLOGS, GET_INIT, G
 const initialAuthState = {
     user: {},
     isUserLoggedIn: false,
+    accounts: [],
+    isAuthAccountsLoading: true,
 };
 
 export const user = (state = initialAuthState, { type, payload }) => {
     switch (type) {
     case AUTH_SET_USER:
         return { ...state, user: payload, isUserLoggedIn: !state.isUserLoggedIn };
+    case 'AUTH_ACCOUNTS':
+        return { ...state, accounts: payload, isAuthAccountsLoading: false };
     default:
         return state;
     }

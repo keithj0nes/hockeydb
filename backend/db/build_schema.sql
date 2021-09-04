@@ -72,9 +72,9 @@ CREATE TABLE "news" (
   "updated_date" TIMESTAMP,
   "updated_by" INTEGER,        -- REFERENCES users(id),
   "deleted_date" TIMESTAMP,
-  "deleted_by" INTEGER         -- REFERENCES users(id),
+  "deleted_by" INTEGER,        -- REFERENCES users(id),
   "hidden_date" TIMESTAMP,
-  "hidden_by" INTEGER,         -- REFERENCES users(id),
+  "hidden_by" INTEGER          -- REFERENCES users(id),
 );
 
 CREATE TABLE "tags" (
@@ -107,6 +107,7 @@ CREATE TABLE "player_stats" (
   "player_id" INTEGER,         -- REFERENCES players(id)
   "team_id" INTEGER,           -- REFERENCES teams(id)
   "season_id" varchar,         -- REFERENCES seasons(id)
+  "player_number" INTEGER,
   "games_played" INTEGER NOT NULL DEFAULT 0,
   "goals" INTEGER NOT NULL DEFAULT 0,
   "assists" INTEGER NOT NULL DEFAULT 0,
@@ -166,7 +167,7 @@ CREATE TABLE "my_random_table" (
   "name" VARCHAR NOT NULL,
   "colors" JSONB,
   "score" INTEGER NOT NULL DEFAULT 0,
-  "association" VARCHAR NOT NULL DEFAULT 'USA Hockey',
+  "association" VARCHAR NOT NULL DEFAULT 'USA Hockey'
 );
 
 CREATE TABLE "team_season_division" (
@@ -190,7 +191,7 @@ CREATE TABLE "game_season_division" (
   "division_id" INTEGER        -- REFERENCES divisions(id)
 );
 
-
+-- change players_teams to player_team_season
 CREATE TABLE "players_teams" (
   "id" SERIAL PRIMARY KEY,
   "player_id" INTEGER,        -- REFERENCES players(id)
@@ -242,6 +243,22 @@ CREATE TABLE "games" (
   "game_notes" VARCHAR
 );
 
+CREATE TABLE "registrations" (
+  "id"  SERIAL PRIMARY KEY,
+  "user_id" INTEGER,            -- REFERENCES users(id),
+  "player_id" INTEGER,          -- REFERENCES players(id),
+  "season_id" INTEGER,          -- REFERENCES seasons(id),
+  "payment_frequency" VARCHAR(255) NOT NULL DEFAULT "full", -- monthly / half / full
+  "paid_amount" INTEGER NOT NULL DEFAULT 0,
+  "paid_at" TIMESTAMP,
+  "completed_at" TIMESTAMP,
+  "created_at" TIMESTAMP,
+  "created_by" INTEGER,        -- REFERENCES users(id),
+  "updated_at" TIMESTAMP,
+  "updated_by" INTEGER,        -- REFERENCES users(id),
+  "deleted_at" TIMESTAMP,
+  "deleted_by" INTEGER         -- REFERENCES users(id),
+);
 
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
 --==--==--==--==--==--     Add Foreign Keys     --==--==--==--==--==--
@@ -300,11 +317,18 @@ ALTER TABLE "games" ADD FOREIGN KEY ("away_team") REFERENCES "teams" ("id");
 ALTER TABLE "games" ADD FOREIGN KEY ("location_id") REFERENCES "locations" ("id");
 ALTER TABLE "games" ADD FOREIGN KEY ("scorekeeper_id") REFERENCES "users" ("id");
 
-ALTER TABLE "news_tags" ADD FOREIGN KEY ("tags_id") REFERENCES "tags" ("id");
+ALTER TABLE "news_tags" ADD FOREIGN KEY ("tag_id") REFERENCES "tags" ("id");
 ALTER TABLE "news_tags" ADD FOREIGN KEY ("news_id") REFERENCES "news" ("id");
 
 ALTER TABLE "user_role" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "user_role" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
+
+ALTER TABLE "registrations" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "registrations" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
+ALTER TABLE "registrations" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
+ALTER TABLE "registrations" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
+ALTER TABLE "registrations" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
+ALTER TABLE "registrations" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 
 -- CREATE TABLE "goalie_stats" (
 --   "id" int,

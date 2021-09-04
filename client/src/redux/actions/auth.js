@@ -89,3 +89,12 @@ export const createAccount = (userData) => async () => {
     if (!data) return false;
     return true;
 };
+
+export const getAuthedPlayerAccounts = () => async (dispatch) => {
+    const data = await request({ url: '/api/auth/accounts', session: {}, method: 'GET' });
+    if (!data) return false;
+
+    dispatch({ type: 'AUTH_ACCOUNTS', payload: data.data });
+
+    return true;
+};

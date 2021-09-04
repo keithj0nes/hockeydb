@@ -11,9 +11,7 @@ import Auth, { basicList } from '../../../components/Auth';
 import './singleteam.scss';
 
 
-const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, record, seasonsSelect, currentSeasonId }) => {
-    // console.log(props, 'PROPS IN SINGLE TEAM')
-
+const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, record, seasonsSelect, currentSeasonId, teamPlayerStats }) => {
     const [tabSelected, setTabSelected] = useState('home');
     const [selectedSeason, setSelectedSeason] = useState(null);
 
@@ -56,7 +54,7 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
             return (<STSchedule match={match} />);
         }
         if (tabSelected === 'roster') {
-            return (<STRoster />);
+            return (<STRoster stats={teamPlayerStats} />);
         }
         return null;
     };
@@ -86,6 +84,8 @@ const SingleTeam = ({ location, match, getTeamById, clearSingleTeamState, team, 
             </p>
         </Tooltip>
     ));
+
+    console.log(teamPlayerStats, 'teamPlayerStats')
 
 
     return (
@@ -163,6 +163,7 @@ const mapStateToProps = state => ({
     seasons: state.seasons.seasons,
     seasonsSelect: state.teams.singleTeam.seasonsSelect,
     currentSeasonId: state.seasons.currentSeason?.id,
+    teamPlayerStats: state.teams.singleTeam?.teamPlayerStats,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -181,17 +182,19 @@ SingleTeam.propTypes = {
     location: PropTypes.object,
     match: PropTypes.object,
     currentSeasonId: PropTypes.number,
+    teamPlayerStats: PropTypes.array,
 };
 
-const STRoster = () => (
+const STRoster = ({ stats }) => (
     <Table
         title="Player Stats"
-        data={playerStats}
+        data={stats}
         minWidth={800}
         uniqueKey="number"
         columns={{
-            number: { as: '#', flex: 'one' },
-            name: 'five',
+            player_number: { as: '#', flex: 'one' },
+            // name: 'five',
+            name: { as: 'name', flex: 'five', format: '$first_name $last_name' },
             games_played: { as: 'gp', flex: 'one' },
             goals: { as: 'g', flex: 'one' },
             assists: { as: 'a', flex: 'one' },

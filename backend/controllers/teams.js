@@ -141,7 +141,20 @@ const getTeamById = async (req, res, next) => {
             standings = await db.query(standingsQuery, [team[0].division_id]);
         }
 
-        return res.send({ status: 200, data: { team: team[0], recent, record, seasons, standings, seasonsSelect }, message: 'Retrieved Team' });
+        const teamPlayerStatsQuery = `
+            SELECT * FROM players p
+            JOIN players_teams pt ON pt.player_id = p.id
+            JOIN teams t ON t.id = pt.team_id
+            JOIN player_stats ps ON ps.player_id = p.id
+            WHERE t.id = $1 AND pt.season_id = ${season || season_id.id};
+        `;
+
+        const teamPlayerStats = await db.query(teamPlayerStatsQuery, [id]);
+
+        console.log(teamPlayerStats, 'team player stats')
+        
+
+        return res.send({ status: 200, data: { team: team[0], recent, record, seasons, standings, seasonsSelect, teamPlayerStats }, message: 'Retrieved Team' });
     } catch (error) {
         console.log('GET TEAM BY ID ERROR: ', error);
         return next(error);

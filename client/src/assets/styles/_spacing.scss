@@ -40,6 +40,8 @@ $list: ('xxs': 4, 'xs': 8, 's': 16, 'm': 24, 'l': 32, 'xl': 40, 'xxl': 48);
 
 }
 
+// example usage -> padding: size('xs');
+
 @each $property, $value in $list {
     @each $side in $sides {
 
@@ -78,6 +80,9 @@ $list: ('xxs': 4, 'xs': 8, 's': 16, 'm': 24, 'l': 32, 'xl': 40, 'xxl': 48);
         }
     }
 }
+
+$mobile: 576px;
+$tablet: 768px;
 
 // for devices?
 // $grid-breakpoints: (

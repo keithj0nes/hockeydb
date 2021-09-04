@@ -33,7 +33,6 @@ const Table = ({ data, columns, minWidth, containerWidth, title, uniqueKey, empt
 
                     {data.map(d => (
                         <div className="ot-row" key={uniqueKey ? d[uniqueKey] : d.id}>
-
                             {sectionKeys.map(section => {
                                 const isObj = typeof columns[section] === 'object';
                                 const sectionLink = columns[section].link;
@@ -95,7 +94,8 @@ export default Table;
 // this function takes the format string, replaces the $variable_name with the variable passed into the data prop and returns the original string with replaced variables
 // format: '$home_score : $away_score' returns '3 : 5'
 function variableStringFormatter(str, data) {
-    return str.split(/(?=[\s.,:;-])|(?<=[\s.,:;-])/g).map(item => {
+    // return str.split(/(?=[\s.,:;-])|(?<=[\s.,:;-])/g).map(item => {
+    return str.split(/([\s().,:;-])/g).map(item => {
         if (item.charAt(0) === '$') {
             return Object.keys(data).map(i => {
                 if (i === item.slice(1)) {

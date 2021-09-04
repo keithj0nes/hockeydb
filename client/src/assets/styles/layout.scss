@@ -27,6 +27,16 @@
     justify-content: flex-end;
 }
 
+.f-justify-center {
+    display: flex;
+    justify-content: center;
+}
+
+.f-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .text-center {
     text-align: center;
 }
