@@ -51,7 +51,7 @@ const loginFromCookie = async (req, res) => {
         const season = await db.seasons.findOne({ is_active: true });
 
         // NEED TO CHANGE THIS TO BE OPTIMIZED
-        const seasons = await db.seasons.find({ 'deleted_date =': null }).catch(error => console.log(error));
+        const seasons = await db.seasons.find({ 'deleted_at =': null }).catch(error => console.log(error));
         // NEED TO CHANGE THIS TO BE OPTIMIZED
 
         await db.users.update({ id: user.id }, { last_login: new Date() }).catch(error => console.log(error, 'update last_login error on cookie login'));
@@ -291,7 +291,31 @@ passport.use('local-login', new LocalStrategy({
             return done(null, false, { status: 400, message: 'Invalid password.' });
         }
 
-        return done(null, user);
+        // get associated player registrations here
+
+        // optimize this query so we dont have to run javascript after query happens
+        // query = get all players from previous registrations associated with logged in account
+
+        const query = `
+            SELECT t.name AS previous_team, p.*, r.* FROM registrations r
+            JOIN players p ON p.id = r.player_id
+            LEFT JOIN player_team_season pt ON pt.player_id = p.id
+            LEFT JOIN teams t ON t.id = pt.team_id
+            WHERE r.user_id = $1 ORDER BY r.player_id desc;
+        `;
+
+        const data = await db.query(query, [user.id]);
+
+        const associated_accounts = [];
+        data.reduce((acc, curr) => {
+            if (acc.indexOf(curr.player_id) === -1) {
+                acc.push(curr.player_id);
+                associated_accounts.push(curr);
+            }
+            return acc;
+        }, []);
+
+        return done(null, { ...user, associated_accounts });
     } catch (error) {
         console.log('LOCAL-LOGIN ERROR: ', error);
         return done(null, false, { status: 500, message: 'Could not login' });
@@ -317,7 +341,7 @@ passport.use('local-signup', new LocalStrategy({
 
         const { first_name, last_name } = req.body;
 
-        const newUser = await db.users.insert({ first_name, last_name, email, created_date: new Date() });
+        const newUser = await db.users.insert({ first_name, last_name, email, created_at: new Date() });
         const hash = await bcrypt.hash(password, 10);
         await db.passwords.insert({ user_id: newUser.id, pw: hash });
 

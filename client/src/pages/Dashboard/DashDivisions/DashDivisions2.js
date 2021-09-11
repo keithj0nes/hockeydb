@@ -95,13 +95,13 @@ const DashDivisions2 = ({ divisions, getDivisions, createDivision, updateDivisio
         toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: true,
-            title: `${item.hidden_date ? 'Unh' : 'H'}ide Division`,
-            message: item.hidden_date
+            title: `${item.hidden_at ? 'Unh' : 'H'}ide Division`,
+            message: item.hidden_at
                 ? 'Are you sure you want to unhide this division? This will cause the selected division to be visible on the public page'
                 : 'Are you sure you want to hide this division?\nThis will hide the division from both the admin dashboard and from the public page. You can view all hidden divisions using the filter. This does NOT delete the division',
             fields: [],
-            confirmActionTitle: `${item.hidden_date ? 'Unh' : 'H'}ide Division`,
-            confirmAction: () => updateDivision({ id: item.id, divisionData: { is_hidden: !!!item.hidden_date } }),
+            confirmActionTitle: `${item.hidden_at ? 'Unh' : 'H'}ide Division`,
+            confirmAction: () => updateDivision({ id: item.id, divisionData: { is_hidden: !!!item.hidden_at } }),
         }, 'prompt');
     };
 

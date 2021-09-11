@@ -5,7 +5,7 @@ const getAllDivisions = async (req, res, next) => {
         const db = app.get('db');
         const { season } = req.query;
 
-        const season_id = await db.seasons.findOne({ name: season, 'deleted_date =': null });
+        const season_id = await db.seasons.findOne({ name: season, 'deleted_at =': null });
 
         const q = `
           SELECT d.id, d.name, COUNT(tsd.id) as teams_count FROM team_season_division tsd
@@ -14,7 +14,7 @@ const getAllDivisions = async (req, res, next) => {
           GROUP BY d.id;
         `;
         const data = await db.query(q, [season_id.id]);
-        const seasons = await db.seasons.find({ 'hidden_date =': null, 'deleted_date =': null });
+        const seasons = await db.seasons.find({ 'hidden_at =': null, 'deleted_at =': null });
 
         return res.send({ status: 200, data: { divisions: data, seasons }, message: 'Retrieved list of Divisions' });
     } catch (error) {
@@ -37,7 +37,7 @@ const createDivision = async (req, res, next) => {
             return res.send({ status: 400, error: true, message: 'Division under this season already exists' });
         }
 
-        const data = await db.divisions.insert({ name, season_id: season_id.id, created_date: new Date(), created_by: req.user.id });
+        const data = await db.divisions.insert({ name, season_id: season_id.id, created_at: new Date(), created_by: req.user.id });
         return res.send({ status: 200, data, message: 'Division created', notification_type: 'snack' });
     } catch (error) {
         console.log('CREATE DIVISION ERROR: ', error);
@@ -59,7 +59,7 @@ const updateDivision = async (req, res, next) => {
 
         // Manage hidden request
         if (req.body.hasOwnProperty('is_hidden')) {
-            const data = await db.divisions.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null });
+            const data = await db.divisions.update({ id }, is_hidden ? { hidden_at: new Date(), hidden_by: req.user.id } : { hidden_at: null, hidden_by: null });
             return res.send({ status: 200, data: data[0], message: is_hidden ? 'Division hidden' : 'Division unhidden', notification_type: 'snack' });
         }
 
@@ -71,7 +71,7 @@ const updateDivision = async (req, res, next) => {
             }
         }
 
-        const data = await db.divisions.update({ id }, { name, updated_date: new Date(), updated_by: req.user.id });
+        const data = await db.divisions.update({ id }, { name, updated_at: new Date(), updated_by: req.user.id });
         return res.send({ status: 200, data: data[0], message: 'Division updated', notification_type: 'snack' });
     } catch (error) {
         console.log('UPDATE DIVISION ERROR: ', error);
@@ -95,7 +95,7 @@ const deleteDivision = async (req, res, next) => {
             return res.send({ status: 409, error: true, message: 'Division cannot be deleted, there are teams in this division' });
         }
 
-        const data = await db.divisions.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id });
+        const data = await db.divisions.update({ id }, { deleted_at: new Date(), deleted_by: req.user.id });
         return res.send({ status: 200, data: data[0], message: 'Division deleted', notification_type: 'snack' });
     } catch (error) {
         console.log('DELETE DIVISION ERROR: ', error);

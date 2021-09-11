@@ -57,7 +57,7 @@ const Login = ({ loginFromCookie, login, location, history, user, sendResetPassw
 
     const handleAutoLogin = async e => {
         e.preventDefault();
-        login({ email: `${e.currentTarget.name}@hockeydb.com`, password: e.currentTarget.name === 'teammanager' ? 'manager' : e.currentTarget.name, redirect: location.state?.from.pathname });
+        login({ email: `${e.currentTarget.name}@hockeydb.com`, password: process.env.REACT_APP_TESTING_PASSWORD, redirect: location.state?.from.pathname });
     };
 
     const handleResetPassword = async (values) => {

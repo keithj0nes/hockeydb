@@ -20,7 +20,7 @@ const getTeamsPageFilters = async (req, res, next) => {
         `;
 
         const all_teams = await db.query(allTeamsQuery, [season || season_id.id]);
-        const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+        const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_at IS null AND hidden_at IS null ORDER BY id;');
         return res.send({ status: 200, data: { seasons, all_teams }, message: 'Retrieved list of teams page filters' });
     } catch (error) {
         console.log('GET TEAMS PAGE FILTERS ERROR: ', error);
@@ -43,12 +43,12 @@ const getStandingsPageFilters = async (req, res, next) => {
 
         const allDivisionsQuery = `
             SELECT * FROM divisions
-            WHERE season_id = $1 AND deleted_date IS null AND hidden_date IS null
+            WHERE season_id = $1 AND deleted_at IS null AND hidden_at IS null
             ORDER BY name;
         `;
 
         const divisions = await db.query(allDivisionsQuery, [season || season_id.id]);
-        const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+        const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_at IS null AND hidden_at IS null ORDER BY id;');
         return res.send({ status: 200, data: { seasons, divisions }, message: 'Retrieved list of teams page filters' });
     } catch (error) {
         console.log('GET STANDINGS PAGE FILTERS ERROR: ', error);

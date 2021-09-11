@@ -104,9 +104,7 @@ const Header = ({ match, location, isUserLoggedIn }) => {
 
             </header>
 
-            <div className="site-container">
-                <Banner />
-            </div>
+            <Banner />
         </>
     );
 };

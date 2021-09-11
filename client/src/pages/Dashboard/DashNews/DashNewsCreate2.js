@@ -103,7 +103,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
         setShowPreview(!showPreview);
     };
 
-    const isEditingData = isEditing ? { updated_date: new Date() } : { first_name: user.first_name, last_name: user.last_name, created_date: new Date() };
+    const isEditingData = isEditing ? { updated_at: new Date() } : { first_name: user.first_name, last_name: user.last_name, created_at: new Date() };
     const postPreviewData = { ...newsById, ...post, ...isEditingData };
 
     return (
@@ -153,7 +153,7 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
                         {isEditing && (
                             <div style={{ paddingBottom: 20, background: 'white' }}>
                                 <p> Created By: {newsById.first_name} {newsById.last_name}</p>
-                                <p> Created Date: {dateFormat(newsById.created_date, 'MM/DD/YYYY h:mmA')}</p>
+                                <p> Created Date: {dateFormat(newsById.created_at, 'MM/DD/YYYY h:mmA')}</p>
                             </div>
                         )}
 

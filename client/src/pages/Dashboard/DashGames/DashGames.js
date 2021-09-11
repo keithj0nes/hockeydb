@@ -196,13 +196,13 @@ class DashGames extends Component {
                                 return  (
                                 <ul>
                                     <Auth.User roles={accessAdmin}>
-                                        {!d.hidden_date && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Game</li>}
+                                        {!d.hidden_at && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Game</li>}
                                         {/* {!d.is_active && <li onClick={() => {this.handleHideSeason(d); closePopover() }}>{`${showingHidden ? 'Unh' : 'H'}ide Game`}</li> } */}
                                         {/* <li onClick={() => {this.handleDeleteSeason(d); closePopover() }}>Delete Game</li> */}
                                     </Auth.User>
 
                                     <Auth.User roles={accessONLYScorekeeper}>
-                                        {!d.hidden_date && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Boxscore</li> }
+                                        {!d.hidden_at && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Boxscore</li> }
                                     </Auth.User>
                                 </ul> 
                             )}

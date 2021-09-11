@@ -88,7 +88,7 @@ class DashNewsListItem extends Component {
 
                                                 <div className="flex-one hide-mobile">
 
-                                                    {!item.hidden_date && (
+                                                    {!item.hidden_at && (
                                                         <span style={{cursor: "pointer", paddingRight: 10}} onClick={onEdit}><img src={Edit} width="25px" alt=""/></span>
                                                     )}
 

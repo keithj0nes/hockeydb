@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "st___art2": "nodemon server.js & (cd client && npm start)",
     "start": "cd backend && nodemon server.js",
-    "seed": "node seed.js",
+    "seed": "cd backend && node seed.js",
     "herok-postbuild": "cd .. && cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },

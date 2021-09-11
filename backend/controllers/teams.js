@@ -5,9 +5,9 @@ const getAllTeams = async (req, res, next) => {
         const db = app.get('db');
         const { division, season, orderby } = req.query;
 
-        const season_id = await db.seasons.findOne({ name: season, 'deleted_date =': null });
+        const season_id = await db.seasons.findOne({ name: season, 'deleted_at =': null });
         const divisions = await db.divisions.find({ season_id: season_id.id });
-        const seasons = await db.seasons.find({ 'hidden_date =': null, 'deleted_date =': null });
+        const seasons = await db.seasons.find({ 'hidden_at =': null, 'deleted_at =': null });
 
         let query = `
             SELECT teams.*, seasons.name AS season_name, seasons.id AS season_id, divisions.name AS division_name, divisions.id AS division_id FROM team_season_division tsd 
@@ -91,13 +91,13 @@ const getTeamById = async (req, res, next) => {
         }
 
         // this seasons returns ALL seasons for team page
-        const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_date IS null AND hidden_date IS null ORDER BY id;');
+        const seasons = await db.query('SELECT id, name, is_active FROM seasons WHERE deleted_at IS null AND hidden_at IS null ORDER BY id;');
 
         // *** this seasons returns ONLY seasons associated with the team - some teams dont play every season ***
         const seasonsSelectQuery = `
             select s.id, s.name, s.is_active  from team_season_division tsd
             join seasons s on s.id = tsd.season_id
-            where tsd.team_id = $1 and deleted_date IS null AND hidden_date IS null ORDER BY id;
+            where tsd.team_id = $1 and deleted_at IS null AND hidden_at IS null ORDER BY id;
         `;
         const seasonsSelect = await db.query(seasonsSelectQuery, [id]);
 
@@ -143,7 +143,7 @@ const getTeamById = async (req, res, next) => {
 
         const teamPlayerStatsQuery = `
             SELECT * FROM players p
-            JOIN players_teams pt ON pt.player_id = p.id
+            JOIN player_team_season pt ON pt.player_id = p.id
             JOIN teams t ON t.id = pt.team_id
             JOIN player_stats ps ON ps.player_id = p.id
             WHERE t.id = $1 AND pt.season_id = ${season || season_id.id};
@@ -256,7 +256,7 @@ const createTeam = async (req, res, next) => {
             return res.send({ status: 400, data: [], message: 'season does not exist' });
         }
 
-        const data = await db.teams.insert({ name, colors, created_date: new Date(), created_by: req.user.id });
+        const data = await db.teams.insert({ name, colors, created_at: new Date(), created_by: req.user.id });
         await db.team_season_division.insert({ team_id: data.id, season_id: season.id, division_id });
         return res.send({ status: 200, data, message: 'Team created' });
     } catch (error) {
@@ -277,7 +277,7 @@ const updateTeam = async (req, res, next) => {
         }
 
         const season = await db.seasons.findOne({ name: season_name });
-        const updatedTeam = await db.teams.update({ id }, { name, colors: JSON.stringify(colors), updated_date: new Date(), updated_by: req.user.id });
+        const updatedTeam = await db.teams.update({ id }, { name, colors: JSON.stringify(colors), updated_at: new Date(), updated_by: req.user.id });
         await db.team_season_division.update({ season_id: season.id, team_id: id }, { division_id });
         return res.send({ status: 200, data: updatedTeam, message: 'Team updated' });
     } catch (error) {
@@ -311,12 +311,12 @@ const deleteTeam = async (req, res, next) => {
         //     console.log('this team has at least one game')
         // }
 
-        // const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id })
+        // const data = await db.teams.update({ id }, { deleted_at: new Date(), deleted_by: req.user.id })
         await db.team_season_division.destroy({ team_id: id, season_id, division_id });
         return res.send({ status: 200, data: req.body, message: 'Team deleted from season' });
         // if there's no games (and future no players), should we just delete the whole record instead of marking as deleted?
         // const data = await db.teams.destroy({ id })
-        // const data = await db.teams.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id })
+        // const data = await db.teams.update({ id }, { deleted_at: new Date(), deleted_by: req.user.id })
         // return res.send({ status: 200, data, message: 'Team deleted' })
     } catch (error) {
         console.log('DELETE TEAM ERROR: ', error);

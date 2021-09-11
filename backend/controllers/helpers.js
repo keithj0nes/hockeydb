@@ -10,11 +10,11 @@ const filter = (query, excludeFromReqQuery = []) => {
 
     if (q.show_hidden) {
         delete q.show_hidden;
-        q['hidden_date !='] = null;
+        q['hidden_at !='] = null;
     } else {
-        q['hidden_date ='] = null;
+        q['hidden_at ='] = null;
     }
-    q['deleted_date ='] = null;
+    q['deleted_at ='] = null;
 
     for (let i = 0; i < excludeFromReqQuery.length; i + 1) {
         delete q[excludeFromReqQuery[i]];

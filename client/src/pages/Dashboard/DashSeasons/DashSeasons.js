@@ -92,13 +92,13 @@ class DashSeasons extends Component {
         this.props.toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: true,
-            title: `${item.hidden_date ? 'Unh' : 'H'}ide Season`,
-            message: item.hidden_date
+            title: `${item.hidden_at ? 'Unh' : 'H'}ide Season`,
+            message: item.hidden_at
                 ? 'Are you sure you want to unhide this season? This will cause the selected season to be visible on the public page'
                 : 'Are you sure you want to hide this season?\nThis will hide the season from both the admin dashboard and from the public page. You can view all hidden seasons using the filter. This does NOT delete the season',
             fields: [],
-            confirmActionTitle: `${item.hidden_date ? 'Unh' : 'H'}ide Season`,
-            confirmAction: () => this.props.updateSeason(item.id, { is_hidden: !!!item.hidden_date }).then((d) => {
+            confirmActionTitle: `${item.hidden_at ? 'Unh' : 'H'}ide Season`,
+            confirmAction: () => this.props.updateSeason(item.id, { is_hidden: !!!item.hidden_at }).then((d) => {
                 d === 'getSeasons' && this.props.getSeasons(this.props.location.search.slice(1));
             }),
         }, 'prompt');
