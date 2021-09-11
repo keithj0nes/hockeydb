@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Drawer } from 'antd';
 import { connect } from 'react-redux';
 import { Route, NavLink } from 'react-router-dom';
@@ -60,6 +60,16 @@ const dashLinks = {
 const Dashboard = (props) => {
     const { match, admin_type, currentSeason } = props;
     const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        const hasAccess = dashLinks[props.admin_type || 'player'].filter(navLink => props.location.pathname.includes(navLink.to));
+
+        if (hasAccess.length <= 0) {
+            console.log('Not allowed at this route, redirecting to', `/dashboard${dashLinks[props.admin_type || 'player'][0].to}`);
+            // this timeout to ensures redirect happens
+            setTimeout(() => props.history.push(`/dashboard${dashLinks[props.admin_type || 'player'][0].to}`), 200);
+        }
+    }, []);
 
     const DashboardMenu = (
         <div className="dashboard-nav-menu">

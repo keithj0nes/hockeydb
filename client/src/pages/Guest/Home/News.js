@@ -46,7 +46,7 @@ News.propTypes = {
 
 //   render() {
 
-//     const { title, tag, created_date, updated_date, first_name, last_name, body, allow_collapse } = this.props.newsPost
+//     const { title, tag, created_at, updated_at, first_name, last_name, body, allow_collapse } = this.props.newsPost
 
 //     // this will change to an actual icon
 //     const icon = tag ? '!' : '';
@@ -62,9 +62,9 @@ News.propTypes = {
 //             {tag && <div className="tag" style={{background: '#E3BA4A'}}>{icon} <span className="hide-mobile">&nbsp;{tag}</span></div> }
 //           </div>
 //           <div className="posted-date-container">
-//             <h6 className="posted-date">{dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
-//             {/* <p className="posted-date">Updated on: {dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</p> */}
-//             {updated_date && <p className="posted-date">Updated on: {dateFormat(updated_date, 'MM/DD/YYYY hh:mm:ss')}</p> }
+//             <h6 className="posted-date">{dateFormat(created_at, 'MM/DD/YYYY | hh:mm a')}</h6>
+//             {/* <p className="posted-date">Updated on: {dateFormat(created_at, 'MM/DD/YYYY | hh:mm a')}</p> */}
+//             {updated_at && <p className="posted-date">Updated on: {dateFormat(updated_at, 'MM/DD/YYYY hh:mm:ss')}</p> }
 //           </div>
 //           <p className="posted-by">{first_name} {last_name} </p>
 //         </div>
@@ -75,8 +75,8 @@ News.propTypes = {
 //           <h1>{title}</h1>
 //           <div className="posted-date-container">
 //             <div>
-//               <h6 className="posted-date">{dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
-//               <h6 className="posted-date">Updated on: {dateFormat(created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
+//               <h6 className="posted-date">{dateFormat(created_at, 'MM/DD/YYYY | hh:mm a')}</h6>
+//               <h6 className="posted-date">Updated on: {dateFormat(created_at, 'MM/DD/YYYY | hh:mm a')}</h6>
 //             </div>
 //             <div>
 //               {tag && <div className="tag" style={{background: '#E3BA4A'}}>{icon} <span className="hide-mobile">&nbsp;{tag}</span></div> }

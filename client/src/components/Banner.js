@@ -12,33 +12,40 @@ function Banner({ banner }) {
         // getBanner();
     }, []);
 
+    const pathnamesToNotShowBanner = ['registration', 'reset', 'login'];
+    const found = pathnamesToNotShowBanner.find(path => location.pathname.includes(path));
+
     // NEED TO MAKE THIS DYNAMIC FROM AN API CALL
     // CREATE API ROUTE
-    return !location.pathname.includes('registration') && (
-        <div style={{ padding: '30px 10px 0px' }}>
-            <Alert
-                message="Registration open!"
-                description={(
-                    <>
-                        Log in to register for the upcoming season
-                        <Link // to="/registration/1"
-                            to={{
-                                pathname: '/registration',
-                                // search: '?sort=name',
-                                // hash: '#the-hash',
-                                state: { season_id: 1 },
-                            }}
-                        >
-                            HERE
-                        </Link>
-                    </>
-                )}
+    // return !location.pathname.includes('registration') && (
+    return !found && (
+        <div className="site-container">
+            <div style={{ padding: '30px 10px 0px' }}>
+                <Alert
+                    message="Registration open!"
+                    description={(
+                        <>
+                            Log in to register for the upcoming season
+                            <Link // to="/registration/1"
+                                to={{
+                                    pathname: '/registration/1',
+                                    // search: '?sort=name',
+                                    // hash: '#the-hash',
+                                    state: { season_id: 1 },
+                                }}
+                            >
+                                HERE
+                            </Link>
+                        </>
+                    )}
 
-                type="info"
-                closable
-                style={{ padding: 20 }}
-            />
+                    type="info"
+                    closable
+                    style={{ padding: 20 }}
+                />
+            </div>
         </div>
+
     );
 }
 

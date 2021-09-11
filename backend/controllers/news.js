@@ -17,8 +17,8 @@ const getNews = async (req, res, next) => {
             LEFT JOIN news_tags nt ON nt.news_id = n.id
             LEFT JOIN tags t ON t.id = nt.tag_id
             INNER JOIN users u ON u.id = n.created_by
-            WHERE hidden_date IS ${!!req.query.show_hidden ? 'NOT' : ''} null
-            AND deleted_date IS null
+            WHERE hidden_at IS ${!!req.query.show_hidden ? 'NOT' : ''} null
+            AND deleted_at IS null
             GROUP BY n.id, u.id
             ORDER BY n.display_order;
         `;
@@ -49,7 +49,7 @@ const getNewsById = async (req, res, next) => {
             LEFT JOIN news_tags nt ON nt.news_id = n.id
             LEFT JOIN tags t ON t.id = nt.tag_id
             INNER JOIN users u ON n.created_by = u.id 
-            WHERE n.id = $1 AND deleted_date IS null
+            WHERE n.id = $1 AND deleted_at IS null
             GROUP BY n.id, u.id;
         `;
 
@@ -80,7 +80,7 @@ const createNews = async (req, res, next) => {
         `;
 
         await db.query(updateOrderQuery);
-        const inserted = await db.news.insert({ title, display_order: 1, body, created_date: currentDate, created_by: (req.user && req.user.id) || 1 });
+        const inserted = await db.news.insert({ title, display_order: 1, body, created_at: currentDate, created_by: (req.user && req.user.id) || 1 });
 
         if (!!tags_in_post.length) {
             const tagsInPost = tags_in_post.map(item => ({ news_id: inserted.id, tag_id: item.id }));
@@ -136,7 +136,7 @@ const updateNews = async (req, res, next) => {
 
         // Manage hidden request
         if (req.body.hasOwnProperty('is_hidden')) {
-            const data = await db.news.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null });
+            const data = await db.news.update({ id }, is_hidden ? { hidden_at: new Date(), hidden_by: req.user.id } : { hidden_at: null, hidden_by: null });
             return res.send({ status: 200, data: { ...data[0], is_hidden }, message: is_hidden ? 'News post hidden' : 'News post unhidden', notification_type: 'snack' });
         }
 
@@ -146,7 +146,7 @@ const updateNews = async (req, res, next) => {
             await db.news_tags.insert(tagsInPost);
         }
 
-        const data = await db.news.update({ id }, { title, body, allow_collapse, tag, updated_date: new Date(), updated_by: req.user.id });
+        const data = await db.news.update({ id }, { title, body, allow_collapse, tag, updated_at: new Date(), updated_by: req.user.id });
         return res.send({ status: 200, data: data[0], message: 'News post updated', notification_type: 'snack' });
     } catch (error) {
         console.log('UPDATE NEWS ERROR: ', error);
@@ -164,7 +164,7 @@ const deleteNews = async (req, res, next) => {
             return res.send({ status: 404, error: true, message: 'News post not found', notification_type: 'snack' });
         }
 
-        const data = await db.news.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id });
+        const data = await db.news.update({ id }, { deleted_at: new Date(), deleted_by: req.user.id });
         return res.send({ status: 200, data: data[0], message: 'News post deleted', notification_type: 'snack' });
     } catch (error) {
         console.log('DELETE NEWS ERROR: ', error);

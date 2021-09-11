@@ -58,7 +58,7 @@ const createSeason = async (req, res, next) => {
             return res.send({ status: 400, data: [], message: 'Season already exists' });
         }
 
-        const data = await db.seasons.insert({ name, type, is_active: false, created_date: new Date(), created_by: req.user.id });
+        const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id });
         return res.send({ status: 200, data, message: 'Season created', notification_type: 'snack' });
     } catch (error) {
         console.log('CREATE SEASON ERROR: ', error);
@@ -83,7 +83,7 @@ const updateSeason = async (req, res, next) => {
             if (season.is_active) {
                 return res.send({ status: 409, data: [], message: 'Cannot hide the currently active season', notification_type: 'snack' });
             }
-            const data = await db.seasons.update({ id }, is_hidden ? { hidden_date: new Date(), hidden_by: req.user.id } : { hidden_date: null, hidden_by: null });
+            const data = await db.seasons.update({ id }, is_hidden ? { hidden_at: new Date(), hidden_by: req.user.id } : { hidden_at: null, hidden_by: null });
             return res.send({ status: 200, data: { ...data[0], is_hidden }, message: is_hidden ? 'Season hidden' : 'Season unhidden', notification_type: 'snack' });
         }
 
@@ -101,7 +101,7 @@ const updateSeason = async (req, res, next) => {
             await db.seasons.update({ id: findIsActive.id }, { is_active: false });
         }
 
-        const data = await db.seasons.update({ id }, { name, type, is_active, updated_date: new Date(), updated_by: req.user.id });
+        const data = await db.seasons.update({ id }, { name, type, is_active, updated_at: new Date(), updated_by: req.user.id });
         return res.send({ status: 200, data: { ...data[0], updateCurrentSeasonGlobally: is_active }, message: 'Season updated', notification_type: 'snack' });
     } catch (error) {
         console.log('UPDATE SEASON ERROR: ', error);
@@ -124,7 +124,7 @@ const deleteSeason = async (req, res, next) => {
             return res.send({ status: 409, error: true, message: 'Cannot delete the currently active season', notification_type: 'snack' });
         }
 
-        const data = await db.seasons.update({ id }, { deleted_date: new Date(), deleted_by: req.user.id });
+        const data = await db.seasons.update({ id }, { deleted_at: new Date(), deleted_by: req.user.id });
         return res.send({ status: 200, data, message: 'Season deleted', notification_type: 'snack' });
     } catch (error) {
         console.log('DELETE SEASON ERROR: ', error);

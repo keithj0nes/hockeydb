@@ -14,7 +14,7 @@ CREATE TABLE "users" (
   "last_name" VARCHAR,
   "email" VARCHAR,
   "is_suspended" BOOLEAN,
-  "suspended_date" TIMESTAMP,
+  "suspended_at" TIMESTAMP,
   "invite_token" VARCHAR,
   "invite_date" TIMESTAMP,
   "reinvite_date" TIMESTAMP
@@ -32,14 +32,14 @@ CREATE TABLE "passwords" (
 CREATE TABLE "blog" (
   "id" SERIAL PRIMARY KEY,
   "message" VARCHAR,
-  "created_date" TIMESTAMP,
+  "created_at" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
-  "updated_date" TIMESTAMP,
+  "updated_at" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
-  "deleted_date" TIMESTAMP,
+  "deleted_at" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
--- INSERT INTO blog (message, created_date, created_by, updated_date, updated_by, deleted_date, deleted_by)
+-- INSERT INTO blog (message, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by)
 -- VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales metus et dolor convallis, auctor vulputate lectus imperdiet. Donec tempor porta metus, sit amet dictum nisi pretium id. Nulla vitae massa efficitur, malesuada velit eget, aliquam odio. Vestibulum nunc ex, ullamcorper a luctus vitae, rhoncus eget turpis. Duis rhoncus lobortis dignissim. In sollicitudin vel turpis at lobortis. Aenean eget pretium mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum sit amet sapien nec diam commodo dignissim eu at dui.', 
 -- null, null, null, null, null, null);
 
@@ -49,11 +49,11 @@ CREATE TABLE "players" (
   "last_name" VARCHAR(255),
   "email" VARCHAR(255),
   "registered_date" TIMESTAMP,
-  "created_date" TIMESTAMP,
+  "created_at" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
-  "updated_date" TIMESTAMP,
+  "updated_at" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
-  "deleted_date" TIMESTAMP,
+  "deleted_at" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
 
@@ -91,7 +91,7 @@ CREATE TABLE "player_stats" (
 --   "game_id" int
 -- );
 
-CREATE TABLE "players_teams" (
+CREATE TABLE "player_team_season" (
   "id" SERIAL PRIMARY KEY,
   "player_id" INTEGER REFERENCES players(id),
   "team_id" INTEGER REFERENCES teams(id),
@@ -117,11 +117,11 @@ CREATE TABLE "teams" (
   "division_id" INTEGER REFERENCES divisions(id),
   "name" VARCHAR,
   "colors" VARCHAR,
-  "created_date" TIMESTAMP,
+  "created_at" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
-  "updated_date" TIMESTAMP,
+  "updated_at" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
-  "deleted_date" TIMESTAMP,
+  "deleted_at" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
 
@@ -130,11 +130,11 @@ CREATE TABLE "seasons" (
   "id"  SERIAL PRIMARY KEY,
   "name" VARCHAR,
   "type" VARCHAR,
-  "created_date" TIMESTAMP,
+  "created_at" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
-  "updated_date" TIMESTAMP,
+  "updated_at" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
-  "deleted_date" TIMESTAMP,
+  "deleted_at" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id),
   "is_active" BOOLEAN
 );
@@ -144,11 +144,11 @@ CREATE TABLE "divisions" (
   "id"  SERIAL PRIMARY KEY,
   "name" VARCHAR,
   "season_id" INTEGER REFERENCES seasons(id)
-  "created_date" TIMESTAMP,
+  "created_at" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
-  "updated_date" TIMESTAMP,
+  "updated_at" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
-  "deleted_date" TIMESTAMP,
+  "deleted_at" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
 
@@ -157,11 +157,11 @@ CREATE TABLE "locations" (
   "id" SERIAL PRIMARY KEY,
   "name" VARCHAR,
   "address" VARCHAR,
-  "created_date" TIMESTAMP,
+  "created_at" TIMESTAMP,
   "created_by" INTEGER REFERENCES users(id),
-  "updated_date" TIMESTAMP,
+  "updated_at" TIMESTAMP,
   "updated_by" INTEGER REFERENCES users(id),
-  "deleted_date" TIMESTAMP,
+  "deleted_at" TIMESTAMP,
   "deleted_by" INTEGER REFERENCES users(id)
 );
 
@@ -237,7 +237,7 @@ CREATE TABLE "games" (
 
 
 
-INSERT INTO users (first_name, last_name, email, is_suspended, suspended_date)
+INSERT INTO users (first_name, last_name, email, is_suspended, suspended_at)
 VALUES ('test', 'user', 'test@test.com', false, null);
 
 INSERT INTO passwords (user_id, salt, pw)
@@ -279,9 +279,9 @@ VALUES ('thunderbirds', 'western', 'navy blue/green/white', 2,1);
 
 -- ALTER TABLE "suspensions" ADD FOREIGN KEY ("posted_by") REFERENCES "admins" ("id");
 
--- ALTER TABLE "players_teams" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
+-- ALTER TABLE "player_team_season" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 
--- ALTER TABLE "players_teams" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
+-- ALTER TABLE "player_team_season" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
 
 -- ALTER TABLE "referees_games" ADD FOREIGN KEY ("referee_id") REFERENCES "referees" ("id");
 

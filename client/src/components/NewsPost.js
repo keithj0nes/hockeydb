@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'date-fns/format';
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 
 
 export const NewsPost = ({ post }) => {
@@ -14,8 +14,14 @@ export const NewsPost = ({ post }) => {
                     <h1>{post.title}</h1>
                 </div>
                 <div className="posted-date-container">
-                    <h6 className="posted-date">{dateFormat(post.created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
-                    {post.updated_date && <p className="posted-date">Updated on: {dateFormat(post.updated_date, 'MM/DD/YYYY hh:mm:ss')}</p> }
+                    <Tooltip overlayStyle={{ maxWidth: '100%' }} title={dateFormat(post.created_at, 'dddd, MMMM do YYYY @ hh:mma')} placement="left" color="#0C1D40">
+                        <h6 className="posted-date">{dateFormat(post.created_at, 'MM/DD/YYYY | hh:mm a')}</h6>
+                    </Tooltip>
+                    {post.updated_at && (
+                        <Tooltip overlayStyle={{ maxWidth: '100%' }} title={dateFormat(post.updated_at, 'dddd, MMMM do YYYY @ hh:mma')} placement="topLeft" color="#0C1D40">
+                            <p className="posted-date">Updated on: {dateFormat(post.updated_at, 'MM/DD/YYYY hh:mm:ss')}</p>
+                        </Tooltip>
+                    )}
                 </div>
                 <p className="posted-by">{post.first_name} {post.last_name}</p>
                 {!!post.tags_in_post?.length && post.tags_in_post.map(item => <Tag key={item.id} style={{ color: 'white', background: '#E3BA4A' }}>{item.name}</Tag>)}
@@ -27,8 +33,14 @@ export const NewsPost = ({ post }) => {
                 <h1>{post.title}</h1>
                 <div className="posted-date-container">
                     <div>
-                        <h6 className="posted-date">{dateFormat(post.created_date, 'MM/DD/YYYY | hh:mm a')}</h6>
-                        {post.updated_date && <p className="posted-date">Updated on: {dateFormat(post.updated_date, 'MM/DD/YYYY hh:mm:ss')}</p> }
+                        <Tooltip overlayStyle={{ maxWidth: '100%' }} title={dateFormat(post.created_at, 'dddd, MMMM do YYYY @ hh:mma')} placement="topLeft" color="#0C1D40">
+                            <h6 className="posted-date">{dateFormat(post.created_at, 'MM/DD/YYYY | hh:mm a')}</h6>
+                        </Tooltip>
+                        {post.updated_at && (
+                            <Tooltip overlayStyle={{ maxWidth: '100%' }} title={dateFormat(post.updated_at, 'dddd, MMMM do YYYY @ hh:mma')} placement="topLeft" color="#0C1D40">
+                                <p className="posted-date">Updated on: {dateFormat(post.updated_at, 'MM/DD/YYYY hh:mm:ss')}</p>
+                            </Tooltip>
+                        )}
                     </div>
                     <div>
                         <p className="posted-by">{post.first_name} {post.last_name} </p>

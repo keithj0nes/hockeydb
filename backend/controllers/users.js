@@ -17,7 +17,7 @@ const getUsers = async (req, res, next) => {
         //     delete newQuery.invite_token
         // }
         // console.log(newQuery, 'NEW QUERRRYYY')
-        // const query = helpers.filter(newQuery, ['hidden_date =', 'deleted_date =']);
+        // const query = helpers.filter(newQuery, ['hidden_at =', 'deleted_at =']);
 
         let myNewStuffz = `
             SELECT *, 

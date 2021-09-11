@@ -1,16 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, InputNumber, Steps, Collapse, Checkbox, Radio } from 'antd';
+import { Form, Input, Collapse } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Button } from 'components';
 
-
-
-
-
-    // change out this waiver step in the registration file
-
-
-
-const WaiverStep = ({ fakeData, setFakeData, form, userInputedValues, openPanelKey44, setOpenPanelKey44 }) => {
+const WaiverStep = ({ fakeData, setFakeData, form, userInputedValues, openPanelKey, setOpenPanelKey }) => {
+    // console.log(userInputedValues, 'userInputedValues')
     return (
         <div className="section-border">
             {/* <h2>Docs & Waivers</h2> */}
@@ -41,7 +36,7 @@ const WaiverStep = ({ fakeData, setFakeData, form, userInputedValues, openPanelK
                     // form.setFieldsValue({ [waiver.name]: e.target.value?.toUpperCase() });
                     form.setFieldsValue({ [entry[0]]: entry[1]?.toUpperCase() });
 
-                    setOpenPanelKey44('next');
+                    setOpenPanelKey('next');
 
                     // TO DO
 
@@ -49,11 +44,10 @@ const WaiverStep = ({ fakeData, setFakeData, form, userInputedValues, openPanelK
                     // it is currently being updated on line 451 via onchange
                 }}
             >
-                {/* <Collapse defaultActiveKey={openPanelKey}> */}
-                <Collapse activeKey={openPanelKey44} onChange={e => setOpenPanelKey44(e)}>
+                <Collapse activeKey={openPanelKey} onChange={e => setOpenPanelKey(e)}>
 
                     {fakeData.step2_waivers.map(waiver => (
-                        <WaiverCollapse waiver={waiver} fakeData={fakeData} setFakeData={setFakeData} key={waiver.id} form={form} userInputedValues={userInputedValues} setOpenPanelKey44={setOpenPanelKey44} />
+                        <WaiverCollapse waiver={waiver} fakeData={fakeData} setFakeData={setFakeData} key={waiver.id} form={form} userInputedValues={userInputedValues} setOpenPanelKey={setOpenPanelKey} />
                     ))}
 
                 </Collapse>
@@ -67,4 +61,101 @@ export default WaiverStep;
 WaiverStep.propTypes = {
     fakeData: PropTypes.object,
     form: PropTypes.object,
+    setFakeData: PropTypes.func,
+    userInputedValues: PropTypes.object,
+    // openPanelKey: PropTypes.array,
+    openPanelKey: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.array,
+    ]),
+    setOpenPanelKey: PropTypes.func,
+};
+
+
+const WaiverCollapse = ({ waiver, fakeData, setFakeData, form, userInputedValues, setOpenPanelKey, ...props }) => {
+    const [canSubmit, setCanSubmit] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+    const [myValue, setMyValue] = useState('');
+
+    useEffect(() => {
+        setCanSubmit(!!validateSign(myValue, expectedName2));
+    }, [myValue]);
+
+    const expectedName2 = `${userInputedValues.first_name} ${userInputedValues.last_name}`;
+
+    const handleFormChange = e => {
+        setMyValue(e.target.value?.toUpperCase());
+    };
+
+    const validateWaiver = () => {
+        if (!myValue || validateSign(myValue, expectedName2)) {
+            return Promise.resolve();
+        }
+        return Promise.reject('Please sign initials');
+    };
+
+    return (
+        <Collapse.Panel {...props} collapsible="header" header={waiver.title} key={waiver.id} extra={(<p>{canSubmit ? (<> <CheckOutlined style={{ color: '#4F9300' }} /> Completed </>) : 'Pending Completion'}</p>)}>
+
+            <p className="waiver-container">{waiver.body}</p>
+
+            <div className="m-t-xl m-b-s f-justify-between">
+                <p>By entering my name in the box below, I agree to the terms of the waiver.</p>
+
+                <Button title="Download Waiver" type="link" onClick={() => console.log('ONCLICK: create modal with list of PDF waivers to choose from')} />
+            </div>
+
+            <div className="sign-download-container">
+
+                <div className="f-align-start">
+
+                    <Form.Item
+                        name={waiver.name}
+                        style={{ marginBottom: 0 }}
+                        validateTrigger="onBlur"
+                        rules={[
+                            { required: true, message: 'Initials are required' },
+                            { validator() { return validateWaiver(); } },
+                        ]}
+                    >
+                        <Input type="text" style={{ minHeight: 42, textTransform: 'uppercase' }} disabled={disabled || !!waiver.signed} value={myValue} onChange={handleFormChange} />
+                    </Form.Item>
+
+                    <div style={{ marginRight: 24 }} />
+
+                    {canSubmit && (
+                        <Button disabled={!canSubmit || disabled} title="NEXT" onClick={() => setOpenPanelKey('next')} />
+                    )}
+                </div>
+
+                <p>{canSubmit ? (<> <CheckOutlined style={{ color: '#4F9300' }} /> Completed </>) : 'Pending Completion'}</p>
+
+
+                {/* <div className="p-b-m" /> */}
+                {/* <Button title="Download Waiver" type="link" onClick={() => console.log('ONCLICK: create modal with list of PDF waivers to choose from')}/> */}
+            </div>
+
+        </Collapse.Panel>
+    );
+};
+
+// this function allows user to enter full name or initials
+// returns inputted value if pass or false if fail
+function validateSign(userValue, expectedValue) {
+    const fullName = expectedValue.split(' ');
+    const initials = fullName.shift().charAt(0).toUpperCase() + fullName.pop().charAt(0).toUpperCase();
+    const expectedValueFormatted = expectedValue.toUpperCase();
+    if (expectedValueFormatted === userValue || initials === userValue) {
+        return userValue;
+    }
+    return false;
+}
+
+WaiverCollapse.propTypes = {
+    fakeData: PropTypes.object,
+    form: PropTypes.object,
+    setFakeData: PropTypes.func,
+    userInputedValues: PropTypes.object,
+    setOpenPanelKey: PropTypes.func,
+    waiver: PropTypes.object,
 };

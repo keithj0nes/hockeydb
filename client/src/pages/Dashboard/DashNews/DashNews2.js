@@ -34,13 +34,13 @@ const DashNews2 = ({ news, getNews, isLoading, location, toggleModal, updateNews
         toggleModal({
             isVisible: true,
             isClosableOnBackgroundClick: true,
-            title: `${item.hidden_date ? 'Unh' : 'H'}ide News Post`,
-            message: item.hidden_date
+            title: `${item.hidden_at ? 'Unh' : 'H'}ide News Post`,
+            message: item.hidden_at
                 ? 'Are you sure you want to unhide this news post? This will cause the selected news post to be visible on the public page'
                 : 'Are you sure you want to hide this news post?\nThis will hide the news post from both the admin dashboard and from the public page. You can view all hidden news posts using the filter. This does NOT delete the news post',
             fields: [],
-            confirmActionTitle: `${item.hidden_date ? 'Unh' : 'H'}ide News Post`,
-            confirmAction: () => updateNewsPostById({ id: item.id, newsData: { is_hidden: !!!item.hidden_date } }),
+            confirmActionTitle: `${item.hidden_at ? 'Unh' : 'H'}ide News Post`,
+            confirmAction: () => updateNewsPostById({ id: item.id, newsData: { is_hidden: !!!item.hidden_at } }),
         }, 'prompt');
     };
 
@@ -116,7 +116,7 @@ const DashNews2 = ({ news, getNews, isLoading, location, toggleModal, updateNews
                             title: 'three',
                             full_name: { as: 'author', flex: 'one' },
                             // only show the created date if show_hidden filter isnt applied
-                            ...!location.search.includes('show_hidden') && { created_date: { as: 'published date', flex: 'one', type: 'date' } },
+                            ...!location.search.includes('show_hidden') && { created_at: { as: 'published date', flex: 'one', type: 'date' } },
                         }}
                         minWidth={680}
                         isLoading={[isLoading, 15]}
