@@ -18,6 +18,8 @@ import DashNewsCreate2 from './DashNews/DashNewsCreate2';
 import DashLocations2 from './DashLocations/DashLocations2';
 import DashUsers2 from './DashUsers/DashUsers2';
 import DashHome from './DashHome/DashHome';
+import DashProfile from './DashProfile/DashProfile';
+
 import { Site_Name_Full } from '../../assets/resourceStrings';
 
 import '../../assets/styles/dashboard.scss';
@@ -55,6 +57,10 @@ const dashLinks = {
         { name: 'Players',    to: '/players',    icon: ICONS.USERS,     component: DashPlayers,                   exact: false, hideFromNavigation: false },
     ],
 };
+
+const universalViews = [
+    { name: 'Profile', to: '/profile', component: DashProfile, exact: true },
+];
 
 
 const Dashboard = (props) => {
@@ -135,7 +141,7 @@ const Dashboard = (props) => {
                 </div>
 
                 <Content>
-                    {dashLinks[admin_type || 'player'].map(page => (
+                    {dashLinks[admin_type || 'player'].concat(universalViews).map(page => (
                         <Route
                             key={page.to}
                             path={`${match.path}${page.to}`}
@@ -145,7 +151,7 @@ const Dashboard = (props) => {
                     ))}
                 </Content>
 
-                <Footer className="text-center">
+                <Footer className="text-center p-b-xs">
                     {Site_Name_Full} ©{new Date().getFullYear()} <br />
                     All rights reserved
                 </Footer>

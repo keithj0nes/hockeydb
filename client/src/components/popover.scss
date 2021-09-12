@@ -31,12 +31,19 @@
         align-items: center;
         cursor: pointer;
 
-        &:hover:not(.not-available), &:hover a {
-            color: $dash-color-table-ellipsis;
+        &:hover:not(.not-available),
+        &:hover a,
+        .profile-pic-nav-selected {
+            // color: $dash-color-table-ellipsis;
+            color: $admin-color-highlite;
         }
 
         &.not-available {
             cursor: not-allowed;
+        }
+
+        a {
+            font-family: inherit;
         }
 
         img {
