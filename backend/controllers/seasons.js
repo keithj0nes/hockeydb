@@ -1,6 +1,13 @@
 const app = require('../server.js');
 const helpers = require('./helpers');
 
+// const createLimitFragment = (db, limit, offset) => {
+//     if (offset) {
+//         return db.query('LIMIT $1 OFFSET $2', [limit, offset]);
+//     }
+//     return db.query('LIMIT $1', limit);
+// };
+
 
 const getSeasons = async (req, res, next) => {
     try {
@@ -8,18 +15,42 @@ const getSeasons = async (req, res, next) => {
         const query = helpers.filter(req.query);
         console.log(req.query, ' req.query!');
 
-        const { limit = 2, page = 1, dir = 'desc' } = req.query;
+        const { limit = 50, page = 1, dir = 'desc' } = req.query;
 
         const offset = (!page || page <= 1) ? 0 : (page - 1) * limit;
         console.log(offset);
         const total_count = await db.seasons.count({ ...query });
-        const seasons = await db.seasons.find({
-            ...query,
-        }, {
-            order: [{ field: 'id', direction: dir }],
-            offset,
-            limit,
-        });
+        // const OLDQUERY = await db.seasons.find({
+        //     ...query,
+        // }, {
+        //     // fields: ['name'],
+        //     order: [{ field: 'id', direction: dir }],
+        //     offset,
+        //     limit,
+        // });
+
+        console.log(query, ' querrryyy helper');
+
+        // select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+        // u.first_name, u.last_name, u.id AS user_id from seasons s
+        // join users u on u.id = s.created_by
+        // where hidden_at IS null AND deleted_at IS null
+        // order by s.id ${dir} limit $2 offset $3
+        const raw = `
+
+            select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+            cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name, 
+            uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+            from seasons s
+            join users cu on cu.id = s.created_by
+            left join users uu on uu.id = s.updated_by
+            where hidden_at ${req.query.show_hidden ? 'IS NOT null' : 'IS null'} AND deleted_at IS null
+            order by s.id ${dir} limit $2 offset $3
+        `;
+
+        const seasons = await db.query(raw, [dir, limit, offset]);
+
+        // console.log(seasons, 'new uqery')
 
         const total_pages = Math.ceil(total_count / limit);
         console.log({ total_count: parseInt(total_count), seasons_length: seasons.length, total_pages, page: parseInt(page) });
@@ -79,6 +110,7 @@ const updateSeason = async (req, res, next) => {
         }
 
         // Manage hidden request
+        // eslint-disable-next-line no-prototype-builtins
         if (req.body.hasOwnProperty('is_hidden')) {
             if (season.is_active) {
                 return res.send({ status: 409, data: [], message: 'Cannot hide the currently active season', notification_type: 'snack' });

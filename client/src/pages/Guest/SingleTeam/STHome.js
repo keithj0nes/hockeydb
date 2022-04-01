@@ -6,7 +6,7 @@ import Auth, { basicList } from '../../../components/Auth';
 import { getQuery } from '../../../helpers';
 
 
-const STHome = ({ recent, standings, currentSeasonId }) => {
+const STHome = ({ recent, standings, currentSeasonId, leaders }) => {
     const [state, setState] = useState({});
     const [, filterString] = getQuery();
     useEffect(() => {
@@ -19,11 +19,11 @@ const STHome = ({ recent, standings, currentSeasonId }) => {
                 <Auth.Tier tiers={basicList}>
                     <Table
                         title="Team Leaders"
-                        data={teamLeaders}
+                        data={leaders}
                         minWidth="50%"
                         columns={{
                             category: { as: 'cat', flex: 'two' },
-                            player: 'five',
+                            player: { as: 'player', flex: 'five', format: '$first_name $last_name' },
                             points: { as: 'pts', flex: 'one' },
                         }}
                         uniqueKey="category"
@@ -70,22 +70,15 @@ const mapStateToProps = state => ({
     recent: state.teams.singleTeam.recent,
     standings: state.teams.singleTeam.standings,
     currentSeasonId: state.seasons.currentSeason?.id,
+    // remove this concat when goalie stats are incorporated
+    leaders: state.teams.singleTeam.leaders.concat({ category: 'Wins', first_name: 'Roberto', last_name: 'Luongo', points: 0 }),
 });
 
 export default connect(mapStateToProps)(STHome);
-
 
 STHome.propTypes = {
     standings: PropTypes.array,
     recent: PropTypes.array,
     currentSeasonId: PropTypes.number,
+    leaders: PropTypes.array,
 };
-
-
-const teamLeaders = [
-    { category: 'Points', player: 'Tanner Seramur', points: 26 },
-    { category: 'Goals', player: 'Adrian Kenepah', points: 25 },
-    { category: 'Assists', player: 'Jerry Johnson', points: 22 },
-    { category: 'PIMs', player: 'Adam Kessler', points: 159 },
-    { category: 'Wins', player: 'Roberto Luongo', points: 0 },
-];

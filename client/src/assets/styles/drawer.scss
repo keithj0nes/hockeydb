@@ -1,0 +1,12 @@
+@import './variables';
+
+.select-options-formlist {
+    .ant-space,
+    .ant-space-item:first-child {
+        // background-color: red;
+        width: 100%;
+    }
+    .ant-space-item .ant-form-item {
+        margin-bottom: 0;
+    }
+}

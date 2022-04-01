@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, InputNumber, Steps, Collapse, Checkbox, Radio } from 'antd';
+import { Form, Input } from 'antd';
+// import { Form, Input, InputNumber, Steps, Collapse, Checkbox, Radio } from 'antd';
 
 
 const InfoStep = ({fakeData, form}) => {
@@ -34,7 +35,7 @@ const InfoStep = ({fakeData, form}) => {
                     <div className="fields-group">
                         {fakeData.personalInputs?.map(item => {
                             return (
-                                <Form.Item label={item.label} name={item.name} rules={[{ required: item.required, message: `${item.label} is required` }]}>
+                                <Form.Item key={item.name} label={item.label} name={item.name} rules={[{ required: item.required, message: `${item.label} is required` }]}>
                                     <Input type={item.type}/>
                                 </Form.Item>
                             )
@@ -47,7 +48,7 @@ const InfoStep = ({fakeData, form}) => {
                     <div className="fields-group">
                         {fakeData.teamInputs?.map(item => {
                             return (
-                                <Form.Item label={item.label} name={item.name} rules={[{ required: item.required, message: `${item.label} is required` }]}>
+                                <Form.Item key={item.name} label={item.label} name={item.name} rules={[{ required: item.required, message: `${item.label} is required` }]}>
                                     <Input type={item.type}/>
                                 </Form.Item>
                             )

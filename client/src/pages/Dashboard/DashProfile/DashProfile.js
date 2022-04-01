@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashPageHeader, DashFilter, Pagination, useQueryParam } from '../../../components';
+import { DashPageHeader } from '../../../components';
 
 const DashProfile = (props) => {
     const pageHeaderInfo = {

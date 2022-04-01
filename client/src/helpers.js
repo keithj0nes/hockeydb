@@ -58,6 +58,12 @@ export const capitalizeWords = (words, splitter = '_') => {
     }).join(' ');
 };
 
+export const guid = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+};
+
 // static mapClassNames(classNames, classProps = {}) {
 
 //     if (typeof classNames === 'object') {

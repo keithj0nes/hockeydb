@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input } from 'antd';
-import { SketchPicker } from 'react-color';
-import { DashPageHeader, Button, ColorPicker } from '../../../components';
+import { DashPageHeader, Button } from '../../../components';
+import Form2 from '../../../components/Form';
 
 const initState = {
     hasBeenSubmitted: false,
@@ -28,12 +28,57 @@ const initState = {
 const DashHome = () => {
     const [state, setState] = useState(initState);
     const [calculatorVisible, setCalculatorVisible] = useState(false);
-    const [color, setColor] = useState('#FFFFFF');
-    const [colorPickerOpen, setcolorPickerOpen] = useState(false);
     const pageHeaderInfo = {
         title: 'Dashboard',
         hideSearchAndButtons: true,
     };
+
+    const formFields = [
+        {
+            style: {},
+            fields: {
+                total_price: {
+                    label: 'Season Price',
+                    type: 'text',
+                    // width: 150,
+                    // ratio: 1,
+                    required: false,
+                    placeholder: 'Enter Price',
+                },
+                estimated_transactions: {
+                    label: 'Estimated Transactions',
+                    type: 'text',
+                    // width: 150,
+                    // ratio: 1,
+                    required: false,
+                    placeholder: 'Enter Transactions Count',
+                },
+            },
+        },
+        {
+            style: {},
+            fields: {
+                additional_percentage: {
+                    label: 'Additional Percentage',
+                    type: 'text',
+                    required: true,
+                    rules: [{ required: true, message: 'Please enter an additional percentage'}],
+                    style: {},
+                    columns: 8,
+                    placeholder: 'Enter %',
+                },
+                additional_cents: {
+                    label: 'Additional Cents',
+                    type: 'text',
+                    required: true,
+                    // options: [{ label: '0-10', value: 1 }, { label: '11-50', value: 2 }, { label: '51-100', value: 3 }],
+                    // style: {},
+                    columns: 4,
+                    placeholder: 'Enter ¢',
+                },
+            },
+        },
+    ];
 
 
     const stripeCalculator = (values) => {
@@ -115,20 +160,22 @@ const DashHome = () => {
     // console.log({stripeCents: state.stripeCents, additionalCents: state.additionalCents});
     // console.log((state.stripeCents) + (state.additionalCents / 100));
 
-    const inlineStyles = {
-        colorPickerPopover: {
-            position: 'absolute',
-            zIndex: '1000',
-            top: '0px',
-            bottom: '0px',
-            right: '0px',
-            left: '0px',
-            background: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-    };
+    // const inlineStyles = {
+    //     colorPickerPopover: {
+    //         position: 'absolute',
+    //         zIndex: '1000',
+    //         top: '0px',
+    //         bottom: '0px',
+    //         right: '0px',
+    //         left: '0px',
+    //         background: 'rgba(0, 0, 0, 0.5)',
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         justifyContent: 'center',
+    //     },
+    // };
+
+    console.log('hahah');
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
@@ -136,6 +183,18 @@ const DashHome = () => {
             <Button
                 title={calculatorVisible ? 'Hide Calculator' : 'Show Calculator'}
                 onClick={() => setCalculatorVisible(!calculatorVisible)}
+            />
+
+            <Form2
+                fields={formFields}
+                onSubmit={stripeCalculator}
+                title=""
+                subTitle={(
+                    <>
+                        <h2>How to use Season Calculator:</h2>
+                        <p>Enter a Season Price to calculate the total season price minus Stripe and PML (us) fees. Stripe fees are required by default while PML fees are optional and added on top of the Stripe fees. Use the Estimated Transaction box to multiply each category to an overall season count - IE: fees are $100 and there are 50 people in the league, use the Estimated Transation box to view the overall pricing for 50 people in the league.</p>
+                    </>
+                )}
             />
 
             {/* <button id="bt" onClick={() => setcolorPickerOpen(true)}>OPN PICKER</button> */}
@@ -199,7 +258,7 @@ const DashHome = () => {
                         </Form.Item>
                     </div>
 
-                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Button htmlType="submit" title="Calculate" type="admin" />
                     </div>
 
@@ -267,6 +326,34 @@ const DashHome = () => {
                     )}
 
                 </Form>
+            )}
+
+            {state.hasBeenSubmitted && (
+                <>
+                    <h3>Single Participant Totals</h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                        {card({ title: 'Total Stripe Fees', number: state.singleStripeFees, prefix: '$' })}
+                        {card({ title: 'Total PML Fees', number: state.singlePMLFees, prefix: '$' })}
+                        {card({ title: 'Total Combined Fees', number: state.singleCombinedFees, prefix: '$' })}
+                        {card({ title: 'Total League Income', number: state.singleIncomeForLeague, prefix: '$' })}
+                        {/* {card({ title: 'Total Stripe Fees', number: state.singleStripeFees })} */}
+                        {/* {card({ title: 'To get the amount entered in the input above', number: state.singleToGetDesiredPrice, prefix: '$' })} */}
+                    </div>
+
+
+                </>
+            )}
+
+            {state.hasEstimatedAmount && (
+                <>
+                    <h3>Overall Season Totals</h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                        {card({ title: 'Overall Stripe Fees', number: state.seasonStripeFees, prefix: '$' })}
+                        {card({ title: 'Overall PML Fees', number: state.seasonPMLFees, prefix: '$' })}
+                        {card({ title: 'Overall Combined Fees', number: state.seasonCombinedFees, prefix: '$' })}
+                        {card({ title: 'Overall League Income', number: state.seasonIncomeForLeague, prefix: '$' })}
+                    </div>
+                </>
             )}
 
         </>

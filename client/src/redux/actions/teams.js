@@ -42,7 +42,7 @@ export const getTeamById = (teamId, filter) => async (dispatch) => {
     const team = await request({ url: `/api/teams/${teamId}?${filter || ''}`, method: 'GET', session: {}, publicRoute: true });
     if (!team.data) return false;
 
-    console.log(team,' team')
+    // console.log(team,' team')
 
     // add rank key - not stored in db
     const standings = team.data.standings.map((item, ind) => ({ ...item, rank: ind + 1 }));
@@ -58,6 +58,7 @@ export const getTeamById = (teamId, filter) => async (dispatch) => {
             seasonsSelect: team.data.seasonsSelect,
             standings,
             teamPlayerStats: team.data.teamPlayerStats,
+            leaders: team.data.teamLeaders,
         },
     });
 

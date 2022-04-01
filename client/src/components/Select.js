@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select as S } from 'antd';
+// import { Select as S } from 'antd';
 import './select.scss';
 
 export const Select = ({ name, defaultValue, hiddenValue, listOfSelects, onChange, title, useKey }) => (

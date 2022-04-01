@@ -1,0 +1,102 @@
+@import './variables';
+
+.register-steps-menu {
+    background-color: $header_sidenav_color;
+    min-width: 280px;
+}
+
+
+.register-steps.ant-steps {
+    // margin-top: 50px;
+    padding: 0 16px;
+    padding-top: 50px;
+    font-family: $heading-font;
+
+    .ant-steps-item-container {
+        // padding-bottom: 30px;
+    }
+
+    .ant-steps-item-finish .ant-steps-item-icon,
+    .ant-steps-item-process .ant-steps-item-icon,
+    .ant-steps-item-wait .ant-steps-item-icon {
+        background-color: transparent;
+    }
+
+    .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
+    .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+    .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after {
+        background-color: #aaa;
+        opacity: 0.5;
+    }
+
+    .ant-steps-item-finish .ant-steps-item-icon {
+        border-color: #aaa;
+        opacity: 0.5;
+    }
+
+    .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+        color: #aaa;
+    }
+
+    .ant-steps-item-wait .ant-steps-item-icon {
+        border-color: #aaa;
+        opacity: 0.5;
+    }
+
+    .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+        color: #aaa;
+    }
+
+    .ant-steps-item-process .ant-steps-item-icon {
+        border-color: $white_color;
+    }
+
+    .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+        border-color: $white_color;
+    }
+
+    .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+        color: #aaa;
+        opacity: 0.5;
+    }
+    .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description {
+        color: #aaa;
+        opacity: 0.5;
+    }
+
+    .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+        color: #ccc;
+    }
+    .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description {
+        color: #ccc;
+    }
+
+    .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+        color: #aaa;
+        opacity: 0.5;
+    }
+    .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description {
+        color: #aaa;
+        opacity: 0.5;
+    }
+}
+
+
+@media only screen and (min-width: 768px) {
+
+    .register-container {
+        background-color: pink;
+        display: flex;
+    }
+
+    .register-steps-menu {
+        height: 100vh;
+
+    }
+
+    .register-steps.ant-steps {
+        .ant-steps-item-container {
+            padding-bottom: 30px;
+        }
+    }
+}

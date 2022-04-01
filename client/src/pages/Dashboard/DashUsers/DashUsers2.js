@@ -7,6 +7,7 @@ import { Button, SlideOut, DashPageHeader, DashFilter } from '../../../component
 import DashTable from '../DashTable';
 import { useQueryParam } from '../../../components/useQueryParams';
 // import { setQuery } from 'helpers';
+// import { Drawer } from 'antd';
 import './dashusers.scss';
 
 const defaultState = {

@@ -34,6 +34,8 @@ const Header = ({ match, location, isUserLoggedIn }) => {
     };
 
     if (location.pathname.includes('/dashboard')) return null;
+    if (location.pathname.includes('/register')) return null;
+
     return (
         <>
             <header>

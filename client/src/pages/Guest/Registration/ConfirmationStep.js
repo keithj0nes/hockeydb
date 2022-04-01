@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Radio } from 'antd';
+import { Form } from 'antd';
 // import { CheckOutlined } from '@ant-design/icons';
 // import { Button } from 'components';
 
@@ -11,7 +11,7 @@ function mapObj(obj) {
 const ConfirmationStep = ({ fakeData, setFakeData, form, userInputedValues, openPanelKey, setOpenPanelKey }) => {
     // const userName = `${userInputedValues.first_name} ${userInputedValues.last_name}`;
 
-    // console.log(userInputedValues, 'user inputed values')
+    console.log(userInputedValues, 'user inputed values  CONFIRMATION PAGE')
 
     const userDataStuff = {
         information: {
@@ -19,7 +19,7 @@ const ConfirmationStep = ({ fakeData, setFakeData, form, userInputedValues, open
             first_name: ['First Name', 'John'],
             last_name: ['Last Name', 'Smith'],
             birth_date: ['Birthdate', '99/99/99'],
-            phone: ['Phone 3', '1234567890'],
+            phone: ['Phone #', '1234567890'],
         },
         team_details: {
             previous_team: ['Last team played for', 'Rangers'],
@@ -32,6 +32,10 @@ const ConfirmationStep = ({ fakeData, setFakeData, form, userInputedValues, open
         waivers: {
             injury_waiver: ['Injury Waiver', 'AA'],
             another_waiver: ['Another Waiver', 'AA'],
+        },
+        payment_options: {
+            pay_in_full: ['Pay in Full', 5000],
+            type: ['Card Type', 'Visa/Mastercard']
         },
     };
 
@@ -50,11 +54,12 @@ const ConfirmationStep = ({ fakeData, setFakeData, form, userInputedValues, open
                     onFinish={values => console.log(values, 'values')}
                 >
                     {mapObj(userDataStuff).map(section => {
+                    // {mapObj(userInputedValues).map(section => {
                         return (
                             <>
-                                <h2 style={{textTransform: 'uppercase'}}>{section.key.replace(/_/g, ' ')}</h2>
+                                <h2 style={{textTransform: 'uppercase', paddingTop: 10 }}>{section.key.replace(/_/g, ' ')}</h2>
                                 {mapObj(section.value).map(keys => {
-                                    console.log(keys, 'keys')
+                                    // console.log(keys, 'keys')
 
                                     return (
                                         <div style={{ display: 'flex', background: '#f8f8f8', margin: '10px 0' }}>

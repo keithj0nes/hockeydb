@@ -65,7 +65,7 @@ class Schedule extends Component {
 
     handleLoadMore = () => {
         this.setState({filters: {...this.state.filters, page: this.state.filters.page + 1, fromLoadMore: true}}, () => {
-            const search = setQuery(this.state.filters);
+            const search = setQuery(this.state.filters, true);
             this.props.getGames(search).then(() => this.setState({filters: {...this.state.filters, fromLoadMore: false}}))
         });
     }
@@ -106,7 +106,9 @@ class Schedule extends Component {
                             {game.away_team}
                         </Link>
                     </p>
-                    <p className="ot-cell ot-flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p>
+                    {/* <p className="ot-cell ot-flex-one">{game.has_been_played && ( `${game.home_score} : ${game.away_score}` )}</p> */}
+                    <p className="ot-cell ot-flex-one">{`${game.home_score} : ${game.away_score}`}</p>
+
                     <p className="ot-cell ot-flex-one">
                         {game.has_been_played && (
                             <Link to={`/boxscore/${game.id}`}>

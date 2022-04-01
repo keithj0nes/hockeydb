@@ -9,6 +9,14 @@ import './checkbox.scss';
 class DeleteModal extends React.Component {
     state = {
         shouldBeDeleted: false,
+        hideInput: false,
+    }
+
+    componentDidMount() {
+        console.log(this.props, 'to be deleted')
+        if (this.props.data.toBeDeleted === null) {
+            this.setState({ shouldBeDeleted: true, hideInput: true })
+        }
     }
 
     handleChangeDelete = (e, name) => {
@@ -24,10 +32,12 @@ class DeleteModal extends React.Component {
 
                 {isLoading && 'Loading...'}
 
-                <div className="modal-field">
-                    <label htmlFor="del">{!!data.toBeDeletedString ? data.toBeDeletedString : data.toBeDeleted.name}</label>
-                    <input type="text" name="del" id="del" onChange={this.handleChangeDelete} />
-                </div>
+                {!this.state.hideInput && (
+                    <div className="modal-field">
+                        <label htmlFor="del">{!!data.toBeDeletedString ? data.toBeDeletedString : data.toBeDeleted?.name}</label>
+                        <input type="text" name="del" id="del" onChange={this.handleChangeDelete} />
+                    </div>
+                )}
 
                 {data.errors && (
                     <p className="modal-error">{data.errors}</p>
@@ -67,6 +77,7 @@ const PromptModal = ({ data, toggleModal }) => (
 
         {data.fields.map(field => (
             <div key={field.name}>
+                {console.log(field, 'field')}
 
                 {field.type === 'input' && (
                     <Form.Item label={field.title} name={field.name} rules={field.rules}>

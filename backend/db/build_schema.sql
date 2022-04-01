@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS registrations CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS tags CASCADE;
 DROP TABLE IF EXISTS user_role CASCADE;
+DROP TABLE IF EXISTS settings CASCADE;
 
 
 --==--==--==--==--==--==--==--==--==-==--==--==--==--==--==--==--
@@ -112,7 +113,7 @@ CREATE TABLE "player_stats" (
   "player_id" INTEGER,         -- REFERENCES players(id)
   "team_id" INTEGER,           -- REFERENCES teams(id)
   "season_id" INTEGER,         -- REFERENCES seasons(id)
-  "player_number" INTEGER,
+  "player_number" INTEGER NOT NULL DEFAULT 0,
   "games_played" INTEGER NOT NULL DEFAULT 0,
   "goals" INTEGER NOT NULL DEFAULT 0,
   "assists" INTEGER NOT NULL DEFAULT 0,
@@ -175,6 +176,8 @@ CREATE TABLE "team_season_division" (
   "games_played" INTEGER NOT NULL DEFAULT 0,
   "wins" INTEGER NOT NULL DEFAULT 0,
   "losses" INTEGER NOT NULL DEFAULT 0,
+  "ties" INTEGER NOT NULL DEFAULT 0,
+  -- "overtime_losses" INTEGER NOT NULL DEFAULT 0,
   "points" INTEGER NOT NULL DEFAULT 0,
   "goals_for" INTEGER NOT NULL DEFAULT 0,
   "goals_against" INTEGER NOT NULL DEFAULT 0,
@@ -261,6 +264,29 @@ CREATE TABLE "registrations" (
   "deleted_by" INTEGER         -- REFERENCES users(id),
 );
 
+CREATE TABLE "settings" (
+  "id" SERIAL PRIMARY KEY,
+  "disable_tags" BOOLEAN NOT NULL DEFAULT FALSE,
+  "color_scheme" JSONB, -- figure out how to default jsonb
+  "logo_url" VARCHAR,
+  "banner_url" VARCHAR,
+  "show_banner" BOOLEAN NOT NULL DEFAULT FALSE,
+  "created_at" TIMESTAMP,
+  "created_by" INTEGER,    -- REFERENCES users(id)
+  "updated_at" TIMESTAMP,
+  "updated_by" INTEGER     -- REFERENCES users(id),
+);
+
+-- color scheme ==
+-- primary_color,
+-- secondary_color,
+-- link_color,
+-- tag_color,
+
+
+
+
+
 
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
 --==--==--==--==--==--     Add Foreign Keys     --==--==--==--==--==--
@@ -335,6 +361,9 @@ ALTER TABLE "registrations" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("
 ALTER TABLE "registrations" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
 ALTER TABLE "registrations" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 
+ALTER TABLE "settings" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
+ALTER TABLE "settings" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
+
 
 --==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--
 --==--==--==--==--==--    Default Values    --==--==--==--==--==--
@@ -402,3 +431,24 @@ INSERT INTO "tags" (name) VALUES ('evals');
 --   "posted_by" int,
 --   "posted_date" datetime
 -- );
+
+
+
+-- run on prod
+CREATE TABLE "settings" (
+  "id" SERIAL PRIMARY KEY,
+  "disable_tags" BOOLEAN NOT NULL DEFAULT FALSE,
+  "color_scheme" JSONB, -- figure out how to default jsonb
+  "logo_url" VARCHAR,
+  "banner_url" VARCHAR,
+  "show_banner" BOOLEAN NOT NULL DEFAULT FALSE,
+  "created_at" TIMESTAMP,
+  "created_by" INTEGER,     -- REFERENCES users(id)
+  "updated_at" TIMESTAMP,
+  "updated_by" INTEGER     -- REFERENCES users(id),
+);
+
+
+ALTER TABLE "settings" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
+ALTER TABLE "settings" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
+-- run on prod
