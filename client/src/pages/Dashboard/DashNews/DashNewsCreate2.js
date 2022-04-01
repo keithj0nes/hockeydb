@@ -96,11 +96,61 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
     };
 
     const onFinish = (values) => {
+        // console.log(values, 'values');
+        // const errors = [];
+
+        // Object.keys(values).map(value => {
+        //     console.log(value, 'value');
+        //     if (!values[value]) {
+        //         errors.push(`${value} is required`);
+        //     }
+        // });
+
+        // if (errors) {
+        //     return alert(errors);
+        // }
         // this map is required to do antd select only allowing array of strings (no array of object)
         // this map takse a the away of strings ['announcemnt'] and maps them to their object [{ id: 1, name: 'announcemnt' }]
         const mappedSelectArrayToNewsTagsKeys = values.tags_in_post?.map(item => newsTags.find(t => t.name === item));
         setPost({ ...values, tags_in_post: mappedSelectArrayToNewsTagsKeys || [] });
         setShowPreview(!showPreview);
+    };
+
+    const renderTags = () => {
+        // settings table created in db, figure out how to send this info on initial page load
+        // similar to laravel in browswer
+        const settings = { disable_tags: false };
+        // settings table created in db, figure out how to send this info on initial page load
+        // similar to laravel in browswer
+
+
+        if (!!settings.disable_tags) {
+            return (
+                <>
+                    <p className="dashnews-input">Tags Disabled</p>
+                    <p className="muted">An admin has disabled use of tags for announcements.</p>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <Form.Item label="Tags" name="tags_in_post" className="dashnews-input">
+                    <Select
+                        mode="multiple"
+                        tagRender={tagRender}
+                        open={false}
+                        style={{ width: '100%' }}
+                        placeholder="Select tags"
+                        className="tag-select"
+                    />
+                </Form.Item>
+
+                <div className="dashnews-input">
+                    {tagsList.map(tag => <Tag onClick={() => addTagToSelect(tag)} key={tag.id}>{tag.name}</Tag>)}
+                </div>
+            </>
+        );
     };
 
     const isEditingData = isEditing ? { updated_at: new Date() } : { first_name: user.first_name, last_name: user.last_name, created_at: new Date() };
@@ -168,21 +218,8 @@ const DashNewsCreate2 = ({ user, newsById, newsTags, getNewsTags, createNewsPost
                             </Form.Item>
                         </Form.Item>
 
+                        {renderTags()}
 
-                        <Form.Item label="Tags" name="tags_in_post" className="dashnews-input">
-                            <Select
-                                mode="multiple"
-                                tagRender={tagRender}
-                                open={false}
-                                style={{ width: '100%' }}
-                                placeholder="Select tags"
-                                className="tag-select"
-                            />
-                        </Form.Item>
-
-                        <div className="dashnews-input">
-                            {tagsList.map(tag => <Tag onClick={() => addTagToSelect(tag)} key={tag.id}>{tag.name}</Tag>)}
-                        </div>
                         <br />
                         <br />
 

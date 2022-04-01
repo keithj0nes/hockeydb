@@ -41,7 +41,7 @@ const CustomColorComponent = (props) => {
             hsl: hex.toHsl(),
             id,
         });
-    }, [props.defaultValue])
+    }, [props.defaultValue, color])
 
     const CustomPointer = () => <div className="pointer" />;
 

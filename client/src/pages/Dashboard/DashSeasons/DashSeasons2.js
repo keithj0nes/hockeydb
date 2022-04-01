@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+// import { Link } from 'react-router-dom';
+// import { Drawer } from 'antd';
 import { getSeasons, deleteSeason, createSeason, updateSeason } from 'redux/actions/seasons';
 import { toggleModal } from 'redux/actions/misc';
+// import dateFormat from 'date-fns/format';
 import { DashPageHeader, DashFilter, Pagination, useQueryParam } from '../../../components';
 import DashTable from '../DashTable';
 import './DashSeasons.scss';
 import { searchReduce } from '../../../helpers';
+// import Form from '../../../components/Form';
+import DashSeasonsDrawer from './DashSeasonsDrawer';
 
 const defaultState = {
     seasonTypes: [
@@ -18,9 +23,11 @@ const defaultState = {
     filterData: [],
 };
 
-const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, createSeason, updateSeason, deleteSeason, paginationDetails }) => {
+const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, createSeason, updateSeason, deleteSeason, paginationDetails, user }) => {
     const [state, setState] = useState(defaultState);
     const [filters, setFilters] = useQueryParam({ getMethod: getSeasons });
+    const [quickMenuVisible, setQuickMenuVisible] = useState(false);
+    const [selectedSeason, setSelectedSeason] = useState(null);
     const showingHidden = location.search.includes('hidden');
 
     const setFilterDataOpenFilter = (val) => {
@@ -168,7 +175,18 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
 
     // //////////////////////////////////// //
 
+    // console.log(seasons, 'seasonssss')
 
+    // const seasons2 = [{
+    //     created_at: "2021-09-09T22:12:54.604Z",
+    //     created_by: 3,
+    //     id: 3,
+    //     is_active: true,
+    //     name: "Summer 2021",
+    //     type: "Playoffs",
+    //     updated_at: null,
+    //     registration_is: 'open', // limited, closed
+    // }]
     return (
         <>
             <DashPageHeader pageHeaderInfo={pageHeaderInfo} />
@@ -185,8 +203,10 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
                         emptyTableText={location.search.length > 0 ? 'Sorry, there are no seasons within your filter criteria' : 'Sorry, no seasons have been created. Start by adding a season above.'}
                         popoverData={(d, closePopover) => (
                             <ul>
+                                <li onClick={() => { setQuickMenuVisible(true); closePopover(); setSelectedSeason(d); }}>Open Slideout</li>
                                 <li onClick={() => { handleEditSeason(d); closePopover(); }}>Edit Season</li>
-                                {!d.is_active && <li onClick={() => { handleHideSeason(d); closePopover(); }}>{`${showingHidden ? 'Unh' : 'H'}ide Season`}</li>}
+                                <li onClick={() => { handleEditSeason(d); closePopover(); }}>Registration</li>
+                                {!d.is_active && <li onClick={() => { handleHideSeason(d); closePopover(); }}>{`${showingHidden ? 'Unhide' : 'Hide'} Season`}</li>}
                                 {!d.is_active && <li onClick={() => { handleDeleteSeason(d); closePopover(); }}>Delete Season</li>}
                             </ul>
                         )}
@@ -194,6 +214,71 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
                 </div>
             </div>
             <Pagination {...paginationDetails} setFilters={setFilters} />
+
+            {/* <Drawer
+                width="360px"
+                placement="right"
+                maskClosable // ={true} // set to false if has been edited
+                // onClick={() => setQuickMenuVisible(false)}
+                onClose={() => {
+                    setQuickMenuVisible(false);
+                    setSelectedSeason(null);
+                }}
+                visible={quickMenuVisible}
+            > */}
+            {console.log(selectedSeason, 'selected season!')}
+            <DashSeasonsDrawer
+                visible={quickMenuVisible}
+                selected={selectedSeason || {}}
+                onClose={() => {
+                    console.log('firiinggg onCLOSE')
+                    setQuickMenuVisible(false);
+                    setSelectedSeason(null);
+                }}
+            />
+            {/* </Drawer> */}
+
+            {/* <Drawer
+                className="my-drawer"
+                ...
+                .my-drawer.ant-drawer-open {
+                // width: 100% !important; // mask: false
+                > .ant-drawer-content-wrapper {
+                    width: 30% !important;
+                }
+                }
+
+                @media (max-width: 767.98px) {
+                .my-drawer.ant-drawer-open {
+                    > .ant-drawer-content-wrapper {
+                    width: 100% !important;
+                    }
+                }
+                } */}
+
+
+            {/* fields: [
+                {
+                    title: 'Name',
+                    type: 'input',
+                    name: 'name',
+                    defaultValue: item.name,
+                },
+                {
+                    title: 'Type',
+                    type: 'select',
+                    name: 'type',
+                    defaultValue: item.type,
+                    listOfSelects: [...state.seasonTypes].splice(1),
+                },
+                {
+                    title: item.is_active ? 'Active Season' : 'Set To Active Season',
+                    type: 'checkbox',
+                    name: 'is_active',
+                    hidden: item.is_active,
+                    defaultValue: item.is_active,
+                },
+            ], */}
         </>
     );
 };
@@ -208,6 +293,7 @@ const DashSeasons2 = ({ seasons, isLoading, location, getSeasons, toggleModal, c
 const mapStateToProps = state => {
     console.log(state.seasons)
     return {
+        user: state.user.user,
         seasons: state.seasons.seasons,
         isLoading: state.seasons.isLoading,
         paginationDetails: state.seasons.pagination,
@@ -234,4 +320,25 @@ DashSeasons2.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     location: PropTypes.object,
     paginationDetails: PropTypes.object,
+    user: PropTypes.object,
 };
+
+// drawer styles
+
+// <Drawer
+//     className="my-drawer"
+//     ...
+//     .my-drawer.ant-drawer-open {
+//     // width: 100% !important; // mask: false
+//     > .ant-drawer-content-wrapper {
+//         width: 30% !important;
+//     }
+//     }
+
+//     @media (max-width: 767.98px) {
+//     .my-drawer.ant-drawer-open {
+//         > .ant-drawer-content-wrapper {
+//         width: 100% !important;
+//         }
+//     }
+// }

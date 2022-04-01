@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-continue */
 const massive = require('massive');
 const faker = require('faker');
 const bcrypt = require('bcrypt');
@@ -91,7 +93,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     ];
     const newsPosts = [
         { title: 'Registrations Open Soon', display_order: 1, body: '<p>Signups start May 1st. Look for the registration link emails to be sent out soon</p>' },
-        { title: 'Welcome to our league', display_order: 2, body: '<p>As we look to workout some of the kinks of a new league, we\'re looking to add some new features in the near future.</p><p><br></p><p><strong><em>Features that include:</em></strong></p><ul><li>Registrations</li><li>Player Stats</li><li>Payments</li><li>Email Notifications</li><li>Messaging</li><li>Native Phone App</li></ul><p><br></p><p>All with a fun, friendly, and easy to use user interface (UI).</p>' },
+        { title: 'Welcome to our league', display_order: 2, body: '<p>As we look to work out some of the kinks of a new league, we\'re looking to add some new features in the near future.</p><p><br></p><p><strong><em>Features that include:</em></strong></p><ul><li>Registrations</li><li>Player Stats</li><li>Payments</li><li>Email Notifications</li><li>Messaging</li><li>Native Phone App</li></ul><p><br></p><p>All with a fun, friendly, and easy to use user interface (UI).</p>' },
     ];
 
 
@@ -106,22 +108,18 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     }));
 
     // create seasons
-    const createSeason = async ({ admin }) => {
-        return Promise.all(seasonsList.map(async (seedSeason, idx) => {
-            const type = typesOfSeasons[randomr(typesOfSeasons.length)];
-            const isLastSeasonInList = (idx + 1) === seasonsList.length;
-            const insertedSeason = await db.seasons.insert({ name: seedSeason, type, is_active: isLastSeasonInList ? true : false, created_at: new Date(), created_by: admin.id });
-            return insertedSeason;
-        }));
-    };
+    const createSeason = async ({ admin }) => Promise.all(seasonsList.map(async (seedSeason, idx) => {
+        const type = typesOfSeasons[randomr(typesOfSeasons.length)];
+        const isLastSeasonInList = (idx + 1) === seasonsList.length;
+        const insertedSeason = await db.seasons.insert({ name: seedSeason, type, is_active: !!isLastSeasonInList, created_at: new Date(), created_by: admin.id });
+        return insertedSeason;
+    }));
 
     // create divisions
-    const createDivisions = async ({ admin }) => {
-        return Promise.all(divisionList.map(async division => {
-            const insertedDivision = await db.divisions.insert({ name: division, created_at: new Date(), created_by: admin.id });
-            return insertedDivision;
-        }));
-    };
+    const createDivisions = async ({ admin }) => Promise.all(divisionList.map(async division => {
+        const insertedDivision = await db.divisions.insert({ name: division, created_at: new Date(), created_by: admin.id });
+        return insertedDivision;
+    }));
 
     // create 24 teams
     // divide it out by 4 divisions
@@ -158,14 +156,12 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
         // chunkedDivisions takes all the createdTeams (24) and divides them in to the 6 divisions
         const chunkedDivisions = chunkArray(createdTeams, 6);
 
-        return Promise.all(createdSeasons.map(season => {
-            return Promise.all(createdDivisions.map((div, i) => {
-                const section = chunkedDivisions[i];
-                return Promise.all(section.map(async sec => {
-                    await db.team_season_division.insert({ team_id: sec.id, season_id: season.id, division_id: div.id });
-                }));
+        return Promise.all(createdSeasons.map(season => Promise.all(createdDivisions.map((div, i) => {
+            const section = chunkedDivisions[i];
+            return Promise.all(section.map(async sec => {
+                await db.team_season_division.insert({ team_id: sec.id, season_id: season.id, division_id: div.id });
             }));
-        }));
+        }))));
     };
 
 
@@ -179,16 +175,36 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
             const createdTeamsCopy = [...createdTeams];
             const myTeam = createdTeamsCopy.splice(randomr(createdTeamsCopy.length - 1), 1);
 
-            return Promise.all(createdSeasons.map(season => {
-                return Promise.all(myTeam.map(async team => {
-                    const goals = randomr(30);
-                    const assists = randomr(40);
-                    await db.player_stats.insert({ player_id: player.id, team_id: team.id, season_id: season.id, games_played: randomr(10, 20), goals, assists, points: (goals + assists), penalties_in_minutes: randomr(11), game_winning_goals: randomr(6), power_play_goals: randomr(4), short_handed_goals: randomr(0, 1), goals_per_game: 0, assists_per_game: 0, points_per_game: 0 });
-                    await db.player_team_season.insert({ player_id: player.id, team_id: team.id, season_id: season.id });
-                }));
-            }));
+            return Promise.all(createdSeasons.map(season => Promise.all(myTeam.map(async team => {
+                const goals = randomr(30);
+                const assists = randomr(40);
+                await db.player_stats.insert({ player_id: player.id, team_id: team.id, season_id: season.id, games_played: randomr(10, 20), goals, assists, points: (goals + assists), penalties_in_minutes: randomr(11), game_winning_goals: randomr(6), power_play_goals: randomr(4), short_handed_goals: randomr(0, 1), goals_per_game: 0, assists_per_game: 0, points_per_game: 0 });
+                await db.player_team_season.insert({ player_id: player.id, team_id: team.id, season_id: season.id });
+            }))));
         }));
     };
+
+    // associate numbers to player per seaoson and team
+
+    // need to loop over each team and make sure there are no dupilicate numbers on the same team
+    // const associateNumbersToPlayersPerSeason = async () => {
+    //     // const m = await db.player_stats.find({}, {
+    //     //     order: [{
+    //     //         field: 'team_id',
+    //     //         direction: 'desc',
+    //     //     }],
+    //     // });
+    //     const m = await db.team_season_division.find({}, {
+    //         order: [{
+    //             field: 'team_id',
+    //             direction: 'asc',
+    //         }],
+    //     });
+    //     m.map(team => {
+    //         const playersForThisTeam = await db.player_stats.find({ team_id })
+    //     })
+    //     // console.log(m, 'm')
+    // };
 
     const createGames = async ({ admin }) => {
         const locations = await db.locations.find();
@@ -199,54 +215,100 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
         // teams must be in division
         // teams cannot play itself
 
-        return Promise.all(createdSeasons.map(season => {
-            return Promise.all(createdDivisions.map(async division => {
-                // const { exact, min, max } = counts.games;
-                const seasonGamesLength = 12; // exact || randomr(min, max);
-                const divisionTeams = await db.team_season_division.find({ division_id: division.id, season_id: 1 });
+        return Promise.all(createdSeasons.map(season => Promise.all(createdDivisions.map(async division => {
+            // const { exact, min, max } = counts.games;
+            const seasonGamesLength = 12; // exact || randomr(min, max);
+            const divisionTeams = await db.team_season_division.find({ division_id: division.id, season_id: 1 });
 
-                return Promise.all(Array(seasonGamesLength).fill().map(async () => {
-                    let home_team = divisionTeams[randomr(divisionTeams.length)].team_id;
-                    let away_team = divisionTeams[randomr(divisionTeams.length)].team_id;
+            return Promise.all(Array(seasonGamesLength).fill().map(async () => {
+                let home_team = divisionTeams[randomr(divisionTeams.length)].team_id;
+                let away_team = divisionTeams[randomr(divisionTeams.length)].team_id;
 
-                    const location_id = randomr(locations.length) + 1;
-                    const start_date = season.is_active ? faker.date.future() : faker.date.past();
+                const location_id = randomr(locations.length) + 1;
+                const start_date = season.is_active ? faker.date.future() : faker.date.past();
 
-                    // team cannot play itself
-                    while (home_team === away_team) {
-                        home_team = divisionTeams[randomr(divisionTeams.length)].team_id;
-                        away_team = divisionTeams[randomr(divisionTeams.length)].team_id;
+                // team cannot play itself
+                while (home_team === away_team) {
+                    home_team = divisionTeams[randomr(divisionTeams.length)].team_id;
+                    away_team = divisionTeams[randomr(divisionTeams.length)].team_id;
+                }
+
+                const gameStats = {
+                    home_first_score: season.is_active ? 0 : randomr(5),
+                    home_second_score: season.is_active ? 0 : randomr(5),
+                    home_third_score: season.is_active ? 0 : randomr(3),
+                    home_first_sog: season.is_active ? 0 : randomr(13),
+                    home_second_sog: season.is_active ? 0 : randomr(10),
+                    home_third_sog: season.is_active ? 0 : randomr(10),
+                    // home_first_pim: randomr(2),
+                    // home_second_pim: randomr(2),
+                    // home_third_pim: randomr(2),
+                    away_first_score: season.is_active ? 0 : randomr(5),
+                    away_second_score: season.is_active ? 0 : randomr(5),
+                    away_third_score: season.is_active ? 0 : randomr(3),
+                    away_first_sog: season.is_active ? 0 : randomr(13),
+                    away_second_sog: season.is_active ? 0 : randomr(10),
+                    away_third_sog: season.is_active ? 0 : randomr(10),
+                    // away_first_pim: randomr(2),
+                    // away_second_pim: randomr(2),
+                    // away_third_pim: randomr(2),
+                };
+
+                const home_score = (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score);
+                const away_score = (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score);
+
+                const game = await db.games.insert({ home_team, away_team, has_been_played: !season.is_active, created_by: admin.id, location_id, start_date, home_score, away_score, ...gameStats });
+                await db.game_season_division.insert({ game_id: game.id, season_id: season.id, division_id: division.id });
+
+                // set team_season_division stats here
+
+                if (!season.is_active) {
+                    let home_points = 0;
+                    let away_points = 0;
+                    if (home_score > away_score) {
+                        home_points = 2;
+                    } else if (away_score > home_score) {
+                        away_points = 2;
+                    } else if (home_score === away_score) {
+                        home_points = 1;
+                        away_points = 1;
                     }
 
-                    const gameStats = {
-                        home_first_score: season.is_active ? 0 : randomr(5),
-                        home_second_score: season.is_active ? 0 : randomr(5),
-                        home_third_score: season.is_active ? 0 : randomr(3),
-                        home_first_sog: season.is_active ? 0 : randomr(13),
-                        home_second_sog: season.is_active ? 0 : randomr(10),
-                        home_third_sog: season.is_active ? 0 : randomr(10),
-                        // home_first_pim: randomr(2),
-                        // home_second_pim: randomr(2),
-                        // home_third_pim: randomr(2),
-                        away_first_score: season.is_active ? 0 : randomr(5),
-                        away_second_score: season.is_active ? 0 : randomr(5),
-                        away_third_score: season.is_active ? 0 : randomr(3),
-                        away_first_sog: season.is_active ? 0 : randomr(13),
-                        away_second_sog: season.is_active ? 0 : randomr(10),
-                        away_third_sog: season.is_active ? 0 : randomr(10),
-                        // away_first_pim: randomr(2),
-                        // away_second_pim: randomr(2),
-                        // away_third_pim: randomr(2),
+                    const home_stats = {
+                        games_played: 'games_played + 1',
+                        wins: `wins + ${home_score > away_score ? 1 : 0}`,
+                        losses: `losses + ${home_score < away_score ? 1 : 0}`,
+                        ties: `ties + ${home_score === away_score ? 1 : 0}`,
+                        points: `points + ${home_points}`,
+                        goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+                        goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+                        penalties_in_minutes: `penalties_in_minutes + ${0}`,
                     };
 
-                    const home_score = (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score);
-                    const away_score = (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score);
+                    const away_stats = {
+                        games_played: 'games_played + 1',
+                        wins: `wins + ${away_score > home_score ? 1 : 0}`,
+                        losses: `losses + ${away_score < home_score ? 1 : 0}`,
+                        ties: `ties + ${away_score === home_score ? 1 : 0}`,
+                        points: `points + ${away_points}`,
+                        goals_for: `goals_for + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+                        goals_against: `goals_against + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+                        penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                    };
 
-                    const game = await db.games.insert({ home_team, away_team, has_been_played: !season.is_active, created_by: admin.id, location_id, start_date, home_score, away_score, ...gameStats });
-                    await db.game_season_division.insert({ game_id: game.id, season_id: season.id, division_id: division.id });
-                }));
+                    // console.log({ home_stats, away_stats })
+                    // update home_team stats
+                    await db.team_season_division.update({ team_id: home_team, season_id: season.id, division_id: division.id }, {
+                        $set: { ...home_stats },
+                    });
+
+                    // update away_team stats
+                    await db.team_season_division.update({ team_id: away_team, season_id: season.id, division_id: division.id }, {
+                        $set: { ...away_stats },
+                    });
+                }
             }));
-        }));
+        }))));
     };
 
 
@@ -295,6 +357,50 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
             const away_score = (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score);
 
             await db.games.update({ id: game.id }, { has_been_played: true, updated_by: admin.id, home_score, away_score, ...gameStats });
+
+
+            let home_points = 0;
+            let away_points = 0;
+            if (home_score > away_score) {
+                home_points = 2;
+            } else if (away_score > home_score) {
+                away_points = 2;
+            } else if (home_score === away_score) {
+                home_points = 1;
+                away_points = 1;
+            }
+
+            const home_stats = {
+                games_played: 'games_played + 1',
+                wins: `wins + ${home_score > away_score ? 1 : 0}`,
+                losses: `losses + ${home_score < away_score ? 1 : 0}`,
+                ties: `ties + ${home_score === away_score ? 1 : 0}`,
+                points: `points + ${home_points}`,
+                goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+                goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+                penalties_in_minutes: `penalties_in_minutes + ${0}`,
+            };
+
+            const away_stats = {
+                games_played: 'games_played + 1',
+                wins: `wins + ${away_score > home_score ? 1 : 0}`,
+                losses: `losses + ${away_score < home_score ? 1 : 0}`,
+                ties: `ties + ${away_score === home_score ? 1 : 0}`,
+                points: `points + ${away_points}`,
+                goals_for: `goals_for + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+                goals_against: `goals_against + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+                penalties_in_minutes: `penalties_in_minutes + ${0}`,
+            };
+
+            // update home_team stats
+            await db.team_season_division.update({ team_id: game.home_team, season_id: game.season_id, division_id: game.division_id }, {
+                $set: { ...home_stats },
+            });
+
+            // update away_team stats
+            await db.team_season_division.update({ team_id: game.away_team, season_id: game.season_id, division_id: game.division_id }, {
+                $set: { ...away_stats },
+            });
         }));
     };
 
@@ -356,6 +462,9 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
 
         await associatePlayersToTeamsSeasons();
         console.log('   ✅   Players Teams Seasons Associated');
+
+        // await associateNumbersToPlayersPerSeason();
+        // console.log('   ✅   Player Numbers Associated');
 
         await createGames({ admin: createdUsers[0] });
         console.log('   ✅   Games Created');

@@ -2,7 +2,6 @@
 // import PropTypes from 'prop-types';
 
 
-
 // class ListItem extends Component {
 
 //     state = {
@@ -70,7 +69,6 @@
 // export default ListItem;
 
 
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -80,18 +78,17 @@ import Delete from '../../assets/icons/delete_icon.svg';
 
 
 class ListItem extends Component {
-
     state = {
         isEditing: false,
         name: '',
-        type: ''
+        type: '',
     }
 
     handleChange = e => {
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({ [e.target.name]: e.target.value });
     }
 
-    render(){
+    render() {
         const { onClick, item, sections, onEdit } = this.props;
 
         const sectionKeys = Object.keys(sections);
@@ -114,46 +111,40 @@ class ListItem extends Component {
 
                 <div className="hide-mobile">
 
-                    <div style={{display: 'flex', justifyContent: 'space-between'}} >
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
 
-
-                        {sectionKeys.map(section => {
-
-                            return !this.state.isEditing ? (
-                                <p key={section} className={`flex-${sections[section]}`}>{item[section]} {item.is_active && section === sectionKeys[0] && '- (active)'}</p>
-                            ) : (
-                                <input key={section} className={`flex-${sections[section]}`} type="text" onChange={this.handleChange} name={`${sections[section]}`} defaultValue={item[section]}/>
-                            )
-                        })}
+                        {sectionKeys.map(section => (!this.state.isEditing ? (
+                            <p key={section} className={`flex-${sections[section]}`}>{item[section]} {item.is_active && section === sectionKeys[0] && '- (active)'}</p>
+                        ) : (
+                            <input key={section} className={`flex-${sections[section]}`} type="text" onChange={this.handleChange} name={`${sections[section]}`} defaultValue={item[section]} />
+                        )))}
 
 
                         <div className="flex-one hide-mobile">
                             {/* <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{  this.state.isEditing ? '<save>' : '<edit>'}</span> */}
-                            <span style={{cursor: "pointer", paddingRight: 10}} onClick={onEdit}><img src={Edit} width="25px" alt=""/></span>
+                            <span style={{ cursor: 'pointer', paddingRight: 10 }} onClick={onEdit}><img src={Edit} width="25px" alt="" /></span>
 
                             {/* <span onClick={() => this.props.deleteSeason(item.id)}>{'<delete>'}</span> */}
 
                             {this.state.isEditing ? (
-                                <span onClick={()=> {this.setState({isEditing: !this.state.isEditing})}}>{'<cancel>'}</span>
-
-                            ):
-
-                                <span style={{cursor: "pointer"}} onClick={onClick}><img src={Delete} width="25px" alt=""/></span>
-                            }
+                                <span onClick={() => { this.setState(state => ({ isEditing: !state.isEditing })); }}>{'<cancel>'}</span>
+                            )
+                                : <span style={{ cursor: 'pointer' }} onClick={onClick}><img src={Delete} width="25px" alt="" /></span>}
 
                         </div>
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }
 
 ListItem.propTypes = {
     onClick: PropTypes.func.isRequired,
     item: PropTypes.object.isRequired,
-    sections: PropTypes.object.isRequired
-}
+    sections: PropTypes.object.isRequired,
+    onEdit: PropTypes.func,
+};
 
 export default ListItem;

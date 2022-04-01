@@ -576,22 +576,16 @@
 // // };
 
 
-
-
-
-
-
-
-
 /* eslint-disable no-multi-str */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
+// import { Form, Steps, Button as AntButton } from 'antd';
 import { Form, Steps } from 'antd';
 import { Button } from 'components';
 
-import StepInfo from './InfoStep';
+import InfoStep from './InfoStep';
 import WaiverStep from './WaiverStep';
 import PaymentStep from './PaymentStep';
 import RegisterAsStep from './RegisterAsStep';
@@ -600,28 +594,27 @@ import ConfirmationStep from './ConfirmationStep';
 import './registration.scss';
 
 
-const userDataStuff = {
-    information: {
-        // first_name: 'First Name',
-        first_name: ['First Name', 'John'],
-        last_name: ['Last Name', 'Smith'],
-        birth_date: ['Birthdate', '99/99/99'],
-        phone: ['Phone 3', '1234567890'],
-    },
-    team_details: {
-        previous_team: ['Last team played for', 'Rangers'],
-        previous_division: ['Last team\'s division', '1A'],
-        requesting_team: ['Team you\'re signing up for', 'Rangers'],
-        requesting_division: ['Team\s division', '1A'],
-        experience: ['Experince', '5 years'],
-        preferred_position: ['Preferred Position', 'Any'],
-    },
-    waivers: {
-        injury_waiver: ['Injury Waiver', 'AA'],
-        another_waiver: ['Another Waiver', 'AA'],
-    },
-};
-
+// const userDataStuff = {
+//     information: {
+//         // first_name: 'First Name',
+//         first_name: ['First Name', 'John'],
+//         last_name: ['Last Name', 'Smith'],
+//         birth_date: ['Birthdate', '99/99/99'],
+//         phone: ['Phone #', '1234567890'],
+//     },
+//     team_details: {
+//         previous_team: ['Last team played for', 'Rangers'],
+//         previous_division: ['Last team\'s division', '1A'],
+//         requesting_team: ['Team you\'re signing up for', 'Rangers'],
+//         requesting_division: ['Team\s division', '1A'],
+//         experience: ['Experince', '5 years'],
+//         preferred_position: ['Preferred Position', 'Any'],
+//     },
+//     waivers: {
+//         injury_waiver: ['Injury Waiver', 'AA'],
+//         another_waiver: ['Another Waiver', 'AA'],
+//     },
+// };
 
 
 const fakeData1 = {
@@ -657,7 +650,7 @@ const fakeData1 = {
             downloadUrl: null,
             id: 15,
             name: 'injury_waiver',
-            title: 'Injury Waiver',
+            label: 'Injury Waiver',
             signed: '',
         },
         {
@@ -665,7 +658,7 @@ const fakeData1 = {
             downloadUrl: null,
             id: 22,
             name: 'another_waiver',
-            title: 'Another Waiver',
+            label: 'Another Waiver',
             signed: '',
         },
     ],
@@ -673,8 +666,8 @@ const fakeData1 = {
         <p>Registrations are listed as below</p> <br /> <p>Lots and lots of monies</p>',
     step3_allowDiscountCode: true,
     step3_payment_options: [
-        { label: 'New Player Registration', name: 'new_player_registration', amount: 5000, remaining: 10 },
-        { label: 'Returning Player Registration', name: 'returning_player_registration', amount: 4000, remaining: 4 },
+        { label: 'Pay In Full', name: 'pay_in_full', amount: 5000, remaining: 10 },
+        { label: '3 Month Payment Play', name: 'payment_plan', amount: 6000, remaining: 4 },
     ],
 };
 
@@ -713,17 +706,17 @@ const Registration = ({ history, location, match, associatedAccounts }) => {
 
     const formsList = { form_info, form_waivers, form_payment, form_confirmation };
 
-    // useEffect(() => {
-    //     const waiverListIds = fakeData1.step2_waivers.map(item => item.id);
-    //     // console.log(waiverListIds, 'id')
-    //     setOpenPanelKey(waiverListIds[0]);
+    useEffect(() => {
+        const waiverListIds = fakeData1.step2_waivers.map(item => item.id);
+        // console.log(waiverListIds, 'id')
+        setOpenPanelKey(waiverListIds[0]);
 
-    //     history.push(`/registration/${registeringForSeasonId}`);
+        history.push(`/registration/${registeringForSeasonId}`);
 
-    //     if (!associatedAccounts.length) {
-    //         history.push(`/registration/${registeringForSeasonId}/info`);
-    //     }
-    // }, []);
+        if (!associatedAccounts.length) {
+            history.push(`/registration/${registeringForSeasonId}/info`);
+        }
+    }, [history, associatedAccounts.length]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -746,40 +739,122 @@ const Registration = ({ history, location, match, associatedAccounts }) => {
     };
 
     const submitOnGoToNext = () => {
-        const found = allSteps.find(step => location.pathname?.includes(step));
-        const currentForm = formsList[`form_${found}`];
+        const foundStep = allSteps.find(step => location.pathname?.includes(step));
+        const currentForm = formsList[`form_${foundStep}`];
+
 
         currentForm.validateFields().then((values) => {
             console.log(values, 'VALUESSSSS');
-            if (found === 'info') {
-                setUserInputedValues(values);
+
+            
+            if (foundStep === 'info') {
+                const m = Object.keys(values).map(item => {
+                    // console.log(item, 'item')
+                    let n = fakeData1.personalInputs.find(asdf => asdf.name === item)?.label;
+                    let section = 'information';
+                    if (!n) {
+                        n = fakeData1.teamInputs.find(asdf => asdf.name === item)?.label;
+                        section = 'team_details';
+                    }
+                    console.log(section, n, 'nnnn')
+                    // return { [item]: [n, values[item]] };
+                    return { section, key: [item], bbb: [n, values[item]] };
+                });
+                // console.log(m, 'm!');
+
+                const b = m.reduce((obj, item) => {
+                    // console.log(obj, item, 'obj')
+                    return {
+                        ...obj,
+                        [item.section]: {
+                            ...obj[item.section],
+                            [item.key]: item.bbb,
+                        },
+                    };
+                }, {});
+                // console.log(b, 'bbbbb')
+
+                // // setUserInputedValues(values);
+                setUserInputedValues(b);
             }
 
-            if (found === 'waivers') {
+            if (foundStep === 'waivers') {
                 // make sure all required waivers are signed
                 const m = fakeData1.step2_waivers.reduce((acc, n) => [...acc, n.name], []);
                 const n = Object.keys(values);
-                console.log({ m, n });
+                // console.log({ m, n });
 
                 if (m.length !== n.length) {
                     return false;
                 }
 
-                setUserInputedValues({ ...userInputedValues, waivers: values });
+                const newArr = Object.keys(values).map(item => {
+                    // console.log(item,' item')
+                    const n = fakeData1.step2_waivers.find(asdf => asdf.name === item)?.label;
+                    return { key: [item], values: [n, values[item]] };
+                });
+                // console.log(newArr, 'valuesss')
+
+                const b = newArr.reduce((obj, item) => {
+                    // console.log(obj, item, 'obj')
+                    return {
+                        ...obj,
+                        // [item.section]: {
+                        // ...obj[item.section],
+                        [item.key]: item.values,
+                        // },
+                    };
+                }, {});
+
+                // console.log(b, 'bbb again')
+
+                setUserInputedValues({ ...userInputedValues, waivers: b });
             }
 
-            if (found === 'payment') {
+            if (foundStep === 'payment') {
+                // const newArr = Object.keys(values).map(item => {
+                //     // console.log(item,' item')
+                //     const n = fakeData1.step3_payment_options.find(asdf => asdf.name === item)?.label;
+                //     return { key: [item], values: [n, values[item]] };
+                // });
+
+                const m = Object.keys(values).map(item => {
+                    // console.log(item, 'item')
+                    let n = fakeData1.step3_payment_options.find(asdf => asdf.name === item)?.label;
+                    let section = 'Payment Options';
+                    // if (!n) {
+                    //     n = fakeData1.teamInputs.find(asdf => asdf.name === item)?.label;
+                    //     section = 'team_details';
+                    // }
+                    console.log(section, n, 'nnnn')
+                    // return { [item]: [n, values[item]] };
+                    return { section, key: [item], bbb: [n, values[item]] };
+                });
+
+                const b = m.reduce((obj, item) => {
+                    // console.log(obj, item, 'obj')
+                    return {
+                        ...obj,
+                        // [item.section]: {
+                        // ...obj[item.section],
+                        [item.key]: item.values,
+                        // },
+                    };
+                }, {});
+                console.log(b, 'bbb again')
+
+
                 setUserInputedValues({ ...userInputedValues, ...values });
             }
 
 
-            if (found === 'confirmation') {
+            if (foundStep === 'confirmation') {
                 setUserInputedValues({ ...userInputedValues, ...values });
 
                 return alert('all steps done!!')
             }
 
-            return history.push(allSteps[allSteps.indexOf(found) + 1]);
+            return history.push(allSteps[allSteps.indexOf(foundStep) + 1]);
         }).catch((errorInfo) => {
             console.log(errorInfo, 'EROR in submitOnGoToNext');
         });
@@ -801,7 +876,6 @@ const Registration = ({ history, location, match, associatedAccounts }) => {
                             <Steps.Step title="Payment" />
                             <Steps.Step title="Confirmation" />
                         </Steps>
-
                     </div>
 
                     <div className="hide-desktop" style={{ minHeight: 100, borderBottom: '1px solid gray', marginBottom: 24 }}>
@@ -815,10 +889,11 @@ const Registration = ({ history, location, match, associatedAccounts }) => {
 
                     <Route
                         path={`${match.url}/${registeringForSeasonId}/info`}
-                        component={() => <StepInfo fakeData={fakeData} form={form_info} userInputedValues={userInputedValues} />}
+                        component={() => <InfoStep fakeData={fakeData} form={form_info} userInputedValues={userInputedValues} />}
                         exact
                     />
 
+{/* "react-scripts-old": "^3.4.1", */}
 
                     {/* waiver collapse "signing" wont work with using route - why? */}
                     {/* <Route
@@ -855,6 +930,13 @@ const Registration = ({ history, location, match, associatedAccounts }) => {
 
                         {/* NEED TO ADD THE ABILITY TO DISABLE NEXT BUTTON BASED ON STEP */}
                         <Button title="Next" onClick={submitOnGoToNext} />
+
+                        {/* <AntButton onClick={submitOnGoToNext} type="primary" size="large">
+                            Next
+                        </AntButton>
+                        <AntButton onClick={submitOnGoToNext} type="primary">
+                            Next
+                        </AntButton> */}
                         {/* NEED TO ADD THE ABILITY TO DISABLE NEXT BUTTON BASED ON STEP */}
                     </div>
                 </div>
@@ -889,6 +971,6 @@ export default connect(mapStateToProps)(Registration);
 Registration.propTypes = {
     history: PropTypes.object,
     location: PropTypes.object,
-    match: PropTypes.func,
+    match: PropTypes.object,
     associatedAccounts: PropTypes.array,
 };

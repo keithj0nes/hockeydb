@@ -191,22 +191,19 @@ class DashGames extends Component {
                             isLoading={isLoading}
                             emptyTableText={this.props.location.search.length > 0 ? 'Sorry, there are no games within your filter criteria' : 'Sorry, no games have been created. Start by adding a games above.'}
 
-                            popoverData={ (d, closePopover) => {
-                                // console.log(d,' ddddd')
-                                return  (
+                            popoverData={(d, closePopover) => (
                                 <ul>
                                     <Auth.User roles={accessAdmin}>
-                                        {!d.hidden_at && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Game</li>}
+                                        {!d.hidden_at && <li onClick={() => { this.handleEditGame(d); closePopover(); }}>Edit Game</li>}
                                         {/* {!d.is_active && <li onClick={() => {this.handleHideSeason(d); closePopover() }}>{`${showingHidden ? 'Unh' : 'H'}ide Game`}</li> } */}
                                         {/* <li onClick={() => {this.handleDeleteSeason(d); closePopover() }}>Delete Game</li> */}
                                     </Auth.User>
 
                                     <Auth.User roles={accessONLYScorekeeper}>
-                                        {!d.hidden_at && <li onClick={() => {this.handleEditGame(d); closePopover() }}>Edit Boxscore</li> }
+                                        {!d.hidden_at && <li onClick={() => { this.handleEditGame(d); closePopover(); }}>Edit Boxscore</li> }
                                     </Auth.User>
-                                </ul> 
+                                </ul>
                             )}
-                            }
                         />
                     </div>
 

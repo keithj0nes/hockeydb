@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from '../../../components';
@@ -43,7 +43,7 @@ const defaultState = {
 
 const DashGamesDetails = ({ history, match, getGameById, gameDetails }) => {
     // const [ gameDetails, setGameDetails ] = useState(defaultState)
-    const [_gameDetails, setGameDetails] = useState(defaultState);
+    const [_gameDetails] = useState(defaultState);
 
     // console.log(location, 'location!')
     console.log(_gameDetails, 'gamedetails');

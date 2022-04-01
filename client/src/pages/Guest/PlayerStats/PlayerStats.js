@@ -7,6 +7,9 @@ import { Select, Table } from '../../../components';
 import { getQuery, setQuery } from '../../../helpers';
 // import { useQueryParam } from '../../../components/useQueryParams';
 
+//
+// player stats should default to showing top few players per division, then filter from there
+//
 
 const PlayerStats = ({ location, getPlayersStats, getTeamsPageFilters, scheduleFilters, playerStats }) => {
     const [filters, setFilters] = useState({
@@ -65,8 +68,9 @@ const PlayerStats = ({ location, getPlayersStats, getTeamsPageFilters, scheduleF
                 minWidth={800}
                 columns={{
                     // 'rank': 'one',
-                    first_name: { as: 'name', flex: 'one' },
-                    last_name: { flex: 'one' },
+                    // first_name: { as: 'name', flex: 'one' },
+                    // last_name: { flex: 'one' },
+                    player: { as: 'player', flex: 'two', format: '$first_name $last_name' },
                     games_played: { as: 'gp', flex: 'one' },
                     points: { as: 'Pts', flex: 'one' },
                     goals: { as: 'G', flex: 'one' },

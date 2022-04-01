@@ -78,9 +78,9 @@ const getTeamById = async (req, res, next) => {
         }
 
         const teamQuery = `
-            select t.id, t.name, t.colors, d.name AS division_name, d.id as division_id from team_season_division tsd
-            join teams t on t.id = tsd.team_id
-            join divisions d on d.id = tsd.division_id
+            SELECT t.id, t.name, t.colors, d.name AS division_name, d.id AS division_id FROM team_season_division tsd
+            JOIN teams t ON t.id = tsd.team_id
+            JOIN divisions d ON d.id = tsd.division_id
             WHERE tsd.season_id = ${season || season_id.id} AND tsd.team_id = $1
         `;
 
@@ -95,14 +95,14 @@ const getTeamById = async (req, res, next) => {
 
         // *** this seasons returns ONLY seasons associated with the team - some teams dont play every season ***
         const seasonsSelectQuery = `
-            select s.id, s.name, s.is_active  from team_season_division tsd
-            join seasons s on s.id = tsd.season_id
-            where tsd.team_id = $1 and deleted_at IS null AND hidden_at IS null ORDER BY id;
+            SELECT s.id, s.name, s.is_active FROM team_season_division tsd
+            JOIN seasons s ON s.id = tsd.season_id
+            WHERE tsd.team_id = $1 AND deleted_at IS null AND hidden_at IS null ORDER BY id;
         `;
         const seasonsSelect = await db.query(seasonsSelectQuery, [id]);
 
         const recordQuery = `
-            select games_played, wins, losses, points, goals_for, goals_against, penalties_in_minutes from team_season_division where season_id = ${season || season_id.id} AND team_id = $1;
+            SELECT games_played, wins, losses, ties, points, goals_for, goals_against, penalties_in_minutes FROM team_season_division WHERE season_id = ${season || season_id.id} AND team_id = $1;
         `;
 
         const record = await db.query(recordQuery, [id]);
@@ -142,19 +142,63 @@ const getTeamById = async (req, res, next) => {
         }
 
         const teamPlayerStatsQuery = `
-            SELECT * FROM players p
+            SELECT p.first_name, p.last_name, p.id AS player_id, ps.* FROM players p
             JOIN player_team_season pt ON pt.player_id = p.id
             JOIN teams t ON t.id = pt.team_id
             JOIN player_stats ps ON ps.player_id = p.id
-            WHERE t.id = $1 AND pt.season_id = ${season || season_id.id};
+            WHERE t.id = $1 AND pt.season_id = ${season || season_id.id} AND ps.season_id = ${season || season_id.id}
+            ORDER BY ps.points desc
         `;
 
         const teamPlayerStats = await db.query(teamPlayerStatsQuery, [id]);
 
-        console.log(teamPlayerStats, 'team player stats')
-        
 
-        return res.send({ status: 200, data: { team: team[0], recent, record, seasons, standings, seasonsSelect, teamPlayerStats }, message: 'Retrieved Team' });
+        // TEAM LEADER QUERIES
+        // should try to figure out how to make this one query instead of 5
+        const teamLeaderPointsQuery = `
+            select players.id AS player_id, first_name, last_name, points from player_stats
+            join players on players.id = player_stats.player_id
+            where team_id = $1 and season_id = ${season || season_id.id}
+            order by points desc, goals asc limit 1;
+        `;
+        const teamLeaderPoints = await db.query(teamLeaderPointsQuery, [id]);
+
+        const teamLeaderGoalsQuery = `
+            select players.id AS player_id, first_name, last_name, goals as points from player_stats
+            join players on players.id = player_stats.player_id
+            where team_id = $1 and season_id = ${season || season_id.id}
+            order by goals desc, points desc limit 1;
+        `;
+        const teamLeaderGoals = await db.query(teamLeaderGoalsQuery, [id]);
+
+        const teamLeaderAssistsQuery = `
+            select players.id AS player_id, first_name, last_name, assists as points from player_stats
+            join players on players.id = player_stats.player_id
+            where team_id = $1 and season_id = ${season || season_id.id}
+            order by assists desc, points desc limit 1;
+        `;
+        const teamLeaderAssists = await db.query(teamLeaderAssistsQuery, [id]);
+
+        const teamLeaderPIMSQuery = `
+            select players.id AS player_id, first_name, last_name, penalties_in_minutes as points from player_stats
+            join players on players.id = player_stats.player_id
+            where team_id = $1 and season_id = ${season || season_id.id}
+            order by penalties_in_minutes desc, points desc limit 1;
+        `;
+        const teamLeaderPIMS = await db.query(teamLeaderPIMSQuery, [id]);
+
+        const teamLeaders = [];
+
+        teamLeaders.push({ category: 'Points', ...teamLeaderPoints[0] });
+        teamLeaders.push({ category: 'Goals', ...teamLeaderGoals[0] });
+        teamLeaders.push({ category: 'Assists', ...teamLeaderAssists[0] });
+        teamLeaders.push({ category: 'PIMs', ...teamLeaderPIMS[0] });
+
+        // END TEAM LEADER QUERIES
+        // should try to figure out how to make this one query instead of 5
+
+
+        return res.send({ status: 200, data: { team: team[0], recent, record, seasons, standings, seasonsSelect, teamPlayerStats, teamLeaders }, message: 'Retrieved Team' });
     } catch (error) {
         console.log('GET TEAM BY ID ERROR: ', error);
         return next(error);

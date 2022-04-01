@@ -46,8 +46,19 @@ const WaiverStep = ({ fakeData, setFakeData, form, userInputedValues, openPanelK
             >
                 <Collapse activeKey={openPanelKey} onChange={e => setOpenPanelKey(e)}>
 
-                    {fakeData.step2_waivers.map(waiver => (
-                        <WaiverCollapse waiver={waiver} fakeData={fakeData} setFakeData={setFakeData} key={waiver.id} form={form} userInputedValues={userInputedValues} setOpenPanelKey={setOpenPanelKey} />
+                    {fakeData.step2_waivers.map((waiver, index) => (
+                        <WaiverCollapse
+                            key={waiver.id}
+                            isLastWaiver={fakeData.step2_waivers.length === index + 1}
+                            waiver={waiver}
+                            fakeData={fakeData}
+                            setFakeData={setFakeData}
+                            form={form}
+                            userInputedValues={userInputedValues}
+                            setOpenPanelKey={setOpenPanelKey}
+                        >
+                            {console.log(fakeData.step2_waivers.length, index)}
+                        </WaiverCollapse>
                     ))}
 
                 </Collapse>
@@ -72,16 +83,18 @@ WaiverStep.propTypes = {
 };
 
 
-const WaiverCollapse = ({ waiver, fakeData, setFakeData, form, userInputedValues, setOpenPanelKey, ...props }) => {
+const WaiverCollapse = ({ waiver, fakeData, isLastWaiver, setFakeData, form, userInputedValues, setOpenPanelKey, ...props }) => {
     const [canSubmit, setCanSubmit] = useState(false);
-    const [disabled, setDisabled] = useState(false);
+    const [disabled] = useState(false);
     const [myValue, setMyValue] = useState('');
+    const expectedName2 = `${userInputedValues.information?.first_name?.[1]} ${userInputedValues.information?.last_name?.[1]}`;
 
     useEffect(() => {
         setCanSubmit(!!validateSign(myValue, expectedName2));
-    }, [myValue]);
+    }, [myValue, expectedName2]);
 
-    const expectedName2 = `${userInputedValues.first_name} ${userInputedValues.last_name}`;
+    console.log(userInputedValues.information?.first_name?.[1], 'userInputedValues')
+
 
     const handleFormChange = e => {
         setMyValue(e.target.value?.toUpperCase());
@@ -95,7 +108,7 @@ const WaiverCollapse = ({ waiver, fakeData, setFakeData, form, userInputedValues
     };
 
     return (
-        <Collapse.Panel {...props} collapsible="header" header={waiver.title} key={waiver.id} extra={(<p>{canSubmit ? (<> <CheckOutlined style={{ color: '#4F9300' }} /> Completed </>) : 'Pending Completion'}</p>)}>
+        <Collapse.Panel {...props} collapsible="header" header={waiver.label} key={waiver.id} extra={(<p>{canSubmit ? (<> <CheckOutlined style={{ color: '#4F9300' }} /> Completed </>) : 'Pending Completion'}</p>)}>
 
             <p className="waiver-container">{waiver.body}</p>
 
@@ -123,7 +136,7 @@ const WaiverCollapse = ({ waiver, fakeData, setFakeData, form, userInputedValues
 
                     <div style={{ marginRight: 24 }} />
 
-                    {canSubmit && (
+                    {!isLastWaiver && canSubmit && (
                         <Button disabled={!canSubmit || disabled} title="NEXT" onClick={() => setOpenPanelKey('next')} />
                     )}
                 </div>

@@ -38,3 +38,27 @@ module.exports = {
     tryCatch,
     isProduction,
 };
+
+
+// may try to use this type of helper in the future?
+const search = (make, model, color) => {
+    const params = [];
+    let sql = 'select * from cars where 1 = 1';
+
+    if (make !== 'all') {
+        sql += ' and make = ?';
+        params.push(make);
+    }
+    if (model !== 'all') {
+        sql += ' and model = ?';
+        params.push(model);
+    }
+    if (color !== 'all') {
+        sql += ' and color = ?';
+        params.push(color);
+    }
+
+    // connection.query(sql, params, (error, results, fields) => {
+    //     // handle results here...
+    // });
+};

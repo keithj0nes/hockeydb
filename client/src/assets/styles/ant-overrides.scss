@@ -49,3 +49,22 @@
 .ant-drawer-body {
     padding: 0;
 }
+
+.ant-btn-primary {
+    background: $highlite_color;
+    border-color: $highlite_color;
+
+    &:hover,
+    &:focus {
+        background: lighten($highlite_color, 2%);
+        border-color: lighten($highlite_color, 2%);
+    }
+}
+
+button:disabled.ant-switch-checked, button.disabled.ant-switch-checked {
+    background-color: #1890ff;
+}
+
+.ant-switch-checked.ant-switch-disabled {
+    opacity: 0.8;
+}

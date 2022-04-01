@@ -19,11 +19,14 @@ import Inquiry from '../Guest/Inquiry/Inquiry';
 import Registration from '../Guest/Registration/Registration';
 import { Modal, Header, Login, Invite, ResetPassword } from '../../components';
 import PlayerStats from '../Guest/PlayerStats/PlayerStats';
+import Register from '../Dashboard/Register';
 
 import 'antd/dist/antd.css';
 import '../../assets/styles/ant-overrides.scss';
 import '../../assets/styles/layout.scss';
 import '../../assets/styles/_spacing.scss';
+import '../../assets/styles/_form.scss';
+import '../../assets/styles/drawer.scss';
 
 import './App.scss';
 
@@ -34,7 +37,7 @@ const App = ({ isUserLoggedIn, loginFromCookie }) => {
             await loginFromCookie();
         }
         _loginFromCookie();
-    }, []);
+    }, [loginFromCookie]);
 
     return (
         <Router history={history}>
@@ -60,6 +63,7 @@ const App = ({ isUserLoggedIn, loginFromCookie }) => {
                 </div>
                 <PrivateRoute path="/dashboard/old" authenticated={isUserLoggedIn} component={Dashboard} />
                 <PrivateRoute path="/dashboard" authenticated={isUserLoggedIn} component={Dashboard2} />
+                <PrivateRoute path="/register" authenticated={isUserLoggedIn} component={Register} />
                 <Modal />
             </div>
         </Router>

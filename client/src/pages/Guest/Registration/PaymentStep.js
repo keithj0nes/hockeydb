@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Radio } from 'antd';
+import { Form, Radio, Input } from 'antd';
 // import { CheckOutlined } from '@ant-design/icons';
 // import { Button } from 'components';
 
@@ -34,6 +34,19 @@ const PaymentStep = ({ fakeData, setFakeData, form, userInputedValues, openPanel
                     <p><strong>Participant Fee for {userName}</strong></p>
                     <p>The fee is $70 through 3/1, then will increase to $80. If you are paying offline, continue with registration and just email abrinkerhoff@ushl.com when you’re registration is complete. Primary GOALIES are $40.</p>
 
+
+
+
+
+        {/* i'm so lost with this */}
+
+
+
+
+
+
+
+
                     <div className="fields-group" style={{ flexDirection: 'column' }}>
                         <Form.Item name="payment_options" rules={[{ required: true, message: 'Payment option is required' }]}>
                             <Radio.Group onChange={onChange} value={value}>
@@ -44,7 +57,11 @@ const PaymentStep = ({ fakeData, setFakeData, form, userInputedValues, openPanel
                                 ))}
                             </Radio.Group>
                         </Form.Item>
+
                     </div>
+                    <Form.Item name="payment_type" label="Payment Type">
+                        <Input type="text" style={{ minHeight: 42, textTransform: 'uppercase' }} />
+                    </Form.Item>
                 </Form>
             </div>
         </>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Icon, Popover } from 'components';
 import { ICONS } from 'assets/ICONS';
@@ -31,7 +31,12 @@ const ProfilePic = ({ user, logout }) => {
 
             <Popover isVisible={isDropDownVisibile} setIsVisible={setIsDropDownVisible} closest="#propiccont">
                 <ul>
-                    <li><Link to="/dashboard/profile"> My Profile </Link></li>
+                    {/* <li><Link to="/dashboard/profile"> My Profile </Link></li> */}
+                    <li>
+                        <NavLink to="/dashboard/profile" exact activeClassName="profile-pic-nav-selected">
+                            My Profile
+                        </NavLink>
+                    </li>
                     <li>Notifications</li>
                     <li>Account Settings</li>
                     <li><Link to="/"> Back to site </Link></li>

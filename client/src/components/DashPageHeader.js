@@ -6,7 +6,7 @@ import { Icon, ProfilePic, Popover } from '.';
 // let's manage state inside the dash page header component
 
 export const DashPageHeader = ({ pageHeaderInfo }) => {
-    const { title, searchPlaceholder, onChange, buttons, hideSearchAndButtons } = pageHeaderInfo;
+    const { title, subTitle, searchPlaceholder, onChange, buttons, hideSearchAndButtons } = pageHeaderInfo;
 
     return (
         <div className="page-header">
@@ -15,7 +15,10 @@ export const DashPageHeader = ({ pageHeaderInfo }) => {
                 {/* add season name to side of divisions */}
 
                 {/* <div style={{display: 'flex'}}> */}
-                <h1>{title}</h1>
+                <div>
+                    <h1>{title}</h1>
+                    {subTitle && <p>{subTitle}</p>}
+                </div>
                 {/* <p>Summer 3028</p> */}
                 {/* </div> */}
 
