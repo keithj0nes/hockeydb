@@ -24,7 +24,7 @@
     "history": "^4.10.1",
     "jsonwebtoken": "^8.5.0",
     "moment": "^2.24.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.9.0",
     "querystring": "^0.2.0",
