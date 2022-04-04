@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import cookie from 'react-cookies';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import { notification } from 'antd';
 import { Site_Name_Short } from 'assets/resourceStrings';
 import { request } from './middleware';
@@ -45,7 +45,13 @@ export const loginFromCookie = () => async (dispatch, getState) => {
     const access_token = cookie.load(`${Site_Name_Short}_auth_pml`);
     if (!access_token) return false;
 
-    const decoded = jwt.decode(access_token);
+    const jwt_decode = (token) => {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace('-', '+').replace('_', '/');
+        return JSON.parse(window.atob(base64));
+      };
+
+    const decoded = jwt_decode(access_token);
 
     dispatch(setUser({ ...decoded.user, access_token }));
     dispatch({ type: SET_CURRENT_SEASON, payload: decoded.season });

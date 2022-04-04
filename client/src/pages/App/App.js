@@ -21,7 +21,7 @@ import { Modal, Header, Login, Invite, ResetPassword } from '../../components';
 import PlayerStats from '../Guest/PlayerStats/PlayerStats';
 import Register from '../Dashboard/Register';
 
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 import '../../assets/styles/ant-overrides.scss';
 import '../../assets/styles/layout.scss';
 import '../../assets/styles/_spacing.scss';

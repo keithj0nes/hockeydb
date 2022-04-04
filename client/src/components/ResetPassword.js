@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import qs from 'query-string';
 import logo from 'assets/images/logo.png';
 import { Form, Input } from 'antd';
@@ -13,10 +13,16 @@ const ResetPassword = ({ location, history, updatePassword }) => {
     const [jwtIsExpired, setJwtIsExpired] = useState(false);
     const [userToken, setUserToken] = useState('');
 
+    const jwt_decode = (token) => {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace('-', '+').replace('_', '/');
+        return JSON.parse(window.atob(base64));
+      };
+
     useEffect(() => {
         try {
             const { token } = qs.parse(location.search.slice(1));
-            const decodedToken = jwt.decode(token);
+            const decodedToken = jwt_decode(token);
 
             if (!decodedToken || Date.now() >= decodedToken.exp * 1000) {
                 return setJwtIsExpired(true);
