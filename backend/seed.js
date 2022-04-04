@@ -273,39 +273,91 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
                         home_points = 1;
                         away_points = 1;
                     }
-
+                    
+                    // const home_stats = {
+                        //     games_played: 'games_played + 1',
+                        //     wins: `wins + ${home_score > away_score ? 1 : 0}`,
+                        //     losses: `losses + ${home_score < away_score ? 1 : 0}`,
+                        //     ties: `ties + ${home_score === away_score ? 1 : 0}`,
+                        //     points: `points + ${home_points}`,
+                        //     goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+                        //     goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+                        //     penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                        // };
+                        
+                        // console.log('🌟 homeStates', home_stats);
+                        // const home_stats = {
+                            //     games_played: 1,
+                            //     wins: 1,
+                            //     losses: 1,
+                            //     ties: 1,
+                            //     points: 1,
+                            //     goals_for: 1,
+                            //     goals_against: 1,
+                            //     penalties_in_minutes: 1,
+                            // };
+                            
+                            // const away_stats = {
+                                //     games_played: 'games_played + 1',
+                                //     wins: `wins + ${away_score > home_score ? 1 : 0}`,
+                                //     losses: `losses + ${away_score < home_score ? 1 : 0}`,
+                                //     ties: `ties + ${away_score === home_score ? 1 : 0}`,
+                                //     points: `points + ${away_points}`,
+                                //     goals_for: `goals_for + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+                                //     goals_against: `goals_against + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+                                //     penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                                // };
+                                
+                    let home = await db.team_season_division.findOne({team_id: home_team, season_id: season.id, division_id: division.id});
+                    let away = await db.team_season_division.findOne({team_id: away_team, season_id: season.id, division_id: division.id});
                     const home_stats = {
-                        games_played: 'games_played + 1',
-                        wins: `wins + ${home_score > away_score ? 1 : 0}`,
-                        losses: `losses + ${home_score < away_score ? 1 : 0}`,
-                        ties: `ties + ${home_score === away_score ? 1 : 0}`,
-                        points: `points + ${home_points}`,
-                        goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
-                        goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
-                        penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                        games_played: home.games_played + 1,
+                        wins: home.wins + (home_score > away_score ? 1 : 0),
+                        losses: home.losses + (home_score < away_score ? 1 : 0),
+                        ties: home.ties + (home_score === away_score ? 1 : 0),
+                        points: home.points + home_points,
+                        goals_for: home.goals_for + (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score),
+                        goals_against: home.goals_against + (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score),
+                        penalties_in_minutes: home.penalties_in_minutes + 0,
                     };
-
                     const away_stats = {
-                        games_played: 'games_played + 1',
-                        wins: `wins + ${away_score > home_score ? 1 : 0}`,
-                        losses: `losses + ${away_score < home_score ? 1 : 0}`,
-                        ties: `ties + ${away_score === home_score ? 1 : 0}`,
-                        points: `points + ${away_points}`,
-                        goals_for: `goals_for + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
-                        goals_against: `goals_against + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
-                        penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                        games_played: away.games_played + 1,
+                        wins: away.wins + (away_score > home_score ? 1 : 0),
+                        losses: away.losses + (away_score < home_score ? 1 : 0),
+                        ties: away.ties + (away_score === home_score ? 1 : 0),
+                        points: away.points + away_points,
+                        goals_for: away.goals_for + (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score),
+                        goals_against: away.goals_against + (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score),
+                        penalties_in_minutes: away.penalties_in_minutes + 0,
                     };
 
-                    // console.log({ home_stats, away_stats })
+
+                    // console.log('🌟🌟',{ home_stats, away_stats })
                     // update home_team stats
-                    await db.team_season_division.update({ team_id: home_team, season_id: season.id, division_id: division.id }, {
-                        $set: { ...home_stats },
+                    // await db.team_season_division.update({ team_id: home_team, season_id: season.id, division_id: division.id }, {
+                    //     $set: { ...home_stats },
+                    // });
+                    // await db.team_season_division.update({ team_id: home_team, season_id: season.id, division_id: division.id }, { 
+                    //     games_played: home_stats.games_played, wins:home_stats.wins, losses:home_stats.losses, ties:home_stats.ties, points:home_stats.points, goals_for:home_stats.goals_for, goals_against:home_stats.goals_against
+                    // });
+                    await db.team_season_division.update({ team_id: home_team, season_id: season.id, division_id: division.id }, {...home_stats}, function (res, err) {
+                        return res;
+                    });
+                    // await db.team_season_division.update({ team_id: home_team, season_id: season.id, division_id: division.id }, {
+                    //     $set: { ...home_stats }
+                    // }, function (res, err) {
+                    //     return res;
+                    // });
+
+                    // console.log('🌟', '5');
+                    // update away_team stats
+                    // await db.team_season_division.update({ team_id: away_team, season_id: season.id, division_id: division.id }, {
+                    //     $set: { ...away_stats },
+                    // });
+                    await db.team_season_division.update({ team_id: away_team, season_id: season.id, division_id: division.id }, {...away_stats}, function (res, err) {
+                        return res;
                     });
 
-                    // update away_team stats
-                    await db.team_season_division.update({ team_id: away_team, season_id: season.id, division_id: division.id }, {
-                        $set: { ...away_stats },
-                    });
                 }
             }));
         }))));
@@ -370,37 +422,71 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
                 away_points = 1;
             }
 
+            // const home_stats = {
+            //     games_played: 'games_played + 1',
+            //     wins: `wins + ${home_score > away_score ? 1 : 0}`,
+            //     losses: `losses + ${home_score < away_score ? 1 : 0}`,
+            //     ties: `ties + ${home_score === away_score ? 1 : 0}`,
+            //     points: `points + ${home_points}`,
+            //     goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+            //     goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+            //     penalties_in_minutes: `penalties_in_minutes + ${0}`,
+            // };
+
+            // const away_stats = {
+            //     games_played: 'games_played + 1',
+            //     wins: `wins + ${away_score > home_score ? 1 : 0}`,
+            //     losses: `losses + ${away_score < home_score ? 1 : 0}`,
+            //     ties: `ties + ${away_score === home_score ? 1 : 0}`,
+            //     points: `points + ${away_points}`,
+            //     goals_for: `goals_for + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
+            //     goals_against: `goals_against + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
+            //     penalties_in_minutes: `penalties_in_minutes + ${0}`,
+            // };
+
+            let home = await db.team_season_division.findOne({team_id: game.home_team, season_id: game.season_id, division_id: game.division_id});
+            let away = await db.team_season_division.findOne({team_id: game.away_team, season_id: game.season_id, division_id: game.division_id});
             const home_stats = {
-                games_played: 'games_played + 1',
-                wins: `wins + ${home_score > away_score ? 1 : 0}`,
-                losses: `losses + ${home_score < away_score ? 1 : 0}`,
-                ties: `ties + ${home_score === away_score ? 1 : 0}`,
-                points: `points + ${home_points}`,
-                goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
-                goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
-                penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                games_played: home.games_played + 1,
+                wins: home.wins + (home_score > away_score ? 1 : 0),
+                losses: home.losses + (home_score < away_score ? 1 : 0),
+                ties: home.ties + (home_score === away_score ? 1 : 0),
+                points: home.points + home_points,
+                goals_for: home.goals_for + (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score),
+                goals_against: home.goals_against + (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score),
+                penalties_in_minutes: home.penalties_in_minutes + 0,
             };
 
             const away_stats = {
-                games_played: 'games_played + 1',
-                wins: `wins + ${away_score > home_score ? 1 : 0}`,
-                losses: `losses + ${away_score < home_score ? 1 : 0}`,
-                ties: `ties + ${away_score === home_score ? 1 : 0}`,
-                points: `points + ${away_points}`,
-                goals_for: `goals_for + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
-                goals_against: `goals_against + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
-                penalties_in_minutes: `penalties_in_minutes + ${0}`,
+                games_played: away.games_played + 1,
+                wins: away.wins + (away_score > home_score ? 1 : 0),
+                losses: away.losses + (away_score < home_score ? 1 : 0),
+                ties: away.ties + (away_score === home_score ? 1 : 0),
+                points: away.points + away_points,
+                goals_for: away.goals_for + (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score),
+                goals_against: away.goals_against + (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score),
+                penalties_in_minutes: away.penalties_in_minutes + 0,
             };
 
-            // update home_team stats
-            await db.team_season_division.update({ team_id: game.home_team, season_id: game.season_id, division_id: game.division_id }, {
-                $set: { ...home_stats },
-            });
+
+
+
+
+            // // update home_team stats
+            // await db.team_season_division.update({ team_id: game.home_team, season_id: game.season_id, division_id: game.division_id }, {
+            //     $set: { ...home_stats },
+            // });
+
+            // // update away_team stats
+            // await db.team_season_division.update({ team_id: game.away_team, season_id: game.season_id, division_id: game.division_id }, {
+            //     $set: { ...away_stats },
+            // });
+
+             // update home_team stats
+             await db.team_season_division.update({ team_id: game.home_team, season_id: game.season_id, division_id: game.division_id }, { ...home_stats });
 
             // update away_team stats
-            await db.team_season_division.update({ team_id: game.away_team, season_id: game.season_id, division_id: game.division_id }, {
-                $set: { ...away_stats },
-            });
+            await db.team_season_division.update({ team_id: game.away_team, season_id: game.season_id, division_id: game.division_id },  { ...away_stats });
         }));
     };
 
