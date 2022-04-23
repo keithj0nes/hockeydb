@@ -53,7 +53,8 @@ if (process.env.NODE_ENV === 'production') {
 
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {
     app.set('db', instance); // add your connection to express
-}).catch(err => console.log(err, 'massive err'));
+    console.log('Database - connection established');
+}).catch(err => console.log('Database - connection failed \n', err));
 
 
 // ROUTES //
