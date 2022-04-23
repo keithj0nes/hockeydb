@@ -1,16 +1,14 @@
 /* eslint-disable no-use-before-define */
 const sgMail = require('@sendgrid/mail');
 const { isProduction } = require('../helpers');
-// let config;
-// if (!isProduction) config = require('../../config');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY); // || config.SENDGRID_API_KEY);
-const testEmail = process.env.TEST_EMAIL; // || config.TEST_EMAIL;
-const url = process.env.SITE_URL; // || config.SITE_URL;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const testEmail = process.env.TEST_EMAIL;
+const url = process.env.SITE_URL;
 const leagueName = 'United States Hockey League';
 const aOrAn = str => ((/^[aeiou]$/i).test(str.charAt(0)) ? 'an' : 'a');
 
-function newUserEmail(email, name) {
+function newUserEmail() {
     const msg = {
         to: testEmail,
         from: testEmail, // Use the email address or domain you verified above
@@ -21,7 +19,7 @@ function newUserEmail(email, name) {
     sgMail.send(msg).then((sent, error) => {
         // Awesome Logic to check if mail was sent
         console.log({ sent, error }, 'sent!');
-        return 'sent!'
+        return 'sent!';
     }).catch(err => {
         console.log({ err: err.toString() });
         return err;

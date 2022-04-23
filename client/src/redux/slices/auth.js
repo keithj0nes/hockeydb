@@ -57,6 +57,8 @@ export const login = loginData => async dispatch => {
     console.log(loginData, 'login data!')
     const data = await request({ url: '/api/auth/login', method: 'POST', session: loginData, publicRoute: true });
     console.log(data,' dtaataaa')
+
+    if (data.error) return alert(data.message);
     if (!data) return false;
     cookie.save(`${Site_Name_Short}_auth_pml`, data.data.access_token);
     dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));

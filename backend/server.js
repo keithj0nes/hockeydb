@@ -31,11 +31,12 @@ const divisions = require('./controllers/divisions');
 const misc = require('./controllers/misc');
 const users = require('./controllers/users');
 const emailer = require('./controllers/helpers/emailer');
+const { isProduction } = require('./controllers/helpers');
 
 
 // Make sure to create a local postgreSQL db called hockeydb
 let connectionInfo;
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
     const dbUriSplit = process.env.DB_URI.split(/[:/@]+/);
     connectionInfo = {
         user: dbUriSplit[1],
@@ -199,7 +200,7 @@ app.put('/api/auth/:id');
 app.post('/api/auth/login/cookie', auth.loginFromCookie);
 
 // Used for production
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
     console.log('running in herooku');
     // Serve any static files
     app.use(express.static(path.join(__dirname, '../client/build')));
