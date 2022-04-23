@@ -1,0 +1,25 @@
+
+
+// ant overrides here
+
+
+
+// .ant-col .ant-form-item-label {
+.ant-form-item .ant-form-item-label {
+    padding-bottom: 0;
+    // @apply bg-red-500
+}
+
+.ant-form-item:not(.ant-form-item-with-help) {
+    @apply mb-5;
+}
+
+.ant-form-item-with-help .ant-form-item-explain {
+    @apply text-xs;
+    min-height: theme('spacing.5');
+}
+
+
+.ant-drawer-body {
+    padding: 0;
+}

@@ -37,7 +37,6 @@ CREATE TABLE "users" (
   "first_name" VARCHAR,
   "last_name" VARCHAR,
   "email" VARCHAR,
-  "admin_type" VARCHAR,
   "is_suspended" BOOLEAN NOT NULL DEFAULT false,
   "suspended_at" TIMESTAMP,
   "invite_token" VARCHAR,
@@ -435,20 +434,18 @@ INSERT INTO "tags" (name) VALUES ('evals');
 
 
 -- run on prod
-CREATE TABLE "settings" (
-  "id" SERIAL PRIMARY KEY,
-  "disable_tags" BOOLEAN NOT NULL DEFAULT FALSE,
-  "color_scheme" JSONB, -- figure out how to default jsonb
-  "logo_url" VARCHAR,
-  "banner_url" VARCHAR,
-  "show_banner" BOOLEAN NOT NULL DEFAULT FALSE,
-  "created_at" TIMESTAMP,
-  "created_by" INTEGER,     -- REFERENCES users(id)
-  "updated_at" TIMESTAMP,
-  "updated_by" INTEGER     -- REFERENCES users(id),
-);
-
-
-ALTER TABLE "settings" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
-ALTER TABLE "settings" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
+-- CREATE TABLE "settings" (
+--   "id" SERIAL PRIMARY KEY,
+--   "disable_tags" BOOLEAN NOT NULL DEFAULT FALSE,
+--   "color_scheme" JSONB, -- figure out how to default jsonb
+--   "logo_url" VARCHAR,
+--   "banner_url" VARCHAR,
+--   "show_banner" BOOLEAN NOT NULL DEFAULT FALSE,
+--   "created_at" TIMESTAMP,
+--   "created_by" INTEGER,     -- REFERENCES users(id)
+--   "updated_at" TIMESTAMP,
+--   "updated_by" INTEGER     -- REFERENCES users(id),
+-- );
+-- ALTER TABLE "settings" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
+-- ALTER TABLE "settings" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
 -- run on prod

@@ -9,9 +9,29 @@ const helpers = require('./helpers');
 // };
 
 
+const myQueryThing = (q = {}, allowable = []) => {
+    console.log(q);
+
+    const newQuery = {};
+    for (let i = 0; i < allowable.length; i += 1) {
+        if (q[allowable[i]]) {
+            newQuery[allowable[i]] = q[allowable[i]];
+        }
+    }
+
+    return newQuery;
+};
+
+
 const getSeasons = async (req, res, next) => {
     try {
         const db = app.get('db');
+
+        const allowableQueryKeys = ['type', 'show_hidden', 'limit', 'page', 'dir', 'order_by'];
+        const bbb = myQueryThing(req.query, allowableQueryKeys);
+
+        console.log(bbb, 'bbbbbb');
+
         const query = helpers.filter(req.query);
         console.log(req.query, ' req.query!');
 
@@ -19,7 +39,7 @@ const getSeasons = async (req, res, next) => {
 
         const offset = (!page || page <= 1) ? 0 : (page - 1) * limit;
         console.log(offset);
-        const total_count = await db.seasons.count({ ...query });
+        const total_count = await db.seasons.count({ ...bbb });
         // const OLDQUERY = await db.seasons.find({
         //     ...query,
         // }, {

@@ -85,11 +85,11 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
         totalPlayers: 200,
     };
     const users = [
-        { email: 'super@hockeydb.com', admin_type: 'super', role_id: 1 },
-        { email: 'admin@hockeydb.com', admin_type: 'admin', role_id: 2 },
-        { email: 'scorekeeper@hockeydb.com', admin_type: 'scorekeeper', role_id: 3 }, // not doing anything with this role yet
-        { email: 'teammanager@hockeydb.com', admin_type: 'manager', role_id: 4 }, // not doing anything with this role yet
-        { email: 'mutliaccounts@hockeydb.com', admin_type: 'player', role_id: 5 },
+        { email: 'super@hockeydb.com', role_id: 1 },
+        { email: 'admin@hockeydb.com', role_id: 2 },
+        { email: 'scorekeeper@hockeydb.com', role_id: 3 }, // not doing anything with this role yet
+        { email: 'teammanager@hockeydb.com', role_id: 4 }, // not doing anything with this role yet
+        { email: 'mutliaccounts@hockeydb.com', role_id: 5 },
     ];
     const newsPosts = [
         { title: 'Registrations Open Soon', display_order: 1, body: '<p>Signups start May 1st. Look for the registration link emails to be sent out soon</p>' },
@@ -99,7 +99,7 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
 
     // create admins
     const createUsers = async () => Promise.all(users.map(async user => {
-        const insertedUser = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: user.admin_type, email: user.email, created_at: new Date() });
+        const insertedUser = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), email: user.email, created_at: new Date() });
         const password = process.env.TESTING_PASSWORD;
         const hash = await bcrypt.hash(password, 10);
         await db.passwords.insert({ user_id: insertedUser.id, pw: hash });
@@ -283,6 +283,15 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
                         goals_for: `goals_for + ${gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score}`,
                         goals_against: `goals_against + ${gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score}`,
                         penalties_in_minutes: `penalties_in_minutes + ${0}`,
+
+                        // games_played: home.games_played + 1,
+                        // wins: home.wins + (home_score > away_score ? 1 : 0),
+                        // losses: home.losses + (home_score < away_score ? 1 : 0),
+                        // ties: home.ties + (home_score === away_score ? 1 : 0),
+                        // points: home.points + home_points,
+                        // goals_for: home.goals_for + (gameStats.home_first_score + gameStats.home_second_score + gameStats.home_third_score),
+                        // goals_against: home.goals_against + (gameStats.away_first_score + gameStats.away_second_score + gameStats.away_third_score),
+                        // penalties_in_minutes: home.penalties_in_minutes + 0,
                     };
 
                     const away_stats = {
@@ -526,10 +535,10 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
 //         games:   { min: 5,  max: 8,  exact: 2 },         // games per team - exact has priority
 //     }
 //     const admins = [
-//         // {email: 'owner@hockeydb.com',         admin_type: 'owner'},         // not doing anything with this yet
-//         { email: 'admin@hockeydb.com',         admin_type: 'admin' },
-//         { email: 'scorekeeper@hockeydb.com',   admin_type: 'scorekeeper' },    // not doing anything with this yet
-//         { email: 'teammanager@hockeydb.com',   admin_type: 'manager' }         // not doing anything with this yet
+//         { email: 'owner@hockeydb.com' },         // not doing anything with this yet
+//         { email: 'admin@hockeydb.com' },
+//         { email: 'scorekeeper@hockeydb.com' },   // not doing anything with this yet
+//         { email: 'teammanager@hockeydb.com" },   // not doing anything with this yet
 //     ]
 
 
@@ -537,8 +546,8 @@ massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
 //     const createAdmins = async () => {
 //         return Promise.all( admins.map(async admin => {
 
-//             const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), admin_type: admin.admin_type, email: admin.email});
-//             const password = admin.admin_type;
+//             const insertedAdmin = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), email: admin.email});
+//             const password = process.env.TESTING_PASSWORD;
 //             const hash = await bcrypt.hash(password, 10);
 //             await db.passwords.insert({ user_id: insertedAdmin.id, pw: hash });
 

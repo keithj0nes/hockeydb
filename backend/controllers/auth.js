@@ -101,7 +101,7 @@ const signup = async (req, res) => {
 
 const invite = async (req, res) => {
     const db = app.get('db');
-    const { email, first_name, last_name, user_role } = req.body;
+    const { email, first_name, last_name } = req.body;
 
     // console.log(req.user, 'req.user') // need to hook up to  auth.authorizeAccessToken, middleware to work
 
@@ -115,11 +115,11 @@ const invite = async (req, res) => {
     }
 
     // set invite token with expiry
-    const invite_token = jwt.sign({ email, first_name, last_name, user_role }, JWT_SECRET, { expiresIn: '8h' });
+    const invite_token = jwt.sign({ email, first_name, last_name }, JWT_SECRET, { expiresIn: '8h' });
     // add user by email / add user names / add invite_token
-    const newUser = await db.users.insert({ email, first_name, last_name, admin_type: user_role, invite_token, invite_date: new Date() });
+    const newUser = await db.users.insert({ email, first_name, last_name, invite_token, invite_date: new Date() });
     // send email
-    await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role, invite_token } });
+    await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, invite_token } });
     // await for response
     return res.send({ status: 200, data: { ...newUser, full_name: `${first_name} ${last_name}`, status: 'invited' }, message: 'An invitation has been sent', notification_type: 'snack' });
 };
@@ -173,9 +173,9 @@ const resendInvite = async (req, res) => {
     // update reinvite_date
     await db.users.update({ id }, { invite_token, reinvite_date: new Date(), invite_date: null });
     // send email
-    const { email, first_name, last_name, admin_type } = user;
+    const { email, first_name, last_name } = user;
 
-    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
+    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, invite_token } });
     if (!sendingMail) {
         return res.send({ status: 400, error: true, message: 'Could not resend invite email, please try again later', notification_type: 'snack' });
     }
@@ -365,12 +365,13 @@ passport.use('jwt', new JWTStrategy({
     try {
         // console.log(req.roles && req.roles.includes(token.user.admin_type), 'INCLUDEZZ');
 
-        // if list of roles exists, check to see if the current user's admin_type is in the roles list
-        if (req.roles && !req.roles.includes(token.user.admin_type)) {
-            console.log('DOES NOT ROLSE');
-            // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
-            return done(null, false, { status: 401, message: 'You do not have permission for this action', redirect: '/dashboard', notification_type: 'snack' });
-        }
+        // NOTE: took this out as elimited the need for admin_type
+        // // if list of roles exists, check to see if the current user's admin_type is in the roles list
+        // if (req.roles && !req.roles.includes(token.user.admin_type)) {
+        //     console.log('DOES NOT ROLSE');
+        //     // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
+        //     return done(null, false, { status: 401, message: 'You do not have permission for this action', redirect: '/dashboard', notification_type: 'snack' });
+        // }
 
         const isSuspended = await checkSuspended(token.user.id);
         if (!!isSuspended) {
