@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSeasons } from '../../../redux/slices/seasons';
+import { getSeasons } from '../../redux/slices/seasons';
 
 const Seasons = () => {
     const PAGE_TITLE = 'Seasons';

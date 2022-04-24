@@ -15,7 +15,7 @@ import Schedule from './pages/guest/Schedule';
 import Login from './components/auth/Login';
 import { history } from './utils';
 
-import DashboardRouter from './pages/guest/dashboard/Router';
+import DashboardRouter from './pages/dashboard/Router';
 
 function App() {
     // const count = useSelector((state) => state.counter.value)

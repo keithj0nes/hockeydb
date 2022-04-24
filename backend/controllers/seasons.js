@@ -75,7 +75,7 @@ const getSeasons = async (req, res, next) => {
         const total_pages = Math.ceil(total_count / limit);
         console.log({ total_count: parseInt(total_count), seasons_length: seasons.length, total_pages, page: parseInt(page) });
 
-        return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons' });
+        return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons', notification_type: 'hi', notification: { type: 'toast', duration: 2, status: 'success' } });
     } catch (error) {
         console.log('GET SEASONS ERROR: ', error);
         return next(error);

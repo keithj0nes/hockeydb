@@ -54,9 +54,10 @@ export const { setUser } = authSlice.actions;
 
 
 export const login = loginData => async dispatch => {
-    console.log(loginData, 'login data!')
-    const data = await request({ url: '/api/auth/login', method: 'POST', session: loginData, publicRoute: true });
-    console.log(data,' dtaataaa')
+    console.log(loginData, 'login data!');
+    const data = await request({ url: '/api/auth/login', method: 'POST', session: loginData, isPublic: true });
+    console.log(data, ' dtaataaa');
+
 
     if (data.error) return alert(data.message);
     if (!data) return false;
@@ -64,9 +65,9 @@ export const login = loginData => async dispatch => {
     dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));
     // dispatch({ type: SET_CURRENT_SEASON, payload: data.data.season });
 
-    console.log(history, 'history!!')
+    console.log(history, 'history!!');
     history.push(loginData.redirect || '/dashboard');
-    // return true;
+    return true;
 };
 
 // TODO: add login from cookie to add ability to check if user is suspended on token account

@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { Drawer } from 'antd';
 import { Routes, Route, NavLink } from 'react-router-dom';
-import { logout } from '../../../redux/slices/auth';
-import { useAuth } from '../../../hooks';
+import { logout } from '../../redux/slices/auth';
+import { useAuth } from '../../hooks';
 
 import Dashboard from './Dashboard';
 import Seasons from './Seasons';
