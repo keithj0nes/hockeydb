@@ -8,6 +8,7 @@ const request = async ({ url, method, session, publicRoute }) => {
     if (!url) return alert('no route, please include a route string');
 
     let access_token;
+    // Publi
     if (!publicRoute) {
         console.log('get acces token here!');
         // access_token = store.getState().user.user.access_token;

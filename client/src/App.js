@@ -13,6 +13,7 @@ import { Header } from './components/guest';
 import News from './pages/guest/news/News';
 import Schedule from './pages/guest/Schedule';
 import Login from './components/auth/Login';
+import Standings from './pages/guest/Standings';
 import { history } from './utils';
 
 import DashboardRouter from './pages/guest/dashboard/Router';
@@ -31,6 +32,8 @@ function App() {
                     <Route path="invoices" element={<Invoices />} />
                     <Route path="schedule" element={<Schedule />} />
                     <Route path="login" element={<Login />} />
+                    <Route path="standings" element={<Standings />} />
+                    <Route path="schedule" element={<Standings />} />
 
                     <Route
                         path="*"
