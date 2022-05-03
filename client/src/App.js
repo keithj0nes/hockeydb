@@ -33,7 +33,6 @@ function App() {
                     <Route path="schedule" element={<Schedule />} />
                     <Route path="login" element={<Login />} />
                     <Route path="standings" element={<Standings />} />
-                    <Route path="schedule" element={<Standings />} />
 
                     <Route
                         path="*"

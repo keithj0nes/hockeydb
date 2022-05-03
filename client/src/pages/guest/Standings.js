@@ -8,7 +8,6 @@ const Standings = () => {
     const { standings, isLoading } = useSelector(state => state.standings);
 
     useEffect(() => {
-        console.log('useEffect firing standings');
         dispatch(getStandings());
     }, []); // empty array = only fires on the didMount
 
