@@ -20,9 +20,9 @@ const Schedule = () => {
             {isLoading ? (
                 <p>Page Loading</p>) : (
                 <div>
-                    {games.map(game => {
+                    {games.map((game, id) => {
                         return (
-                            <div>
+                            <div key={id}>
                                 {`HOME TEAM: ${game.away_team} VS. AWAY TEAM: ${game.home_team}`}
                             </div>
                         )
