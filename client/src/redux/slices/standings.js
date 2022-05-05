@@ -4,7 +4,7 @@ import { wait } from '../../utils';
 
 const initialState = {
     standings: [],
-    isLoading: true,
+    isLoading: false,
 };
 
 export const standingsSlice = createSlice({
@@ -17,7 +17,6 @@ export const standingsSlice = createSlice({
         },
         getStandingSuccess: (state, { payload }) => {
             // console.log('STANDINGS PAYLOAD', payload);
-
             state.standings = payload;
             state.isLoading = false;
         },

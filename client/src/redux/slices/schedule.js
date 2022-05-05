@@ -5,7 +5,7 @@ import { wait } from '../../utils'; // simulates server lag response time
 // set initial state
 const initialState = {
     games: [],
-    isLoading: true,
+    isLoading: false,
 };
 
 // set/export reducers in object with name and initial state
@@ -34,8 +34,9 @@ export const scheduleSlice = createSlice({
 // export reducers in .actions
 export const { getInit, getScheduleSuccess } = scheduleSlice.actions;
 
-// function currying?
 export const getSchedule = (filter) => async (dispatch) => {
+
+    dispatch(getInit());
 
     await wait(2000);
 
