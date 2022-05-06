@@ -53,7 +53,7 @@ export const { getInit, getSeasonsSuccess } = seasonsSlice.actions;
 export const getSeasons = (filter) => async (dispatch) => {
     console.log('getting seasons', filter);
     // console.log({ filter });
-    // await wait(2000);
+    await wait(2000);
 
     // const data = await request({ url: `/api/games?${filter || ''}`, method: 'GET', session: {}, isPublic: true });
     const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', session: {}, isPublic: true });

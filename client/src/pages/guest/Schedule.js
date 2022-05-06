@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSchedule } from '../../redux/slices/games';
+import { getSchedule } from '../../redux/slices/schedule';
 
 
 const Schedule = () => {
-    const games = useSelector((state) => state.games);
+    const { games, isLoading } = useSelector((state) => state.games);
     const dispatch = useDispatch();
-
-    console.log(games.schedule, 'games');
+    console.log('SCHEDULE STATE IN COMPONENT', games);
 
     useEffect(() => {
         console.log('fetching schedule');
@@ -18,6 +17,17 @@ const Schedule = () => {
     return (
         <div>
             Show schedule here
+            {isLoading ? (
+                <p>Page Loading</p>
+            ) : (
+                <div>
+                    {games.map((game) => (
+                        <div key={game.id}>
+                            {`HOME TEAM: ${game.away_team} VS. AWAY TEAM: ${game.home_team}`}
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

@@ -1,4 +1,4 @@
-const app = require('../server.js');
+const app = require('../server');
 const helpers = require('./helpers');
 
 // const createLimitFragment = (db, limit, offset) => {
@@ -10,7 +10,7 @@ const helpers = require('./helpers');
 
 
 const myQueryThing = (q = {}, allowable = []) => {
-    console.log(q);
+    console.log('Q var from myQueryThing', q);
 
     const newQuery = {};
     for (let i = 0; i < allowable.length; i += 1) {
@@ -18,27 +18,31 @@ const myQueryThing = (q = {}, allowable = []) => {
             newQuery[allowable[i]] = q[allowable[i]];
         }
     }
-
     return newQuery;
 };
 
 
 const getSeasons = async (req, res, next) => {
+    console.log('REQ.QUERY', req.query);
     try {
         const db = app.get('db');
 
         const allowableQueryKeys = ['type', 'show_hidden', 'limit', 'page', 'dir', 'order_by'];
         const bbb = myQueryThing(req.query, allowableQueryKeys);
 
-        console.log(bbb, 'bbbbbb');
+        console.log('BBB', bbb);
+
+        console.log('HELPERS', helpers);
 
         const query = helpers.filter(req.query);
-        console.log(req.query, ' req.query!');
+        console.log('REQ.QUERY AFTER FILTER', query);
 
         const { limit = 50, page = 1, dir = 'desc' } = req.query;
 
+        console.log(`LIMIT: ${limit}, PAGE: ${page}, DIR: ${dir}`);
+
         const offset = (!page || page <= 1) ? 0 : (page - 1) * limit;
-        console.log(offset);
+        console.log('OFFSET', offset);
         const total_count = await db.seasons.count({ ...bbb });
         // const OLDQUERY = await db.seasons.find({
         //     ...query,
@@ -48,6 +52,7 @@ const getSeasons = async (req, res, next) => {
         //     offset,
         //     limit,
         // });
+        console.log('TOTAL_COUNT', total_count);
 
         console.log(query, ' querrryyy helper');
 
