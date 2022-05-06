@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { Popover } from 'antd';
+import classNames from 'classnames';
 import { getSeasons } from '../../redux/slices/seasons';
+
+const filterTypes = ['Type', 'Hidden'];
 
 const Seasons = () => {
     const PAGE_TITLE = 'Seasons';
@@ -19,11 +23,71 @@ const Seasons = () => {
         const currentParams = Object.fromEntries([...searchParams]);
         console.log(currentParams); // get new values onchange
         // console.log(getSeasons, 'get seasons')
+        console.log(location.search,' LOCLAT ION>SIRAECH')
 
         dispatch(getSeasons(location.search));
     }, [searchParams]);
 
     console.log(seasons, ' seassonnss');
+
+    const content = (
+        <div className="w-44 py-1">
+
+            {filterTypes.map(item => (
+                <FilterItem item={item} key={item} />
+            ))}
+
+            <div className="hidden">
+
+
+                <button type="button" className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
+                    <svg className="w-4 h-4 mr-3 invisible" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <p>Name</p>
+                </button>
+
+
+                <button type="button" className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
+                    <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    <p>Name</p>
+                </button>
+                <p>Content</p>
+                <p>Content</p>
+
+                <input type="checkbox" className="form-checkbox rounded text-pink-500" />
+
+                <label className="inline-flex items-center">
+                    <input type="checkbox" className="rounded mr-2 checked:text-pink-500 border-green-500 focus:ring-indigo-400 focus:ring-opacity-25" />
+                    Checkbox
+                </label>
+
+                <div className="max-w-sm mx-auto p-8">
+                    <label className="inline-flex items-center">
+                        <input className="text-indigo-500 w-4 h-4 mr-2 focus:ring-transparent focus:ring-opacity-100 border border-gray-300 rounded" type="checkbox" />
+                        Checkbox
+                    </label>
+                </div>
+
+
+                <div className="p-4">
+                    <div className="flex items-center mr-4 mb-2">
+                        <input type="checkbox" id="A3-yes" name="A3-confirmation" value="yes" className="opacity-0 absolute h-8 w-8" />
+                        <div className="bg-white border-2 rounded-md border-blue-400 w-8 h-8 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-500">
+                            <svg className="fill-current hidden w-3 h-3 text-blue-600 pointer-events-none" version="1.1" viewBox="0 0 17 12" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="none" fillRule="evenodd">
+                                    <g transform="translate(-9 -11)" fill="#1F73F1" fillRule="nonzero">
+                                        <path d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z" />
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <label htmlFor="A3-yes" className="select-none">Yes</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    );
+
 
     return (
         <div className="h-full p-4 sm:p-7">
@@ -33,7 +97,7 @@ const Seasons = () => {
 
                 <button
                     type="button"
-                    className="flex justify-center items-center border p-2 text-lg lg:text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                    className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
                 >
                     Create Season
                 </button>
@@ -46,13 +110,13 @@ const Seasons = () => {
 
 
                     <div className="relative w-full lg:w-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 lg:h-4 lg:w-4 absolute left-2 top-3 lg:top-3 stroke-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 absolute left-2 top-3 stroke-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
 
                         <input
                             type="text"
-                            className="w-full lg:w-64 border py-2 pl-10 lg:pl-8 pr-2 text-lg lg:text-sm border-gray-300 rounded focus:outline-none focus:ring focus:ring-gray-200"
+                            className="w-full lg:w-64 border py-2 pl-8 pr-2 text-sm border-gray-300 rounded focus:outline-none focus:ring focus:ring-gray-200"
                             placeholder="Search meeee"
                         />
                     </div>
@@ -61,27 +125,34 @@ const Seasons = () => {
 
 
                     <div className="flex space-x-5 items-center pb-5 pt-3 md:p-0 border-b border-gray-300 md:border-none w-full lg:w-auto">
-                        <button
-                            type="button"
-                            className="w-full lg:w-32 flex justify-center items-center gap-2 border p-2 text-lg lg:text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 lg:h-4 lg:w-4 stroke-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            Filter
-                        </button>
+
+                        <Popover content={content} trigger="click" placement="bottomRight">
+                            <button
+                                type="button"
+                                className="w-full lg:w-32 flex justify-center items-center gap-2 border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 stroke-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                </svg>
+                                Filter
+                            </button>
+                        </Popover>
+
 
                         <div className="h-8 lg:h-6 w-[3px] bg-gray-300 lg:hidden" />
+                        <Popover content={content} trigger="click" placement="bottomRight">
 
-                        <button
-                            type="button"
-                            className="w-full flex justify-center  lg:hidden items-center border p-2 text-lg lg:text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 lg:h-4 lg:w-4 stroke-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                            </svg>
-                            Sort
-                        </button>
+                            <button
+                                type="button"
+                                className="w-full flex justify-center  lg:hidden items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 stroke-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                                Sort
+                            </button>
+                        </Popover>
+
                     </div>
                 </div>
 
@@ -89,28 +160,50 @@ const Seasons = () => {
             </div>
 
 
-            <div className="bg-red-100 p-10">
+            <div className="md:grid md:grid-cols-2 gap-x-10">
                 {!isLoading && seasons.map(item => (
-                    <div key={item.id} className="bg-yellow-100 my-5 p-3">
-                        {item.name}
-                    </div>
-                ))}
-            </div>
+                    <div key={item.id} className="w-full bg-white my-5 p-3 shadow-md">
+                        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <p className="text-gray-500">{item.type}</p>
 
-            <div className="mt-12">
-                {myList.map(item => (
-                    <div className="bg-white flex justify-between px-2 py-1 my-3 items-center">
-                        <div>
-                            <p className="font-semibold text-sm">{item.city}</p>
-                            <p className="text-gray-400 text-xs">{item.address}</p>
+                            <p className={classNames('px-2 py-1 rounded-lg', {
+                                'bg-green-100 text-green-600': item.is_active,
+                                'bg-gray-100 text-gray-600': !item.is_active,
+                            })}
+                            >
+                                {item.is_active ? 'Active' : 'Inactive'}
+                            </p>
                         </div>
-                        <div className="flex items-center">
-                            <p className="mr-1">{item.rating}</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 fill-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                            </svg>
-                        </div>
+
+                        <h3 className="text-lg text-black font-semibold pt-2">{item.name}</h3>
+
+                        <ul className="odd:bg-white even:bg-slate-100">
+                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
+                                <p className="text-xs text-gray-500">Start</p>
+                                <p className="text-xs font-bold text-black">10/16/2022</p>
+                            </li>
+
+                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
+                                <p className="text-xs text-gray-500">Expected Finish</p>
+                                <p className="text-xs font-bold text-black">12/29/2022</p>
+                            </li>
+
+                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
+                                <p className="text-xs text-gray-500">Teams</p>
+                                <p className="text-xs font-bold text-black">44</p>
+                            </li>
+
+                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
+                                <p className="text-xs text-gray-500">Registered Players</p>
+                                <p className="text-xs font-bold text-black">659</p>
+                            </li>
+                        </ul>
+
+
                     </div>
+                    // <div key={item.id} className="bg-yellow-100 my-5 p-3">
+                    //     {item.name}
+                    // </div>
                 ))}
             </div>
         </div>
@@ -119,11 +212,15 @@ const Seasons = () => {
 
 export default Seasons;
 
-const myList = [
-    { city: 'Anacortes', address: '123 4th street', rating: 3.5 },
-    { city: 'Battle Ground', address: '123 4th street', rating: 2.2 },
-    { city: 'Bellevue', address: '123 4th street', rating: 4.8 },
-    { city: 'Kenmore', address: '123 4th street', rating: 1.9 },
-    { city: 'Lake Stevens', address: '123 4th street', rating: 4.1 },
-    { city: 'Mill Creek', address: '123 4th street', rating: 3.9 },
-];
+
+// playing around with futue sorting / filtering dropdown
+
+const FilterItem = ({ item }) => {
+    const [isChecked, setIsChecked] = useState(false);
+    return (
+        <button type="button" onClick={() => setIsChecked(!isChecked)} className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
+            <svg className={classNames('w-4 h-4 mr-3', { invisible: !isChecked })} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+            <p>{item}</p>
+        </button>
+    );
+};

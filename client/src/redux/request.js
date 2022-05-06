@@ -41,9 +41,9 @@ const request = async ({ url, method, session, isPublic }) => {
         console.warn("Avoid using 'notification_type' - instead use \n { \n \xa0 notification: { \n \xa0 \xa0 type: 'toast', \n \xa0 \xa0 duration: 2, \n \xa0 \xa0 status: 'success' \n \xa0 } \n } ");
     }
 
-    if (notification.type === 'toast') {
-        toast(notification, message);
-    }
+    // if (notification.type === 'toast') {
+    //     toast(notification, message);
+    // }
 
     return response.data;
 };

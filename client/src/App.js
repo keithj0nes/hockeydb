@@ -5,7 +5,7 @@ import { unstable_HistoryRouter as HistoryRouter, Routes, Route, Navigate, Outle
 import PropTypes from 'prop-types';
 // import { Link, Routes, Route, Outlet } from 'react-router-dom';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 // import { decrement, increment } from './redux/slices/counter';
 
 import { Header } from './components/guest';

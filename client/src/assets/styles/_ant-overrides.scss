@@ -23,3 +23,16 @@
 .ant-drawer-body {
     padding: 0;
 }
+
+
+.ant-popover {
+    padding-top: 5px;
+
+    .ant-popover-arrow {
+        display: none;
+    }
+
+    .ant-popover-inner-content {
+        padding: 0;
+    }
+}
