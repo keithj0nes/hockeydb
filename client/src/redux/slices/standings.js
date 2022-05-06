@@ -38,9 +38,9 @@ export const getStandings = (filter = '') => async dispatch => {
 
     const standings = data.data.standings.map((item) => ({
         ...item,
-        teams_in_division: item.teams_in_division.map((team, idx) => ({ ...team, rank: idx + 1 }))
+        teams_in_division: item.teams_in_division.map((team, idx) => ({ ...team, rank: idx + 1 })),
     }));
     dispatch(getStandingSuccess(standings));
-}
+};
 
 export default standingsSlice.reducer;

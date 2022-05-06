@@ -35,7 +35,6 @@ export const scheduleSlice = createSlice({
 export const { getInit, getScheduleSuccess } = scheduleSlice.actions;
 
 export const getSchedule = (filter) => async (dispatch) => {
-
     dispatch(getInit());
 
     await wait(2000);
@@ -49,7 +48,7 @@ export const getSchedule = (filter) => async (dispatch) => {
     console.log('DATA', data);
     console.log('DATA.DATA.GAMES', data.data.games);
     // get games from data
-    const games = data.data.games;
+    const { games } = data.data;
 
     dispatch(getScheduleSuccess(games));
 };

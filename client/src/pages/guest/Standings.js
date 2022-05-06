@@ -17,26 +17,21 @@ const Standings = () => {
 
             {/* Add conditional loading check here */}
             {isLoading ? (
-                <p>Page Loading</p>) : (
+                <p>Page Loading</p>
+            ) : (
                 <div className="bg-green-100">
-                    {standings.map(item => {
-                        return (
-                            <div>
-                                <h2 className='text-xl'>{item.division_name}</h2>
-                                {item.teams_in_division.map((team) => {
-                                    return (
-                                        <div>{team.name}</div>
-                                    )
-                                })}
-                            </div>
-
-                        )
-                    })}
+                    {standings.map(item => (
+                        <div>
+                            <h2 className="text-xl">{item.division_name}</h2>
+                            {item.teams_in_division.map((team) => (
+                                <div>{team.name}</div>
+                            ))}
+                        </div>
+                    ))}
                 </div>
-            )
-            }
+            )}
         </div>
-    )
-}
+    );
+};
 
 export default Standings;
