@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Popover } from 'antd';
 import classNames from 'classnames';
 import { getSeasons } from '../../redux/slices/seasons';
+import { Loader } from '../../components';
 
 const filterTypes = ['Type', 'Hidden'];
 
@@ -23,9 +24,9 @@ const Seasons = () => {
         const currentParams = Object.fromEntries([...searchParams]);
         console.log(currentParams); // get new values onchange
         // console.log(getSeasons, 'get seasons')
-        console.log(location.search,' LOCLAT ION>SIRAECH')
+        console.log(location.search, ' LOCLAT ION>SIRAECH');
 
-        dispatch(getSeasons(location.search));
+        !seasons.length && dispatch(getSeasons(location.search));
     }, [searchParams]);
 
     console.log(seasons, ' seassonnss');
@@ -90,7 +91,9 @@ const Seasons = () => {
 
 
     return (
-        <div className="h-full p-4 sm:p-7">
+        <div className="h-full p-4 sm:p-7 relative">
+
+            {isLoading && <Loader />}
 
             <div className="flex justify-between">
                 <h1 className="text-3xl font-semibold">{PAGE_TITLE}</h1>
@@ -161,7 +164,7 @@ const Seasons = () => {
 
 
             <div className="md:grid md:grid-cols-2 gap-x-10">
-                {!isLoading && seasons.map(item => (
+                {seasons.map(item => (
                     <div key={item.id} className="w-full bg-white my-5 p-3 shadow-md">
                         <div className="flex justify-between items-center border-b border-gray-200 pb-2">
                             <p className="text-gray-500">{item.type}</p>

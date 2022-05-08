@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, current } from '@reduxjs/toolkit';
 import request from '../request';
 import { wait } from '../../utils';
 
@@ -34,6 +34,7 @@ export const seasonsSlice = createSlice({
     reducers: {
         getInit: state => {
             state.isLoading = true;
+            console.log(current(state.seasons), 'ReDUX SEaSONS')
         },
         getSeasonsSuccess: (state, { payload }) => {
             console.log(payload, ' payload');
@@ -52,8 +53,9 @@ export const { getInit, getSeasonsSuccess } = seasonsSlice.actions;
 
 export const getSeasons = (filter) => async (dispatch) => {
     console.log('getting seasons', filter);
+    dispatch(getInit());
     // console.log({ filter });
-    await wait(2000);
+    await wait(5000);
 
     // const data = await request({ url: `/api/games?${filter || ''}`, method: 'GET', session: {}, isPublic: true });
     const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', session: {}, isPublic: true });
