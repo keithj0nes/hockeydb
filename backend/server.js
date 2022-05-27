@@ -50,8 +50,8 @@ if (isProduction) {
 } else {
     connectionInfo = process.env.DB_URI;
 }
-console.log('IS PRODUCTION', isProduction);
-console.log('CONNECTION INFO', connectionInfo);
+// console.log('IS PRODUCTION', isProduction);
+// console.log('CONNECTION INFO', connectionInfo);
 
 massive(connectionInfo, { excludeMatViews: true }).then(instance => {
     // console.log('INSTANCE', instance);

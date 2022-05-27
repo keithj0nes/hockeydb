@@ -25,7 +25,7 @@
         "babel"
     ],
     "rules": {
-    "indent": ["error", 4],
+    "indent": ["error", 4, { "SwitchCase": 1 }],
     "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 0 }],
     "react/jsx-indent": ["error" , 4],
     "react/jsx-indent-props": ["error" , 4],

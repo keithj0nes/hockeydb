@@ -8,10 +8,10 @@ const getAllDivisions = async (req, res, next) => {
         const season_id = await db.seasons.findOne({ name: season, 'deleted_at =': null });
 
         const q = `
-          SELECT d.id, d.name, COUNT(tsd.id) as teams_count FROM team_season_division tsd
-          LEFT JOIN divisions d ON d.id = tsd.division_id
-          WHERE tsd.season_id = $1
-          GROUP BY d.id;
+            SELECT d.id, d.name, COUNT(tsd.id) as teams_count FROM team_season_division tsd
+            LEFT JOIN divisions d ON d.id = tsd.division_id
+            WHERE tsd.season_id = $1
+            GROUP BY d.id;
         `;
         const data = await db.query(q, [season_id.id]);
         const seasons = await db.seasons.find({ 'hidden_at =': null, 'deleted_at =': null });

@@ -47,13 +47,13 @@ export const { getInit, getScheduleSuccess } = scheduleSlice.actions;
 export const getSchedule = (filter) => async (dispatch) => {
     dispatch(getInit());
 
-    await wait(2000);
+    // await wait(2000);
 
     const data = await request({
         url: `/api/games?${filter || ''}`,
         method: 'GET',
         session: {},
-        publicRoute: true,
+        isPublic: true,
     });
     console.log('DATA', data);
     console.log('DATA.DATA.GAMES', data.data.games);

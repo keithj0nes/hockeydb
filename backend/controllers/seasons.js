@@ -9,41 +9,168 @@ const helpers = require('./helpers');
 // };
 
 
+// const myQueryThing = (q = {}, allowable = []) => {
+//     console.log('Q var from myQueryThing', q);
+//     const newQuery = {};
+//     for (let i = 0; i < allowable.length; i += 1) {
+//         if (q[allowable[i]]) {
+//             newQuery[allowable[i]] = q[allowable[i]];
+//         }
+//     }
+//     return newQuery;
+// };
+
 const myQueryThing = (q = {}, allowable = []) => {
     console.log('Q var from myQueryThing', q);
-
     const newQuery = {};
     for (let i = 0; i < allowable.length; i += 1) {
-        if (q[allowable[i]]) {
-            newQuery[allowable[i]] = q[allowable[i]];
+        // console.log(typeof allowable[i]);
+        // console.log(allowable[i]);
+        // console.log(q[allowable], 'q[allowable]');
+        const type = typeof allowable[i];
+        switch (type) {
+            case 'string':
+                if (q[allowable[i]]) {
+                    newQuery[allowable[i]] = q[allowable[i]];
+                }
+                break;
+            case 'object':
+                if (q[allowable[i].key]) {
+                    // console.log('HITTING LOL')
+                    // console.log(q[allowable[i].key])
+                    const queryValue = q[allowable[i].key];
+                    const checkForNull = allowable[i].checkNullable;
+                    if (checkForNull) {
+                        newQuery[allowable[i].column + (JSON.parse(queryValue) ? ' !=' : ' =')] = null;
+                    }
+                }
+                break;
+            default:
+                break;
         }
+        newQuery['deleted_at ='] = null;
     }
     return newQuery;
 };
 
 
+// EXAMPLE TO TRY
+
+// function buildConditions(params) {
+//     const conditions = [];
+//     const values = [];
+//     let conditionsStr;
+
+//     if (typeof params.name !== 'undefined') {
+//         conditions.push('name LIKE ?');
+//         values.push(`%${params.name}%`);
+//     }
+
+//     if (typeof params.age !== 'undefined') {
+//         conditions.push('age = ?');
+//         values.push(parseInt(params.age));
+//     }
+
+//     return {
+//         where: conditions.length
+//             ? conditions.join(' AND ') : '1',
+//         values,
+//     };
+// }
+
+// const conditions = buildConditions(params);
+// const sql = `SELECT * FROM table WHERE ${conditions.where}`;
+
+// connection.query(sql, conditions.values, (err, results) => {
+//     // do things
+// });
+
+const buildWhere = (params) => {
+    const conditions = [];
+    const values = [];
+
+    if (!!params.type) {
+        conditions.push(`type = $${conditions.length + 1}`);
+        values.push(params.type);
+    }
+
+    if (!!params.show_hidden) {
+        conditions.push('hidden_at IS NOT null');
+    } else {
+        conditions.push('hidden_at IS null');
+    }
+
+    conditions.push('deleted_at IS null');
+
+    return [conditions.length ? conditions.join(' AND ') : '1', values];
+};
+
+const buildWhereWithAllowable = (params = {}, allowable = []) => {
+    const conditions = [];
+    const values = [];
+
+    // TODO: figure out how to see if extra params are added that dont exist in "allowable"
+    // if so, need to return false, alerting the user that their query doesnt hae results
+
+    // example: url.com/seasons?hello=hi should return false because that query doesnt exist
+
+    console.log('\n');
+    for (let i = 0; i < allowable.length; i += 1) {
+        console.log('params', params);
+        console.log('allowable[i]', allowable[i]);
+        console.log('params[allowable[i]]', params[allowable[i]], '\n');
+
+        if (params[allowable[i].key]) {
+            conditions.push(`${allowable[i].key} = $${conditions.length + 1}`);
+            values.push(params.type);
+
+
+            // TODO: figure out how to get this to work with dynamic values
+            // idea is to have one BUILDWHERE function that is dynamic for multple occasions
+
+
+            // if (params[allowable[i].nulls]) {
+
+            // }
+        }
+    }
+    return [conditions.length ? conditions.join(' AND ') : 'false', values];
+};
+
+
 const getSeasons = async (req, res, next) => {
+    console.log(' \n \n ============================ \n \n');
+
     console.log('REQ.QUERY', req.query);
     try {
         const db = app.get('db');
 
-        const allowableQueryKeys = ['type', 'show_hidden', 'limit', 'page', 'dir', 'order_by'];
-        const bbb = myQueryThing(req.query, allowableQueryKeys);
+        // const allowableQueryKeys = ['type', 'show_hidden', 'limit', 'page', 'dir', 'order_by'];
+        // const allowableQueryKeys = ['type', { key: 'show_hidden', column: 'hidden_at', condition: [' !=', null] }, 'limit', 'page', 'dir', 'order_by'];
+        // const allowableQueryKeys = ['type', { key: 'show_hidden', column: 'hidden_at', checkNullable: true }, 'limit', 'page', 'dir', 'order_by'];
+        // const allowableQueryKeys = ['type', { key: 'show_hidden', column: 'hidden_at', checkNullable: true }];
+        const allowableQueryKeys = [{ key: 'type' }, { key: 'show_hidden', column: 'hidden_at', nulls: true }];
 
-        console.log('BBB', bbb);
+        // const bbb = myQueryThing(req.query, allowableQueryKeys);
 
-        console.log('HELPERS', helpers);
+        // console.log('BBB', bbb);
+
+        const builtQuery = buildWhere(req.query);
+
+        const builtQueryWithAllowable = buildWhereWithAllowable(req.query, allowableQueryKeys);
+        console.log(builtQueryWithAllowable, 'builtQueryWithAllowable');
+        // 'limit', 'page', 'dir', 'order_by'
 
         const query = helpers.filter(req.query);
         console.log('REQ.QUERY AFTER FILTER', query);
 
-        const { limit = 50, page = 1, dir = 'desc' } = req.query;
+        const { limit = 2, page = 1, dir = 'desc' } = req.query;
 
         console.log(`LIMIT: ${limit}, PAGE: ${page}, DIR: ${dir}`);
 
         const offset = (!page || page <= 1) ? 0 : (page - 1) * limit;
         console.log('OFFSET', offset);
-        const total_count = await db.seasons.count({ ...bbb });
+        const total_count = 3 // await db.seasons.count({ ...query });
         // const OLDQUERY = await db.seasons.find({
         //     ...query,
         // }, {
@@ -52,6 +179,64 @@ const getSeasons = async (req, res, next) => {
         //     offset,
         //     limit,
         // });
+
+        console.log(builtQueryWithAllowable, 'builtQueryWithAllowable builtQueryWithAllowable builtQueryWithAllowable')
+
+        const raw2 = `
+            select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+            cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
+            uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+            from seasons s
+            join users cu on cu.id = s.created_by
+            left join users uu on uu.id = s.updated_by
+            where ${builtQueryWithAllowable[0]}
+            -- order by s.id ${dir} limit $${builtQuery[1].length + 1} offset $${builtQuery[1].length + 2}
+        `;
+            // order by s.id ${dir} limit $2 offset $3
+
+        console.log(raw2)
+
+        console.log(builtQuery, 'built quiery')
+
+        const seasonsWithBuiltQuery = await db.query(raw2, [...builtQuery[1], limit, offset]);
+
+        console.log({seasonsWithBuiltQuery})
+
+        // const librariesWithBooks = await db.libraries.join({
+        //     books: {
+        //         type: 'INNER',
+        //         on: { library_id: 'id' },
+        //     },
+        // }).find({
+        //     state: 'EV',
+        //     'books.author ILIKE': 'calvino, %',
+        // });
+
+
+        // TODO: massive js joins wont work because not able to select specifc
+        // fields or rename fields such as in the "raw" below. need to figure
+        // out to build a small where query builder to append to the RAW below
+
+
+        // const librariesWithBooks = await db.seasons.join({
+        //     users: {
+        //         type: 'INNER',
+        //         on: { id: 'created_by' },
+        //         // omit: true,
+        //         // columns: ['id', 'first_name']
+        //     },
+        // }).find({
+        //     ...bbb,
+        //     // state: 'EV',
+        //     // 'books.author ILIKE': 'calvino, %',
+        // }, {
+        //     // fields: { my_name: 'name' },
+        // });
+
+        // console.log({ librariesWithBooks });
+        // console.log(librariesWithBooks[0].users);
+
+
         console.log('TOTAL_COUNT', total_count);
 
         console.log(query, ' querrryyy helper');
@@ -62,7 +247,6 @@ const getSeasons = async (req, res, next) => {
         // where hidden_at IS null AND deleted_at IS null
         // order by s.id ${dir} limit $2 offset $3
         const raw = `
-
             select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
             cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name, 
             uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
@@ -80,7 +264,8 @@ const getSeasons = async (req, res, next) => {
         const total_pages = Math.ceil(total_count / limit);
         console.log({ total_count: parseInt(total_count), seasons_length: seasons.length, total_pages, page: parseInt(page) });
 
-        return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons', notification_type: 'hi', notification: { type: 'toast', duration: 2, status: 'error' } });
+        // return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons', notification_type: 'hi', notification: { type: 'toast', duration: 2, status: 'error' } });
+        return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons' });
     } catch (error) {
         console.log('GET SEASONS ERROR: ', error);
         return next(error);

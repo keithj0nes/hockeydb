@@ -6,11 +6,18 @@ import classNames from 'classnames';
 import { getSeasons } from '../../redux/slices/seasons';
 import { Loader } from '../../components';
 
+import { useQueryParams } from '../../hooks/useQueryParams';
+
 const filterTypes = ['Type', 'Hidden'];
 
 const Seasons = () => {
     const PAGE_TITLE = 'Seasons';
-    const [searchParams, setSearchParams] = useSearchParams();
+    // const [searchParams, setSearchParams] = useSearchParams();
+
+    const [filters, setFilters] = useQueryParams(getSeasons);
+
+    console.log({ filters, setFilters })
+
 
     const { seasons, isLoading } = useSelector((state) => state.seasons);
     const dispatch = useDispatch();
@@ -20,23 +27,27 @@ const Seasons = () => {
     // console.log(searchParams, 'searchParams');
     // console.log(location, 'location')
 
-    useEffect(() => {
-        const currentParams = Object.fromEntries([...searchParams]);
-        console.log(currentParams); // get new values onchange
-        // console.log(getSeasons, 'get seasons')
-        console.log(location.search, ' LOCLAT ION>SIRAECH');
+    // useEffect(() => {
+    //     // const currentParams = Object.fromEntries([...searchParams]);
+    //     // console.log(currentParams); // get new values onchange
+    //     // console.log(getSeasons, 'get seasons')
+    //     console.log(location.search, ' LOCLAT ION>SIRAECH');
 
-        !seasons.length && dispatch(getSeasons(location.search));
-    }, [searchParams]);
+    //     !seasons.length && dispatch(getSeasons(location.search));
+    // }, [searchParams]);
+
+    // useEffect(() => {
+
+    // }, [])
 
     console.log(seasons, ' seassonnss');
 
     const content = (
         <div className="w-44 py-1">
 
-            {filterTypes.map(item => (
-                <FilterItem item={item} key={item} />
-            ))}
+            {/* {filterTypes.map(item => (
+                <FilterItem item={item} key={item} setSearchParams={setSearchParams} />
+            ))} */}
 
             <div className="hidden">
 
@@ -101,6 +112,7 @@ const Seasons = () => {
                 <button
                     type="button"
                     className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                    onClick={() => setFilters({ hidden: true })}
                 >
                     Create Season
                 </button>
@@ -218,10 +230,11 @@ export default Seasons;
 
 // playing around with futue sorting / filtering dropdown
 
-const FilterItem = ({ item }) => {
+const FilterItem = ({ item, setSearchParams }) => {
     const [isChecked, setIsChecked] = useState(false);
+    console.log(item, 'item')
     return (
-        <button type="button" onClick={() => setIsChecked(!isChecked)} className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
+        <button type="button" onClick={() => { setIsChecked(!isChecked); setSearchParams({ hi: 'lol' }); }} className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
             <svg className={classNames('w-4 h-4 mr-3', { invisible: !isChecked })} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
             <p>{item}</p>
         </button>
