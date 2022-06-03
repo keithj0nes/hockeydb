@@ -174,6 +174,13 @@ const Seasons = () => {
 
             </div>
 
+            {!isLoading && !seasons.length && !!Object.keys(filters).length && (
+                <div className="w-full flex items-center pt-20 justify-center">
+
+                    <p>No results found with your search criteria</p>
+                </div>
+
+            )}
 
             <div className="md:grid md:grid-cols-2 gap-x-10">
                 {seasons.map(item => (

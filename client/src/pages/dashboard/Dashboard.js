@@ -15,7 +15,7 @@ const Dashboard = () => {
         <div className="h-full p-4 sm:p-7">
             <h1 className="text-3xl font-semibold">{PAGE_TITLE}</h1>
 
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap gap-x-5">
 
                 {/* card */}
 

@@ -15,7 +15,7 @@ const Table = ({ data, columns, emptyText, minWidth }) => {
     console.log(sectionKeys);
 
     return (
-        <div className="bg-red-100 p-10" style={{ minWidth }}>
+        <div className="bg-red-100 p-10 overflow-hidden" style={{ minWidth }}>
 
             <div className="bg-yellow-100 p-2 flex">
                 {sectionKeys.map(key => {
