@@ -16,6 +16,8 @@ import Login from './components/auth/Login';
 import Standings from './pages/guest/Standings';
 import { history } from './utils';
 
+import Players from './pages/guest/Players';
+
 import DashboardRouter from './pages/dashboard/Router';
 
 function App() {
@@ -33,6 +35,7 @@ function App() {
                     <Route path="schedule" element={<Schedule />} />
                     <Route path="login" element={<Login />} />
                     <Route path="standings" element={<Standings />} />
+                    <Route path="players" element={<Players />} />
 
                     <Route
                         path="*"
