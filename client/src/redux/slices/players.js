@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import request from "request";
+import { createSlice } from '@reduxjs/toolkit';
+import request from 'request';
 
 
 const initialState = {
@@ -34,4 +34,10 @@ export const getPlayers = (filter) => async (dispatch) => {
         session: {},
         isPublic: true,
     });
-}
+
+    // const { players } = data.data;
+
+    console.log('PLAYERS DATA.DATA: ', data);
+};
+
+export default playersSlice.reducer;
