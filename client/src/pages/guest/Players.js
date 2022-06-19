@@ -18,8 +18,12 @@ const Players = () => {
                 <p>Page Loading</p>
             ) : (
                 <div className="bg-green-100">
-                    {players.length ? <p>Players in DB: {players.length}</p>
-                        : <p>No Player Data Found</p>}
+                    <p>Players in DB: {players.length}</p>
+                    {players.map(player => (
+                        <div>
+                            {`Player name: ${player.first_name} ${player.last_name} | Team: ${player.name}`}
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
