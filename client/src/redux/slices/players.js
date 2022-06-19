@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import request from 'request';
+import request from '../request';
 
 
 const initialState = {
@@ -17,7 +17,9 @@ export const playersSlice = createSlice({
         },
         getPlayersSuccess: (state, { payload }) => {
             console.log('PLAYER STATE', state);
-            console.log('SCHEDULE PAYLOAD', payload);
+            console.log('PLAYERS PAYLOAD', payload);
+            state.isLoading = false;
+            state.players = [...payload];
         },
     },
 });
@@ -35,9 +37,11 @@ export const getPlayers = (filter) => async (dispatch) => {
         isPublic: true,
     });
 
-    // const { players } = data.data;
+    const players = data.data;
 
-    console.log('PLAYERS DATA.DATA: ', data);
+    dispatch(getPlayersSuccess(players));
+
+    // console.log('PLAYERS DATA.DATA: ', data.data);
 };
 
 export default playersSlice.reducer;

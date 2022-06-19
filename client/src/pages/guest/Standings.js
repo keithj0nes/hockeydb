@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStandings } from '../../redux/slices/standings';
 
+
 const Standings = () => {
     const dispatch = useDispatch();
     // get standings state
