@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import request from '../request';
 import { wait } from '../../utils';
 
@@ -34,11 +34,10 @@ export const seasonsSlice = createSlice({
     reducers: {
         getInit: state => {
             state.isLoading = true;
-            console.log(current(state.seasons), 'ReDUX SEaSONS')
         },
         getSeasonsSuccess: (state, { payload }) => {
             console.log(payload, ' payload');
-
+            state.pagination = payload.pagination;
             state.seasons = payload.seasons;
             state.isLoading = false;
         },
