@@ -25,16 +25,19 @@ export const teamsSlice = createSlice({
 export const { getInit, getTeamsSuccess } = teamsSlice.actions;
 
 // DB query function
-export const getTeams = (filter) => async (dispatch) => {
+export const getTeamsByDivision = (filter) => async (dispatch) => {
     dispatch(getInit());
 
     const data = await request({
-        url: `/api/teams?${filter || ''}`,
+        url: `/api/teams/by-division?${filter || ''}`,
         method: 'GET',
         session: {},
         isPublic: true,
     });
-    console.log('DATA', data);
+    // teams categorized by division
+    const divisions = data.data.allTeams;
+    console.log('TEAMS DATA', divisions);
+    dispatch(getTeamsSuccess(divisions));
 };
 
 
