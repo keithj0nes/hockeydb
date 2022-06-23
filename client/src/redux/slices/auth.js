@@ -55,7 +55,7 @@ export const { setUser } = authSlice.actions;
 
 export const login = loginData => async dispatch => {
     console.log(loginData, 'login data!');
-    const data = await request({ url: '/api/auth/login', method: 'POST', session: loginData, isPublic: true });
+    const data = await request({ url: '/api/auth/login', method: 'POST', body: loginData, isPublic: true });
     console.log(data, ' dtaataaa');
 
 
@@ -78,7 +78,7 @@ export const logout = (preventMessage) => async (dispatch) => {
     dispatch(setUser({}));
     history.push('/');
 
-    console.log('LOGGED OUT!!')
+    console.log('LOGGED OUT!!');
 
     // const options = {
     //     message: 'Success',

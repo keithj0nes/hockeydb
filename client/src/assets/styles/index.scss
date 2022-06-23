@@ -101,7 +101,10 @@ input:checked + div svg {
   
   input:checked ~ div > .toggle-bg2 {
     /* @apply bg-blue-600 border-blue-600; */
-    @apply bg-indigo-600 border-indigo-600;
+    // @apply bg-indigo-600 border-indigo-600;
+    // @apply bg-primary border-primary;
+    @apply bg-db-secondary border-db-secondary;
+
   }
   
   .custom-checkbox input:checked ~ span:first-of-type {

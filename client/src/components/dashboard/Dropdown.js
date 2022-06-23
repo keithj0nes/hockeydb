@@ -45,6 +45,7 @@ const Dropdown = ({ options, onChange, value, name }) => {
         <div className="relative bg-red-100">
             <span className="inline-block w-full rounded-md shadow-sm">
                 <button
+                    id={name}
                     aria-haspopup="listbox"
                     aria-expanded={isOpen}
                     type="button"
@@ -92,7 +93,8 @@ const Dropdown = ({ options, onChange, value, name }) => {
                                 <span>{option.name}</span>
 
                                 {selected?.value === option.value && (
-                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
+                                    // <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
+                                    <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-db-secondary">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                     </span>
                                 )}

@@ -52,7 +52,6 @@ export const getSchedule = (filter) => async (dispatch) => {
     const data = await request({
         url: `/api/games?${filter || ''}`,
         method: 'GET',
-        session: {},
         isPublic: true,
     });
     console.log('DATA', data);

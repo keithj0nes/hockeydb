@@ -3,17 +3,14 @@ import axios from 'axios';
 import { toast } from '../utils';
 
 // this will handle axios requests
-const request = async ({ url, method, session, isPublic }) => {
-    if (!session && method !== 'DELETE') return alert('no session, please include a session object');
+const request = async ({ url, method, body = {}, isPublic, store = () => true }) => {
+    if (!body && method !== 'DELETE') return alert('no body, please include a body object');
     if (!method) return alert('no method, please include a method string');
     if (!url) return alert('no route, please include a route string');
 
     let access_token;
     if (!isPublic) {
-        console.log('get acces token here!');
-
-        // need to add redux store to this in order to work correctly
-        // access_token = store.getState().user.user.access_token;
+        access_token = store().auth?.access_token;
     }
 
     if (!isPublic && !access_token) return alert('no access token for auth route');
@@ -21,7 +18,7 @@ const request = async ({ url, method, session, isPublic }) => {
     const response = await axios({
         method,
         url,
-        data: session,
+        data: body,
         headers: {
             Authorization: isPublic ? null : `Bearer ${access_token}`,
         },

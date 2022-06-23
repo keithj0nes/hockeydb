@@ -1,19 +1,20 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Popover, Drawer } from 'antd';
+import { Popover } from 'antd';
 import debounce from 'lodash.debounce';
 import classNames from 'classnames';
 import { getSeasons } from '../../redux/slices/seasons';
 import { Loader, Pagination } from '../../components';
 import { Dropdown } from '../../components/dashboard';
+import { DrawerCreateSeason } from './components';
 
 import { useQueryParams } from '../../hooks/useQueryParams';
 
 
 // import Toggle from '../../components/Toggle';
 
-
+// TODO: use seasonTypes IN REDUX INSTEAD OF THIS
 const seasonTypes = [
     { name: 'View All', value: '' },
     { name: 'Regular', value: 'Regular' },
@@ -84,11 +85,8 @@ const Seasons = () => {
     const inputRef = useRef();
 
 
-    // const { seasons, isLoading } = useSelector((state) => state.seasons);
+    const { seasons, isFetching, pagination } = useSelector((state) => state.seasons);
 
-    const b = useSelector((state) => state.seasons);
-    // console.log(b, 'BBBBBBB= == == =  =');
-    const { seasons, isLoading, pagination } = b;
 
     const dispatch = useDispatch();
     const location = useLocation();
@@ -119,7 +117,7 @@ const Seasons = () => {
     const content = (
         <div className="w-64 py-1 px-2">
             <form className="hiddeen">
-                <fieldset disabled={isLoading}>
+                <fieldset disabled={isFetching}>
 
                     <button
                         type="button"
@@ -192,7 +190,7 @@ const Seasons = () => {
         <div className="h-screen overflow-scroll p-4 sm:p-7 relative">
 
             {/* comment out loading to avoid flicker for now */}
-            {/* {isLoading && <Loader />} */}
+            {/* {isFetching && <Loader />} */}
 
             <div className="flex justify-between">
                 <h1 className="text-3xl font-semibold">{PAGE_TITLE}</h1>
@@ -281,7 +279,7 @@ const Seasons = () => {
                 </div>
             </div>
 
-            {!isLoading && !seasons.length && (
+            {!isFetching && !seasons.length && (
                 <div className="w-full flex items-center pt-20 justify-center">
                     {!!Object.keys(filters).length ? (
                         <p>No results found with your search criteria</p>
@@ -351,37 +349,10 @@ const Seasons = () => {
                 </div>
             )}
 
-
-
-
-
-
-            {/* prpbably need to create a dashboard/drawers folder
-            and create custom drawer components from there including
-            this one below - ex = SeasonsCreateDrawer.js */}
-
-
-
-
-
-
-
-            <Drawer
-                // title="Basic Drawer"
-                // width="80%"
-                maskClosable // true by default -> set to false if has been edited to avoid accidentally closing
-                width="360px"
-                placement="right"
-                closable={false}
+            <DrawerCreateSeason
                 onClose={() => setIsCreateVisible(false)}
                 visible={isCreateVisible}
-            >
-                <div className="bg-light-gray w-full h-full">
-
-                    <h2 className="text-center text-2xl py-10">Create Season form</h2>
-
-                </div>
-            </Drawer>
+            />
         </div>
     );
 };

@@ -421,11 +421,16 @@ const createSeason = async (req, res, next) => {
 
         const season = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]);
         if (!!season.length) {
-            return res.send({ status: 400, data: [], message: 'Season already exists' });
+            const inlineErrors = {
+                name: 'Season already exists',
+                // start_date: 'Invalid date',
+            };
+
+            return res.send({ status: 400, data: { errors: inlineErrors }, message: 'Season already exists' });
         }
 
         const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id });
-        return res.send({ status: 200, data, message: 'Season created', notification_type: 'snack' });
+        return res.send({ status: 200, data, message: 'Season created', notification: { type: 'toast', duration: 3, status: 'success' } });
     } catch (error) {
         console.log('CREATE SEASON ERROR: ', error);
         return next(error);

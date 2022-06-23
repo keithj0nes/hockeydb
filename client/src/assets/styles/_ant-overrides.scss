@@ -115,3 +115,16 @@
         // @apply text-primary border-b-2 border-db-secondary;
     }
 }
+
+// 
+// DRAWER 
+// 
+
+.floating {
+    &.ant-drawer-right.ant-drawer-open .ant-drawer-content-wrapper {
+        box-shadow: none !important;
+    }
+    .ant-drawer-content {
+        background-color: transparent;
+    }
+}
