@@ -35,12 +35,17 @@ const createNewMigration = (fileName, filePath) => {
 
     const content = '-- Write SQL for new migration \n\n';
 
+    console.log('\nCreating migration');
+    console.log('--------------------');
+
     fs.writeFile(`${filePath}/${newFileName}`, content, err => {
         if (err) {
             return console.error(err);
         }
 
-        return console.log('\x1b[32m Migration file created');
+        console.log(` ✅ ${newFileName}`);
+        console.log('--------------------');
+        return console.log('Migration file created\n\n');
     });
 };
 
