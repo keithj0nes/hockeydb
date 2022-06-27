@@ -32,11 +32,15 @@ const misc = require('./controllers/misc');
 const users = require('./controllers/users');
 const emailer = require('./controllers/helpers/emailer');
 const { isProduction } = require('./controllers/helpers');
+const { selectEnvironment } = require('./database/utils/selectEnvironment');
 
+const scriptsPath = path.join(__dirname, 'database/scripts');
 
 // Make sure to create a local postgreSQL db called hockeydb
+
 let connectionInfo;
 if (isProduction) {
+    // TODO: change this to use new connection info - connectionInfo = selectEnvironment('production');
     const dbUriSplit = process.env.DB_URI.split(/[:/@]+/);
     connectionInfo = {
         user: dbUriSplit[1],
@@ -48,12 +52,10 @@ if (isProduction) {
         poolSize: 2,
     };
 } else {
-    connectionInfo = process.env.DB_URI;
+    connectionInfo = selectEnvironment();
 }
-// console.log('IS PRODUCTION', isProduction);
-// console.log('CONNECTION INFO', connectionInfo);
 
-massive(connectionInfo, { excludeMatViews: true }).then(instance => {
+massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(instance => {
     // console.log('INSTANCE', instance);
     app.set('db', instance); // add your connection to express
     console.log('Database - connection established');

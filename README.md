@@ -9,30 +9,45 @@
 
 
 ### Create .env Files
-- cd /backend and create a `.env` file that looks like:
+- cd /backend and create a &nbsp;`.env`&nbsp; file that looks like:
 
         # PORT is defined for local development only
         PORT=8010
+
+        # TESTING_PASSWORD must match REACT_APP_TESTING_PASSWORD in frontend .env file
+        TESTING_PASSWORD=abc123123
+
         JWT_SECRET=any_secret_key_that_you_want
-        DB_URI=postgres://YOURUSERNAME:YOURPASSWORD@localhost/hockeydb
         SITE_URL=http://localhost:3000
         API_VERSION=0.0.1
         SENDGRID_API_KEY={{ ASK FOR API KEY }}
         TEST_EMAIL={{ YOUR EMAIL FOR DEVELOPMENT TESTING }}
-        # TESTING_PASSWORD must match in both backend and client .env files
-        TESTING_PASSWORD=abc123123
+
+        # Test database connection
+        TEST_DB_HOST=localhost
+        TEST_DB_PORT=5432
+        TEST_DB_DATABASE=hockeydb-test
+        TEST_DB_USERNAME=YOURUSERNAME
+        TEST_DB_PASSWORD=YOURPASSWORD
+
+        # Development database connection
+        DEV_DB_HOST=localhost
+        DEV_DB_PORT=5432
+        DEV_DB_DATABASE=hockeydb
+        DEV_DB_USERNAME=YOURUSERNAME
+        DEV_DB_PASSWORD=YOURPASSWORD
 
 - cd /client and create a `.env` file that looks like:
 
-        # TESTING_PASSWORD must match in both backend and client .env files
+        # REACT_APP_TESTING_PASSWORD must match TESTING_PASSWORD in backend .env file
         REACT_APP_TESTING_PASSWORD=abc123123
 
 ### Seed Database
 - Make sure PostgreSQL is installed on your computer https://www.postgresql.org
 - Create a database called &nbsp; `hockeydb`
-- From the project's root level, run &nbsp; `npm run seed`
+- From the project's root level, run &nbsp; `npm run seed  [optional: test | dev (default)]` &nbsp; OR &nbsp; `npm run migrate seed  [optional: test | dev (default)]`
 - If any errors occur, rerun the seed command
-- You can input your own counts for teams, players, and games by editing the variables in the seed file:
+- You can input your own counts for teams, players, and games by editing the variables in the &nbsp;`seedMigration.js`&nbsp; file:
         
         const counts = {
             teams:   { min: 4,  max: 10, exact: null },
@@ -53,4 +68,19 @@
         email: teammanager@hockeydb.com
         email: mutliaccounts@hockeydb.com
 
-        password: {{ TESTING_PASSWORD }}
+        password: {{ process.env.REACT_APP_TESTING_PASSWORD }}
+
+
+### Database Migrations
+When making updates to the database, a migration can be added to update the database incrementally, such as needing to add new tables, add columns to tables, etc
+
+#### Running a migration
+
+`npm run migrate [optional: test | prod | dev (default)]`
+
+#### Creating a migration
+
+`npm run migrate create ${fileName}`
+
+- Creating a new migration will create a new blank `.sql` file.
+- `${fileName}` should be snake case `like_this_example`
