@@ -3,7 +3,9 @@ import request from '../request';
 import { wait } from '../../utils';
 
 const initialState = {
+    news: [],
     isFetching: true,
+    todaysGames: [],
 };
 
 export const newsSlice = createSlice({
@@ -17,6 +19,7 @@ export const newsSlice = createSlice({
             console.log(payload, ' payload');
             // state.pagination = payload.pagination;
             state.news = payload.news;
+            state.todaysGames = payload.todays_games;
             state.isFetching = false;
         },
     },
