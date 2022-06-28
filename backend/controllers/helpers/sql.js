@@ -22,15 +22,37 @@ const buildWhere = (query = {}, allowable = []) => {
     allowable.push({ key: 'sort' });
 
 
+    console.log(query, 'querrry');
+    console.log(allowable, 'allowable');
+
+
     // TODO: figure out how to see if extra params are added that dont exist in "allowable"
     // if so, need to return false, alerting the user that their query doesnt hae results
     // example: url.com/seasons?hello=hi should return false because that query doesnt exist
 
     console.log('\n');
-    for (let i = 0; i < allowable.length; i += 1) {
+    for (let i = 0; i < allowable.length - 3; i += 1) {
         if (allowable[i].nulls) {
             conditions.push(`${allowable[i].column} ${isOrIsNot(query[allowable[i].key], allowable[i].nulls)}`);
-            break;
+            values.push('');
+            continue;
+        }
+
+        console.log(allowable[i].key, 'allowable[i].key');
+
+        if (allowable[i].key === 'search' && query[allowable[i].key]) {
+            const searchConditions = [];
+            allowable[i].columns.forEach(item => {
+                // TODO: check into SQL injection with this method of wildcar search
+                searchConditions.push(`LOWER(${item}) like '%${query.search}%'`);
+            });
+
+            if (searchConditions.length) {
+                conditions.push(`(${searchConditions.join(' OR ')})`);
+            }
+            // values.push(query.search);
+
+            continue;
         }
 
         if (query[allowable[i].key]) {

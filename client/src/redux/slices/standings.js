@@ -32,7 +32,7 @@ export const getStandings = (filter = '') => async dispatch => {
 
     await wait(3000);
 
-    const data = await request({ url: `/api/standings?${filter}`, method: 'GET', session: {}, publicRoute: true });
+    const data = await request({ url: `/api/standings?${filter}`, method: 'GET', isPublic: true });
 
     // console.log('DATA IN STANDINGS REDUCER', data);
 

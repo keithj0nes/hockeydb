@@ -1,14 +1,17 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import request from '../request';
 import { wait } from '../../utils';
 
+// fetching = getting data
+// posting = creating/updatig data
 
 const initialState = {
-    isLoading: true,
+    isFetching: true,
+    isPosting: false,
     seasons: [],
     currentSeason: {},
     seasonTypes: ['Regular', 'Playoffs', 'Tournament'],
-
+    inlineErrors: {},
     // filter
     // isVisible: false,
     // // filterOptions: {
@@ -32,21 +35,35 @@ export const seasonsSlice = createSlice({
     name: 'seasons',
     initialState,
     reducers: {
+        posting: state => {
+            state.isPosting = true;
+        },
+        clearPosting: state => {
+            state.isPosting = false;
+        },
         getInit: state => {
             state.isLoading = true;
-            console.log(current(state.seasons), 'ReDUX SEaSONS')
         },
         getSeasonsSuccess: (state, { payload }) => {
             console.log(payload, ' payload');
-
+            state.pagination = payload.pagination;
             state.seasons = payload.seasons;
-            state.isLoading = false;
+            state.isFetching = false;
+        },
+        // createSeasonSuccess: (state, { payload }) => {
+        // }
+        callErrors: (state, { payload }) => {
+            console.log(payload, 'payload')
+            state.inlineErrors = payload;
+        },
+        clearErrors: state => {
+            state.inlineErrors = {};
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { getInit, getSeasonsSuccess } = seasonsSlice.actions;
+export const { clearPosting, posting, getInit, getSeasonsSuccess, callErrors, clearErrors } = seasonsSlice.actions;
 
 // export default counterSlice.reducer
 
@@ -54,17 +71,31 @@ export const { getInit, getSeasonsSuccess } = seasonsSlice.actions;
 export const getSeasons = (filter) => async (dispatch) => {
     console.log('getting seasons', filter);
     dispatch(getInit());
-    // console.log({ filter });
     // await wait(2000);
 
-    // const data = await request({ url: `/api/games?${filter || ''}`, method: 'GET', session: {}, isPublic: true });
-    const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', session: {}, isPublic: true });
+    const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', isPublic: true });
 
     console.log(data, 'daattaa');
-    // // request();
     dispatch(getSeasonsSuccess(data.data));
+};
 
-    // dispatch({ type: `seasons/${GET_SUCCESS}`, payload: data.data });
+export const createSeason = (seasonData) => async (dispatch, store) => {
+    dispatch(posting());
+    await wait(1000);
+    dispatch(clearPosting());
+
+    // return console.log(seasonData, 'SEASON DATAA')
+
+    const data = await request({ url: '/api/admin/seasons', method: 'POST', body: seasonData, store });
+    if (!data) return false;
+
+    if (data.data.errors) {
+        dispatch(callErrors(data.data.errors));
+        return false;
+    }
+    // dispatch({ type: `seasons/${CREATE_SUCCESS}`, payload: data.data });
+    // dispatch({ type: TOGGLE_MODAL, modalProps: { isVisible: false } });
+    return true;
 };
 
 // export const selectCount = (state) => state.counter.value

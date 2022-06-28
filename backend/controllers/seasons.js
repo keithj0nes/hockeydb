@@ -336,7 +336,7 @@ const getSeasons = async (req, res, next) => {
     console.log('REQ.QUERY', req.query);
     try {
         const db = app.get('db');
-        const allowableQueryKeys = [{ key: 'type' }, { key: 'show_hidden', column: 'hidden_at', nulls: 'IS' }];
+        const allowableQueryKeys = [{ key: 'type' }, { key: 'show_hidden', column: 'hidden_at', nulls: 'IS' }, { key: 'search', columns: ['type', 'name'] }];
 
         const [WHERE, whereValues] = buildWhere(req.query, allowableQueryKeys);
         const [ORDER_BY, orderByValues, { limit: limite2, page: page2 }] = buildOrderBy(req.query, { by: 's.id', limit: 3, page: 1, dir: 'desc' }, whereValues.length);
@@ -364,7 +364,7 @@ const getSeasons = async (req, res, next) => {
         // console.log({ WHERE, ORDER_BY });
         // console.log({ whereValues, orderByValues, limite2 });
 
-        // console.log(raw2);
+        console.log(raw2);
 
         let seasonsWithBuiltQuery = [];
         let seasonCOUNT = 0;
@@ -390,7 +390,7 @@ const getSeasons = async (req, res, next) => {
         // console.log({ total_count: parseInt(seasonCOUNT), current_count: seasonsWithBuiltQuery.length, total_pages2, page: parseInt(page2) });
 
         // return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons', notification_type: 'hi', notification: { type: 'toast', duration: 2, status: 'error' } });
-        return res.send({ status: 200, data: { seasons: seasonsWithBuiltQuery, pagination: { total_count: parseInt(seasonCOUNT), total_pages: total_pages2, page: parseInt(page2) } }, message: 'Retrieved list of seasons' });
+        return res.send({ status: 200, data: { seasons: seasonsWithBuiltQuery, pagination: { total_count: parseInt(seasonCOUNT), limit: limite2, total_pages: total_pages2, page: parseInt(page2) } }, message: 'Retrieved list of seasons' });
     } catch (error) {
         console.log('GET SEASONS ERROR: ', error);
         return next(error);
@@ -421,11 +421,16 @@ const createSeason = async (req, res, next) => {
 
         const season = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]);
         if (!!season.length) {
-            return res.send({ status: 400, data: [], message: 'Season already exists' });
+            const inlineErrors = {
+                name: 'Season already exists',
+                // start_date: 'Invalid date',
+            };
+
+            return res.send({ status: 400, data: { errors: inlineErrors }, message: 'Season already exists' });
         }
 
         const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id });
-        return res.send({ status: 200, data, message: 'Season created', notification_type: 'snack' });
+        return res.send({ status: 200, data, message: 'Season created', notification: { type: 'toast', duration: 3, status: 'success' } });
     } catch (error) {
         console.log('CREATE SEASON ERROR: ', error);
         return next(error);
