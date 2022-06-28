@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { parseISO, format } from 'date-fns';
 import { useDispatch } from 'react-redux';
 import { incrementAsync } from '../../../redux/slices/counter';
+import { getNews } from '../../../redux/slices/news';
 
 const post = {
     body: '<h1><strong><em><u>HAHA I KNOW</u></em></strong></h1>',
@@ -33,8 +34,10 @@ const News = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(incrementAsync());
+        dispatch(getNews());
     }, []);
+
+
 
 
     const items = [1, 2, 3, 4, 5];

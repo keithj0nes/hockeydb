@@ -44,13 +44,13 @@ export const scheduleSlice = createSlice({
 // export reducers in .actions
 export const { getInit, getScheduleSuccess } = scheduleSlice.actions;
 
-export const getSchedule = (filter) => async (dispatch) => {
+export const getSchedule = (filter = '') => async (dispatch) => {
     dispatch(getInit());
 
     // await wait(2000);
 
     const data = await request({
-        url: `/api/games?${filter || ''}`,
+        url: `/api/games?${filter}`,
         method: 'GET',
         isPublic: true,
     });
