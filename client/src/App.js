@@ -15,6 +15,9 @@ import Schedule from './pages/guest/Schedule';
 import Login from './components/auth/Login';
 import Standings from './pages/guest/Standings';
 import { history } from './utils';
+import Teams from './pages/guest/Teams';
+
+import Players from './pages/guest/Players';
 
 import DashboardRouter from './pages/dashboard/Router';
 
@@ -33,6 +36,8 @@ function App() {
                     <Route path="schedule" element={<Schedule />} />
                     <Route path="login" element={<Login />} />
                     <Route path="standings" element={<Standings />} />
+                    <Route path="teams" element={<Teams />} />
+                    <Route path="players" element={<Players />} />
 
                     <Route
                         path="*"

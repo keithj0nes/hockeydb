@@ -7,6 +7,7 @@ const navLinks = [
     { name: 'Home', to: '' },
     { name: 'Schedule', to: 'schedule' },
     { name: 'Teams', to: 'teams' },
+    { name: 'Players', to: 'players' },
     { name: 'Standings', to: 'standings' },
     // { name: 'Scoreboard', to: 'scoreboard' },
     { name: 'Stats', to: 'stats' },
