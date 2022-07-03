@@ -339,16 +339,31 @@ const getSeasons = async (req, res, next) => {
         const allowableQueryKeys = [{ key: 'type' }, { key: 'show_hidden', column: 'hidden_at', nulls: 'IS' }, { key: 'search', columns: ['type', 'name'] }];
 
         const [WHERE, whereValues] = buildWhere(req.query, allowableQueryKeys);
-        const [ORDER_BY, orderByValues, { limit: limite2, page: page2 }] = buildOrderBy(req.query, { by: 's.id', limit: 3, page: 1, dir: 'desc' }, whereValues.length);
+        const [ORDER_BY, orderByValues, { limit: limite2, page: page2 }] = buildOrderBy(req.query, { by: 's.start_date', limit: 3, page: 1, dir: 'desc' }, whereValues.length);
 
+        // const raw2 = `
+        //     select s.id, s.name, s.start_date, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+        //     cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
+        //     uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+        //     FROM seasons s
+        //     JOIN users cu ON cu.id = s.created_by
+        //     LEFT JOIN users uu ON uu.id = s.updated_by
+        //     ${WHERE}
+        //     ${ORDER_BY}
+        // `;
+
+        // this uses group by to grab teeams count
         const raw2 = `
-            select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+            select s.id, s.name, s.start_date, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
             cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
-            uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+            uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name,
+            count(tsd.id) as teams_count
             FROM seasons s
             JOIN users cu ON cu.id = s.created_by
             LEFT JOIN users uu ON uu.id = s.updated_by
+            LEFT JOIN team_season_division tsd ON tsd.season_id = s.id
             ${WHERE}
+            GROUP BY s.id, cu.first_name, cu.last_name, uu.first_name, uu.last_name
             ${ORDER_BY}
         `;
 
@@ -402,11 +417,28 @@ const getSeasonById = async (req, res, next) => {
     try {
         const db = app.get('db');
         const { id } = req.params;
-        const data = await db.query('select * from blog where id = $1', [id]);
-        if (!data) {
-            return res.send({ status: 404, data: [], message: 'Blog cannot be found' });
-        }
-        return res.send({ status: 200, data, message: `Retrieved season ${data.id}` });
+
+        const rawTeams = `
+            SELECT t.name AS team_name, t.id AS team_id, d.name AS division_name, d.id AS division_id, COUNT(pts.player_id) AS players_count from team_season_division tsd
+            JOIN teams t ON t.id = tsd.team_id
+            JOIN divisions d ON d.id = tsd.division_id
+            JOIN player_team_season pts ON pts.team_id = t.id
+            WHERE tsd.season_id = $1
+            GROUP BY t.name, t.id, d.name, d.id;
+        `;
+
+        const rawDivisions = `
+            SELECT d.id, d.name, COUNT(tsd.team_id) as teams_count from team_season_division tsd
+            JOIN divisions d ON d.id = tsd.division_id
+            WHERE tsd.season_id = $1
+            GROUP BY tsd.division_id, d.name, d.id;
+        `;
+
+
+        const teams = await db.query(rawTeams, [id]);
+        const divisions = await db.query(rawDivisions, [id]);
+
+        return res.send({ status: 200, data: { teams, divisions }, message: `Retrieved season ${id}` });
     } catch (error) {
         console.log('GET SEASON BY ID ERROR: ', error);
         return next(error);
@@ -417,7 +449,9 @@ const getSeasonById = async (req, res, next) => {
 const createSeason = async (req, res, next) => {
     try {
         const db = app.get('db');
-        const { name, type } = req.body;
+        const { name, type, copy_from, start_date } = req.body;
+
+        // TODO: get copy_from (previous season) logic working
 
         const season = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]);
         if (!!season.length) {
@@ -429,7 +463,7 @@ const createSeason = async (req, res, next) => {
             return res.send({ status: 400, data: { errors: inlineErrors }, message: 'Season already exists' });
         }
 
-        const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id });
+        const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id, start_date: !start_date ? null : start_date });
         return res.send({ status: 200, data, message: 'Season created', notification: { type: 'toast', duration: 3, status: 'success' } });
     } catch (error) {
         console.log('CREATE SEASON ERROR: ', error);

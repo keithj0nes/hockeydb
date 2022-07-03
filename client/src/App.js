@@ -86,7 +86,7 @@ export default App;
 
 function Guest() {
     return (
-        <main className="bg-gray-100 h-screen">
+        <main className="bg-gray-100 min-h-screen">
             <Header />
 
             <div className="p-2 max-w-6xl m-auto">

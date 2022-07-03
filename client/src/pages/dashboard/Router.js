@@ -9,13 +9,22 @@ import { useAuth } from '../../hooks';
 
 import Dashboard from './Dashboard';
 import Seasons from './Seasons';
+import SingleSeason from './SingleSeason';
 
 
 const navigation = [
     { title: 'Dashboard', to: '', icon: '', component: <Dashboard /> },
     { title: 'Seasons', to: 'seasons', icon: '', component: <Seasons /> },
-    { title: 'Divisions', to: 'divisions', icon: '' },
-    { title: 'Teams', to: 'teams', icon: '' },
+    { title: 'Seasons', to: 'seasons/:id', icon: '', component: <SingleSeason />, hide: true },
+    // { title: 'Divisions', to: 'divisions', icon: '' },
+    // { title: 'Teams', to: 'teams', icon: '' },
+    { title: 'Locations', to: 'locations', icon: '' },
+    { title: 'Users', to: 'users', icon: '' },
+    { title: 'Announcements', to: 'announcements', icon: '' },
+    { title: 'Messages', to: 'messages', icon: '' },
+    { title: 'Pages', to: 'pages', icon: '' },
+    { title: 'Payments', to: 'payments', icon: '' },
+    { title: 'Settings', to: 'settings', icon: '' },
 ];
 
 const icon = (fill = 'fill-white') => (
@@ -117,38 +126,41 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile }) => {
                 </div>
 
                 <ul className="pt-6">
-                    {navigation.map(link => (
-                        <li key={link.to} className="text-gray-300 group hover:text-white text-sm  cursor-pointer rounded-md hover:bg-primary-100">
-                            <NavLink
-                                to={link.to}
-                                exact={(link.to === '').toString()}
-                                end
-                                onClick={() => !!setIsOpenMobile && setIsOpenMobile(false)}
-                                className={({ isActive }) => (isActive ? 'flex items-center p-2  hover:text-db-secondary text-db-secondary' : 'flex p-2  items-center gap-x-4 hover:text-white')}
-                                children={({ isActive }) => (
-                                    <div className="flex h-full items-center gap-x-4">
-                                        <div className={classNames('absolute transition duration-100 left-0 h-8 w-0.5 bg-db-secondary', {
-                                            hidden: !isActive,
-                                        })}
-                                        />
-                                        <div className="block p-1">
-                                            {icon(isActive ? 'fill-db-secondary transition duration-100' : 'fill-white transition duration-100')}
-                                        </div>
-                                        <span className={classNames('origin-left duration-100', { 'scale-0': !isOpen })}>
-                                            {link.title}
-                                        </span>
+                    {navigation.map(link => {
+                        if (link.hide) return null;
+                        return (
+                            <li key={link.to} className="text-gray-300 group hover:text-white text-sm  cursor-pointer rounded-md hover:bg-primary-100">
+                                <NavLink
+                                    to={link.to}
+                                    exact={(link.to === '').toString()}
+                                    end
+                                    onClick={() => !!setIsOpenMobile && setIsOpenMobile(false)}
+                                    className={({ isActive }) => (isActive ? 'flex items-center p-2  hover:text-db-secondary text-db-secondary' : 'flex p-2  items-center gap-x-4 hover:text-white')}
+                                    children={({ isActive }) => (
+                                        <div className="flex h-full items-center gap-x-4">
+                                            <div className={classNames('absolute transition duration-100 left-0 h-8 w-0.5 bg-db-secondary', {
+                                                hidden: !isActive,
+                                            })}
+                                            />
+                                            <div className="block p-1">
+                                                {icon(isActive ? 'fill-db-secondary transition duration-100' : 'fill-white transition duration-100')}
+                                            </div>
+                                            <span className={classNames('origin-left duration-100', { 'scale-0': !isOpen })}>
+                                                {link.title}
+                                            </span>
 
-                                        <div className={classNames('whitespace-nowrap text-white absolute hidden ml-1 mb-8 left-full py-1 px-2 rounded bg-gray-700', {
-                                            'group-hover:block': !isOpen,
-                                        })}
-                                        >
-                                            {link.title}
+                                            <div className={classNames('whitespace-nowrap text-white absolute hidden ml-1 mb-8 left-full py-1 px-2 rounded bg-gray-700', {
+                                                'group-hover:block': !isOpen,
+                                            })}
+                                            >
+                                                {link.title}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            />
-                        </li>
-                    ))}
+                                    )}
+                                />
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
 

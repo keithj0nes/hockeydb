@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Popover } from 'antd';
 import debounce from 'lodash.debounce';
 import classNames from 'classnames';
+import { format, parseISO } from 'date-fns';
 import { getSeasons } from '../../redux/slices/seasons';
 import { Loader, Pagination } from '../../components';
 import { Dropdown } from '../../components/dashboard';
@@ -69,6 +70,7 @@ const sortBy = [
     { name: 'Name', value: 'name' },
     { name: 'Created', value: 'created_at' }, // TODO: change this to season start_date when adding to db
     { name: 'Type', value: 'type' },
+    { name: 'Active', value: 'is_active' },
 ];
 
 
@@ -310,7 +312,8 @@ const Seasons = () => {
                         <ul className="odd:bg-white even:bg-slate-100">
                             <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
                                 <p className="text-xs text-gray-500">Start</p>
-                                <p className="text-xs font-bold text-black">10/16/2022</p>
+                                {/* <p className="text-xs font-bold text-black">10/16/2022</p> */}
+                                <p className="text-xs font-bold text-black">{item.start_date ? format(parseISO(item.start_date), 'MM/dd/yyyy') : 'No start date selected'}</p>
                             </li>
 
                             <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
@@ -320,15 +323,26 @@ const Seasons = () => {
 
                             <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
                                 <p className="text-xs text-gray-500">Teams</p>
-                                <p className="text-xs font-bold text-black">44</p>
+                                {/* <p className="text-xs font-bold text-black">44</p> */}
+                                <p className="text-xs font-bold text-black">{item.teams_count}</p>
                             </li>
 
                             <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
                                 <p className="text-xs text-gray-500">Registered Players</p>
-                                <p className="text-xs font-bold text-black">659</p>
+                                <p className="text-xs font-bold text-black">(need to db query) 659</p>
                             </li>
                         </ul>
 
+
+                        <div className="flex justify-center pt-3">
+                            <Link
+                                // to={`${item.id}`}
+                                to={item.id.toString()}
+                                className="flex w-1/2 justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                            >
+                                Select {item.id}
+                            </Link>
+                        </div>
 
                     </div>
                 ))}

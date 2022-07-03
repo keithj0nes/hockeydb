@@ -4,6 +4,7 @@ const massive = require('massive');
 const faker = require('faker');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const { add } = require('date-fns');
 const { chunkArray, randomr, colorRandomizer, wait } = require('./seedHelpers');
 const { selectEnvironment } = require('./selectEnvironment');
 
@@ -11,6 +12,7 @@ const scriptsPath = path.join(__dirname, '..', 'scripts');
 
 const argv = process.argv.slice(2);
 const connectionInfo = selectEnvironment(argv[1]);
+const todaysDate = new Date();
 
 const dropTables = async () => massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(async (db) => {
     console.log('\n\nDropping tables');
@@ -39,7 +41,7 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
     const divisionList = ['1A', '2B', '3C', '4D'];
     const locationsList = ['Kingsgate Arena', 'Showare Stadium', 'Key Arena', 'Center Ice Arena', 'The Cooler', 'The Igloo', 'The Coliseum'];
     const counts = {
-        teams: { min: 4, max: 10, exact: 24 }, // teams per division - exact has priority
+        teams: { min: 20, max: 30, exact: null }, // teams per division - exact has priority
         games: { min: 5, max: 8, exact: null }, // games per team - exact has priority
         players: { min: 9, max: 16, exact: null }, // players per team - exact has priority
         totalPlayers: 200,
@@ -58,7 +60,7 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
 
     // create users
     const createUsers = async () => Promise.all(users.map(async user => {
-        const insertedUser = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), email: user.email, created_at: new Date() });
+        const insertedUser = await db.users.insert({ first_name: faker.name.firstName(), last_name: faker.name.lastName(), email: user.email, created_at: todaysDate });
         const password = process.env.TESTING_PASSWORD;
         const hash = await bcrypt.hash(password, 10);
         await db.passwords.insert({ user_id: insertedUser.id, pw: hash });
@@ -70,13 +72,13 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
     const createSeason = async ({ admin }) => Promise.all(seasonsList.map(async (seedSeason, idx) => {
         const type = typesOfSeasons[randomr(typesOfSeasons.length)];
         const isLastSeasonInList = (idx + 1) === seasonsList.length;
-        const insertedSeason = await db.seasons.insert({ name: seedSeason, type, is_active: !!isLastSeasonInList, created_at: new Date(), created_by: admin.id });
+        const insertedSeason = await db.seasons.insert({ name: seedSeason, type, is_active: !!isLastSeasonInList, created_at: todaysDate, start_date: add(todaysDate, { months: idx * 2 }), created_by: admin.id });
         return insertedSeason;
     }));
 
     // create divisions
     const createDivisions = async ({ admin }) => Promise.all(divisionList.map(async division => {
-        const insertedDivision = await db.divisions.insert({ name: division, created_at: new Date(), created_by: admin.id });
+        const insertedDivision = await db.divisions.insert({ name: division, created_at: todaysDate, created_by: admin.id });
         return insertedDivision;
     }));
 
@@ -84,20 +86,33 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
     // divide it out by 4 divisions
 
     // create teams
-    const createTeams = async ({ admin }) => Promise.all(Array(counts.teams.exact).fill().map(async () => {
-        const teamList = [faker.hacker.adjective(), faker.hacker.noun(), faker.hacker.verb()];
-        const name = `${faker.address.city()} ${teamList[randomr(teamList.length)]}s`;
-        const colors = colorRandomizer();
-        const insertedTeam = await db.teams.insert({ name, colors, created_at: new Date(), created_by: admin.id });
-        return insertedTeam;
-    }));
+    // const createTeams = async ({ admin }) => Promise.all(Array(counts.teams.exact).fill().map(async () => {
+    //     const teamList = [faker.hacker.adjective(), faker.hacker.noun(), faker.hacker.verb()];
+    //     const name = `${faker.address.city()} ${teamList[randomr(teamList.length)]}s`;
+    //     const colors = colorRandomizer();
+    //     const insertedTeam = await db.teams.insert({ name, colors, created_at: todaysDate, created_by: admin.id });
+    //     return insertedTeam;
+    // }));
+
+    const createTeams = async ({ admin }) => {
+        const { exact, min, max } = counts.teams;
+        const teamsCount = exact || randomr(min, max);
+
+        return Promise.all(Array(teamsCount).fill().map(async () => {
+            const teamList = [faker.hacker.adjective(), faker.hacker.noun(), faker.hacker.verb()];
+            const name = `${faker.address.city()} ${teamList[randomr(teamList.length)]}s`;
+            const colors = colorRandomizer();
+            const insertedTeam = await db.teams.insert({ name, colors, created_at: todaysDate, created_by: admin.id });
+            return insertedTeam;
+        }));
+    };
 
     // create players
     const createPlayers = async ({ admin }) => Promise.all(Array(counts.totalPlayers).fill().map(async () => {
         const first_name = faker.name.firstName();
         const last_name = faker.name.lastName();
         const email = faker.internet.email();
-        await db.players.insert({ first_name, last_name, email, created_at: new Date(), created_by: admin.id });
+        await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: admin.id });
     }));
 
 
@@ -111,7 +126,6 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
         // 6 teams per division
         // 3 seasons
 
-        // chunkedDivisions takes all the createdTeams (24) and divides them in to the 6 divisions
         const chunkedDivisions = chunkArray(createdTeams, 6);
 
         return Promise.all(createdSeasons.map(season => Promise.all(createdDivisions.map((div, i) => {
@@ -259,7 +273,7 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
     // create locations
     const createLocations = async ({ admin }) => Promise.all(locationsList.map(async location => {
         const address = `${faker.address.streetAddress()}, ${faker.address.city()}, ${faker.address.stateAbbr()}`;
-        const createdLocation = await db.locations.insert({ name: location, address, created_at: new Date(), created_by: admin.id });
+        const createdLocation = await db.locations.insert({ name: location, address, created_at: todaysDate, created_by: admin.id });
         return createdLocation;
     }));
 
@@ -355,7 +369,7 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
         // add news post
         await Promise.all(newsPosts.map(async singleNewsPost => {
             const { title, display_order, body } = singleNewsPost;
-            const createdNewsPost = await db.news.insert({ title, display_order, body, created_at: new Date(), created_by: admin.id });
+            const createdNewsPost = await db.news.insert({ title, display_order, body, created_at: todaysDate, created_by: admin.id });
 
 
             // put random item associated to creatednewPost

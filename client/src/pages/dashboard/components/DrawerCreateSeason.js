@@ -17,9 +17,9 @@ const seasonTypes = [
 ];
 
 const FORM_FIELDS = {
-    name: 'my name',
-    type: 'my type lol',
-    copyFrom: '',
+    name: '',
+    type: '',
+    copy_from: '',
     start_date: '',
 };
 
@@ -40,9 +40,9 @@ const VALIDATIONS = {
     // },
 };
 
-const DrawerCreateSeason = ({ onClose, visible }) => {
+const DrawerCreateSeason = ({ onClose, visible, edit }) => {
     const [showCopyFrom, setShowCopyFrom] = useState(false);
-    const { fields, handleChange, errors, validate, resetForm } = useForm(FORM_FIELDS);
+    const { fields, handleChange, errors, validate, resetForm } = useForm({ ...FORM_FIELDS, ...edit });
 
     const dispatch = useDispatch();
     const b = useSelector((state) => state.seasons);
@@ -63,11 +63,21 @@ const DrawerCreateSeason = ({ onClose, visible }) => {
 
         const isValidated = validate(VALIDATIONS);
 
-        // console.log(isValidated, 'is validated');
+        console.log(fields, 'FIELDS');
+        console.log(isValidated, 'is validated');
 
         if (!isValidated) return;
 
-        const success = await dispatch(createSeason(fields));
+        let success = false;
+
+        if (!!edit) {
+            console.warn('TODO: Need to finish edit with redux and node');
+            success = true;
+        } else {
+            success = await dispatch(createSeason(fields));
+        }
+
+        // const success = await dispatch(createSeason(fields));
 
         if (success) {
             onClose();
@@ -75,20 +85,7 @@ const DrawerCreateSeason = ({ onClose, visible }) => {
     };
 
 
-
-
-
-
-
-
-
-
     // TODO: add newly created season to the redux state on createSeason
-
-
-
-
-
 
 
     return (
@@ -106,7 +103,7 @@ const DrawerCreateSeason = ({ onClose, visible }) => {
                 <div className="bg-light-gray w-full h-full rounded-md relative">
                     {isPosting && <Loader />}
 
-                    <h2 className="text-center text-2xl pt-10 pb-2">Create Season</h2>
+                    <h2 className="text-center text-2xl pt-10 pb-2">{!!edit ? 'Edit' : 'Create'} Season</h2>
 
                     <form className="px-6" onSubmit={handleSubmit}>
 
@@ -163,21 +160,38 @@ const DrawerCreateSeason = ({ onClose, visible }) => {
                             <Toggle />
                         </div> */}
 
+                        {!!edit && (
+                            <div className="my-3">
+                                <label className="text-sm block pb-1">Set to active season</label>
+                                <Toggle
+                                    checked={edit.is_active}
+                                    disabled={edit.is_active}
+                                />
 
-                        <div className="py-3">
-                            <label className="text-sm block pb-1">Copy from previous season?</label>
-                            {/* <Toggle onChange={e => console.log(e.target.checked, 'eee')} /> */}
-                            <Toggle
-                                onChange={e => setShowCopyFrom(e.target.checked)}
-                                checked={showCopyFrom}
-                            />
+                                {edit.is_active && (
+                                    <p className="leading-tight text-sm">You must set another season as active in order to deactivate this season</p>
+                                )}
 
-                        </div>
+                            </div>
+                        )}
 
-                        <div className={classNames({ 'invisible h-0': !showCopyFrom, 'visible h-auto': showCopyFrom })}>
-                            <label htmlFor="type1" className="text-sm">Choose season to copy:</label>
-                            <Dropdown options={[...seasonTypes].slice(1)} name="type1" />
-                        </div>
+                        {!edit && (
+                            <>
+                                <div className="py-3">
+                                    <label className="text-sm block pb-1">Copy from previous season?</label>
+                                    {/* <Toggle onChange={e => console.log(e.target.checked, 'eee')} /> */}
+                                    <Toggle
+                                        onChange={e => setShowCopyFrom(e.target.checked)}
+                                        checked={showCopyFrom}
+                                    />
+
+                                </div>
+                                <div className={classNames({ 'invisible h-0': !showCopyFrom, 'visible h-auto': showCopyFrom })}>
+                                    <label htmlFor="type1" className="text-sm">Choose season to copy:</label>
+                                    <Dropdown options={[...seasonTypes].slice(1)} name="type1" />
+                                </div>
+                            </>
+                        )}
 
 
                         <div className="pt-12 flex justify-end gap-x-2">
@@ -193,7 +207,7 @@ const DrawerCreateSeason = ({ onClose, visible }) => {
                                 className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
                                 // onClick={() => setIsCreateVisible(true)}
                             >
-                                Create
+                                {!!edit ? 'Edit' : 'Create'}
                             </button>
                         </div>
 
@@ -210,4 +224,5 @@ export default DrawerCreateSeason;
 DrawerCreateSeason.propTypes = {
     onClose: PropTypes.func,
     visible: PropTypes.bool,
+    edit: PropTypes.object,
 };

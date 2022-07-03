@@ -12,6 +12,7 @@ const initialState = {
     currentSeason: {},
     seasonTypes: ['Regular', 'Playoffs', 'Tournament'],
     inlineErrors: {},
+    seasonById: {},
     // filter
     // isVisible: false,
     // // filterOptions: {
@@ -50,6 +51,10 @@ export const seasonsSlice = createSlice({
             state.seasons = payload.seasons;
             state.isFetching = false;
         },
+        getSeasonByIdSuccess: (state, { payload }) => {
+            console.log(payload, 'payloaddddd')
+            state.seasonById = { ...payload };
+        },
         // createSeasonSuccess: (state, { payload }) => {
         // }
         callErrors: (state, { payload }) => {
@@ -63,21 +68,34 @@ export const seasonsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { clearPosting, posting, getInit, getSeasonsSuccess, callErrors, clearErrors } = seasonsSlice.actions;
+export const { clearPosting, posting, getInit, getSeasonsSuccess, getSeasonByIdSuccess, callErrors, clearErrors } = seasonsSlice.actions;
 
 // export default counterSlice.reducer
 
 
-export const getSeasons = (filter) => async (dispatch) => {
+export const getSeasons = (filter = '') => async (dispatch) => {
     console.log('getting seasons', filter);
     dispatch(getInit());
     // await wait(2000);
 
-    const data = await request({ url: `/api/seasons${filter || ''}`, method: 'GET', isPublic: true });
+    const data = await request({ url: `/api/seasons${filter}`, method: 'GET', isPublic: true });
 
     console.log(data, 'daattaa');
     dispatch(getSeasonsSuccess(data.data));
 };
+
+
+export const getSeasonById = ({ id, filter = '' }) => async (dispatch) => {
+    console.log('getting season by id', id, filter);
+    // dispatch(getInit());
+    // await wait(2000);
+
+    const data = await request({ url: `/api/seasons/${id}/${filter}`, method: 'GET', isPublic: true });
+
+    console.log(data, 'daattaa');
+    dispatch(getSeasonByIdSuccess(data.data));
+};
+
 
 export const createSeason = (seasonData) => async (dispatch, store) => {
     dispatch(posting());
