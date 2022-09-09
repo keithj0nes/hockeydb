@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 export default function useForm(initialState = {}) {
     const [fields, setFields] = useState(initialState);
-    const [errors, setErrors] = useState({});
+    const [errors, setLocalErrors] = useState({});
     const initalValues = Object.values(initialState).join('');
 
     useEffect(() => {
@@ -78,7 +78,7 @@ export default function useForm(initialState = {}) {
         });
     };
 
-    const validate = (validations) => {
+    const validate = (validations, scrollToError = true) => {
         let valid = true;
         const newErrors = {};
         for (const key in validations) {
@@ -108,18 +108,25 @@ export default function useForm(initialState = {}) {
             }
         }
 
-        // console.log(newErrors, 'useForm errors')
-
         if (!valid) {
-            setErrors(newErrors);
+            setLocalErrors(newErrors);
+
+            if (scrollToError) {
+                // NOTE: to scroll to error, the input must have an id
+                const errorsKeys = Object.keys(newErrors);
+                const section = document.getElementById(`${errorsKeys[0]}`);
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
             return false;
         }
-        setErrors(newErrors);
+        setLocalErrors(newErrors);
         return true;
     };
 
     const resetForm = () => {
         setFields(initialState);
+        setLocalErrors({});
     };
 
     const clearForm = () => {
@@ -127,8 +134,20 @@ export default function useForm(initialState = {}) {
             Object.entries(fields).map(([key]) => [key, '']),
         );
         setFields(clearedState);
-        setErrors({});
+        setLocalErrors({});
     };
 
-    return { fields, handleChange, resetForm, clearForm, errors, validate };
+    const setErrors = (incomingErrors) => setLocalErrors({ ...errors, ...incomingErrors });
+    // const setFieldsDangerously = (incomingFields) => setFields({ ...fields, ...incomingFields });
+
+    const setFieldsDangerously = (incomingFields, overwrite) => {
+        if (overwrite) {
+            setFields({ ...incomingFields });
+        } else {
+            setFields({ ...fields, ...incomingFields });
+        }
+    };
+
+
+    return { fields, handleChange, resetForm, clearForm, errors, validate, setErrors, setFieldsDangerously };
 }

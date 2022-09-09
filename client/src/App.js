@@ -20,6 +20,7 @@ import Teams from './pages/guest/Teams';
 import Players from './pages/guest/Players';
 
 import DashboardRouter from './pages/dashboard/Router';
+import Register from './pages/dashboard/Register';
 
 function App() {
     // const count = useSelector((state) => state.counter.value)
@@ -55,6 +56,14 @@ function App() {
                     element={(
                         <PrivateRoute>
                             <DashboardRouter />
+                        </PrivateRoute>
+                    )}
+                />
+                <Route
+                    path="/register/:registration_id"
+                    element={(
+                        <PrivateRoute>
+                            <Register />
                         </PrivateRoute>
                     )}
                 />

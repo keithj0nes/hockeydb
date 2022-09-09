@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import request from '../request';
-import { wait } from '../../utils';
+import { wait, history } from '../../utils';
 
 // fetching = getting data
 // posting = creating/updatig data
@@ -43,7 +43,7 @@ export const seasonsSlice = createSlice({
             state.isPosting = false;
         },
         getInit: state => {
-            state.isLoading = true;
+            state.isFetching = true;
         },
         getSeasonsSuccess: (state, { payload }) => {
             console.log(payload, ' payload');
@@ -54,6 +54,7 @@ export const seasonsSlice = createSlice({
         getSeasonByIdSuccess: (state, { payload }) => {
             console.log(payload, 'payloaddddd')
             state.seasonById = { ...payload };
+            state.isFetching = false;
         },
         // createSeasonSuccess: (state, { payload }) => {
         // }
@@ -87,8 +88,8 @@ export const getSeasons = (filter = '') => async (dispatch) => {
 
 export const getSeasonById = ({ id, filter = '' }) => async (dispatch) => {
     console.log('getting season by id', id, filter);
-    // dispatch(getInit());
-    // await wait(2000);
+    dispatch(getInit());
+    // await wait(5000);
 
     const data = await request({ url: `/api/seasons/${id}/${filter}`, method: 'GET', isPublic: true });
 
@@ -116,7 +117,21 @@ export const createSeason = (seasonData) => async (dispatch, store) => {
     return true;
 };
 
-// export const selectCount = (state) => state.counter.value
+export const createRegistration = (registrationDate) => async (dispatch, store) => {
+    console.log(registrationDate, 'registrationDate')
+    dispatch(posting());
+
+    await wait(2000);
+
+    const data = await request({ url: `/api/admin/seasons/${registrationDate.season_id}/registrations`, method: 'POST', body: registrationDate, store });
+    dispatch(clearPosting());
+    if (!data) return false;
+    if (data.errors) return data.errors;
+
+    history.push(`${registrationDate.season_id}/registrations/${data.data.id}`)
+
+    return false;
+};
 
 export default seasonsSlice.reducer;
 

@@ -134,6 +134,13 @@ const Login = () => {
                 >
                     Login as [Team Manager]
                 </button>
+                <button
+                    type="button"
+                    className="my-1 block m-auto text-secondary underline active:opacity-80 hover:opacity-80"
+                    onClick={() => handleAutoLogin('mutliaccounts')}
+                >
+                    Login as [Player]
+                </button>
 
                 {/* <Button onClick={handleAutoLogin} name="admin" type="link" title="Login as [Admin]" />
                 <Button onClick={handleAutoLogin} name="scorekeeper" type="link" title="Login as [Scorekeeper]" />

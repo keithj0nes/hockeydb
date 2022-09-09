@@ -203,3 +203,18 @@ data_found:             'Data found'
   request_submitted:      'Order %{code} Code has been Submitted successfully'
   orders_not_found:       'No orders yet'
   ````
+
+
+// Node Name Description
+// code Zoho Books error code. This will be zero for a success response and non-zero in case of an error.
+// message Message for the invoked API.
+// resource name Comprises the invoked API’s Data.
+
+
+// {
+//     "code" : 0,
+//     "message" : "success",
+//     "invoice" : {
+//         "invoice_id" : "..."
+//     }
+// }

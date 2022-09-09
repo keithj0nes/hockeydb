@@ -12,7 +12,7 @@ const Toggle = ({ noText, yesText, checked, onChange, name, disabled }) => (
             <div className="relative">
                 <div className="toggle-bg2 transition duration-200 bg-gray-200 border-2 border-gray-200 h-7 w-16 rounded-full" />
             </div>
-            <span className="mr-0 mt-0.5 z-10 text-blue-600 font-medium absolute right-2 top-0.5 uppercase pointer-events-none">
+            <span className="mr-0 mt-0.5 z-10 text-sm font-medium absolute right-2 top-0.5 uppercase pointer-events-none">
                 {noText || <svg style={{ marginTop: 2, marginRight: 6 }} className="mt-2 ml-2 transition duration-200 opacity-1 w-4 h-4 text-purple pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>}
             </span>
         </label>

@@ -128,3 +128,33 @@
         background-color: transparent;
     }
 }
+
+// 
+// POP OVER 
+// 
+
+
+.ant-popover.ant-popconfirm.ant-popover-placement-top {
+
+    .ant-popover-arrow {
+        display: block;
+    }
+
+    .ant-popover-inner {
+        @apply p-2
+    }
+
+    .ant-popover-buttons {
+        @apply flex justify-end ;
+
+        // className="flex justify-center items-center p-2 text-sm rounded focus:outline-none active:ring active:ring-gray-200"
+
+        .ant-btn-default {
+            @apply flex justify-center items-center p-2 text-sm rounded border-none hover:text-black focus:outline-none active:ring active:ring-gray-200;
+        }
+
+        .ant-btn-primary {
+            @apply flex justify-center items-center border p-2 px-3 text-sm border-gray-300 rounded bg-primary hover:bg-primary-100 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100;
+        }
+    }
+}

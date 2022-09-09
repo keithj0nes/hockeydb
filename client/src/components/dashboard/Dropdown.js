@@ -84,15 +84,16 @@ const Dropdown = ({ options, onChange, value, name }) => {
                                 role="option"
                                 tabIndex="-1"
                                 aria-selected={selected?.value === option.value}
-                                onClick={() => handleChange(option)}
+                                onClick={() => !option.disabled && handleChange(option)}
                                 className={classNames('cursor-pointer select-none relative py-2 pl-4 pr-9 hover:bg-gray-100', {
-                                    'text-black font-bold': selected?.value === option.value,
-                                    'text-gray-700': selected?.value !== option.value,
+                                    'text-black font-bold': (selected?.value === option.value) && !option.disabled,
+                                    'text-gray-700': (selected?.value !== option.value) && !option.disabled,
+                                    'hover:bg-white text-gray-400 hover:cursor-not-allowed': option.disabled,
                                 })}
                             >
                                 <span>{option.name}</span>
 
-                                {selected?.value === option.value && (
+                                {selected?.value === option.value && !option.disabled && (
                                     // <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
                                     <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-db-secondary">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>

@@ -45,7 +45,7 @@
 ### Seed Database
 - Make sure PostgreSQL is installed on your computer https://www.postgresql.org
 - Create a database called &nbsp; `hockeydb`
-- From the project's root level, run &nbsp; `npm run seed  [optional: test | dev (default)]` &nbsp; OR &nbsp; `npm run migrate seed  [optional: test | dev (default)]`
+- From the project's root level, cd /backend and run &nbsp; `npm run seed  [optional: test | dev (default)]` &nbsp; OR &nbsp; `npm run migrate seed  [optional: test | dev (default)]`
 - If any errors occur, rerun the seed command
 - You can input your own counts for teams, players, and games by editing the variables in the &nbsp;`seedMigration.js`&nbsp; file:
         
@@ -84,3 +84,19 @@ When making updates to the database, a migration can be added to update the data
 
 - Creating a new migration will create a new blank `.sql` file.
 - `${fileName}` should be snake case `like_this_example`
+
+### Use Test Database
+By default, starting the server will use the `hockeydb` database. If you've created a `hockeydb-test` database, you can run `npm run use:test` to use the test database instead of the default.
+
+
+## Basic Commands (backend)
+
+    npm start                   // start server using dev database
+    npm run use:dev             // start server using dev database
+    npm run use:test            // start server using test database
+    npm run migrate             // run new migrations
+    npm run migrate create ${fileName} // create new migration
+    npm run seed                // seed default database
+    npm run migrate seed        // seed default database
+    npm run seed test           // seed test database
+    npm run migrate seed test   // seed test database

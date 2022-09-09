@@ -336,8 +336,8 @@ const Seasons = () => {
 
                         <div className="flex justify-center pt-3">
                             <Link
-                                // to={`${item.id}`}
                                 to={item.id.toString()}
+                                state={{ seasonName: item.name }}
                                 className="flex w-1/2 justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
                             >
                                 Select {item.id}

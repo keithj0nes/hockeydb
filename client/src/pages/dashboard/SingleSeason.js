@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, Link } from 'react-router-dom';
-
-// import { format, parseISO } from 'date-fns';
+import { useParams, useLocation } from 'react-router-dom';
+import { format, parseISO } from 'date-fns';
 import { getSeasonById } from '../../redux/slices/seasons';
 import { Tabs, DrawerCreateSeason, Divisions, Teams, Players, Registrations } from './components';
 
-// const myTabs = ['Divisions', 'Teams', 'Players', 'Registrations'];
 const myTabs2 = [
+    { name: 'Registrations', key: 'registrations', component: <Registrations /> },
     { name: 'Teams', key: 'teams', component: <Teams /> },
     { name: 'Divisions', key: 'divisions', component: <Divisions /> },
     { name: 'Players', key: 'players', component: <Players /> },
-    { name: 'Registrations', key: 'registrations', component: <Registrations /> },
 ];
 
 
 const SingleSeason = () => {
     const [activeTab, setActiveTab] = useState(myTabs2[0].key);
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
     const dispatch = useDispatch();
+    const { seasonById, isFetching } = useSelector((state) => state.seasons);
+    const { season } = seasonById;
 
     const { id } = useParams();
+    const { state } = useLocation();
 
     useEffect(() => {
         dispatch(getSeasonById({ id }));
     }, []);
 
-
-    const is_active = true;
     return (
         <div className="bg-red-10 h-screen p-4 sm:p-7 overflow-scroll">
 
 
             <div className="flex justify-between items-start">
                 <div className="flex items-center">
-                    <h1 className="text-3xl font-semibold">Fall 2022</h1>
+                    {/* <h1 className="text-3xl font-semibold">Fall 2022</h1> */}
+                    <h1 className="text-3xl font-semibold">{state?.seasonName || season?.name }</h1>
+
                     <button
                         type="button"
                         className="ml-4"
@@ -48,17 +48,20 @@ const SingleSeason = () => {
 
                 <div className="text-center">
                     <div className="group relative">
-                        <p className={classNames('px-2 py-1 rounded-lg self-center', {
-                            'bg-green-100 text-green-600': is_active,
-                            'bg-gray-100 text-gray-600': !is_active,
+                        <p className={classNames('px-2 py-1 rounded-lg self-center cursor-default', {
+                            'bg-green-100 text-green-600': season?.is_active,
+                            'bg-gray-100 text-gray-600': !season?.is_active,
                         })}
                         >
-                            {is_active ? 'Active' : 'Inactive'}
+                            {season?.is_active ? 'Active' : 'Inactive'}
 
                         </p>
-                        <p className="group-hover:block whitespace-nowrap text-xs text-white absolute hidden mt-2 right-0 py-1 px-2 rounded bg-gray-700">
-                            The &quot;Active&quot; season is displayed <br /> on the website by default
-                        </p>
+                        <div className="p-1 group-hover:block absolute hidden right-0">
+                            <p className="whitespace-nowrap text-xs text-white py-1 px-2 rounded bg-gray-700">
+                                The &quot;Active&quot; season is displayed <br /> on the website by default
+                            </p>
+                        </div>
+
                     </div>
 
                 </div>
@@ -81,14 +84,15 @@ const SingleSeason = () => {
             <DrawerCreateSeason
                 onClose={() => setIsEditModalVisible(false)}
                 visible={isEditModalVisible}
-                edit={{
-                    name: 'Fall 2020',
-                    type: 'Tournament',
-                    copy_from: '',
-                    start_date: '2022-06-30',
-                    // start_date: format(parseISO('2019-02-11T14:00:00'), 'yyyy-MM-dd'),
-                    is_active: true,
-                }}
+                // edit={{
+                //     name: 'Fall 2020',
+                //     type: 'Tournament',
+                //     copy_from: '',
+                //     start_date: '2022-06-30',
+                //     // start_date: format(parseISO('2019-02-11T14:00:00'), 'yyyy-MM-dd'),
+                //     is_active: true,
+                // }}
+                edit={{ ...season, start_date: season?.start_date && format(parseISO(season?.start_date), 'yyyy-MM-dd') }}
             />
         </div>
     );

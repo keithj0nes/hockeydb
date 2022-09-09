@@ -417,6 +417,13 @@ const getSeasonById = async (req, res, next) => {
     try {
         const db = app.get('db');
         const { id } = req.params;
+        // const seasonQuery = await db.seasons.findOne({ id });
+
+        const season = await db.seasons.findOne({ id }, { fields: ['name', 'type', 'is_active', 'start_date', 'end_date'] });
+
+        if (!season) {
+            return res.send({ status: 404, error: true, message: 'Season not found', notification: { type: 'toast', duration: 2, status: 'error' } });
+        }
 
         const rawTeams = `
             SELECT t.name AS team_name, t.id AS team_id, d.name AS division_name, d.id AS division_id, COUNT(pts.player_id) AS players_count from team_season_division tsd
@@ -434,17 +441,18 @@ const getSeasonById = async (req, res, next) => {
             GROUP BY tsd.division_id, d.name, d.id;
         `;
 
+        // const template_registrations = await db.template_registrations.find({ season_id: id });
+        const template_registrations = await db._REGISTRATION_TEMPLATE_BY_ADMIN.find({ season_id: id });
 
         const teams = await db.query(rawTeams, [id]);
         const divisions = await db.query(rawDivisions, [id]);
 
-        return res.send({ status: 200, data: { teams, divisions }, message: `Retrieved season ${id}` });
+        return res.send({ status: 200, data: { teams, divisions, season, template_registrations }, message: `Retrieved season ${id}` });
     } catch (error) {
         console.log('GET SEASON BY ID ERROR: ', error);
         return next(error);
     }
 };
-
 
 const createSeason = async (req, res, next) => {
     try {

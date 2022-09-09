@@ -27,6 +27,7 @@ const teams = require('./controllers/teams');
 const games = require('./controllers/games');
 const locations = require('./controllers/locations');
 const seasons = require('./controllers/seasons');
+const registrations = require('./controllers/registrations');
 const divisions = require('./controllers/divisions');
 const misc = require('./controllers/misc');
 const users = require('./controllers/users');
@@ -37,6 +38,8 @@ const { selectEnvironment } = require('./database/utils/selectEnvironment');
 const scriptsPath = path.join(__dirname, 'database/scripts');
 
 // Make sure to create a local postgreSQL db called hockeydb
+
+const argv = process.argv.slice(2);
 
 let connectionInfo;
 if (isProduction) {
@@ -52,13 +55,13 @@ if (isProduction) {
         poolSize: 2,
     };
 } else {
-    connectionInfo = selectEnvironment();
+    connectionInfo = selectEnvironment(argv[0]);
 }
 
 massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(instance => {
     // console.log('INSTANCE', instance);
     app.set('db', instance); // add your connection to express
-    console.log('Database - connection established');
+    console.log('Database - connection established to', connectionInfo.database);
 }).catch(err => console.log('Database - connection failed \n', err));
 
 
@@ -118,6 +121,10 @@ app.get('/api/misc/teams-filters', misc.getTeamsPageFilters);
 app.get('/api/misc/standings-filters', misc.getStandingsPageFilters);
 app.get('/api/misc/news-tags', misc.getNewsTags);
 
+// Player Registrations
+app.get('/api/register/:registration_id', registrations.getRegistration);
+app.post('/api/register/:registration_id', auth.authorizeAccessToken, registrations.submitPlayerRegistration);
+
 
 // ADMIN
 
@@ -133,6 +140,15 @@ app.get('/api/misc/news-tags', misc.getNewsTags);
 app.post('/api/admin/seasons', auth.authorizeAccessToken, seasons.createSeason);
 app.put('/api/admin/seasons/:id', auth.authorizeAccessToken, seasons.updateSeason);
 app.delete('/api/admin/seasons/:id', auth.authorizeAccessToken, seasons.deleteSeason);
+
+// Create Registrations
+app.post('/api/admin/seasons/:season_id/registrations', auth.authorizeAccessToken, registrations.createRegistration);
+// app.get('/api/admin/seasons/:id/registrations/:reg_id', auth.authorizeAccessToken, registrations.getRegistrationByRegId);
+app.get('/api/admin/seasons/:season_id/registrations/:registration_id', registrations.getRegistrationByRegIdAdmin);
+app.put('/api/admin/seasons/:season_id/registrations/:registration_id', registrations.updateRegistrationFields);
+
+// curl -X GET "http://localhost:8010/api/admin/seasons/3/registrations/1"
+
 
 // Create division
 app.post('/api/admin/divisions', auth.authorizeAccessToken, divisions.createDivision);

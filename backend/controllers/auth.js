@@ -270,7 +270,18 @@ passport.use('local-login', new LocalStrategy({
 }, async (email, password, done) => {
     try {
         const db = app.get('db');
-        const user = await db.users.findOne({ email });
+        // const user2 = await db.users.findOne({ email });
+        const q = `
+            SELECT u.*, ARRAY_AGG(json_build_object('role_id', r.id, 'name', r.name)) AS roles
+            FROM users u 
+            JOIN user_role ur ON ur.user_id = u.id 
+            JOIN roles r ON r.id = ur.role_id
+            WHERE email = $1
+            GROUP BY u.id;
+        `;
+
+        const [user] = await db.query(q, [email]);
+
         if (!user) {
             return done(null, false, { status: 400, message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' });
         }

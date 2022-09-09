@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { Drawer } from 'antd';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/auth';
 import { useAuth } from '../../hooks';
 
@@ -11,11 +12,26 @@ import Dashboard from './Dashboard';
 import Seasons from './Seasons';
 import SingleSeason from './SingleSeason';
 
+import RegistrationWizard from './registrationsWizard/RegistrationWizard';
+import OpenRegistrations from './OpenRegistrations';
 
-const navigation = [
+const ROLES = {
+    Super: 1,
+    Admin: 2,
+    Scorekeeper: 3,
+    Manager: 4,
+    Player: 5,
+};
+
+
+// TODO: remove nav items depending on logged in user
+
+const initialNavigation = [
     { title: 'Dashboard', to: '', icon: '', component: <Dashboard /> },
-    { title: 'Seasons', to: 'seasons', icon: '', component: <Seasons /> },
-    { title: 'Seasons', to: 'seasons/:id', icon: '', component: <SingleSeason />, hide: true },
+    { title: 'Seasons', to: 'seasons', icon: '', component: <Seasons />, allowed_roles: [ROLES.Super, ROLES.Admin] },
+    { title: 'Seasons', to: 'seasons/:id', icon: '', component: <SingleSeason />, hide: true, allowed_roles: [ROLES.Super, ROLES.Admin] },
+    { title: 'Seasons', to: 'seasons/:id/registrations/:registration_id', icon: '', component: <RegistrationWizard />, hide: true, allowed_roles: [ROLES.Super, ROLES.Admin]},
+
     // { title: 'Divisions', to: 'divisions', icon: '' },
     // { title: 'Teams', to: 'teams', icon: '' },
     { title: 'Locations', to: 'locations', icon: '' },
@@ -39,7 +55,24 @@ const icon = (fill = 'fill-white') => (
 const Router = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [isOpenMobile, setIsOpenMobile] = useState(false);
-    // const auth = useAuth();
+    const auth = useAuth();
+
+    // TODO: this may not work depending on how long the user name / role is
+    const [auth_role] = [...auth.roles].sort((a, b) => a.role_id - b.role_id);
+    let navigation = initialNavigation;
+
+    // TODO: be able to add more role id / nav menu items dynamically
+
+    // if (auth.hasPermission([ROLES.Player])) {
+    // navigation = [...initialNavigation, { title: 'Register', to: '/register', icon: '' }];
+    navigation = [...initialNavigation, { title: 'Register', to: 'registrations', icon: '', component: <OpenRegistrations /> }];
+
+    // }
+
+    // if (auth.hasPermission([ROLES.Player])) {
+    //     navigation = [...initialNavigation, { title: 'My Teams', to: 'my-teams', icon: '', component: <Seasons /> }];
+    // }
+
 
     return (
         <main className="lg:flex">
@@ -53,11 +86,34 @@ const Router = () => {
                 'w-20': !isOpen,
             })}
             >
-                <DasbhoardNav isOpen={isOpen} setIsOpen={setIsOpen} />
+                <DasbhoardNav isOpen={isOpen} setIsOpen={setIsOpen} navigation={navigation} auth_role={auth_role} />
             </div>
 
             <div className="flex-1 min-h-screen bg-light-gray">
+
                 <Routes>
+                    {navigation.map(page => (
+                        <Route
+                            key={page.to}
+                            path={`${page.to}`}
+                            element={(
+                                <PrivateRoute allowed={page.allowed_roles}>
+                                    {page.component}
+                                </PrivateRoute>
+                            )}
+                            exact={page.exact}
+                        />
+                    ))}
+                    <Route
+                        path="/*"
+                        element={(
+                            <main style={{ padding: '1rem' }}>
+                                <p>404 - There is nothing here in the Dashboard!</p>
+                            </main>
+                        )}
+                    />
+                </Routes>
+                {/* <Routes>
                     {navigation.map(page => (
                         <Route
                             key={page.to}
@@ -70,11 +126,11 @@ const Router = () => {
                         path="/*"
                         element={(
                             <main style={{ padding: '1rem' }}>
-                                <p>404 - There is nothing here!</p>
+                                <p>404 - There is nothing here in the Dashboard!</p>
                             </main>
                         )}
                     />
-                </Routes>
+                </Routes> */}
             </div>
 
             <Drawer
@@ -86,7 +142,7 @@ const Router = () => {
                 visible={isOpenMobile}
             >
                 <div className="flex flex-col justify-between h-screen p-5 pt-8 duration-300 bg-primary relative">
-                    <DasbhoardNav isOpen={isOpenMobile} setIsOpenMobile={setIsOpenMobile} />
+                    <DasbhoardNav isOpen={isOpenMobile} setIsOpenMobile={setIsOpenMobile} navigation={navigation} auth_role={auth_role} />
                 </div>
             </Drawer>
         </main>
@@ -95,7 +151,28 @@ const Router = () => {
 
 export default Router;
 
-const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile }) => {
+function PrivateRoute({ children, allowed }) {
+    if (!allowed) return children;
+    const auth = useAuth();
+
+    // TODO: determine if we should should show a "no permission" page or redirect to the dashboard
+
+    if (!auth.hasPermission(allowed)) {
+        console.log('Not allowed at this route, redirecting to the dashboard');
+
+        // TODO: show a slideout alert notifitying the user they do not have permission to view this route
+        return <Navigate to="/dashboard" />;
+    }
+    return children;
+}
+
+PrivateRoute.propTypes = {
+    children: PropTypes.any,
+    allowed: PropTypes.array,
+};
+
+
+const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_role }) => {
     const auth = useAuth();
     const dispatch = useDispatch();
 
@@ -193,10 +270,19 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile }) => {
                         </svg>
                     </div>
 
-                    <div className={classNames('whitespace-nowrap text-xs duration-100', { 'scale-0': !isOpen })}>
-                        <span className="block font-bold">
+                    <div className={classNames('whitespace-nowrap text-xs duration-100 w-full', { 'scale-0': !isOpen })}>
+                        {/* <span className="block font-bold">
                             {auth.full_name}
-                        </span>
+                        </span> */}
+                        <div className="flex justify-between">
+                            <span className="block font-bold">
+                                {auth.full_name}
+                            </span>
+
+                            <span className="block font-bold">
+                                {auth_role.name}
+                            </span>
+                        </div>
                         <span className="block">
                             {auth.email}
                         </span>
@@ -206,4 +292,12 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile }) => {
             </div>
         </>
     );
+};
+
+DasbhoardNav.propTypes = {
+    isOpen: PropTypes.bool,
+    setIsOpen: PropTypes.func,
+    setIsOpenMobile: PropTypes.func,
+    navigation: PropTypes.array,
+    auth_role: PropTypes.object,
 };
