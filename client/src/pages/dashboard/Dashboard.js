@@ -5,8 +5,6 @@ import React from 'react';
 // import { Drawer } from 'antd';
 // import { Routes, Route, NavLink } from 'react-router-dom';
 // import { logout } from '../../../redux/slices/auth';
-// import { useAuth } from '../../../hooks';
-
 
 const Dashboard = () => {
     const PAGE_TITLE = 'Dashboard';

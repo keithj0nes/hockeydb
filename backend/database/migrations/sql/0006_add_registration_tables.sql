@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" (
   "user_id" INTEGER,      -- REFERENCES users(id)
   -- "season_id" INTEGER,      -- REFERENCES seasons(id)
   "registration_template_id" INTEGER,      -- REFERENCES _REGISTRATION_TEMPLATE_BY_ADMIN(id)
+  "player_id" INTEGER,          -- REFERENCES players(id)
   "created_at" TIMESTAMP,
   "updated_at" TIMESTAMP
 );
@@ -83,32 +84,33 @@ ALTER TABLE "_LEAGUE_SEASON_FORM_FIELDS" ADD FOREIGN KEY ("registration_template
 ALTER TABLE "_LEAGUE_SEASON_FORM_FIELDS" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" ADD FOREIGN KEY ("registration_template_id") REFERENCES "_REGISTRATION_TEMPLATE_BY_ADMIN" ("id");
+ALTER TABLE "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 ALTER TABLE "_FORM_SUBMSSION_FIELDS" ADD FOREIGN KEY ("form_submission_id") REFERENCES "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" ("id");
 ALTER TABLE "_FORM_SUBMSSION_FIELDS" ADD FOREIGN KEY ("season_form_field_id") REFERENCES "_LEAGUE_SEASON_FORM_FIELDS" ("id");
 ALTER TABLE "_REGISTRATION_TEMPLATE_BY_ADMIN" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
 
 -- CREATE NEW REGISTRATION TEMPLATE BY ADMIN
-INSERT INTO "_REGISTRATION_TEMPLATE_BY_ADMIN" ( name, is_open, season_id ) VALUES ( 'test create reg', true, 3 );
+-- INSERT INTO "_REGISTRATION_TEMPLATE_BY_ADMIN" ( name, is_open, season_id ) VALUES ( 'test create reg', true, 3 );
 
 -- ADD DEFAULT FIELDS
-INSERT INTO "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS" ( field_type, label, is_required, locked, section, section_display_index, display_index ) VALUES ( 'text', 'First Name', true, true, 'Basic Info', 1, 1 );
-INSERT INTO "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS" ( field_type, label, is_required, locked, section, section_display_index, display_index ) VALUES ( 'text', 'Last Name', true, true, 'Basic Info', 1, 2 );
-INSERT INTO "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS" ( field_type, label, hint, section, section_display_index, display_index ) VALUES ( 'text', 'Phone Number', '222-222-22222', 'Basic Info', 1, 3 );
+-- INSERT INTO "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS" ( field_type, label, is_required, locked, section, section_display_index, display_index ) VALUES ( 'text', 'First Name', true, true, 'Basic Info', 1, 1 );
+-- INSERT INTO "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS" ( field_type, label, is_required, locked, section, section_display_index, display_index ) VALUES ( 'text', 'Last Name', true, true, 'Basic Info', 1, 2 );
+-- INSERT INTO "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS" ( field_type, label, hint, section, section_display_index, display_index ) VALUES ( 'text', 'Phone Number', '222-222-22222', 'Basic Info', 1, 3 );
 
 -- ADD FORM FIELDS MADE BY ADMIN
-INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" (field_type, label, hint, options, is_required, registration_template_id, section, section_display_index, display_index)
-SELECT field_type, label, hint, options, is_required, 1, section, section_display_index, display_index FROM "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS";
+-- INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" (field_type, label, hint, options, is_required, registration_template_id, section, section_display_index, display_index)
+-- SELECT field_type, label, hint, options, is_required, 1, section, section_display_index, display_index FROM "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS";
 
-INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" ( field_type, label, hint, registration_template_id, section, section_display_index, display_index ) VALUES ( 'text', 'Previous Team', 'Here be a hint/tooltip', 1, 'Sports Info', 2, 2 );
-INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" ( field_type, label, hint, options, registration_template_id, is_required, section, section_display_index, display_index ) VALUES ( 'select', 'Shirt Size', 'Use the dropdown to select a size', '{"XS": "Extra Small", "S": "Small"}', 1, true, 'Sports Info', 2, 3 );
-INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" ( field_type, label, registration_template_id, hint, section, section_display_index, display_index ) VALUES ( 'checkbox', 'Do you also coach?', 1, 'Check the box if you coach any level', 'Sports Info', 2, 3 );
+-- INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" ( field_type, label, hint, registration_template_id, section, section_display_index, display_index ) VALUES ( 'text', 'Previous Team', 'Here be a hint/tooltip', 1, 'Sports Info', 2, 2 );
+-- INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" ( field_type, label, hint, options, registration_template_id, is_required, section, section_display_index, display_index ) VALUES ( 'select', 'Shirt Size', 'Use the dropdown to select a size', '{"XS": "Extra Small", "S": "Small"}', 1, true, 'Sports Info', 2, 3 );
+-- INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" ( field_type, label, registration_template_id, hint, section, section_display_index, display_index ) VALUES ( 'checkbox', 'Do you also coach?', 1, 'Check the box if you coach any level', 'Sports Info', 2, 3 );
 
 -- REGISTRATION
-INSERT INTO "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" ( user_id, season_id ) VALUES ( 1, 1 );
+-- INSERT INTO "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" ( user_id, season_id ) VALUES ( 1, 1 );
 
 -- USER FORM SUBMISSION
-INSERT INTO "_FORM_SUBMSSION_FIELDS" ( form_submission_id, season_form_field_id, value ) VALUES ( 1, 1, '{"select": "XS"}' );
-INSERT INTO "_FORM_SUBMSSION_FIELDS" ( form_submission_id, season_form_field_id, value ) VALUES ( 1, 3, '{"checbox": "true"}' );
+-- INSERT INTO "_FORM_SUBMSSION_FIELDS" ( form_submission_id, season_form_field_id, value ) VALUES ( 1, 1, '{"select": "XS"}' );
+-- INSERT INTO "_FORM_SUBMSSION_FIELDS" ( form_submission_id, season_form_field_id, value ) VALUES ( 1, 3, '{"checbox": "true"}' );
 
 
 

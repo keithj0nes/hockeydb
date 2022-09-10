@@ -167,7 +167,14 @@ const Registrations = () => {
                         {seasonById?.template_registrations.map(item => (
                             <tr key={item.id} className="w-full border-b">
                                 <td className="py-2">
-                                    <Link to={`registrations/${item.id.toString()}`}>{item.name}</Link>
+                                    {item.is_open ? (
+                                        <Link to={`registrations/${item.id.toString()}`}>
+                                            {item.name}
+                                        </Link>
+
+                                    ) : (
+                                        <p className="cursor-default">{item.name}</p>
+                                    )}
                                 </td>
                                 <td className="py-2">{item.is_open ? 'Open' : 'Closed'}</td>
                                 {/* <td className="py-2">{item.participants}</td>

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { format } = require('date-fns');
 
 // to use
 // npm run migrate create your-migration-name-here
@@ -33,7 +34,7 @@ const createNewMigration = (fileName, filePath) => {
 
     const newFileName = `${newNumber}_${fileName.replace(/-/g, '_')}.sql`;
 
-    const content = '-- Write SQL for new migration \n\n';
+    const content = `Created: ${format(new Date(), 'PPPppp')} \n\n-- Write SQL for new migration \n\n`;
 
     console.log('\nCreating migration');
     console.log('--------------------');

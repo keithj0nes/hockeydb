@@ -10,6 +10,9 @@ const { selectEnvironment } = require('./selectEnvironment');
 
 const scriptsPath = path.join(__dirname, '..', 'scripts');
 
+
+// TODO: add more registrations based on seasons
+
 const argv = process.argv.slice(2);
 const connectionInfo = selectEnvironment(argv[1]);
 const todaysDate = new Date();
@@ -108,13 +111,30 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
     };
 
     // create players
-    const createPlayers = async ({ admin }) => Promise.all(Array(counts.totalPlayers).fill().map(async () => {
-        const first_name = faker.name.firstName();
-        const last_name = faker.name.lastName();
-        const email = faker.internet.email();
-        await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: admin.id });
-    }));
+    // const createPlayers = async ({ admin }) => Promise.all(Array(counts.totalPlayers).fill().map(async () => {
+    //     const first_name = faker.name.firstName();
+    //     const last_name = faker.name.lastName();
+    //     const email = faker.internet.email();
+    //     await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: admin.id });
+    // }));
 
+    const createPlayers = async (createdUsers) => {
+        // create player accounts for last two users
+        const last2 = createdUsers.slice(-2);
+
+        await Promise.all(last2.map(async user => {
+            const { first_name, last_name, email } = user;
+            await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: createdUsers[0].id });
+        }));
+
+        // create player accounts
+        return Promise.all(Array(counts.totalPlayers).fill().map(async () => {
+            const first_name = faker.name.firstName();
+            const last_name = faker.name.lastName();
+            const email = faker.internet.email();
+            await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: createdUsers[0].id });
+        }));
+    };
 
     // associate teams to seasons and divisions
     const associateTeamsToSeasonsDivisions = async () => {
@@ -391,6 +411,59 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
     };
 
 
+    const createRegistrationTemplates = async ({ admin }) => {
+        // add registration template
+        await db._REGISTRATION_TEMPLATE_BY_ADMIN.insert({ name: 'Test Registration 1', is_open: true, season_id: 2, created_at: todaysDate, created_by: admin.id });
+        await db._REGISTRATION_TEMPLATE_BY_ADMIN.insert({ name: 'Test Registration 2', is_open: false, season_id: 2, created_at: todaysDate, created_by: admin.id });
+
+        // add default fields
+        await db._LEAGUE_SEASON_DEFAULT_FORM_FIELDS.insert({ field_type: 'text', label: 'First Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 1 });
+        await db._LEAGUE_SEASON_DEFAULT_FORM_FIELDS.insert({ field_type: 'text', label: 'Last Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 2 });
+        await db._LEAGUE_SEASON_DEFAULT_FORM_FIELDS.insert({ field_type: 'text', label: 'Phone Number', hint: '222-222-2222', section: 'Basic Info', section_display_index: 1, display_index: 3 });
+
+        // add form fields made by admin
+        const query = `
+            INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" (field_type, label, hint, options, is_required, registration_template_id, section, section_display_index, display_index)
+            SELECT field_type, label, hint, options, is_required, 1, section, section_display_index, display_index FROM "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS";
+        `;
+        await db.query(query);
+
+        await db._LEAGUE_SEASON_FORM_FIELDS.insert({ registration_template_id: 1, field_type: 'text', label: 'Previous Team', hint: 'Here be a hint/tooltip', section: 'Sports Info', section_display_index: 2, display_index: 2 });
+        await db._LEAGUE_SEASON_FORM_FIELDS.insert({ registration_template_id: 1, field_type: 'select', label: 'Shirt Size', hint: 'Use the dropdown to select a size', options: '{"XS": "Extra Small", "S": "Small"}', is_required: true, section: 'Sports Info', section_display_index: 2, display_index: 3 });
+        await db._LEAGUE_SEASON_FORM_FIELDS.insert({ registration_template_id: 1, field_type: 'checkbox', label: 'Do you also coach?', hint: 'Check the box if you coach any level', section: 'Sports Info', section_display_index: 2, display_index: 3 });
+    };
+
+    const createPlayerRegistrations = async (createdUsers) => {
+        // create player registrations for last two users
+        const last2 = createdUsers.slice(-2);
+
+        const createdRegistrationTemplates = await db._REGISTRATION_TEMPLATE_BY_ADMIN.find();
+        const createdPlayers = await db.players.find();
+        const usedPlayerIds = [];
+
+        return Promise.all(last2.map(async user => {
+            const associatedAccounts = randomr(1, 6);
+            const [usersPlayerAccount] = await db.players.find({ email: user.email });
+
+            let playerId = usersPlayerAccount.id;
+
+            return Promise.all(createdRegistrationTemplates.map(async template => {
+                if (template.is_open) {
+                    return Promise.all(Array(associatedAccounts).fill().map(async () => {
+                        while (usedPlayerIds.includes(playerId)) {
+                            playerId = randomr(1, createdPlayers.length);
+                        }
+
+                        usedPlayerIds.push(playerId);
+                        await db._USER_FORM_SUBMISSION_AKA_REGISTRATIONS.insert({ user_id: user.id, registration_template_id: 1, player_id: playerId, created_at: todaysDate });
+                    }));
+                }
+                return null;
+            }));
+        }));
+    };
+
+
     const initiateSeed = async () => {
         const createdUsers = await createUsers();
         console.log(' ✅ Users Created');
@@ -407,7 +480,9 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
         await createTeams({ admin: createdUsers[0] });
         console.log(' ✅ Teams Created');
 
-        await createPlayers({ admin: createdUsers[0] });
+        // await createPlayers({ admin: createdUsers[0] });
+        await createPlayers(createdUsers);
+
         console.log(' ✅ Players Created');
 
         await associateTeamsToSeasonsDivisions();
@@ -429,6 +504,12 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
 
         await createNews({ admin: createdUsers[0] });
         console.log(' ✅ News Created');
+
+        await createRegistrationTemplates({ admin: createdUsers[0] });
+        console.log(' ✅ Registration Templates Created');
+
+        await createPlayerRegistrations(createdUsers);
+        console.log(' ✅ Player Registrations Created');
 
         console.log('--------------------');
         console.log('Seeding complete \n \n');

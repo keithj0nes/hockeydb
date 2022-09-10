@@ -307,8 +307,9 @@ passport.use('local-login', new LocalStrategy({
         // optimize this query so we dont have to run javascript after query happens
         // query = get all players from previous registrations associated with logged in account
 
+        // -- SELECT t.name AS previous_team, p.*, r.* FROM registrations r
         const query = `
-            SELECT t.name AS previous_team, p.*, r.* FROM registrations r
+            SELECT t.name AS previous_team, p.*, r.* FROM "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" r
             JOIN players p ON p.id = r.player_id
             LEFT JOIN player_team_season pt ON pt.player_id = p.id
             LEFT JOIN teams t ON t.id = pt.team_id
