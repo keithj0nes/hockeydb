@@ -11,6 +11,7 @@ import { useAuth } from '../../hooks';
 import Dashboard from './Dashboard';
 import Seasons from './Seasons';
 import SingleSeason from './SingleSeason';
+import Account from './Account';
 
 import RegistrationWizard from './registrationsWizard/RegistrationWizard';
 import OpenRegistrations from './OpenRegistrations';
@@ -30,7 +31,7 @@ const initialNavigation = [
     { title: 'Dashboard', to: '', icon: '', component: <Dashboard /> },
     { title: 'Seasons', to: 'seasons', icon: '', component: <Seasons />, allowed_roles: [ROLES.Super, ROLES.Admin] },
     { title: 'Seasons', to: 'seasons/:id', icon: '', component: <SingleSeason />, hide: true, allowed_roles: [ROLES.Super, ROLES.Admin] },
-    { title: 'Seasons', to: 'seasons/:id/registrations/:registration_id', icon: '', component: <RegistrationWizard />, hide: true, allowed_roles: [ROLES.Super, ROLES.Admin]},
+    { title: 'Seasons', to: 'seasons/:id/registrations/:registration_id', icon: '', component: <RegistrationWizard />, hide: true, allowed_roles: [ROLES.Super, ROLES.Admin] },
 
     // { title: 'Divisions', to: 'divisions', icon: '' },
     // { title: 'Teams', to: 'teams', icon: '' },
@@ -41,6 +42,7 @@ const initialNavigation = [
     { title: 'Pages', to: 'pages', icon: '' },
     { title: 'Payments', to: 'payments', icon: '' },
     { title: 'Settings', to: 'settings', icon: '' },
+    { title: 'Account', to: 'account', icon: '', component: <Account />, hide: true },
 ];
 
 const icon = (fill = 'fill-white') => (
@@ -263,31 +265,31 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
                 <div className="border-t border-gray-400 rounded w-full h-0 my-2" />
 
 
-                <div className="text-gray-300 flex items-center gap-x-4 p-2 hover:text-white text-sm cursor-pointer rounded-md hover:bg-primary-100">
-                    <div className="block">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </div>
+                <NavLink to="account">
+                    <div className="text-gray-300 flex items-center gap-x-4 p-2 hover:text-white text-sm cursor-pointer rounded-md hover:bg-primary-100">
+                        <div className="block">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
 
-                    <div className={classNames('whitespace-nowrap text-xs duration-100 w-full', { 'scale-0': !isOpen })}>
-                        {/* <span className="block font-bold">
-                            {auth.full_name}
-                        </span> */}
-                        <div className="flex justify-between">
-                            <span className="block font-bold">
-                                {auth.full_name}
-                            </span>
+                        <div className={classNames('whitespace-nowrap text-xs duration-100 w-full', { 'scale-0': !isOpen })}>
+                            <div className="flex justify-between">
+                                <span className="block font-bold">
+                                    {auth.full_name}
+                                </span>
 
-                            <span className="block font-bold">
-                                {auth_role.name}
+                                <span className="block font-bold">
+                                    {auth_role.name}
+                                </span>
+                            </div>
+                            <span className="block">
+                                {auth.email}
                             </span>
                         </div>
-                        <span className="block">
-                            {auth.email}
-                        </span>
                     </div>
-                </div>
+                </NavLink>
+
 
             </div>
         </>
