@@ -34,7 +34,7 @@ const createNewMigration = (fileName, filePath) => {
 
     const newFileName = `${newNumber}_${fileName.replace(/-/g, '_')}.sql`;
 
-    const content = `Created: ${format(new Date(), 'PPPppp')} \n\n-- Write SQL for new migration \n\n`;
+    const content = `-- Created: ${format(new Date(), 'PPP @ pp')} \n-- Write SQL for new migration\n\n`;
 
     console.log('\nCreating migration');
     console.log('--------------------');
