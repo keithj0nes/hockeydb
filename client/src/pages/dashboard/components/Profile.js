@@ -44,7 +44,7 @@ const Profile = () => {
     return (
         <div>
 
-            <form className="bg-pink-200 lg:max-w-xl" onSubmit={handleSubmit}>
+            <form className="lg:max-w-xl" onSubmit={handleSubmit}>
 
                 <div className="sm:flex gap-6">
 

@@ -1,18 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs } from './components';
 import Profile from './components/Profile';
+import ChangePassword from './components/ChangePassword';
 
-
-const ChangePassword = () => (
-    <div>
-        Change Password Tab
-        <p>current password</p>
-        <p>new password</p>
-        <p>confirm new password</p>
-
-        <p>add strength package</p>
-    </div>
-);
 
 const accountTabs = [
     { name: 'Profile', key: 'profile', component: <Profile /> },
@@ -25,7 +15,16 @@ const Account = () => {
     const [activeTab, setActiveTab] = useState(accountTabs[0].key);
     return (
         <div className="h-full p-4 sm:p-7">
-            <h1 className="text-3xl font-semibold">Account</h1>
+            <div className="flex justify-between">
+                <h1 className="text-3xl font-semibold">Account</h1>
+
+                <button
+                    type="button"
+                    className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                >
+                    Logout
+                </button>
+            </div>
 
             <Tabs active={activeTab} tabs={accountTabs} onChange={setActiveTab} />
 
