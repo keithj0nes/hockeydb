@@ -2,7 +2,8 @@
 import React from 'react';
 import zxcvbn from 'zxcvbn';
 import classNames from 'classnames';
-import { useForm } from '../../../hooks';
+import { format, parseISO } from 'date-fns';
+import { useForm, useAuth } from '../../../hooks';
 
 const FORM_FIELDS = {
     current_password: '',
@@ -29,7 +30,7 @@ const VALIDATIONS = {
 
 const ChangePassword = () => {
     const { fields, handleChange, errors, validate } = useForm(FORM_FIELDS);
-
+    const auth = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -52,7 +53,11 @@ const ChangePassword = () => {
 
 
                 <div className="py-3 w-full">
-                    <label htmlFor="current_password" className="text-sm">Current Passwrod</label>
+                    <label htmlFor="current_password" className="text-sm flex justify-between">
+                        <span>Current Password</span>
+
+                        <span>Last updated: {format(parseISO(auth.password_last_updated_at), 'LLLL dd, yyyy')} </span>
+                    </label>
                     <input
                         type="text"
                         id="current_password"
@@ -111,9 +116,6 @@ const ChangePassword = () => {
                         );
                     })}
                 </div>
-
-
-
 
                 <div className="py-3">
                     <label htmlFor="confirm_new_password" className="text-sm">Confirm New Password</label>

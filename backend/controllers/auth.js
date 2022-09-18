@@ -239,7 +239,7 @@ const updatePassword = async (req, res) => {
 
     // store password
     const hash = await bcrypt.hash(password, 10);
-    await db.passwords.update({ user_id: user.id }, { pw: hash });
+    await db.passwords.update({ user_id: user.id }, { pw: hash, updated_at: new Date() });
     // remove token
     await db.users.update({ id: user.id }, { invite_token: null }).catch(err => console.log(err, 'remove invite_token error'));
 
@@ -272,12 +272,13 @@ passport.use('local-login', new LocalStrategy({
         const db = app.get('db');
         // const user2 = await db.users.findOne({ email });
         const q = `
-            SELECT u.*, ARRAY_AGG(json_build_object('role_id', r.id, 'name', r.name)) AS roles
-            FROM users u 
-            JOIN user_role ur ON ur.user_id = u.id 
+            SELECT u.*, p.updated_at AS password_last_updated_at, ARRAY_AGG(json_build_object('role_id', r.id, 'name', r.name)) AS roles
+            FROM users u
+            JOIN user_role ur ON ur.user_id = u.id
+            JOIN passwords p on p.user_id = u.id
             JOIN roles r ON r.id = ur.role_id
             WHERE email = $1
-            GROUP BY u.id;
+            GROUP BY u.id, p.updated_at;
         `;
 
         const [user] = await db.query(q, [email]);
@@ -352,10 +353,11 @@ passport.use('local-signup', new LocalStrategy({
         }
 
         const { first_name, last_name } = req.body;
+        const today = new Date();
 
-        const newUser = await db.users.insert({ first_name, last_name, email, created_at: new Date() });
+        const newUser = await db.users.insert({ first_name, last_name, email, created_at: today });
         const hash = await bcrypt.hash(password, 10);
-        await db.passwords.insert({ user_id: newUser.id, pw: hash });
+        await db.passwords.insert({ user_id: newUser.id, pw: hash, updated_at: today });
 
         return done(null, newUser);
     } catch (error) {
