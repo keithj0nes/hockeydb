@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { format } = require('date-fns');
+const { exec } = require('node:child_process');
 
 // to use
 // npm run migrate create your-migration-name-here
@@ -39,14 +40,19 @@ const createNewMigration = (fileName, filePath) => {
     console.log('\nCreating migration');
     console.log('--------------------');
 
-    fs.writeFile(`${filePath}/${newFileName}`, content, err => {
+    fs.writeFile(`${filePath}/${newFileName}`, content, async err => {
         if (err) {
             return console.error(err);
         }
-
         console.log(` ✅ ${newFileName}`);
         console.log('--------------------');
-        return console.log('Migration file created\n\n');
+
+        return exec(`code ${filePath}/${newFileName}`, (execErr) => {
+            if (execErr) {
+                return console.log(`Migration file created at:\n${filePath}/${newFileName}\n`);
+            }
+            return console.log('Migration file created and opened\n\n');
+        });
     });
 };
 
