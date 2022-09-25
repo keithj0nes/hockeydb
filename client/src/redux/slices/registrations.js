@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import request from '../request';
-// import { wait, history } from '../../utils';
+import { wait, history } from '../../utils';
 
 
 const initialState = {
     formFields: [],
     isFetching: false,
+
+    openRegistrations: [],
+    myRegistrations: [],
 };
 
 export const registrationsSlice = createSlice({
@@ -25,11 +28,16 @@ export const registrationsSlice = createSlice({
             state.isFetching = false;
             state.formFields = payload;
         },
+        setOpenRegistrations: (state, { payload }) => {
+            state.isFetching = false;
+            state.openRegistrations = payload.open_registrations;
+            state.myRegistrations = payload.my_registrations;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { clearPosting, posting, getInit, setFormFields } = registrationsSlice.actions;
+export const { clearPosting, posting, getInit, setFormFields, setOpenRegistrations } = registrationsSlice.actions;
 
 export const getRegistrationByRegIdAdmin = ({ season_id, registration_id }) => async (dispatch, store) => {
     dispatch(getInit());
@@ -65,6 +73,17 @@ export const submitPlayerRegistration = ({ registration_id, fields }) => async (
 
     const data = await request({ url: `/api/register/${registration_id}`, method: 'POST', body: { fields }, store });
     console.log(data, 'dataaa in getRegistration');
+};
+
+
+export const getOpenRegistrations = () => async (dispatch, store) => {
+    dispatch(getInit());
+    await wait(2000);
+    console.log('getting!! getOpenRegistrations')
+    const data = await request({ url: '/api/registrations', method: 'GET', store });
+    console.log(data, 'dataaa in getOpenRegistrations');
+
+    dispatch(setOpenRegistrations(data.data));
 };
 
 

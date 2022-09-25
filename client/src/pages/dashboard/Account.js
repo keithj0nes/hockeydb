@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Tabs } from './components';
 import Profile from './components/Profile';
 import ChangePassword from './components/ChangePassword';
+import { logout } from '../../redux/slices/auth';
 
 
 const accountTabs = [
@@ -13,6 +15,8 @@ const accountTabs = [
 
 const Account = () => {
     const [activeTab, setActiveTab] = useState(accountTabs[0].key);
+    const dispatch = useDispatch();
+
     return (
         <div className="h-full p-4 sm:p-7">
             <div className="flex justify-between">
@@ -21,6 +25,7 @@ const Account = () => {
                 <button
                     type="button"
                     className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                    onClick={() => dispatch(logout())}
                 >
                     Logout
                 </button>

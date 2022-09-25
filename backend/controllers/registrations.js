@@ -18,9 +18,38 @@ const getRegistration = async (req, res) => {
 
     const reg = await db.query(rawReg, [registration_id]);
 
-    console.log(reg,'reg')
 
     return res.send({ status: 200, data: reg, message: 'Retrieved registration' });
+};
+
+const getOpenRegistrations = async (req, res) => {
+    const db = app.get('db');
+
+    // const open_registrations = await db._REGISTRATION_TEMPLATE_BY_ADMIN.find({ is_open: true });
+    // const my_registrations = await db._USER_FORM_SUBMISSION_AKA_REGISTRATIONS.find({ user_id: 4 });
+
+    const qq = `
+        SELECT 
+            DISTINCT rtba.*,
+            (SELECT  COUNT(*) FROM "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" WHERE registration_template_id = rtba.id) AS filled_spots
+        FROM "_REGISTRATION_TEMPLATE_BY_ADMIN" rtba
+        JOIN "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" r ON r.registration_template_id = rtba.id
+        WHERE is_open = true;
+    `;
+
+    const q = `
+        SELECT 
+            r.id AS registration_id, r.user_id, r.player_id, r.submitted_at, r.registration_template_id,
+            rtba.name, rtba.is_open, rtba.season_id
+        FROM "_USER_FORM_SUBMISSION_AKA_REGISTRATIONS" r
+        JOIN "_REGISTRATION_TEMPLATE_BY_ADMIN" rtba ON rtba.id = r.registration_template_id
+        WHERE user_id = $1;
+    `;
+
+    const my_registrations = await db.query(q, [req.user.id]);
+    const open_registrations = await db.query(qq);
+
+    return res.send({ status: 200, data: { open_registrations, my_registrations }, message: 'Retrieved list of Registrations' });
 };
 
 const getRegistrationByRegIdAdmin = async (req, res) => {
@@ -90,7 +119,7 @@ const updateRegistrationFields = async (req, res, next) => {
             return db._LEAGUE_SEASON_FORM_FIELDS.save({ ...(field_id ? { id: field_id } : {}), registration_template_id: registration_id, ...rest });
         }));
 
-        console.log({upsertFields})
+        // console.log({ upsertFields });
 
 
         return res.send({ status: 200, data: { fields: upsertFields, deleted }, message: 'Registration Updated' });
@@ -160,6 +189,7 @@ const submitPlayerRegistration = async (req, res) => {
 
 module.exports = {
     getRegistration,
+    getOpenRegistrations,
     getRegistrationByRegIdAdmin,
     createRegistration,
     updateRegistrationFields,

@@ -124,7 +124,7 @@ app.get('/api/misc/news-tags', misc.getNewsTags);
 // Player Registrations
 app.get('/api/register/:registration_id', registrations.getRegistration);
 app.post('/api/register/:registration_id', auth.authorizeAccessToken, registrations.submitPlayerRegistration);
-
+app.get('/api/registrations', auth.authorizeAccessToken, registrations.getOpenRegistrations);
 
 // ADMIN
 

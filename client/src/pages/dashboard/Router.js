@@ -1,11 +1,11 @@
 /* eslint-disable react/no-children-prop */
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Drawer } from 'antd';
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
-import { logout } from '../../redux/slices/auth';
+// import { logout } from '../../redux/slices/auth';
 import { useAuth } from '../../hooks';
 
 import Dashboard from './Dashboard';
@@ -176,7 +176,7 @@ PrivateRoute.propTypes = {
 
 const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_role }) => {
     const auth = useAuth();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     return (
         <>
@@ -244,7 +244,7 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
             </div>
 
             <div>
-                <div onClick={() => dispatch(logout())} className="text-gray-300 group relative flex items-center gap-x-4 p-2 hover:text-white text-sm  cursor-pointer rounded-md hover:bg-primary-100">
+                {/* <div onClick={() => dispatch(logout())} className="text-gray-300 group relative flex items-center gap-x-4 p-2 hover:text-white text-sm  cursor-pointer rounded-md hover:bg-primary-100">
                     <div className="block">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -260,7 +260,7 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
                     >
                         Logout
                     </div>
-                </div>
+                </div> */}
 
                 <div className="border-t border-gray-400 rounded w-full h-0 my-2" />
 

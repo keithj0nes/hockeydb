@@ -8,7 +8,7 @@ async function runMigration(filePath, environment) {
     try {
         const val = await pm.migrate(connectionInfo, filePath);
         if (!val.length) {
-            return console.log('No new migrations found.');
+            return console.log('\nNo new migrations found\n\n');
         }
 
         console.log('\n \nApplying migrations:');
@@ -17,7 +17,7 @@ async function runMigration(filePath, environment) {
         val.map((v) => console.log(' ✅', v.fileName));
 
         console.log('--------------------');
-        return console.log('Migrations complete');
+        return console.log('Migrations complete\n\n');
     } catch (error) {
         return console.error(error, ': => error in migration');
     }

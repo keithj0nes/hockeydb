@@ -6,7 +6,7 @@ const FORM_FIELDS = {
     first_name: '',
     last_name: '',
     email: '',
-    start_date: '',
+    phone_number: '',
 };
 
 const VALIDATIONS = {
@@ -39,6 +39,8 @@ const Profile = () => {
         if (!isValidated) return;
 
         console.log('successssssssss handlesubmit');
+
+        alert('Not Set Up');
     };
 
     return (
@@ -85,7 +87,44 @@ const Profile = () => {
                 </div>
 
 
-                <div className="py-3">
+                <div className="sm:flex gap-6">
+                    <div className="py-3 w-full">
+                        <label htmlFor="email" className="text-sm">Email</label>
+                        <input
+                            type="text"
+                            id="email"
+                            name="email"
+                            className="w-full border py-2 text-sm border-gray-300 rounded focus:outline-none focus:ring focus:ring-gray-200"
+                            value={fields.email}
+                            onChange={handleChange}
+                        />
+
+                        {errors.email && (
+                            <p className="mt-1 text-red-500 text-xs pl-1">{errors.email}</p>
+                        )}
+                    </div>
+
+
+                    <div className="py-3 w-full">
+                        <label htmlFor="phone_number" className="text-sm">Phone Number (optional)</label>
+                        <input
+                            type="text"
+                            id="phone_number"
+                            name="phone_number"
+                            className="w-full border py-2 text-sm border-gray-300 rounded focus:outline-none focus:ring focus:ring-gray-200"
+                            value={fields.phone_number}
+                            onChange={handleChange}
+                        />
+
+                        {errors.phone_number && (
+                            <p className="mt-1 text-red-500 text-xs pl-1">{errors.phone_number}</p>
+                        )}
+                    </div>
+
+                </div>
+
+
+                {/* <div className="py-3">
                     <label htmlFor="email" className="text-sm">Email</label>
                     <input
                         type="text"
@@ -99,7 +138,7 @@ const Profile = () => {
                     {errors.email && (
                         <p className="mt-1 text-red-500 text-xs pl-1">{errors.email}</p>
                     )}
-                </div>
+                </div> */}
 
 
                 <button

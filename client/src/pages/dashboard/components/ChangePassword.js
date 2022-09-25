@@ -28,6 +28,10 @@ const VALIDATIONS = {
     },
 };
 
+// const STENGTH_SCORE = {
+//     1:
+// }
+
 const ChangePassword = () => {
     const { fields, handleChange, errors, validate } = useForm(FORM_FIELDS);
     const auth = useAuth();
@@ -41,7 +45,14 @@ const ChangePassword = () => {
         console.log(isValidated, 'is validated');
         if (!isValidated) return;
 
-        console.log('successssssssss handlesubmit');
+        const { score } = zxcvbn(fields.new_password);
+
+        if (score < 4) {
+            alert('Please choose a stronger password');
+            return;
+        }
+
+        alert('Not Set Up');
     };
 
     // console.log(zxcvbn(fields.new_password), 'new passwrod')
@@ -105,13 +116,22 @@ const ChangePassword = () => {
                 <div className="flex gap-2 w-full">
                     {Array(5).fill().map((_, ind) => {
                         const { score } = zxcvbn(fields.new_password);
+                        // console.log({ score, ind });
+
+                        // let myClass = 'bg-gray-300';
+                        // if (score > ind) { myClass = 'bg-red-500'; }
+                        // if (score >= 3 && score > ind) { myClass = 'bg-yellow-500'; }
+                        // if (score >= ind && fields.new_password.length > 16) { myClass = 'bg-green-500'; }
 
                         return (
                             <div
                                 key={ind}
                                 className={classNames('bg-gray-300 h-2 rounded w-full', {
-                                    'bg-green-500': (score > ind) || (score === ind && fields.new_password.length > 16),
+                                    'bg-red-500': score > ind && score < 3,
+                                    'bg-yellow-500': score >= 3 && score > ind && fields.new_password.length <= 16,
+                                    'bg-green-500': score === 4 && fields.new_password.length > 16,
                                 })}
+                                // className={`h-2 rounded w-full ${myClass}`}
                             />
                         );
                     })}
