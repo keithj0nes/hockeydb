@@ -9,7 +9,7 @@ import Select from 'react-select';
 const Schedule = () => {
     const { games, isLoading } = useSelector((state) => state.games);
     const dispatch = useDispatch();
-    // console.log('SCHEDULE STATE IN COMPONENT', games);
+    console.log('SCHEDULE STATE IN COMPONENT', games);
 
     const { seasons } = useSelector((state) => state.seasons);
 
@@ -29,7 +29,8 @@ const Schedule = () => {
     });
 
     const handleSeasonSelect = (e) => {
-        setSelectedSeason(e.target);
+        console.log('EVENT', e);
+        setSelectedSeason(e.value);
     };
 
     console.log('SELECTED SEASON', selectedSeason);
@@ -50,7 +51,7 @@ const Schedule = () => {
                             name="Seasons"
                             options={seasonOptions}
                             label="Seasons"
-                            // onSelect={handleSeasonSelect}
+                            onChange={handleSeasonSelect}
                         />
                         <Select />
                         <Select />
