@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getSchedule } from '../../redux/slices/schedule';
 import { Table } from '../../components/guest';
@@ -13,6 +13,8 @@ const Schedule = () => {
 
     const { seasons } = useSelector((state) => state.seasons);
 
+    const [selectedSeason, setSelectedSeason] = useState('all');
+
     console.log('SEASONS', seasons);
 
     useEffect(() => {
@@ -25,6 +27,12 @@ const Schedule = () => {
     const seasonOptions = seasons.map((season) => {
         return { value: season.name, label: season.name };
     });
+
+    const handleSeasonSelect = (e) => {
+        setSelectedSeason(e.target);
+    };
+
+    console.log('SELECTED SEASON', selectedSeason);
 
     // division options
 
@@ -41,7 +49,8 @@ const Schedule = () => {
                         <Select
                             name="Seasons"
                             options={seasonOptions}
-                            label="Seaons"
+                            label="Seasons"
+                            // onSelect={handleSeasonSelect}
                         />
                         <Select />
                         <Select />
@@ -49,6 +58,7 @@ const Schedule = () => {
                     {/* <div className="hidden md:block"> */}
                     <div className="overflow-scroll">
                         <Table
+                            selectedSeason={selectedSeason}
                             data={games}
                             columns={{
                                 date: {
