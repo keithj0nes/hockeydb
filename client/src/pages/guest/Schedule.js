@@ -13,7 +13,7 @@ const Schedule = () => {
 
     const { seasons } = useSelector((state) => state.seasons);
 
-    const [selectedSeason, setSelectedSeason] = useState('all');
+    const [selectedSeason, setSelectedSeason] = useState('Summer 2021');
 
     console.log('SEASONS', seasons);
 
@@ -47,14 +47,23 @@ const Schedule = () => {
             ) : (
                 <div>
                     <div className="flex">
-                        <Select
-                            name="Seasons"
-                            options={seasonOptions}
-                            label="Seasons"
-                            onChange={handleSeasonSelect}
-                        />
-                        <Select />
-                        <Select />
+                        <div>
+                            <span>Season</span>
+                            <Select
+                                name="Seasons"
+                                options={seasonOptions}
+                                label="Seasons"
+                                onChange={handleSeasonSelect}
+                            />
+                        </div>
+                        <div>
+                            <span>Division</span>
+                            <Select />
+                        </div>
+                        <div>
+                            <span>Team</span>
+                            <Select />
+                        </div>
                     </div>
                     {/* <div className="hidden md:block"> */}
                     <div className="overflow-scroll">
