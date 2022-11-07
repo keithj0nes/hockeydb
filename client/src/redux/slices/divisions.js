@@ -36,8 +36,11 @@ export const getDivisions =
         });
 
         console.log('DIVISONS DATA', data);
+        // deconstruct divisions data from data
+        const { divisions } = data.data;
 
-        // dispatch(getDivisionsSuccess(divisions));
+        // dispatch to getdivisionsuccess to add data to state
+        dispatch(getDivisionsSuccess(divisions));
     };
 
 export default divisionsSlice.reducer;
