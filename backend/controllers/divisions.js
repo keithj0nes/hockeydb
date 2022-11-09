@@ -1,9 +1,18 @@
 const app = require('../server.js');
 
 const getAllDivisions = async (req, res, next) => {
+    console.log('GET ALL DIVISONS HIT');
     try {
         const db = app.get('db');
         const { season } = req.query;
+        console.log('REQ.QUERY', req.query);
+        console.log('SEASON BACKEND', season);
+
+        // get all divisions
+        if (!season) {
+            const allDivisions = await db.divisions.find({ 'hidden_at =': null, 'deleted_at =': null });
+            return res.send({ status: 200, data: { divisions: allDivisions }, message: 'Retrieved list of Divisions' });
+        }
 
         const season_id = await db.seasons.findOne({ name: season, 'deleted_at =': null });
 
