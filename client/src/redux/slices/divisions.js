@@ -12,12 +12,13 @@ export const divisionsSlice = createSlice({
     initialState,
     reducers: {
         getInit: (state) => {
-            console.log('IS LOADING:', state.isLoading);
+            console.log('FETCHING DIVISIONS');
             state.isLoading = true;
         },
         getDivisionsSuccess: (state, { payload }) => {
             state.divisions = [...payload];
             state.isLoading = false;
+            console.log('DIVISIONS STATE', state.divisions);
         },
     },
 });

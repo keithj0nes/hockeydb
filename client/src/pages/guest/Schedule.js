@@ -4,7 +4,9 @@ import { getSchedule } from '../../redux/slices/schedule';
 import { Table } from '../../components/guest';
 // import { Select } from 'antd';
 import { getSeasons } from '../../redux/slices/seasons';
+import { getDivisions } from '../../redux/slices/divisions';
 import Select from 'react-select';
+import { select } from 'react-cookies';
 
 const Schedule = () => {
     const { games, isLoading } = useSelector((state) => state.games);
@@ -13,7 +15,11 @@ const Schedule = () => {
 
     const { seasons } = useSelector((state) => state.seasons);
 
+    const { divisions } = useSelector((state) => state.divisions);
+
     const [selectedSeason, setSelectedSeason] = useState('Summer 2021');
+
+    const [selectedDivision, setSelectedDivision] = useState('All');
 
     console.log('SEASONS', seasons);
 
@@ -21,6 +27,7 @@ const Schedule = () => {
         console.log('fetching schedule');
         dispatch(getSchedule());
         dispatch(getSeasons());
+        dispatch(getDivisions());
     }, []);
 
     // seasons options
@@ -28,9 +35,18 @@ const Schedule = () => {
         return { value: season.name, label: season.name };
     });
 
+    const divisionOptions = divisions.map((division) => {
+        return { value: division.name, label: division.name };
+    });
+
     const handleSeasonSelect = (e) => {
-        console.log('EVENT', e);
         setSelectedSeason(e.value);
+    };
+
+    const handleDivisionSelect = (e) => {
+        console.log('DIVISON EVENT');
+        setSelectedDivision(e.value);
+        console.log('SELECTED DIVISON', selectedDivision);
     };
 
     console.log('SELECTED SEASON', selectedSeason);
@@ -50,15 +66,20 @@ const Schedule = () => {
                         <div>
                             <span>Season</span>
                             <Select
-                                name="Seasons"
+                                name="seasons"
                                 options={seasonOptions}
-                                label="Seasons"
+                                label="seasons"
                                 onChange={handleSeasonSelect}
                             />
                         </div>
                         <div>
                             <span>Division</span>
-                            <Select />
+                            <Select
+                                name="divisons"
+                                options={divisionOptions}
+                                label="divisons"
+                                onChange={handleDivisionSelect}
+                            />
                         </div>
                         <div>
                             <span>Team</span>
