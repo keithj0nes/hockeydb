@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { format as dateFNFormat, parseISO } from 'date-fns';
 
-const Table = ({ data, columns, emptyText, minWidth, selectedSeason }) => {
+const Table = ({ data, columns, emptyText, minWidth, selectedSeason, selectedDivison }) => {
     const sectionKeys = Object.keys(columns);
 
     if (!data.length) {
@@ -27,7 +27,7 @@ const Table = ({ data, columns, emptyText, minWidth, selectedSeason }) => {
             <div>
                 {data.map(
                     (d) =>
-                        d.season_name === selectedSeason && (
+                        d.season_name === selectedSeason && d.division_name === selectedDivison && (
                             <div key={d.id} className="bg-green-100 p-2 flex">
                                 {sectionKeys.map((section) => {
                                     const { flex, link, date, string, format } =

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSchedule } from '../../redux/slices/schedule';
+// import { getSchedule } from '../../redux/slices/schedule';
 import { Table } from '../../components/guest';
 // import { Select } from 'antd';
-import { getSeasons } from '../../redux/slices/seasons';
-import { getDivisions } from '../../redux/slices/divisions';
+import { getGames } from '../../redux/slices/games';
 import Select from 'react-select';
 import { select } from 'react-cookies';
 
@@ -13,43 +12,44 @@ const Schedule = () => {
     const dispatch = useDispatch();
     console.log('SCHEDULE STATE IN COMPONENT', games);
 
-    const { seasons } = useSelector((state) => state.seasons);
+    // const { seasons } = useSelector((state) => state.seasons);
 
-    const { divisions } = useSelector((state) => state.divisions);
+    // const { divisions } = useSelector((state) => state.divisions);
 
-    const [selectedSeason, setSelectedSeason] = useState('Summer 2021');
+    // const [selectedSeason, setSelectedSeason] = useState('Summer 2021');
 
-    const [selectedDivision, setSelectedDivision] = useState('All');
+    // const [selectedDivision, setSelectedDivision] = useState('All');
 
-    console.log('SEASONS', seasons);
+    // console.log('SEASONS', seasons);
 
     useEffect(() => {
         console.log('fetching schedule');
-        dispatch(getSchedule());
-        dispatch(getSeasons());
-        dispatch(getDivisions());
+        // dispatch(getSchedule());
+        dispatch(getGames());
+        // dispatch(getSeasons());
+        // dispatch(getDivisions());
     }, []);
 
     // seasons options
-    const seasonOptions = seasons.map((season) => {
-        return { value: season.name, label: season.name };
-    });
+    // const seasonOptions = seasons.map((season) => {
+    //     return { value: season.name, label: season.name };
+    // });
 
-    const divisionOptions = divisions.map((division) => {
-        return { value: division.name, label: division.name };
-    });
+    // const divisionOptions = divisions.map((division) => {
+    //     return { value: division.name, label: division.name };
+    // });
 
     const handleSeasonSelect = (e) => {
-        setSelectedSeason(e.value);
+        // setSelectedSeason(e.value);
     };
 
     const handleDivisionSelect = (e) => {
-        console.log('DIVISON EVENT');
-        setSelectedDivision(e.value);
-        console.log('SELECTED DIVISON', selectedDivision);
+        // console.log('DIVISON EVENT');
+        // setSelectedDivision(e.value);
+        // console.log('SELECTED DIVISON', selectedDivision);
     };
 
-    console.log('SELECTED SEASON', selectedSeason);
+    // console.log('SELECTED SEASON', selectedSeason);
 
     // division options
 
@@ -66,19 +66,19 @@ const Schedule = () => {
                         <div>
                             <span>Season</span>
                             <Select
-                                name="seasons"
-                                options={seasonOptions}
-                                label="seasons"
-                                onChange={handleSeasonSelect}
+                            // name="seasons"
+                            // options={seasonOptions}
+                            // label="seasons"
+                            // onChange={handleSeasonSelect}
                             />
                         </div>
                         <div>
                             <span>Division</span>
                             <Select
-                                name="divisons"
-                                options={divisionOptions}
-                                label="divisons"
-                                onChange={handleDivisionSelect}
+                            // name="divisons"
+                            // options={divisionOptions}
+                            // label="divisons"
+                            // onChange={handleDivisionSelect}
                             />
                         </div>
                         <div>
@@ -89,7 +89,8 @@ const Schedule = () => {
                     {/* <div className="hidden md:block"> */}
                     <div className="overflow-scroll">
                         <Table
-                            selectedSeason={selectedSeason}
+                            // selectedSeason={selectedSeason}
+                            // selectedDivison={selectedDivision}
                             data={games}
                             columns={{
                                 date: {
