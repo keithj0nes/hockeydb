@@ -6,6 +6,12 @@ const initialState = {
     isLoading: true,
     allGames: [],
     selectedGame: null,
+    scheduleFilters: {
+        seasons: [],
+        divisions: [],
+        teams: [],
+        allTeams: [],
+    },
     gameDetails: null,
     todaysGames: [],
     fromLoadMore: false,
@@ -21,8 +27,15 @@ export const gamesSlice = createSlice({
             state.isLoading = true;
         },
         getGamesSuccess: (state, { payload }) => {
+            console.log('getGamesSuccess Triggered');
             state.allGames = [...payload];
             state.isLoading = false;
+            state.scheduleFilters = {
+                seasons: { ...games.data.seasons },
+                divisions: { ...games.data.divisons },
+                teams: { ...teams.data.teams },
+            };
+            console.log('SCHEDULE FILTERS', state.scheduleFilters);
             console.log('games STATE', state.allGames);
         },
     },
@@ -42,19 +55,20 @@ export const getGames =
             isPublic: true,
         });
 
-        console.log('GAMES DATA', data);
+        console.log('GAMES DATA LINE 58', data);
         if (!data.data) return false;
 
-        console.log('DIVISONS DATA', data);
         // deconstruct games data from data
         const { games } = data.data;
 
         // dispatch to getgamesuccess to add data to state
         dispatch(getGamesSuccess(games));
+        console.log('POST GETGAMES DISPATCH');
     };
 
 export default gamesSlice.reducer;
 
+// // Old Version
 // export const getGames2 = (filter) => async (dispatch, getState) => {
 //     // if it's from loadmore, dont GET_INIT the whole games data
 //     if (filter && !filter.includes('fromLoadMore')) {

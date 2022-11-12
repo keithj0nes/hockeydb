@@ -10,50 +10,37 @@ import { select } from 'react-cookies';
 const Schedule = () => {
     const { games, isLoading } = useSelector((state) => state.games);
     const dispatch = useDispatch();
-    console.log('SCHEDULE STATE IN COMPONENT', games);
+    console.log('GAMES STATE IN COMPONENT', games);
 
-    // const { seasons } = useSelector((state) => state.seasons);
-
-    // const { divisions } = useSelector((state) => state.divisions);
-
-    // const [selectedSeason, setSelectedSeason] = useState('Summer 2021');
-
-    // const [selectedDivision, setSelectedDivision] = useState('All');
-
-    // console.log('SEASONS', seasons);
+    const [filters, setFilters] = useState({ page: 1, fromLoadMore: false });
 
     useEffect(() => {
         console.log('fetching schedule');
-        // dispatch(getSchedule());
-        dispatch(getGames());
-        // dispatch(getSeasons());
-        // dispatch(getDivisions());
+        //  filters / query
+        dispatch(getGames('page=1'));
     }, []);
 
-    // seasons options
-    // const seasonOptions = seasons.map((season) => {
-    //     return { value: season.name, label: season.name };
-    // });
+    const handleFilterChange = (e) => {
+        // get name of filter changed
+        const { name, value } = e.target;
+        console.log('NAME, VALUE', name, value);
 
-    // const divisionOptions = divisions.map((division) => {
-    //     return { value: division.name, label: division.name };
-    // });
-
-    const handleSeasonSelect = (e) => {
-        // setSelectedSeason(e.value);
+        // reset divisions and teams to 'All' if season changed
+        if (name === 'season') {
+            delete filters['division'];
+            delete filters['team'];
+        }
+        // reset the select teams fields if season is changed
+        if (name === 'division') {
+            delete filters['team'];
+        }
+        // delete to not put it in the URL params
+        // delete filters['page'];
+        // delete filters['fromLoadMore'];
     };
 
-    const handleDivisionSelect = (e) => {
-        // console.log('DIVISON EVENT');
-        // setSelectedDivision(e.value);
-        // console.log('SELECTED DIVISON', selectedDivision);
-    };
-
-    // console.log('SELECTED SEASON', selectedSeason);
-
-    // division options
-
-    // team options
+    // for (const season in games.season)
+    // const seasonOptions = {  };
 
     return (
         <div>
@@ -66,19 +53,20 @@ const Schedule = () => {
                         <div>
                             <span>Season</span>
                             <Select
-                            // name="seasons"
-                            // options={seasonOptions}
-                            // label="seasons"
-                            // onChange={handleSeasonSelect}
+                                name="seasons"
+                                // options={seasonOptions}
+                                label="seasons"
+                                onChange={handleFilterChange}
                             />
                         </div>
                         <div>
                             <span>Division</span>
                             <Select
-                            // name="divisons"
-                            // options={divisionOptions}
-                            // label="divisons"
-                            // onChange={handleDivisionSelect}
+                                name="divisons"
+                                // options={divisionOptions}
+                                // label="divisons"
+                                onChange={handleFilterChange}
+                                // defaultValue={this.state.filters.season || ''}
                             />
                         </div>
                         <div>
@@ -150,3 +138,37 @@ const Schedule = () => {
 };
 
 export default Schedule;
+
+// Old code
+// const handleChange = (e) => {
+//     const filters = { ...this.state.filters };
+//     const { name, value, checked, type } = e.target;
+
+//     console.log({ name, value });
+
+//     if (value === '' || checked === false) {
+//         delete filters[name];
+//     } else {
+//         filters[name] = type === 'checkbox' ? checked : value;
+//     }
+
+//     // reset the select divisions and teams fields if season is changed
+//     if (name === 'season') {
+//         delete filters['division'];
+//         delete filters['team'];
+//     }
+//     // reset the select teams fields if season is changed
+//     if (name === 'division') {
+//         delete filters['team'];
+//     }
+//     // delete to not put it in the URL params
+//     delete filters['page'];
+//     delete filters['fromLoadMore'];
+
+//     this.setState(() => {
+//         const search = setQuery(filters);
+//         this.props.getGames(search);
+//         filters.page = 1;
+//         return { filters, statechanged: name === 'season' && true };
+//     });
+// };
