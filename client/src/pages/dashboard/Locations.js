@@ -10,73 +10,14 @@ import { Loader, Pagination } from '../../components';
 import { Dropdown } from '../../components/dashboard';
 import { DrawerCreateSeason } from './components';
 
+import { getLocations } from '../../redux/slices/locations';
+
 import { useQueryParams } from '../../hooks/useQueryParams';
 
 
-// import Toggle from '../../components/Toggle';
-
-// TODO: use seasonTypes IN REDUX INSTEAD OF THIS
-const seasonTypes = [
-    { name: 'View All', value: '' },
-    { name: 'Regular', value: 'Regular' },
-    { name: 'Playoffs', value: 'Playoffs' },
-    { name: 'Tournament', value: 'Tournament' },
-];
-
-
-// const filterConfig = {
-//     Type: {
-//         type: {
-//             type: 'select',
-//             options: [
-//                 { name: 'View All', value: '' },
-//                 { name: 'Regular', value: 'Regular' },
-//                 { name: 'Playoffs', value: 'Playoffs' },
-//                 { name: 'Tournament', value: 'Tournament' },
-//             ],
-//         },
-//     },
-//     Other: {
-//         show_hidden: {
-//             type: 'checkbox',
-//         },
-//     },
-//     'Sort By': {
-//         sort_by: {
-//             type: 'select',
-//             options: [
-//                 { name: 'None', value: '' },
-//                 { name: 'Name', value: 'name' },
-//                 { name: 'Created', value: 'created_at' }, // TODO: change this to season start_date when adding to db
-//                 { name: 'Type', value: 'type' },
-//             ],
-//             sub: {
-//                 asc: true,
-//                 desc: true,
-//             },
-//         },
-//     },
-// };
-
-
-// TODO: look into whether encypting api call is a smart idea?
-// ex: url.com/seasons?type=Tournament&dir=asc
-// would be
-// url.com/seasons?alk242klsjaklgj2020alkkdjf
-
-
-const sortBy = [
-    { name: 'None', value: '' },
-    { name: 'Name', value: 'name' },
-    { name: 'Created', value: 'created_at' }, // TODO: change this to season start_date when adding to db
-    { name: 'Type', value: 'type' },
-    { name: 'Active', value: 'is_active' },
-];
-
-
 const Seasons = () => {
-    const PAGE_TITLE = 'Seasons';
-    const [filters, setFilters] = useQueryParams(getSeasons);
+    const PAGE_TITLE = 'Locations';
+    const [filters, setFilters] = useQueryParams(getLocations);
     const [showFiltersModal, setShowFiltersModal] = useState(false);
     const [isCreateVisible, setIsCreateVisible] = useState(false);
 
@@ -87,8 +28,9 @@ const Seasons = () => {
     const inputRef = useRef();
 
 
-    const { seasons, isFetching, pagination } = useSelector((state) => state.seasons);
+    const { locations, isFetching, pagination } = useSelector((state) => state.locations);
 
+    console.log(locations, 'locations');
 
     const dispatch = useDispatch();
     const location = useLocation();
@@ -135,7 +77,7 @@ const Seasons = () => {
 
                     <div className="pb-4">
                         <p className="pb-1">Type</p>
-                        <Dropdown options={seasonTypes} onChange={handleFilterChange} value={filters.type} name="type" />
+                        {/* <Dropdown options={seasonTypes} onChange={handleFilterChange} value={filters.type} name="type" /> */}
                     </div>
 
                     <div className="pb-2">
@@ -180,7 +122,7 @@ const Seasons = () => {
                             </div>
 
                         </div>
-                        <Dropdown options={sortBy} onChange={handleFilterChange} value={filters.sort} name="sort" />
+                        {/* <Dropdown options={sortBy} onChange={handleFilterChange} value={filters.sort} name="sort" /> */}
                     </div>
 
                 </fieldset>
@@ -202,7 +144,7 @@ const Seasons = () => {
                     className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
                     onClick={() => setIsCreateVisible(true)}
                 >
-                    Create Season
+                    Create Location
                 </button>
             </div>
 
@@ -227,6 +169,7 @@ const Seasons = () => {
 
                         <button
                             type="button"
+                            className={`${!filters.search?.length && 'hidden'}`}
                             onClick={() => {
                                 const { search, ...rest } = filters;
                                 setFilters(rest);
@@ -237,9 +180,9 @@ const Seasons = () => {
                         </button>
                     </div>
 
-                    <div className="h-8 lg:h-6 w-[3px] bg-gray-300 hidden md:block" />
+                    {/* <div className="h-8 lg:h-6 w-[3px] bg-gray-300 hidden md:block" /> */}
 
-                    <div className="flex space-x-5 items-center pb-5 pt-3 md:p-0 border-b border-gray-300 md:border-none w-full lg:w-auto">
+                    {/* <div className="flex space-x-5 items-center pb-5 pt-3 md:p-0 border-b border-gray-300 md:border-none w-full lg:w-auto">
                         <Popover visible={showFiltersModal} onVisibleChange={visible => setShowFiltersModal(visible)} content={content} trigger="click" placement="bottomRight">
                             <button
                                 type="button"
@@ -264,7 +207,7 @@ const Seasons = () => {
                         </Popover>
 
 
-                        {/* <div className="h-8 lg:h-6 w-[3px] bg-gray-300 lg:hidden" />
+                        <div className="h-8 lg:h-6 w-[3px] bg-gray-300 lg:hidden" />
                         <Popover content={content} trigger="click" placement="bottomRight">
                             <button
                                 type="button"
@@ -275,87 +218,54 @@ const Seasons = () => {
                                 </svg>
                                 Sort
                             </button>
-                        </Popover> */}
+                        </Popover>
 
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
-            {!isFetching && !seasons.length && (
+            {!isFetching && !locations.length && (
                 <div className="w-full flex items-center pt-20 justify-center">
                     {!!Object.keys(filters).length ? (
                         <p>No results found with your search criteria</p>
                     ) : (
-                        <p>No seasons found. Start by creating a new season above</p>
+                        <p>No locations found. Start by creating a new location above</p>
                     )}
                 </div>
 
             )}
 
-            <div className="md:grid md:grid-cols-2 gap-x-10">
-                {seasons.map(item => (
-                    <div key={item.id} className="w-full bg-white my-5 p-3 shadow-md">
-                        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
-                            <p className="text-gray-500">{item.type}</p>
+            {/* <div className="md:grid md:grid-cols-2 gap-x-10"> */}
+            <div className="bg-white my-5 shadow-md">
 
-                            <p className={classNames('px-2 py-1 rounded-lg', {
-                                'bg-green-100 text-green-600': item.is_active,
-                                'bg-gray-100 text-gray-600': !item.is_active,
-                            })}
-                            >
-                                {item.is_active ? 'Active' : 'Inactive'}
-                            </p>
+                {locations.map(item => {
+                    const b = '';
+                    return (
+                        <div className="py-3 px-4 border-b flex justify-between items-center">
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    {/* TODO: on click of name, send to games page with filter of location.id */}
+                                    <p
+                                        className="text-lg text-black font-semibold"
+                                        onClick={() => console.log('on click of name, send to games page with filter of location.id')}
+                                    >
+                                        {item.name}
+                                    </p>
+                                    <p className="text-sm text-gray-400">(22 games this season)</p>
+                                </div>
+                                <p className="text-gray-500">{item.address}</p>
+                            </div>
+
+                            <div>
+                                <button type="button" onClick={() => console.log('button clicked')}>Edit</button>
+                            </div>
                         </div>
+                    );
+                })}
 
-                        <h3 className="text-lg text-black font-semibold pt-2">{item.name}</h3>
-
-                        <ul className="odd:bg-white even:bg-slate-100">
-                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
-                                <p className="text-xs text-gray-500">Start</p>
-                                {/* <p className="text-xs font-bold text-black">10/16/2022</p> */}
-                                <p className="text-xs font-bold text-black">{item.start_date ? format(parseISO(item.start_date), 'MM/dd/yyyy') : 'No start date selected'}</p>
-                            </li>
-
-                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
-                                <p className="text-xs text-gray-500">Expected Finish</p>
-                                <p className="text-xs font-bold text-black">12/29/2022</p>
-                            </li>
-
-                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
-                                <p className="text-xs text-gray-500">Teams</p>
-                                {/* <p className="text-xs font-bold text-black">44</p> */}
-                                <p className="text-xs font-bold text-black">{item.teams_count}</p>
-                            </li>
-
-                            <li className="rounded-lg p-2 flex justify-between odd:bg-white even:bg-light-gray">
-                                <p className="text-xs text-gray-500">Registered Players</p>
-                                <p className="text-xs font-bold text-black">(need to db query) 659</p>
-                            </li>
-                        </ul>
-
-
-                        <div className="flex justify-center pt-3">
-                            <Link
-                                // to={`${item.id}`}
-                                // to={item.id.toString()}
-                                to={{
-                                    pathname: item.id.toString(),
-                                    // search: "?sort=name",
-                                    // hash: "#the-hash",
-                                    state: { seasonName: item.name }
-                                }}
-                                z
-                                className="flex w-1/2 justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
-                            >
-                                Select {item.id}
-                            </Link>
-                        </div>
-
-                    </div>
-                ))}
             </div>
 
-            {!!seasons.length && (
+            {/* {!!seasons.length && (
                 <div className="flex justify-end sticky top-[100vh]">
                     <Pagination
                         defaultCurrent={pagination.page}
@@ -368,54 +278,14 @@ const Seasons = () => {
                         }}
                     />
                 </div>
-            )}
+            )} */}
 
-            <DrawerCreateSeason
+            {/* <DrawerCreateSeason
                 onClose={() => setIsCreateVisible(false)}
                 visible={isCreateVisible}
-            />
+            /> */}
         </div>
     );
 };
 
 export default Seasons;
-
-
-// { /* <Toggle /> */ }
-
-// { /* <button type="button" className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
-//     <svg className="w-4 h-4 mr-3 invisible" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-//     <p>Name</p>
-// </button>
-
-
-// <button type="button" className="w-full outline-none focus:bg-gray-100 hover:bg-gray-100 flex px-3 py-2 items-center">
-//     <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-//     <p>Name</p>
-// </button>
-// <p>Content</p>
-// <p>Content</p> */ }
-
-// { /* <input type="checkbox" className="form-checkbox rounded text-pink-500" />
-
-// <label className="inline-flex items-center">
-//     <input type="checkbox" className="rounded mr-2 checked:text-pink-500 border-green-500 focus:ring-indigo-400 focus:ring-opacity-25" />
-//     Checkbox
-// </label> */ }
-
-
-// { /* <div className="p-4">
-//     <div className="flex items-center mr-4 mb-2">
-//         <input type="checkbox" id="A3-yes" name="A3-confirmation" value="yes" className="opacity-0 absolute h-8 w-8" />
-//         <div className="bg-white border-2 rounded-md border-blue-400 w-8 h-8 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-500">
-//             <svg className="fill-current hidden w-3 h-3 text-blue-600 pointer-events-none" version="1.1" viewBox="0 0 17 12" xmlns="http://www.w3.org/2000/svg">
-//                 <g fill="none" fillRule="evenodd">
-//                     <g transform="translate(-9 -11)" fill="#1F73F1" fillRule="nonzero">
-//                         <path d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z" />
-//                     </g>
-//                 </g>
-//             </svg>
-//         </div>
-//         <label htmlFor="A3-yes" className="select-none">Yes</label>
-//     </div>
-// </div> */ }

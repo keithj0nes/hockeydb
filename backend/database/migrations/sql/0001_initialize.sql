@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS "users" (
   "is_suspended" BOOLEAN NOT NULL DEFAULT false,
   "suspended_at" TIMESTAMP,
   "invite_token" VARCHAR,
-  "invite_date" TIMESTAMP,
-  "reinvite_date" TIMESTAMP,
+  "invited_at" TIMESTAMP,
+  "reinvited_at" TIMESTAMP,
   "last_login" TIMESTAMP,
   "created_at" TIMESTAMP,
   "created_by" INTEGER      -- REFERENCES users(id)
@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS "passwords" (
   "id" SERIAL PRIMARY KEY, 
   "user_id" INTEGER,        -- REFERENCES users(id),
   "salt" VARCHAR,
-  "pw" VARCHAR
+  "pw" VARCHAR,
+  "updated_at" TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS "roles" (
@@ -68,8 +69,6 @@ CREATE TABLE IF NOT EXISTS "players" (
   "id"  SERIAL PRIMARY KEY,
   "first_name" VARCHAR(255),
   "last_name" VARCHAR(255),
-  "email" VARCHAR(255),
-  "registered_date" TIMESTAMP,
   "created_at" TIMESTAMP,
   "created_by" INTEGER,        -- REFERENCES users(id),
   "updated_at" TIMESTAMP,
@@ -126,6 +125,20 @@ CREATE TABLE "divisions" (
   "hidden_at" TIMESTAMP,
   "hidden_by" INTEGER          -- REFERENCES users(id),
 );
+
+-- CREATE TABLE "registrants" (
+--   "id"  SERIAL PRIMARY KEY,
+--   "name" VARCHAR,
+--   "season_id" INTEGER,         -- REFERENCES seasons(id)
+--   "created_at" TIMESTAMP,
+--   "created_by" INTEGER,        -- REFERENCES users(id),
+--   "updated_at" TIMESTAMP,
+--   "updated_by" INTEGER,        -- REFERENCES users(id),
+--   "deleted_at" TIMESTAMP,
+--   "deleted_by" INTEGER,        -- REFERENCES users(id),
+--   "hidden_at" TIMESTAMP,
+--   "hidden_by" INTEGER          -- REFERENCES users(id),
+-- );
 
 CREATE TABLE "teams" (
   "id" SERIAL PRIMARY KEY,
@@ -218,22 +231,25 @@ CREATE TABLE "games" (
   "deleted_by" INTEGER         -- REFERENCES users(id),
 );
 
-CREATE TABLE "registrations" (
-  "id"  SERIAL PRIMARY KEY,
-  "user_id" INTEGER,            -- REFERENCES users(id),
-  "player_id" INTEGER,          -- REFERENCES players(id),
-  "season_id" INTEGER,          -- REFERENCES seasons(id),
-  "payment_frequency" VARCHAR(255) NOT NULL DEFAULT 'full', -- monthly / half / full
-  "paid_amount" INTEGER NOT NULL DEFAULT 0,
-  "paid_at" TIMESTAMP,
-  "completed_at" TIMESTAMP,
-  "created_at" TIMESTAMP,
-  "created_by" INTEGER,        -- REFERENCES users(id),
-  "updated_at" TIMESTAMP,
-  "updated_by" INTEGER,        -- REFERENCES users(id),
-  "deleted_at" TIMESTAMP,
-  "deleted_by" INTEGER         -- REFERENCES users(id),
-);
+-- TODO: incorporate this table somehow with current registration tables
+-- waiting for later as not sure how to untilize yet 
+
+-- CREATE TABLE "registrations" (
+--   "id"  SERIAL PRIMARY KEY,
+--   "user_id" INTEGER,            -- REFERENCES users(id),
+--   "player_id" INTEGER,          -- REFERENCES players(id),
+--   "season_id" INTEGER,          -- REFERENCES seasons(id),
+--   "payment_frequency" VARCHAR(255) NOT NULL DEFAULT 'full', -- monthly / half / full
+--   "paid_amount" INTEGER NOT NULL DEFAULT 0,
+--   "paid_at" TIMESTAMP,
+--   "completed_at" TIMESTAMP,
+--   "created_at" TIMESTAMP,
+--   "created_by" INTEGER,        -- REFERENCES users(id),
+--   "updated_at" TIMESTAMP,
+--   "updated_by" INTEGER,        -- REFERENCES users(id),
+--   "deleted_at" TIMESTAMP,
+--   "deleted_by" INTEGER         -- REFERENCES users(id),
+-- );
 
 CREATE TABLE "settings" (
   "id" SERIAL PRIMARY KEY,

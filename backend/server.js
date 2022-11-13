@@ -122,9 +122,11 @@ app.get('/api/misc/standings-filters', misc.getStandingsPageFilters);
 app.get('/api/misc/news-tags', misc.getNewsTags);
 
 // Player Registrations
-app.get('/api/register/:registration_id', registrations.getRegistration);
+app.get('/api/register/:registration_id', auth.authorizeAccessToken, registrations.getRegistration);
 app.post('/api/register/:registration_id', auth.authorizeAccessToken, registrations.submitPlayerRegistration);
+app.put('/api/register/:registration_id', auth.authorizeAccessToken, registrations.updatePlayerRegistration);
 app.get('/api/registrations', auth.authorizeAccessToken, registrations.getOpenRegistrations);
+
 
 // ADMIN
 

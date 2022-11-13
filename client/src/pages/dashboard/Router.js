@@ -12,6 +12,7 @@ import Dashboard from './Dashboard';
 import Seasons from './Seasons';
 import SingleSeason from './SingleSeason';
 import Account from './Account';
+import Locations from './Locations';
 
 import RegistrationWizard from './registrationsWizard/RegistrationWizard';
 import OpenRegistrations from './OpenRegistrations';
@@ -35,7 +36,7 @@ const initialNavigation = [
 
     // { title: 'Divisions', to: 'divisions', icon: '' },
     // { title: 'Teams', to: 'teams', icon: '' },
-    { title: 'Locations', to: 'locations', icon: '' },
+    { title: 'Locations', to: 'locations', icon: '', component: <Locations /> },
     { title: 'Users', to: 'users', icon: '' },
     { title: 'Announcements', to: 'announcements', icon: '' },
     { title: 'Messages', to: 'messages', icon: '' },
@@ -207,6 +208,7 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
                 <ul className="pt-6">
                     {navigation.map(link => {
                         if (link.hide) return null;
+                        if (link.allowed_roles && !auth.hasPermission(link.allowed_roles)) return null;
                         return (
                             <li key={link.to} className="text-gray-300 group hover:text-white text-sm  cursor-pointer rounded-md hover:bg-primary-100">
                                 <NavLink

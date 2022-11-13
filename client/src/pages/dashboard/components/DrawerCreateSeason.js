@@ -8,7 +8,10 @@ import { Toggle, Loader } from '../../../components';
 import { createSeason, clearErrors } from '../../../redux/slices/seasons';
 import { useForm } from '../../../hooks';
 
-// USE seasonTypes IN REDUX INSTEAD OF THIS
+// TODO: USE seasonTypes IN REDUX INSTEAD OF THIS
+
+// TODO: allow user to create a location in this drawer
+
 const seasonTypes = [
     { name: 'View All', value: '' },
     { name: 'Regular', value: 'Regular' },
@@ -63,15 +66,15 @@ const DrawerCreateSeason = ({ onClose, visible, edit }) => {
 
         const isValidated = validate(VALIDATIONS);
 
-        console.log(fields, 'FIELDS');
-        console.log(isValidated, 'is validated');
+        // console.log(fields, 'FIELDS');
+        // console.log(isValidated, 'is validated');
 
         if (!isValidated) return;
 
         let success = false;
 
         if (!!edit) {
-            console.warn('TODO: Need to finish edit with redux and node');
+            // TODO: Need to finish edit with redux and node
             success = true;
         } else {
             success = await dispatch(createSeason(fields));

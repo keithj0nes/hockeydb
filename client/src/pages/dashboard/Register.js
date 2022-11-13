@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/no-children-prop */
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import { Drawer } from 'antd';
-import { Routes, Route, Link, useParams } from 'react-router-dom';
+// import PropTypes from 'prop-types';
+// import { Drawer } from 'antd';
+import { Routes, Route, Link, Outlet, useParams, useSearchParams, useLocation, matchPath, useNavigate, NavLink } from 'react-router-dom';
 import { useAuth, useForm } from '../../hooks';
-import { getRegistration } from '../../redux/slices/registrations';
+import { getRegistration, updatePlayerRegistration } from '../../redux/slices/registrations';
 
 import WizardSelectPlayer from './registrationsWizard/wizard/WizardSelectPlayer';
 import WizardPlayerInfo from './registrationsWizard/wizard/WizardPlayerInfo';
 import WizardConfirmDetails from './registrationsWizard/wizard/WizardConfirmDetails';
 
+import { toast } from '../../utils';
+
 const steps = [
-    { name: 'Register As' },
-    { name: 'Info' },
-    { name: 'Docs' },
-    { name: 'Waivers' },
-    { name: 'Fees' },
-    { name: 'Pay' },
-    { name: 'Review' },
-    { name: 'Confirm' },
+    // { name: 'Register As', com },
+    { name: 'Who', slug: 'who', component: <WizardSelectPlayer /> },
+    { name: 'Info', slug: 'info', component: <WizardPlayerInfo /> },
+    // { name: 'Docs' },
+    // { name: 'Waivers' },
+    // { name: 'Fees' },
+    // { name: 'Pay' },
+    // { name: 'Review' },
+    { name: 'Review', slug: 'review', component: <WizardConfirmDetails /> },
 ];
 
 
@@ -29,16 +33,34 @@ const Register = () => {
     const [currentStep, setCurrentStep] = useState(1);
     // const user = useAuth();
     const formData = useForm({});
+    const { isFetching, formFields: registrationFields, model } = useSelector((state) => state.registrations);
 
-
-    // GET REGISTRATION FORM DATA HERE
-
-    const { isFetching, formFields: registrationFields } = useSelector((state) => state.registrations);
     const dispatch = useDispatch();
     const { registration_id } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+
+    const currentStep2 = useMemo(() => {
+        const match = matchPath({ path: '/register/:id/:step' }, location.pathname);
+        return match?.params?.step;
+    }, [location?.pathname]);
 
 
     useEffect(() => {
+        console.log(currentStep2, 'currentStep2');
+        console.log(!Object.keys(formData?.fields).length, 'formData?.fields');
+
+        // first time mounting and has from=X??? remove it
+        setSearchParams({});
+        // if (!currentStep2 && !Object.keys(formData?.fields).length) {
+        if (!currentStep2 || !Object.keys(formData?.fields).length) {
+            console.log('hereeee');
+            // navigate(`${location?.pathname}/${steps[0].slug}`, { replace: true });
+            navigate({ ...location, pathname: steps[0].slug }, { replace: true });
+        }
+
         dispatch(getRegistration({ registration_id }));
     }, []);
 
@@ -47,10 +69,59 @@ const Register = () => {
     }, [currentStep]);
 
 
-    const handleNext = () => currentStep < steps.length && setCurrentStep(currentStep + 1);
-    const handleBack = () => currentStep > 1 && setCurrentStep(currentStep - 1);
+    // const handleNext = () => currentStep < steps.length && setCurrentStep(currentStep + 1);
+    // const handleBack = () => currentStep > 1 && setCurrentStep(currentStep - 1);
+
+    const handleBack = () => {
+        const stepIndex = steps.findIndex(step => step.slug === currentStep2);
+        return navigate({
+            ...location,
+            pathname: steps[stepIndex - 1].slug,
+        }, {
+            // replace: true,
+            // state: location.state || {},
+        });
+    };
+
+
+    const handleNext = async (indexToGoTo) => {
+        const stepIndex = steps.findIndex(step => step.slug === currentStep2);
+        const from = searchParams.get('from');
+
+        console.log(indexToGoTo, 'indexToGoTo')
+        console.log(currentStep2, 'current step');
+        console.log(stepIndex, 'stepIndex')
+
+        const goToStep = indexToGoTo || stepIndex + 1;
+
+        if (stepIndex > 0) {
+            // set up loading state here
+            const didUpdate = await dispatch(updatePlayerRegistration({ registration_id, fields: formData.fields, step: stepIndex + 1 }));
+            if (!didUpdate) return null;
+        }
+
+
+        console.log({ goToStep: steps[goToStep]?.slug });
+
+        if (((stepIndex + 1) || goToStep) < steps.length) {
+            return navigate({
+                ...location,
+                pathname: !!from ? from : steps[goToStep].slug,
+                search: null,
+            }, {
+                // replace: true,
+                // state: { },
+            });
+        }
+
+        // this should navigate to a success page
+        // like /dashboard/my/registrations
+        return toast({}, 'SUBMITTED!!');
+    };
 
     // console.log(registrationFields, 'registrationFields')
+
+    // TODO: need to load in full data before redirecting to the specific step page
 
 
     return (
@@ -62,12 +133,12 @@ const Register = () => {
                 {/* <h2 className="text-white block">Step name here</h2> */}
 
                 <Link
-                    to="/dashboard"
+                    to="/dashboard/registrations"
                     // className="border whitespace-nowrap border-green-500 rounded inline-flex justify-center gap-x-2 items-center p-2"
                     className="text-gray-300 group relative flex items-center gap-x-4 p-2 text-sm rounded-md hover:bg-primary-100 hover:text-white "
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    Back to Dashboard
+                    Back to Registrations
                 </Link>
 
 
@@ -110,144 +181,127 @@ const Register = () => {
                 'w-20': !isOpen,
             })}
             >
-                <Link
-                    to="/dashboard"
-                    // className="border whitespace-nowrap border-green-500 rounded inline-flex justify-center gap-x-2 items-center p-2"
-                    className="text-gray-300 group relative flex items-center gap-x-4 p-2 text-sm rounded-md hover:bg-primary-100 hover:text-white "
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    Back to Dashboard
-                </Link>
+                <div>
+                    <Link
+                        to="/dashboard/registrations"
+                        // className="border whitespace-nowrap border-green-500 rounded inline-flex justify-center gap-x-2 items-center p-2"
+                        className="text-gray-300 group relative flex items-center gap-x-4 p-2 text-sm rounded-md hover:bg-primary-100 hover:text-white "
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                        Back to Registrations
+                    </Link>
+
+
+                    <ul className="pt-8">
+                        {steps.map((step, ind) => {
+                            const registerAs = formData.fields?.['register-as'];
+                            const foundRegisteringUser = model.registered_players?.find(item => item.value['register-as'] === registerAs);
+
+                            const lastStepBySubmission = foundRegisteringUser?.step;
+                            const thisPageStepIndex = steps.findIndex(step => step.slug === currentStep2);
+                            const isNewSubmission = !foundRegisteringUser && !!Object.keys(formData.fields).length && thisPageStepIndex > 0;
+
+                            let isDisabled = false;
+                            let ico;
+
+                            if (currentStep2 === steps[0].slug || !registerAs) {
+                                ico = (<svg className="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>);
+                                if (ind > 0) {
+                                    isDisabled = true;
+                                }
+                            } else if (lastStepBySubmission >= ind) {
+                                ico = (<svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>);
+                            } else if (isNewSubmission && thisPageStepIndex >= ind) {
+                                ico = (<svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>);
+                            } else {
+                                isDisabled = true;
+                                ico = (<svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>);
+                            }
+
+                            return (
+                                <li key={step.slug} className={classNames('text-gray-300 group hover:text-white text-sm cursor-pointer rounded-md', { 'hover:bg-primary-100': !isDisabled })}>
+                                    <NavLink
+                                        onClick={e => isDisabled && e.preventDefault()}
+                                        to={step.slug}
+                                        // className={({ isActive }) => (isActive ? 'flex items-center p-2 disabled:bg-red-100 hover:text-db-secondary text-db-secondary' : 'flex p-2  items-center gap-x-4 hover:text-white')}
+                                        className={({ isActive }) => {
+                                            if (isActive) {
+                                                return classNames('flex items-center p-2 hover:text-db-secondary text-db-secondary', {
+                                                    'opacity-50 cursor-not-allowed': isDisabled,
+                                                });
+                                            }
+                                            return classNames('flex p-2 items-center gap-x-4 hover:text-white', {
+                                                'opacity-50 cursor-not-allowed': isDisabled,
+                                            });
+                                        }}
+                                        children={({ isActive }) => (
+                                            <div className="flex h-full items-center gap-x-4">
+                                                <div className={classNames('absolute transition duration-100 left-0 h-8 w-0.5 bg-db-secondary', {
+                                                    hidden: !isActive,
+                                                })}
+                                                />
+                                                <div className="block p-1">
+                                                    {ico}
+                                                </div>
+                                                <span className={classNames('origin-left duration-100', { 'scale-0': !isOpen })}>
+                                                    {step.name}
+                                                </span>
+
+                                                <div className={classNames('whitespace-nowrap text-white absolute hidden ml-1 mb-8 left-full py-1 px-2 rounded bg-gray-700', {
+                                                    'group-hover:block': !isOpen,
+                                                })}
+                                                >
+                                                    {step.name}
+                                                </div>
+                                            </div>
+                                        )}
+                                    />
+                                </li>
+                            );
+                        })}
+                    </ul>
+
+                </div>
             </div>
 
-            <div className="flex-1 min-h-screen bg-light-gray">
+            {/* <div className="flex-1 min-h-screen bg-light-gray"> */}
+            <div className="flex-1 h-screen overflow-scroll bg-light-gray">
 
+                <Outlet
+                    context={{
+                        onNext: handleNext,
+                        onBack: handleBack,
+                        formData,
+                        model,
+                        steps,
+                    }}
+                />
 
-                {currentStep === 1 && (
-                    <WizardSelectPlayer onNext={handleNext} onBack={handleBack} formData={formData} />
-                )}
-
-                {currentStep === 2 && (
-                    <WizardPlayerInfo onNext={handleNext} onBack={handleBack} formData={formData} registrationFields={registrationFields} />
-                )}
-
-                {currentStep === 3 && (
-                    <WizardConfirmDetails onBack={handleBack} formData={formData} registrationFields={registrationFields} />
-                )}
-
-                {currentStep > 3 && (
-                    <>
-
-                        <div className="text-center text-lg pt-12">
-                            [FORM PAGE]
-                            <p className="text-6xl text-primary">{currentStep}</p>
-                        </div>
-
-                        <div className="flex justify-between pt-20 px-5">
-                            <button
-                                type="button"
-                                onClick={handleBack}
-                                // className="text-black group relative flex items-center gap-x-4 p-2 text-sm rounded-md hover:bg-primary-100 hover:text-white "
-                                className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
-                                // onClick={() => currentStep > 1 && setCurrentStep(currentStep - 1)}
-                            >
-                                Back
-                            </button>
-                            <button
-                                type="button"
-                                disabled={currentStep === steps.length}
-                                onClick={handleNext}
-                                // onClick={() => currentStep < steps.length && setCurrentStep(currentStep + 1)}
-                                className="flex justify-center items-center border p-2 transition duration-200 text-sm border-gray-300 rounded bg-primary text-white hover:bg-primary-100 disabled:bg-primary-100 disabled:ring-0 focus:outline-none active:ring active:ring-primary-50"
-                            >
-                                Continue
-                            </button>
-                        </div>
-                    </>
-
-                )}
-
-
-                {/* <div className="w-full py-6 hidden">
-                    <div className="flex">
-                        <div className="w-1/4">
-                            <div className="relative mb-2">
-                                <div className="w-10 h-10 mx-auto bg-green-500 rounded-full text-lg text-white flex items-center">
-                                    <span className="text-center text-white w-full">
-                                        <svg className="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                            <path className="heroicon-ui" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2zm14 8V5H5v6h14zm0 2H5v6h14v-6zM8 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="text-xs text-center md:text-base">Select Server</div>
-                        </div>
-
-                        <div className="w-1/4">
-                            <div className="relative mb-2">
-                                <div className="absolute flex align-center items-center align-middle content-center" style={{ width: 'calc(100% - 2.5rem - 1rem)', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                                    <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
-                                        <div className="w-0 bg-green-300 py-1 rounded" style={{ width: '100%' }} />
-                                    </div>
-                                </div>
-
-                                <div className="w-10 h-10 mx-auto bg-green-500 rounded-full text-lg text-white flex items-center">
-                                    <span className="text-center text-white w-full">
-                                        <svg className="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                            <path className="heroicon-ui" d="M19 10h2a1 1 0 0 1 0 2h-2v2a1 1 0 0 1-2 0v-2h-2a1 1 0 0 1 0-2h2V8a1 1 0 0 1 2 0v2zM9 12A5 5 0 1 1 9 2a5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm8 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h5a5 5 0 0 1 5 5v2z" />
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="text-xs text-center md:text-base">Add User</div>
-                        </div>
-
-                        <div className="w-1/4">
-                            <div className="relative mb-2">
-                                <div className="absolute flex align-center items-center align-middle content-center" style={{ width: 'calc(100% - 2.5rem - 1rem)', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                                    <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
-                                        <div className="w-0 bg-green-300 py-1 rounded" style={{ width: '100%' }} />
-                                    </div>
-                                </div>
-
-                                <div className="w-10 h-10 mx-auto bg-white border-2 border-gray-200 rounded-full text-lg text-white flex items-center">
-                                    <span className="text-center text-gray-600 w-full">
-                                        <svg className="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                            <path className="heroicon-ui" d="M9 4.58V4c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v.58a8 8 0 0 1 1.92 1.11l.5-.29a2 2 0 0 1 2.74.73l1 1.74a2 2 0 0 1-.73 2.73l-.5.29a8.06 8.06 0 0 1 0 2.22l.5.3a2 2 0 0 1 .73 2.72l-1 1.74a2 2 0 0 1-2.73.73l-.5-.3A8 8 0 0 1 15 19.43V20a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.58a8 8 0 0 1-1.92-1.11l-.5.29a2 2 0 0 1-2.74-.73l-1-1.74a2 2 0 0 1 .73-2.73l.5-.29a8.06 8.06 0 0 1 0-2.22l-.5-.3a2 2 0 0 1-.73-2.72l1-1.74a2 2 0 0 1 2.73-.73l.5.3A8 8 0 0 1 9 4.57zM7.88 7.64l-.54.51-1.77-1.02-1 1.74 1.76 1.01-.17.73a6.02 6.02 0 0 0 0 2.78l.17.73-1.76 1.01 1 1.74 1.77-1.02.54.51a6 6 0 0 0 2.4 1.4l.72.2V20h2v-2.04l.71-.2a6 6 0 0 0 2.41-1.4l.54-.51 1.77 1.02 1-1.74-1.76-1.01.17-.73a6.02 6.02 0 0 0 0-2.78l-.17-.73 1.76-1.01-1-1.74-1.77 1.02-.54-.51a6 6 0 0 0-2.4-1.4l-.72-.2V4h-2v2.04l-.71.2a6 6 0 0 0-2.41 1.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="text-xs text-center md:text-base">Setting</div>
-                        </div>
-
-                        <div className="w-1/4">
-                            <div className="relative mb-2">
-                                <div className="absolute flex align-center items-center align-middle content-center" style={{ width: 'calc(100% - 2.5rem - 1rem)', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                                    <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
-                                        <div className="w-0 bg-green-300 py-1 rounded" style={{ width: '100%' }} />
-                                    </div>
-                                </div>
-
-                                <div className="w-10 h-10 mx-auto bg-white border-2 border-gray-200 rounded-full text-lg text-white flex items-center">
-                                    <span className="text-center text-gray-600 w-full">
-                                        <svg className="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                            <path className="heroicon-ui" d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-2.3-8.7l1.3 1.29 3.3-3.3a1 1 0 0 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-2-2a1 1 0 0 1 1.4-1.42z" />
-                                        </svg>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="text-xs text-center md:text-base">Finished</div>
-                        </div>
-                    </div>
-                </div> */}
             </div>
         </main>
     );
 };
 
-export default Register;
+// export default Register;
+
+const RegisterLayout = (props) => {
+    console.log(props, 'props');
+    return (
+        <Routes>
+            {/* <Route path="*" element={<PositionWizard {...props} />}> */}
+            {/* <Route path="title" element={<WizardSelectPlayer onNext={handleNext} onBack={handleBack} formData={formData} model={model} />} /> */}
+
+            {/* <Route path="/" element={<Account />} /> */}
+            <Route path="*" element={<Register />}>
+                {/* <Route index path={null} element={<Account />} /> */}
+                {steps.map(step => (
+                    <Route key={step.slug} path={step.slug} element={step.component} />
+                ))}
+            </Route>
+            {/* </Route> */}
+
+        </Routes>
+    );
+};
+
+export default RegisterLayout;

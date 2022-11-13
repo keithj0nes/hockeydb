@@ -55,6 +55,7 @@ const ChangePassword = () => {
         alert('Not Set Up');
     };
 
+    console.log(auth, 'atuth')
     // console.log(zxcvbn(fields.new_password), 'new passwrod')
 
     return (
@@ -66,8 +67,9 @@ const ChangePassword = () => {
                 <div className="py-3 w-full">
                     <label htmlFor="current_password" className="text-sm flex justify-between">
                         <span>Current Password</span>
-
-                        <span>Last updated: {format(parseISO(auth.password_last_updated_at), 'LLLL dd, yyyy')} </span>
+                        {auth.password_last_updated_at && (
+                            <span>Last updated: {format(parseISO(auth.password_last_updated_at), 'LLLL dd, yyyy')} </span>
+                        )}
                     </label>
                     <input
                         type="text"

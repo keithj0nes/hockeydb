@@ -66,7 +66,7 @@
         email: admin@hockeydb.com
         email: scorekeeper@hockeydb.com
         email: teammanager@hockeydb.com
-        email: mutliaccounts@hockeydb.com
+        email: multiaccounts@hockeydb.com
 
         password: {{ process.env.REACT_APP_TESTING_PASSWORD }}
 

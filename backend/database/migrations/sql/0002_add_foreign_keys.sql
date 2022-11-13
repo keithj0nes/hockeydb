@@ -64,12 +64,12 @@ ALTER TABLE "news_tags" ADD FOREIGN KEY ("news_id") REFERENCES "news" ("id");
 ALTER TABLE "user_role" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "user_role" ADD FOREIGN KEY ("role_id") REFERENCES "roles" ("id");
 
-ALTER TABLE "registrations" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-ALTER TABLE "registrations" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
-ALTER TABLE "registrations" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
-ALTER TABLE "registrations" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
-ALTER TABLE "registrations" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
-ALTER TABLE "registrations" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
+-- ALTER TABLE "registrations" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+-- ALTER TABLE "registrations" ADD FOREIGN KEY ("season_id") REFERENCES "seasons" ("id");
+-- ALTER TABLE "registrations" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
+-- ALTER TABLE "registrations" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");
+-- ALTER TABLE "registrations" ADD FOREIGN KEY ("deleted_by") REFERENCES "users" ("id");
+-- ALTER TABLE "registrations" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id");
 
 ALTER TABLE "settings" ADD FOREIGN KEY ("created_by") REFERENCES "users" ("id");
 ALTER TABLE "settings" ADD FOREIGN KEY ("updated_by") REFERENCES "users" ("id");

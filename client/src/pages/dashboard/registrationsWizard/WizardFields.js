@@ -290,66 +290,6 @@ const WizardFields = () => {
             />
 
 
-            <div className="pb-20 mt-10 pt-4 bg-pink-100">
-                <h4 className="pb-10">This is mock as the form a player will fill out</h4>
-
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        console.log('submttinggg');
-                    }}
-                    className="max-w-md"
-                >
-                    {/* {theStuff.map(item => {
-                        // console.log(item,' item')
-                        const name = item.label.replace(/\s+/g, '_').toLowerCase();
-
-
-                        if (item.field_type === 'select') {
-                            const parsed = JSON.parse(item.options);
-                            const options = Object.entries(parsed).map(([value, name]) => ({ name, value }));
-                            return (
-                                <div className="py-3" key={name}>
-                                    <label htmlFor={name} className="text-sm">{item.label}</label>
-                                    <Dropdown
-                                        options={[{ name: 'Select One', value: '', disabled: true }, ...options]}
-                                        name={name}
-                                        onChange={handleChange}
-                                        value={fields[name]}
-                                    />
-
-                                </div>
-                            );
-                        }
-
-                        if (item.field_type === 'checkbox') {
-                            return (
-                                <div key={name}>
-                                    <label htmlFor={name} className="text-sm block pb-1">{item.label}</label>
-
-                                    <Toggle
-                                        noText="No"
-                                        yesText="yes"
-                                        name={name}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            );
-                        }
-
-                        return (
-                            <div key={name}>
-                                <label className="block">{item.label}</label>
-                                <input type="text" name={name} className="py-0 px-2" onChange={handleChange} />
-                            </div>
-                        );
-                    })} */}
-
-                    <button type="submit" className="p-2 text-white hover:opacity-80 mt-4 bg-primary">Submit</button>
-                </form>
-
-            </div>
-
         </div>
     );
 };

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import classNames from 'classnames';
+// import { useDispatch } from 'react-redux';
+// import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Drawer } from 'antd';
-import { Routes, Route, Link, Navigate } from 'react-router-dom';
-// import { useAuth } from '../../hooks';
-import { useAuth } from '../../../../hooks';
-
-// const obj
+// import { Drawer } from 'antd';
+// import { Routes, Route, Link, Navigate } from 'react-router-dom';
+// import { useAuth } from '../../../../hooks';
+import Select from 'react-select';
+import { useOutletContext } from 'react-router-dom';
+import { Toggle } from '../../../../components';
 
 
 const VALIDATIONS = {
@@ -17,22 +17,25 @@ const VALIDATIONS = {
 };
 
 
-const WizardPlayerInfo = ({ onNext, onBack, formData, registrationFields }) => {
-    // console.log(registrationFields, 'registrationFields');
-
+const WizardPlayerInfo = ({ onNext2, onBa2ck, for2mData, m2odel }) => {
     const [sectionNames, setSectionNames] = useState([]);
     const [sections2, setSections2] = useState({});
 
+    const { onNext, onBack, formData, model } = useOutletContext();
+
     const { fields, handleChange, errors, validate, resetForm } = formData;
 
+    // console.log(fields, 'feieleldsss');
 
     useEffect(() => {
-        sorter(registrationFields);
+        // probably need to add redirect here if no form data
+        if (!model.registration_fields) return;
+        sorter(model.registration_fields);
 
-        registrationFields.forEach(item => {
+        model.registration_fields.forEach(item => {
             VALIDATIONS[item.label] = { required: item.is_required };
         });
-    }, [registrationFields]);
+    }, [model.registration_fields]);
 
 
     // TODO: move this sorter function to a helper as it's called multple times
@@ -59,13 +62,16 @@ const WizardPlayerInfo = ({ onNext, onBack, formData, registrationFields }) => {
         console.log(isValidated, 'isvalidated');
 
         if (!isValidated) return;
-        console.log(fields, 'fieeeeldldlsss on submit')
+        console.log(fields, 'fieeeeldldlsss on submit');
         onNext();
     };
 
 
+    // console.log(fields, 'fields');
+    // console.log(sections2);
+
     return (
-        <form onSubmit={handleSubmit} className="p-4">
+        <form onSubmit={handleSubmit} className="p-4 max-w-2xl m-auto">
             {sectionNames.map(section => {
                 const m = '';
                 return (
@@ -96,12 +102,23 @@ const WizardPlayerInfo = ({ onNext, onBack, formData, registrationFields }) => {
                 >
                     Back
                 </button>
-                <button
-                    type="submit"
-                    className="flex justify-center items-center border p-2 transition duration-200 text-sm border-gray-300 rounded bg-primary text-white hover:bg-primary-100 disabled:bg-primary-100 disabled:ring-0 focus:outline-none active:ring active:ring-primary-50"
-                >
-                    Continue
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        type="button"
+                        onClick={() => console.log('Save and exiting')}
+                        // className="flex justify-center items-center border p-2 transition duration-200 text-sm border-gray-300 rounded bg-primary text-white hover:bg-primary-100 disabled:bg-primary-100 disabled:ring-0 focus:outline-none active:ring active:ring-primary-50"
+                        className="flex justify-center items-center border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
+                    >
+                        Save & Exit
+                    </button>
+
+                    <button
+                        type="submit"
+                        className="flex justify-center items-center border p-2 transition duration-200 text-sm border-gray-300 rounded bg-primary text-white hover:bg-primary-100 disabled:bg-primary-100 disabled:ring-0 focus:outline-none active:ring active:ring-primary-50"
+                    >
+                        Continue
+                    </button>
+                </div>
             </div>
         </form>
     );
@@ -113,8 +130,13 @@ WizardPlayerInfo.propTypes = {
     onNext: PropTypes.func,
     onBack: PropTypes.func,
     formData: PropTypes.object,
-    registrationFields: PropTypes.array,
+    model: PropTypes.object,
 };
+
+
+// ADD SELECT AND CHECKBOX INPUT TYPES
+
+// react-select
 
 
 const renderInputType = (field, formData) => {
@@ -141,8 +163,43 @@ const renderInputType = (field, formData) => {
                     )}
                 </div>
             );
-        // case 'checkbox':
-        //     return <Toggle disabled checked />;
+        case 'checkbox':
+            return (
+                <div className="py-3">
+
+                    <Toggle
+                        // disabled
+                        label={field.label}
+                        name={field.label}
+                        checked={fields[field.label] === 'Yes'}
+                        onChange={e => handleChange(e, e.target.checked ? 'Yes' : 'No', field.label)} // {value: 'XS', label: 'Extra Small'} 'eee'
+                    />
+
+                    {/* {field.label} */}
+
+                </div>
+            );
+        case 'select': {
+            const formattedFieldOptions = Object.keys(field.options).map(opt => ({ value: opt, label: field.options[opt] }));
+            // console.log(fields[field.label], 'fields[field.label] fields[field.label]')
+            return (
+                <div className="py-3">
+                    <label htmlFor={field.label} className="text-sm">{field.label}</label>
+                    <Select
+                        onChange={e => handleChange(e, e.label, field.label)} // {value: 'XS', label: 'Extra Small'} 'eee'
+                        options={formattedFieldOptions}
+                        // className="w-full border scroll-mt-10 py-2 text-sm border-gray-300 rounded focus:outline-none focus:ring focus:ring-gray-200"
+                        // getOptionValue={(option) => option}
+                        // value={fields[field.label] || ''}
+                        value={formattedFieldOptions.find(item => item.value === fields[field.label])}
+                    />
+
+                    {errors[field.label] && (
+                        <p className="mt-1 text-red-500 text-xs pl-1">{errors[field.label]}</p>
+                    )}
+                </div>
+            );
+        }
         default:
             return null;
     }

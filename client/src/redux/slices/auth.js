@@ -1,48 +1,45 @@
 import { createSlice } from '@reduxjs/toolkit';
-import cookie from 'react-cookies';
-// import jwt from 'jsonwebtoken';
+import Cookies from 'universal-cookie';
 import { decodeJwt } from 'jose';
 import request from '../request';
 import { history } from '../../utils';
 
-const Site_Name_Short = 'USHL';
+const COOKIE_NAME = 'USHL_auth_pml';
+const cookies = new Cookies();
 
 
-// const initialState = {
+// initialState looks like {
 //     user: {},
 //     isAuthenticated: false,
 //     access_token,
 // };
 
-
 const checkForToken = () => {
-    const access_token = cookie.load(`${Site_Name_Short}_auth_pml`);
-    // console.log(access_token, 'access_token')
-
-    if (!access_token) {
+    const access_token = cookies.get(COOKIE_NAME);
+    if (!access_token || access_token === 'undefined') {
         return { user: {}, isAuthenticated: false };
     }
-
     const decoded = decodeJwt(access_token);
-    // console.log(decoded, 'decoded')
-
-    // const decoded = jwt.decode(access_token);
     return { user: decoded.user, access_token, isAuthenticated: true };
 };
 
-// console.log(checkForToken(), 'checking for tken');
-
 const initialState = checkForToken();
-
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
         setUser: (state, { payload }) => {
-            console.log(payload, ' payload');
+            const userExists = !!Object.keys(payload).length;
+            if (userExists) {
+                cookies.set(COOKIE_NAME, payload.access_token, { path: '/' });
+            } else {
+                cookies.remove(COOKIE_NAME, { path: '/' });
+            }
+
             state.user = payload;
-            state.isAuthenticated = !!Object.keys(payload).length;
+            state.isAuthenticated = userExists;
+            state.access_token = payload.access_token;
         },
     },
 });
@@ -50,44 +47,28 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setUser } = authSlice.actions;
 
-// export default counterSlice.reducer
-
 
 export const login = loginData => async dispatch => {
-    console.log(loginData, 'login data!');
     const data = await request({ url: '/api/auth/login', method: 'POST', body: loginData, isPublic: true });
-    console.log(data, ' dtaataaa');
 
-
-    if (data.error) return alert(data.message);
+    // if (data.error) return alert(data.message);
     if (!data) return false;
-    cookie.save(`${Site_Name_Short}_auth_pml`, data.data.access_token);
     dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));
-    // dispatch({ type: SET_CURRENT_SEASON, payload: data.data.season });
-
-    console.log(history, 'history!!');
     history.push(loginData.redirect || '/dashboard');
     return true;
 };
 
 // TODO: add login from cookie to add ability to check if user is suspended on token account
 
-export const logout = (preventMessage) => async (dispatch) => {
-    // cookie.remove('hockeydb_auth');
-    cookie.remove(`${Site_Name_Short}_auth_pml`);
+export const logout = () => async (dispatch) => {
     dispatch(setUser({}));
     history.push('/');
+};
 
-    console.log('LOGGED OUT!!');
-
-    // const options = {
-    //     message: 'Success',
-    //     description: 'You have successfully logged out',
-    //     placement: 'topRight',
-    // };
-    // if (!preventMessage) {
-    //     notification.success(options);
-    // }
+export const createAccount = (userData) => async () => {
+    const data = await request({ url: '/api/auth/signup', method: 'POST', body: userData, isPublic: true });
+    if (!data) return false;
+    return true;
 };
 
 export default authSlice.reducer;

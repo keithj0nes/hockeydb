@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 // import classNames from 'classnames';
 // import PropTypes from 'prop-types';
 // import { Drawer } from 'antd';
+import { format, parseISO } from 'date-fns';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 // import { logout } from '../../redux/slices/auth';
 // import { useAuth } from '../../hooks';
 import { getOpenRegistrations } from '../../redux/slices/registrations';
 import { Loader, Pagination } from '../../components';
+
 
 const OpenRegistrations = () => {
     const PAGE_TITLE = 'Registrations';
@@ -39,7 +41,7 @@ const OpenRegistrations = () => {
     // TODO: need to determine if a users registration is completed or not
 
     return (
-        <div className="h-screen overflow-scroll p-4 sm:p-7 relative">
+        <div className="h-screen overflow-scroll p-4 sm:p-7 relative max-w-5xl">
 
             {isFetching && <Loader />}
 
@@ -53,7 +55,8 @@ const OpenRegistrations = () => {
             <h3 className="text-xl mb-4 font-semibold">Open Registrations</h3>
 
             {openRegistrations.map(item => {
-                const bb = myRegistrations.find(reg => reg.registration_template_id === item.id);
+                console.log(item, 'item')
+                // const bb = myRegistrations.find(reg => reg.registration_template_id === item.id);
                 // console.log(bb, 'bb')
                 return (
                     <Link
@@ -82,25 +85,31 @@ const OpenRegistrations = () => {
             <p>Send to page of previously filled out data</p>
 
 
-
             {myRegistrations.map(item => {
                 // console.log(item, ' myRegistrations');
                 const b = '';
                 return (
                     <button
                         type="button"
-                        key={item.id}
+                        key={item.registration_id}
                         // to={`/register/${item.id}`}
                         className="w-full my-4 relative flex gap-2 border p-2 text-sm border-gray-300 rounded bg-white hover:bg-gray-50 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100"
                     >
                         <div className="w-full flex justify-between">
                             <div className="bg-yllow-100 text-left">
                                 <p>{item.name}</p>
-                                {renderSpotsLeft(item)}
+
+                                <div className="flex">
+                                    <p className="text-xs">Registration #{item.registration_id} for {item.full_name}</p>
+                                    {item.submitted_at && (<p className="text-xs">&nbsp;| Submitted: {format(parseISO(item.submitted_at), 'MM/dd/yyyy hh:mmaaa')}</p>)}
+
+                                </div>
                             </div>
 
                             <div className="flex items-center">
-                                <p className="text-green-600">Completed</p>
+                                {/* <p className="text-green-600">Completed</p> */}
+                                <button type="button" className="flex items-center text-indigo-700 hover:text-indigo-400 duration-200">View</button>
+
                             </div>
                         </div>
                     </button>

@@ -442,7 +442,7 @@ const getSeasonById = async (req, res, next) => {
         `;
 
         // const template_registrations = await db.template_registrations.find({ season_id: id });
-        const template_registrations = await db._REGISTRATION_TEMPLATE_BY_ADMIN.find({ season_id: id });
+        const template_registrations = await db.registrations_templates.find({ season_id: id });
 
         const teams = await db.query(rawTeams, [id]);
         const divisions = await db.query(rawDivisions, [id]);

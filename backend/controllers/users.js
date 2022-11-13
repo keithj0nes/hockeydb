@@ -24,8 +24,8 @@ const getUsers = async (req, res, next) => {
             CONCAT (first_name, ' ', last_name) AS full_name, 
             CASE
                 when is_suspended = true then 'inactive'
-                when invite_date is not null and last_login is null then 'invited'
-                when reinvite_date is not null then 'reinvited'
+                when invited_at is not null and last_login is null then 'invited'
+                when reinvited_at is not null then 'reinvited'
                 else 'active'
                 END as status 
             FROM USERS
@@ -56,8 +56,8 @@ const getUsers = async (req, res, next) => {
             CONCAT (first_name, ' ', last_name) AS full_name, 
             CASE
                 when is_suspended = true then 'inactive'
-                when invite_date is not null and last_login is null then 'invited'
-                when reinvite_date is not null then 'reinvited'
+                when invited_at is not null and last_login is null then 'invited'
+                when reinvited_at is not null then 'reinvited'
                 else 'active'
                 END as status,
             ARRAY_AGG(r.name ORDER BY r.id) AS role_list

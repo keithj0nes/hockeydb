@@ -5,17 +5,42 @@ const faker = require('faker');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const { add } = require('date-fns');
+// const { nanoid } = require('nanoid');
+const { customAlphabet } = require('nanoid');
+
 const { chunkArray, randomr, colorRandomizer, wait } = require('./seedHelpers');
 const { selectEnvironment } = require('./selectEnvironment');
-
+// const nanoid2 = nanoid.customAlphabet('1234567890abcdef', 10);
 const scriptsPath = path.join(__dirname, '..', 'scripts');
+
+const nanoid = customAlphabet('1234567890abcdef', 10);
 
 
 // TODO: add more registrations based on seasons
+// TODO: make password_last_updated_at same as account creation date (need to add to auth controller too)
 
 const argv = process.argv.slice(2);
 const connectionInfo = selectEnvironment(argv[1]);
 const todaysDate = new Date();
+
+const submissionValue = (player, submissionWithoutPlayer = false) => {
+    if (submissionWithoutPlayer) {
+        return {
+            'First Name': faker.name.firstName(),
+            'Last Name': faker.name.lastName(),
+            'register-as': '0',
+            'submission-key': nanoid(),
+        };
+    }
+    return {
+        'First Name': player.first_name,
+        'Last Name': player.last_name,
+        'Phone Number': '1234567890',
+        'register-as': String(player.id) || '0',
+        'submission-key': nanoid(),
+    };
+};
+
 
 const dropTables = async () => massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(async (db) => {
     console.log('\n\nDropping tables');
@@ -28,14 +53,14 @@ const dropTables = async () => massive(connectionInfo, { excludeMatViews: true, 
 
     console.log(` ✅ ${tableCount} tables removed`);
     console.log('--------------------');
-    console.log('Drop tables complete');
+    console.log('Drop tables complete\n');
     db.instance.$pool.end();
     return true;
 });
 
 
 const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
-    console.log('\n\nInitializing seeding');
+    console.log('\nInitializing seeding');
     console.log('--------------------');
 
     // hard variables
@@ -54,7 +79,7 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
         { email: 'admin@hockeydb.com', role_id: 2 },
         { email: 'scorekeeper@hockeydb.com', role_id: 3 }, // not doing anything with this role yet
         { email: 'teammanager@hockeydb.com', role_id: 4 }, // not doing anything with this role yet
-        { email: 'mutliaccounts@hockeydb.com', role_id: 5 },
+        { email: 'multiaccounts@hockeydb.com', role_id: 5 },
     ];
     const newsPosts = [
         { title: 'Registrations Open Soon', display_order: 1, body: '<p>Signups start May 1st. Look for the registration link emails to be sent out soon</p>' },
@@ -123,16 +148,15 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
         const last2 = createdUsers.slice(-2);
 
         await Promise.all(last2.map(async user => {
-            const { first_name, last_name, email } = user;
-            await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: createdUsers[0].id });
+            const { first_name, last_name, id } = user;
+            await db.players.insert({ first_name, last_name, created_at: todaysDate, created_by: id });
         }));
 
         // create player accounts
         return Promise.all(Array(counts.totalPlayers).fill().map(async () => {
             const first_name = faker.name.firstName();
             const last_name = faker.name.lastName();
-            const email = faker.internet.email();
-            await db.players.insert({ first_name, last_name, email, created_at: todaysDate, created_by: createdUsers[0].id });
+            await db.players.insert({ first_name, last_name, created_at: todaysDate, created_by: createdUsers[0].id });
         }));
     };
 
@@ -413,37 +437,38 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
 
     const createRegistrationTemplates = async ({ admin }) => {
         // add registration template
-        await db._REGISTRATION_TEMPLATE_BY_ADMIN.insert({ name: 'Test Registration 1', is_open: true, season_id: 2, created_at: todaysDate, created_by: admin.id });
-        await db._REGISTRATION_TEMPLATE_BY_ADMIN.insert({ name: 'Test Registration 2', is_open: false, season_id: 2, created_at: todaysDate, created_by: admin.id });
+        await db.registrations_templates.insert({ name: 'Test Registration 1', is_open: true, season_id: 2, created_at: todaysDate, created_by: admin.id, max_spots: 20, show_max_spots: true });
+        await db.registrations_templates.insert({ name: 'Test Registration 2', is_open: false, season_id: 2, created_at: todaysDate, created_by: admin.id, show_max_spots: true });
 
         // add default fields
-        await db._LEAGUE_SEASON_DEFAULT_FORM_FIELDS.insert({ field_type: 'text', label: 'First Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 1 });
-        await db._LEAGUE_SEASON_DEFAULT_FORM_FIELDS.insert({ field_type: 'text', label: 'Last Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 2 });
-        await db._LEAGUE_SEASON_DEFAULT_FORM_FIELDS.insert({ field_type: 'text', label: 'Phone Number', hint: '222-222-2222', section: 'Basic Info', section_display_index: 1, display_index: 3 });
+        await db.registrations_default_fields.insert({ field_type: 'text', label: 'First Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 1 });
+        await db.registrations_default_fields.insert({ field_type: 'text', label: 'Last Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 2 });
+        await db.registrations_default_fields.insert({ field_type: 'text', label: 'Phone Number', hint: '222-222-2222', section: 'Basic Info', section_display_index: 1, display_index: 3 });
 
         // add form fields made by admin
         const query = `
-            INSERT INTO "_LEAGUE_SEASON_FORM_FIELDS" (field_type, label, hint, options, is_required, registration_template_id, section, section_display_index, display_index)
-            SELECT field_type, label, hint, options, is_required, 1, section, section_display_index, display_index FROM "_LEAGUE_SEASON_DEFAULT_FORM_FIELDS";
+            INSERT INTO "registrations_fields" (field_type, label, hint, options, is_required, registration_template_id, section, section_display_index, display_index)
+            SELECT field_type, label, hint, options, is_required, 1, section, section_display_index, display_index FROM "registrations_default_fields";
         `;
         await db.query(query);
 
-        await db._LEAGUE_SEASON_FORM_FIELDS.insert({ registration_template_id: 1, field_type: 'text', label: 'Previous Team', hint: 'Here be a hint/tooltip', section: 'Sports Info', section_display_index: 2, display_index: 2 });
-        await db._LEAGUE_SEASON_FORM_FIELDS.insert({ registration_template_id: 1, field_type: 'select', label: 'Shirt Size', hint: 'Use the dropdown to select a size', options: '{"XS": "Extra Small", "S": "Small"}', is_required: true, section: 'Sports Info', section_display_index: 2, display_index: 3 });
-        await db._LEAGUE_SEASON_FORM_FIELDS.insert({ registration_template_id: 1, field_type: 'checkbox', label: 'Do you also coach?', hint: 'Check the box if you coach any level', section: 'Sports Info', section_display_index: 2, display_index: 3 });
+        await db.registrations_fields.insert({ registration_template_id: 1, field_type: 'text', label: 'Previous Team', hint: 'Here be a hint/tooltip', section: 'Sports Info', section_display_index: 2, display_index: 2 });
+        await db.registrations_fields.insert({ registration_template_id: 1, field_type: 'select', label: 'Shirt Size', hint: 'Use the dropdown to select a size', options: '{"XS": "Extra Small", "S": "Small"}', is_required: true, section: 'Sports Info', section_display_index: 2, display_index: 3 });
+        await db.registrations_fields.insert({ registration_template_id: 1, field_type: 'checkbox', label: 'Do you also coach?', hint: 'Check the box if you coach any level', section: 'Sports Info', section_display_index: 2, display_index: 3 });
     };
 
     const createPlayerRegistrations = async (createdUsers) => {
         // create player registrations for last two users
         const last2 = createdUsers.slice(-2);
 
-        const createdRegistrationTemplates = await db._REGISTRATION_TEMPLATE_BY_ADMIN.find();
+        const createdRegistrationTemplates = await db.registrations_templates.find();
         const createdPlayers = await db.players.find();
         const usedPlayerIds = [];
 
         return Promise.all(last2.map(async user => {
             const associatedAccounts = randomr(1, 6);
-            const [usersPlayerAccount] = await db.players.find({ email: user.email });
+            // const [usersPlayerAccount] = await db.players.find({ email: user.email });
+            const [usersPlayerAccount, ...restOfPlayers] = await db.players.find({ created_by: user.id });
 
             let playerId = usersPlayerAccount.id;
 
@@ -454,8 +479,41 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
                             playerId = randomr(1, createdPlayers.length);
                         }
 
+                        console.log({ 'player id: ': playerId, 'user id: ': user.id });
+                        console.log('break -');
+                        // console.log(createdPlayers, 'plaerys');
+
+                        // TODO: promise is firing and updating the db.players.update to a single value
+                        // instead of updating each one individually. believe it's an await issue
+
+                        // console.log(restOfPlayers, 'restOfPlayers') // empty array
+
+                        // const subValue = submissionValue();
+
+                        // if ()
+
+
+
+
+                        // TODO: only add 3 accounts to the multiaccounts user - dont worry about adding it to the team manager account
+
+
+
+
+                        const myPlayer = createdPlayers.find(p => p.id === playerId);
+
+                        console.log(myPlayer, 'MY PLAYRE')
+
+                        const subValue = submissionValue(myPlayer);
+
+                        console.log(subValue, 'SUB VALUEEEE')
+
+
                         usedPlayerIds.push(playerId);
-                        await db._USER_FORM_SUBMISSION_AKA_REGISTRATIONS.insert({ user_id: user.id, registration_template_id: 1, player_id: playerId, created_at: todaysDate });
+                        await db.registrations_submissions.insert({ user_id: user.id, registration_template_id: 1, value: subValue, player_id: playerId, created_at: todaysDate });
+                        await wait(4000);
+
+                        await db.players.update({ id: playerId }, { parent_id: user.id });
                     }));
                 }
                 return null;

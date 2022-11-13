@@ -8,6 +8,7 @@ import players from './slices/players';
 import teams from './slices/teams';
 import news from './slices/news';
 import registrations from './slices/registrations';
+import locations from './slices/locations';
 
 export const store = configureStore({
     reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
         teams,
         news,
         registrations,
+        locations,
     },
 });

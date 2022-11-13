@@ -1,9 +1,25 @@
 const app = require('../server.js');
+const { buildWhere } = require('./helpers/sql');
+
+// const getLocations = async (req, res, next) => {
+//     try {
+//         const db = app.get('db');
+//         const data = await db.query('SELECT * FROM locations WHERE deleted_at IS NULL ORDER BY UPPER(name)');
+//         return res.send({ status: 200, data, message: 'Retrieved list of locations' });
+//     } catch (error) {
+//         console.log('GET LOCATIONS ERROR: ', error);
+//         return next(error);
+//     }
+// };
 
 const getLocations = async (req, res, next) => {
     try {
         const db = app.get('db');
-        const data = await db.query('SELECT * FROM locations WHERE deleted_at IS NULL ORDER BY UPPER(name)');
+        const allowableQueryKeys = [{ key: 'type' }, { key: 'search', columns: ['address', 'name'] }];
+        const [WHERE] = buildWhere(req.query, allowableQueryKeys);
+
+        const data = await db.query(`SELECT * FROM locations ${WHERE}`);
+
         return res.send({ status: 200, data, message: 'Retrieved list of locations' });
     } catch (error) {
         console.log('GET LOCATIONS ERROR: ', error);

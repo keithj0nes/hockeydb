@@ -17,7 +17,8 @@ try {
     switch (argv[0]) {
         case 'seed':
             dropTables().then(() => {
-                runMigration(migrationsSQLFolder, argv[1]).then(() => {
+                runMigration(migrationsSQLFolder, argv[1]).then((err) => {
+                    if (err) return console.log('Seeding aborted');
                     seedTables();
                 });
             });

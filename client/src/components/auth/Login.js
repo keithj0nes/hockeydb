@@ -3,10 +3,12 @@ import { Form, Input } from 'antd';
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { login } from '../../redux/slices/auth';
+import { login, createAccount } from '../../redux/slices/auth';
 
 const Login = () => {
     const [form] = Form.useForm();
+    const [createForm] = Form.useForm();
+
     const [showForm, setShowForm] = useState('login'); // one of login | reset | reset_success | create
     const [focus, setFocus] = useState(true);
 
@@ -32,7 +34,7 @@ const Login = () => {
         dispatch(login({
             email: values.email.toLowerCase(),
             password: values.password,
-            redirect: location.state?.from
+            redirect: location.state?.from,
         }));
     };
 
@@ -43,6 +45,22 @@ const Login = () => {
             redirect: location.state?.from,
         }));
     };
+
+
+    const handleCreateAccount = async values => {
+        // setIsLoading(true);
+        // await wait(1000);
+        console.log('firing')
+
+        const createSuccess = await dispatch(createAccount({ ...values, email: values.email.toLowerCase() }));
+        // setIsLoading(false);
+        if (!createSuccess) {
+            return;
+        }
+        createForm.resetFields();
+        setShowForm('login');
+    };
+
 
 
     return (
@@ -92,7 +110,7 @@ const Login = () => {
                     <p className="p-1">Don&apos;t have an account?</p>
                     {/* <Button onClick={() => setShowForm('create')} htmlType="button" type="link" title="Create account" /> */}
 
-                    <button type="button" className="p-1 text-secondary underline active:opacity-80">
+                    <button type="button" onClick={() => setShowForm('create')} className="p-1 text-secondary underline active:opacity-80">
                         Create account
                     </button>
                 </div>
@@ -108,6 +126,49 @@ const Login = () => {
                     <p>Don&apos;t have an account?</p>
                     <Button onClick={() => setShowForm('create')} htmlType="button" type="link" title="Create account" />
                 </div> */}
+            </Form>
+
+            <Form
+                form={createForm}
+                layout="vertical"
+                // className={`box-shadow login-form ${showForm === 'create' ? 'toggleIn' : 'toggleOut'}`}
+                onFinish={handleCreateAccount}
+                className={classNames('w-full bg-white p-4 mt-20 max-w-sm m-auto rounded-md shadow-xl transition duration-300',
+                    {
+                        'select-none pointer-events-none opacity-0': !focus,
+                    })}
+
+            >
+                <p className="text-center">Create your account</p>
+
+                {/* <img src={logo} alt="Logo" className="logo" /> */}
+
+                <p className="text-center p-b-m">Creating an account will allow you to register for the league</p>
+                {/* <p className="p-v-m text-center">Please complete your registration below.</p> */}
+
+                <Form.Item label="First name" name="first_name" rules={[{ required: true, message: 'Please enter your first name' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Last name" name="last_name" rules={[{ required: true, message: 'Please enter your last name' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please enter your email' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter a password' }]}>
+                    <Input.Password className="input-password" type="password" />
+                </Form.Item>
+
+                <div className="m-t-xl">
+                    <button type="submit" style={{ width: '100%' }}>Create Account</button>
+                </div>
+                <div className="m-t-m f-justify-between">
+                    <p>Already have an account?</p>
+                    <button onClick={() => setShowForm('login')} type="button">Login</button>
+                </div>
             </Form>
 
 
@@ -137,7 +198,7 @@ const Login = () => {
                 <button
                     type="button"
                     className="my-1 block m-auto text-secondary underline active:opacity-80 hover:opacity-80"
-                    onClick={() => handleAutoLogin('mutliaccounts')}
+                    onClick={() => handleAutoLogin('multiaccounts')}
                 >
                     Login as [Player]
                 </button>

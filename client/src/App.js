@@ -60,7 +60,7 @@ function App() {
                     )}
                 />
                 <Route
-                    path="/register/:registration_id"
+                    path="/register/:registration_id/*"
                     element={(
                         <PrivateRoute>
                             <Register />

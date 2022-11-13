@@ -11,15 +11,17 @@ async function runMigration(filePath, environment) {
             return console.log('\nNo new migrations found\n\n');
         }
 
-        console.log('\n \nApplying migrations:');
+        console.log('\nApplying migrations:');
         console.log('--------------------');
 
         val.map((v) => console.log(' ✅', v.fileName));
 
         console.log('--------------------');
-        return console.log('Migrations complete\n\n');
+        console.log('Migrations complete\n');
+        return false;
     } catch (error) {
-        return console.error(error, ': => error in migration');
+        console.error(error, ': => error in migration');
+        return true;
     }
 }
 

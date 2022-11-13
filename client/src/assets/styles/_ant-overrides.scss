@@ -133,7 +133,6 @@
 // POP OVER 
 // 
 
-
 .ant-popover.ant-popconfirm.ant-popover-placement-top {
 
     .ant-popover-arrow {
@@ -157,4 +156,13 @@
             @apply flex justify-center items-center border p-2 px-3 text-sm border-gray-300 rounded bg-primary hover:bg-primary-100 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100;
         }
     }
+}
+
+
+// 
+// MODAL
+// 
+
+.ant-modal-body {
+    padding: 0;
 }
