@@ -6,11 +6,12 @@ import { Table } from '../../components/guest';
 import { getGames } from '../../redux/slices/games';
 import Select from 'react-select';
 import { select } from 'react-cookies';
+import { getGamesSuccess } from '../../redux/slices/games';
 
 const Schedule = () => {
-    const { games, isLoading } = useSelector((state) => state.games);
+    const { allGames, isLoading } = useSelector((state) => state.games);
     const dispatch = useDispatch();
-    console.log('GAMES STATE IN COMPONENT', games);
+    console.log('ALLGAMES STATE IN COMPONENT', allGames);
 
     const [filters, setFilters] = useState({ page: 1, fromLoadMore: false });
 
@@ -22,25 +23,34 @@ const Schedule = () => {
 
     const handleFilterChange = (e) => {
         // get name of filter changed
-        const { name, value } = e.target;
-        console.log('NAME, VALUE', name, value);
+        console.log('EVENT', e);
+        // const value = e.target.value;
+        // console.log('VALUE', value);
+        setFilters({ ...filters, season: e.value });
+
+        console.log('FILTERS STATE', filters);
 
         // reset divisions and teams to 'All' if season changed
-        if (name === 'season') {
-            delete filters['division'];
-            delete filters['team'];
-        }
-        // reset the select teams fields if season is changed
-        if (name === 'division') {
-            delete filters['team'];
-        }
+        // if (name === 'season') {
+        //     delete filters['division'];
+        //     delete filters['team'];
+        // }
+        // // reset the select teams fields if season is changed
+        // if (name === 'division') {
+        //     delete filters['team'];
+        // }
         // delete to not put it in the URL params
         // delete filters['page'];
         // delete filters['fromLoadMore'];
     };
 
     // for (const season in games.season)
-    // const seasonOptions = {  };
+    // test values
+    const options = [
+        { value: 'summer 2021', label: 'summer 2021' },
+        { value: 'fall 2021', label: 'fall 2021' },
+        { value: 'spring 2020', label: 'spring 2020' },
+    ];
 
     return (
         <div>
@@ -54,7 +64,7 @@ const Schedule = () => {
                             <span>Season</span>
                             <Select
                                 name="seasons"
-                                // options={seasonOptions}
+                                options={options}
                                 label="seasons"
                                 onChange={handleFilterChange}
                             />
@@ -79,7 +89,7 @@ const Schedule = () => {
                         <Table
                             // selectedSeason={selectedSeason}
                             // selectedDivison={selectedDivision}
-                            data={games}
+                            data={allGames}
                             columns={{
                                 date: {
                                     as: 'Date',

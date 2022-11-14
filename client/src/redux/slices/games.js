@@ -28,26 +28,27 @@ export const gamesSlice = createSlice({
         },
         getGamesSuccess: (state, { payload }) => {
             console.log('getGamesSuccess Triggered');
-            state.allGames = [...payload];
+            state.allGames = [...payload.data.games];
             state.isLoading = false;
-            state.scheduleFilters = {
-                seasons: { ...games.data.seasons },
-                divisions: { ...games.data.divisons },
-                teams: { ...teams.data.teams },
-            };
-            console.log('SCHEDULE FILTERS', state.scheduleFilters);
+            // state.scheduleFilters = {
+            //     seasons: { ...data.data.season },
+            //     divisions: { ...data.data.divison },
+            //     teams: { ...data.data.team },
+            // };
+            // console.log('SCHEDULE FILTERS', state.scheduleFilters);
             console.log('games STATE', state.allGames);
         },
     },
 });
 
-export const { getInit, getGamesSuccess } = gamesSlice.actions;
+export const { getInit, getGamesSuccess, updateScheduleFilters } =
+    gamesSlice.actions;
 
 export const getGames =
     (filter = '') =>
     async (dispatch) => {
+        console.log('DISPATCH', dispatch);
         dispatch(getInit());
-
         const data = await request({
             url: `/api/games?${filter || ''}`,
             method: 'GET',
@@ -59,11 +60,18 @@ export const getGames =
         if (!data.data) return false;
 
         // deconstruct games data from data
-        const { games } = data.data;
+        // const { games } = data.data;
+
+        // console.log('GAMES 2', games);
 
         // dispatch to getgamesuccess to add data to state
-        dispatch(getGamesSuccess(games));
+        dispatch(getGamesSuccess(data));
         console.log('POST GETGAMES DISPATCH');
+
+        // const activeSeason = data.data.seasons.find(
+        //     (season) => season.is_active === true
+        // );
+        // return { season: activeSeason.id };
     };
 
 export default gamesSlice.reducer;
