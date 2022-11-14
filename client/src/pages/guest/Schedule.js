@@ -1,36 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// import { getSchedule } from '../../redux/slices/schedule';
 import { Table } from '../../components/guest';
 // import { Select } from 'antd';
 import { getGames } from '../../redux/slices/games';
 import Select from 'react-select';
-import { select } from 'react-cookies';
-import { getGamesSuccess } from '../../redux/slices/games';
+// import { select } from 'react-cookies';
+import { getQuery, setQuery } from '../../queryHelpers';
+import { history } from '../../queryHelpers';
 
 const Schedule = () => {
     const { allGames, isLoading, scheduleFilters } = useSelector(
         (state) => state.games
     );
     const dispatch = useDispatch();
-    console.log('ALLGAMES STATE IN COMPONENT', allGames);
+    // console.log('ALLGAMES STATE IN COMPONENT', allGames);
 
     const [filters, setFilters] = useState({ page: 1, fromLoadMore: false });
 
     useEffect(() => {
         console.log('fetching schedule');
         //  filters / query
+        // apply filters if search / filter selected from dropdown, else retreive all results
+        if (history.location.search) {
+            const [queries, queriesString] = getQuery();
+        }
+        console.log('HISTORY LOCATION', history.location);
+        console.log('queries, queriesString', queries, queriesString);
         dispatch(getGames('page=1'));
     }, []);
 
     const handleFilterChange = (e) => {
         // get name of filter changed
-        console.log('EVENT', e);
         // const value = e.target.value;
         // console.log('VALUE', value);
         setFilters({ ...filters, season: e.value });
 
-        console.log('FILTERS STATE', filters);
+        // console.log('FILTERS STATE', filters);
 
         // reset divisions and teams to 'All' if season changed
         // if (name === 'season') {
@@ -48,7 +53,7 @@ const Schedule = () => {
 
     // for (const season in games.season)
     // test values
-    console.log('DIVISONS COMPONENT', scheduleFilters.divisions);
+    // console.log('DIVISONS COMPONENT', scheduleFilters.divisions);
     const seasonOptions = scheduleFilters.seasons.map((season) => {
         return { value: season.name, label: season.name };
     });
@@ -61,7 +66,7 @@ const Schedule = () => {
         return { value: team.name, label: team.name };
     });
 
-    console.log('SEASONOPTIONS', seasonOptions);
+    // console.log('SEASONOPTIONS', seasonOptions);
 
     return (
         <div>
