@@ -48,9 +48,13 @@ const Schedule = () => {
 
     // for (const season in games.season)
     // test values
-    console.log('SFS', scheduleFilters.seasons);
+    console.log('DIVISONS COMPONENT', scheduleFilters.divisions);
     const seasonOptions = scheduleFilters.seasons.map((season) => {
         return { value: season.name, label: season.name };
+    });
+
+    const divisionOptions = scheduleFilters.divisions.map((division) => {
+        return { value: division.name, label: division.name };
     });
 
     const teamOptions = scheduleFilters.teams.map((team) => {
@@ -80,8 +84,8 @@ const Schedule = () => {
                             <span>Division</span>
                             <Select
                                 name="divisons"
-                                // options={divisionOptions}
-                                // label="divisons"
+                                options={divisionOptions}
+                                label="divisons"
                                 onChange={handleFilterChange}
                                 // defaultValue={this.state.filters.season || ''}
                             />

@@ -28,13 +28,13 @@ export const gamesSlice = createSlice({
         },
         getGamesSuccess: (state, { payload }) => {
             console.log('getGamesSuccess Triggered');
-            console.log('PAYLOAD DATA', typeof payload.data.divisions);
+            console.log('DIVISIONS TYPE', typeof payload.data.divisons);
             state.allGames = [...payload.data.games];
 
             state.isLoading = false;
             state.scheduleFilters = {
                 seasons: [...payload.data.seasons],
-                // divisions: [...payload.data.divisons],
+                divisions: [...payload.data.divisions],
                 teams: [...payload.data.teams],
             };
             // console.log('SCHEDULE FILTERS', state.scheduleFilters);
