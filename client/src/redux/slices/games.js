@@ -28,13 +28,15 @@ export const gamesSlice = createSlice({
         },
         getGamesSuccess: (state, { payload }) => {
             console.log('getGamesSuccess Triggered');
+            console.log('PAYLOAD DATA', typeof payload.data.divisions);
             state.allGames = [...payload.data.games];
+
             state.isLoading = false;
-            // state.scheduleFilters = {
-            //     seasons: { ...data.data.season },
-            //     divisions: { ...data.data.divison },
-            //     teams: { ...data.data.team },
-            // };
+            state.scheduleFilters = {
+                seasons: [...payload.data.seasons],
+                // divisions: [...payload.data.divisons],
+                teams: [...payload.data.teams],
+            };
             // console.log('SCHEDULE FILTERS', state.scheduleFilters);
             console.log('games STATE', state.allGames);
         },

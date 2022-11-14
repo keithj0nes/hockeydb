@@ -9,7 +9,9 @@ import { select } from 'react-cookies';
 import { getGamesSuccess } from '../../redux/slices/games';
 
 const Schedule = () => {
-    const { allGames, isLoading } = useSelector((state) => state.games);
+    const { allGames, isLoading, scheduleFilters } = useSelector(
+        (state) => state.games
+    );
     const dispatch = useDispatch();
     console.log('ALLGAMES STATE IN COMPONENT', allGames);
 
@@ -46,11 +48,16 @@ const Schedule = () => {
 
     // for (const season in games.season)
     // test values
-    const options = [
-        { value: 'summer 2021', label: 'summer 2021' },
-        { value: 'fall 2021', label: 'fall 2021' },
-        { value: 'spring 2020', label: 'spring 2020' },
-    ];
+    console.log('SFS', scheduleFilters.seasons);
+    const seasonOptions = scheduleFilters.seasons.map((season) => {
+        return { value: season.name, label: season.name };
+    });
+
+    const teamOptions = scheduleFilters.teams.map((team) => {
+        return { value: team.name, label: team.name };
+    });
+
+    console.log('SEASONOPTIONS', seasonOptions);
 
     return (
         <div>
@@ -64,7 +71,7 @@ const Schedule = () => {
                             <span>Season</span>
                             <Select
                                 name="seasons"
-                                options={options}
+                                options={seasonOptions}
                                 label="seasons"
                                 onChange={handleFilterChange}
                             />
@@ -81,7 +88,12 @@ const Schedule = () => {
                         </div>
                         <div>
                             <span>Team</span>
-                            <Select />
+                            <Select
+                                name="teams"
+                                options={teamOptions}
+                                label="teams"
+                                onChange={handleFilterChange}
+                            />
                         </div>
                     </div>
                     {/* <div className="hidden md:block"> */}
