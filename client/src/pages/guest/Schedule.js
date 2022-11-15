@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Table } from '../../components/guest';
 // import { Select } from 'antd';
 import { getGames } from '../../redux/slices/games';
-import Select from 'react-select';
+// import Select from 'react-select';
 // import { select } from 'react-cookies';
 import { getQuery, setQuery } from '../../queryHelpers';
+import { Select } from '../../components/dashboard/Select';
 import { history } from '../../queryHelpers';
 
 const Schedule = () => {
@@ -15,56 +16,85 @@ const Schedule = () => {
     const dispatch = useDispatch();
     // console.log('ALLGAMES STATE IN COMPONENT', allGames);
 
-    const [filters, setFilters] = useState({ page: 1, fromLoadMore: false });
+    const [filters, setFilters] = useState({
+        page: 1,
+        fromLoadMore: false,
+    });
 
     useEffect(() => {
         console.log('fetching schedule');
         //  filters / query
         // apply filters if search / filter selected from dropdown, else retreive all results
+        console.log('FILTERS USEEFFECT', filters);
         if (history.location.search) {
-            const [queries, queriesString] = getQuery();
+            const [parsedQuery, queriesString] = getQuery();
+            console.log(
+                'parsedQuery, queriesString',
+                parsedQuery,
+                queriesString
+            );
         }
-        console.log('HISTORY LOCATION', history.location);
-        console.log('queries, queriesString', queries, queriesString);
-        dispatch(getGames('page=1'));
+        // retrieve all results
+        dispatch(getGames('page=1')).then((res) =>
+            console.log('RES FROM DISPATCH', res)
+        );
     }, []);
 
     const handleFilterChange = (e) => {
-        // get name of filter changed
-        // const value = e.target.value;
-        // console.log('VALUE', value);
-        setFilters({ ...filters, season: e.value });
+        console.log('EVENT', e);
+        console.log('EVENT VALUE', e.value);
+        // console.log('FILTERS', filters);
+        // const filters = { ...filters };
+        const { name, value, checked, type } = e.target;
 
-        // console.log('FILTERS STATE', filters);
+        console.log('NAME, VALUE', { name, value });
 
-        // reset divisions and teams to 'All' if season changed
-        // if (name === 'season') {
-        //     delete filters['division'];
-        //     delete filters['team'];
-        // }
-        // // reset the select teams fields if season is changed
-        // if (name === 'division') {
-        //     delete filters['team'];
-        // }
+        if (value === '' || checked === false) {
+            delete filters[name];
+        } else {
+            filters[name] = type === 'checkbox' ? checked : value;
+        }
+
+        // reset the select divisions and teams fields if season is changed
+        if (name === 'season') {
+            delete filters['division'];
+            delete filters['team'];
+        }
+        // reset the select teams fields if season is changed
+        if (name === 'division') {
+            delete filters['team'];
+        }
         // delete to not put it in the URL params
-        // delete filters['page'];
-        // delete filters['fromLoadMore'];
+        delete filters['page'];
+        delete filters['fromLoadMore'];
+        // if (e.name === 'seasons') {
+        //     setFilters({ ...filters, season: e.value, filterType: 'season' });
+        //     console.log('FILTERS IN HANDLER', filters);
+        //     const { filterType } = filters;
+        //     console.log('SEASONFILTER', season);
+        //     const filterId = filters.season.id;
+        // }
+        console.log('FILTERS', filters);
+
+        const search = setQuery(filters);
+        dispatch(getGames(filters));
     };
 
     // for (const season in games.season)
-    // test values
-    // console.log('DIVISONS COMPONENT', scheduleFilters.divisions);
-    const seasonOptions = scheduleFilters.seasons.map((season) => {
-        return { value: season.name, label: season.name };
-    });
 
-    const divisionOptions = scheduleFilters.divisions.map((division) => {
-        return { value: division.name, label: division.name };
-    });
+    /*********** React Select Options *************/
+    // const seasonOptions = scheduleFilters.seasons.map((season) => {
+    //     return { value: season, label: season.name };
+    // });
 
-    const teamOptions = scheduleFilters.teams.map((team) => {
-        return { value: team.name, label: team.name };
-    });
+    // const divisionOptions = scheduleFilters.divisions.map((division) => {
+    //     return { value: division, label: division.name };
+    // });
+
+    // const teamOptions = scheduleFilters.teams.map((team) => {
+    //     return { value: team, label: team.name };
+    // });
+    /**********************************/
 
     // console.log('SEASONOPTIONS', seasonOptions);
 
@@ -79,29 +109,40 @@ const Schedule = () => {
                         <div>
                             <span>Season</span>
                             <Select
-                                name="seasons"
-                                options={seasonOptions}
-                                label="seasons"
+                                name="season"
+                                title="Season"
+                                listOfSelects={scheduleFilters.seasons}
                                 onChange={handleFilterChange}
+                                defaultValue={filters.season || ''}
+                                useKey="id"
                             />
                         </div>
                         <div>
                             <span>Division</span>
                             <Select
-                                name="divisons"
-                                options={divisionOptions}
-                                label="divisons"
+                                name="division"
+                                title="Division"
+                                listOfSelects={[
+                                    { name: 'All', value: '' },
+                                    ...scheduleFilters.divisions,
+                                ]}
                                 onChange={handleFilterChange}
-                                // defaultValue={this.state.filters.season || ''}
+                                defaultValue={filters.division || ''}
+                                useKey="id"
                             />
                         </div>
                         <div>
                             <span>Team</span>
                             <Select
-                                name="teams"
-                                options={teamOptions}
-                                label="teams"
+                                name="team"
+                                title="Team"
+                                listOfSelects={[
+                                    { name: 'All', value: '' },
+                                    ...scheduleFilters.teams,
+                                ]}
                                 onChange={handleFilterChange}
+                                defaultValue={filters.team || ''}
+                                useKey="id"
                             />
                         </div>
                     </div>

@@ -27,8 +27,6 @@ export const gamesSlice = createSlice({
             state.isLoading = true;
         },
         getGamesSuccess: (state, { payload }) => {
-            console.log('getGamesSuccess Triggered');
-            console.log('DIVISIONS TYPE', typeof payload.data.divisons);
             state.allGames = [...payload.data.games];
 
             state.isLoading = false;
@@ -37,8 +35,6 @@ export const gamesSlice = createSlice({
                 divisions: [...payload.data.divisions],
                 teams: [...payload.data.teams],
             };
-            // console.log('SCHEDULE FILTERS', state.scheduleFilters);
-            console.log('games STATE', state.allGames);
         },
     },
 });
@@ -49,7 +45,6 @@ export const { getInit, getGamesSuccess, updateScheduleFilters } =
 export const getGames =
     (filter = '') =>
     async (dispatch) => {
-        console.log('DISPATCH', dispatch);
         dispatch(getInit());
         const data = await request({
             url: `/api/games?${filter || ''}`,
@@ -69,11 +64,10 @@ export const getGames =
         // dispatch to getgamesuccess to add data to state
         dispatch(getGamesSuccess(data));
         console.log('POST GETGAMES DISPATCH');
-
-        // const activeSeason = data.data.seasons.find(
-        //     (season) => season.is_active === true
-        // );
-        // return { season: activeSeason.id };
+        const activeSeason = data.data.seasons.find(
+            (season) => season.is_active === true
+        );
+        return { season: activeSeason.id };
     };
 
 export default gamesSlice.reducer;
