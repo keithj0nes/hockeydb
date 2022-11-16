@@ -13,6 +13,8 @@ const Schedule = () => {
     const { allGames, isLoading, scheduleFilters } = useSelector(
         (state) => state.games
     );
+    console.log('TEAMS IN SCHEDULE', scheduleFilters.teams);
+    console.log('ALLGAMES IN SCHEDULE', allGames);
     const dispatch = useDispatch();
     // console.log('ALLGAMES STATE IN COMPONENT', allGames);
 
@@ -25,15 +27,14 @@ const Schedule = () => {
         console.log('fetching schedule');
         //  filters / query
         // apply filters if search / filter selected from dropdown, else retreive all results
-        console.log('FILTERS USEEFFECT', filters);
-        if (history.location.search) {
-            const [parsedQuery, queriesString] = getQuery();
-            console.log(
-                'parsedQuery, queriesString',
-                parsedQuery,
-                queriesString
-            );
-        }
+        // if (history.location.search) {
+        //     const [parsedQuery, queriesString] = getQuery();
+        //     console.log(
+        //         'parsedQuery, queriesString',
+        //         parsedQuery,
+        //         queriesString
+        //     );
+        // }
         // retrieve all results
         dispatch(getGames('page=1')).then((res) =>
             console.log('RES FROM DISPATCH', res)
@@ -42,9 +43,7 @@ const Schedule = () => {
 
     const handleFilterChange = (e) => {
         console.log('EVENT', e);
-        console.log('EVENT VALUE', e.value);
-        // console.log('FILTERS', filters);
-        // const filters = { ...filters };
+
         const { name, value, checked, type } = e.target;
 
         console.log('NAME, VALUE', { name, value });
@@ -67,20 +66,16 @@ const Schedule = () => {
         // delete to not put it in the URL params
         delete filters['page'];
         delete filters['fromLoadMore'];
-        // if (e.name === 'seasons') {
-        //     setFilters({ ...filters, season: e.value, filterType: 'season' });
-        //     console.log('FILTERS IN HANDLER', filters);
-        //     const { filterType } = filters;
-        //     console.log('SEASONFILTER', season);
-        //     const filterId = filters.season.id;
-        // }
-        console.log('FILTERS', filters);
 
         const search = setQuery(filters);
-        dispatch(getGames(filters));
+        dispatch(getGames(search)).then((res) => {
+            console.log('SEARCH RES', res);
+        });
+        // setFilters(() => {
+        //     filters.page = 1;
+        //     return { filters, stateChanged: name === 'season' && true };
+        // });
     };
-
-    // for (const season in games.season)
 
     /*********** React Select Options *************/
     // const seasonOptions = scheduleFilters.seasons.map((season) => {
@@ -149,8 +144,6 @@ const Schedule = () => {
                     {/* <div className="hidden md:block"> */}
                     <div className="overflow-scroll">
                         <Table
-                            // selectedSeason={selectedSeason}
-                            // selectedDivison={selectedDivision}
                             data={allGames}
                             columns={{
                                 date: {

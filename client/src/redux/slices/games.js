@@ -28,13 +28,16 @@ export const gamesSlice = createSlice({
         },
         getGamesSuccess: (state, { payload }) => {
             state.allGames = [...payload.data.games];
-
             state.isLoading = false;
             state.scheduleFilters = {
                 seasons: [...payload.data.seasons],
                 divisions: [...payload.data.divisions],
                 teams: [...payload.data.teams],
             };
+            console.log('GAMES DATA IN SLICE', payload);
+            // console.log('UPDATED SEASONS', state.scheduleFilters.seasons);
+            // console.log('UPDATED DIVISIONS', state.scheduleFilters.divisions);
+            // console.log('UPDATED TEAMS', state.scheduleFilters.teams);
         },
     },
 });
@@ -53,7 +56,6 @@ export const getGames =
             isPublic: true,
         });
 
-        console.log('GAMES DATA LINE 58', data);
         if (!data.data) return false;
 
         // deconstruct games data from data
