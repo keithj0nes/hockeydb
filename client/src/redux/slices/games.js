@@ -58,14 +58,8 @@ export const getGames =
 
         if (!data.data) return false;
 
-        // deconstruct games data from data
-        // const { games } = data.data;
-
-        // console.log('GAMES 2', games);
-
-        // dispatch to getgamesuccess to add data to state
         dispatch(getGamesSuccess(data));
-        console.log('POST GETGAMES DISPATCH');
+
         const activeSeason = data.data.seasons.find(
             (season) => season.is_active === true
         );

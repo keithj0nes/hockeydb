@@ -24,7 +24,6 @@ const Schedule = () => {
 
     useEffect(() => {
         console.log('fetching schedule');
-        //  filters / query
         // apply filters if search / filter selected from dropdown, else retreive all results
         console.log('HISTORY', history);
         if (history.location.search) {
@@ -37,7 +36,6 @@ const Schedule = () => {
         } else {
             dispatch(getGames('page=1'));
         }
-        // retrieve all results
     }, []);
 
     const handleFilterChange = (e) => {
@@ -45,15 +43,11 @@ const Schedule = () => {
 
         const { name, value, checked, type } = e.target;
 
-        // console.log('NAME, VALUE', { name, value });
-        console.log('FILTERS IN HANDLER', filters);
-
         if (value === '' || checked === false) {
             delete filters[name];
         } else {
             filters[name] = type === 'checkbox' ? checked : value;
         }
-
         // reset the select divisions and teams fields if season is changed
         if (name === 'season') {
             delete filters['division'];
@@ -67,17 +61,10 @@ const Schedule = () => {
         delete filters['page'];
         delete filters['fromLoadMore'];
 
-        console.log('FILTERS AFTER DELETIONS', filters);
-
         // set query in url based on new filters
         const search = setQuery(filters);
         // sends new req with search params
         dispatch(getGames(search));
-        // setFilters(() => {
-        //     console.log('SETFILTERS IN HANDLER IS RUNNING');
-        //     filters.page = 1;
-        //     return { filters, stateChanged: name === 'season' && true };
-        // });
     };
 
     /*********** React Select Options *************/
