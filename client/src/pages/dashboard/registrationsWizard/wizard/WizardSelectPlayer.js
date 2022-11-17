@@ -272,7 +272,7 @@ const WizardSelectPlayer = () => {
             </div>
 
             <Modal title="Basic Modal" getContainer={() => document.getElementById('modal-wrapper')} footer={null} visible={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <ul className="w-full max-w-xl m-auto text-sm font-medium text-gray-900 bg-white rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <ul className="w-full max-w-xl m-auto text-sm font-medium text-gray-900 bg-white rounded-lg">
                     {alreadyRegistered.map(item => {
                         const isUser = item.player_id === user.player_id;
                         return (
