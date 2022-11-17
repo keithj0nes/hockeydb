@@ -34,7 +34,7 @@ export const gamesSlice = createSlice({
                 divisions: [...payload.data.divisions],
                 teams: [...payload.data.teams],
             };
-            console.log('GAMES DATA IN SLICE', payload);
+            // console.log('GAMES DATA IN SLICE', payload);
             // console.log('UPDATED SEASONS', state.scheduleFilters.seasons);
             // console.log('UPDATED DIVISIONS', state.scheduleFilters.divisions);
             // console.log('UPDATED TEAMS', state.scheduleFilters.teams);

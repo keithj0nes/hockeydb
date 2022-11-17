@@ -13,10 +13,9 @@ const Schedule = () => {
     const { allGames, isLoading, scheduleFilters } = useSelector(
         (state) => state.games
     );
-    console.log('TEAMS IN SCHEDULE', scheduleFilters.teams);
-    console.log('ALLGAMES IN SCHEDULE', allGames);
+    // console.log('TEAMS IN SCHEDULE', scheduleFilters.teams);
+    // console.log('ALLGAMES IN SCHEDULE', allGames);
     const dispatch = useDispatch();
-    // console.log('ALLGAMES STATE IN COMPONENT', allGames);
 
     const [filters, setFilters] = useState({
         page: 1,
@@ -27,26 +26,27 @@ const Schedule = () => {
         console.log('fetching schedule');
         //  filters / query
         // apply filters if search / filter selected from dropdown, else retreive all results
-        // if (history.location.search) {
-        //     const [parsedQuery, queriesString] = getQuery();
-        //     console.log(
-        //         'parsedQuery, queriesString',
-        //         parsedQuery,
-        //         queriesString
-        //     );
-        // }
+        console.log('HISTORY', history);
+        if (history.location.search) {
+            console.log('HISTORY.LOCATION.SEARCH', history.location.search);
+            // get query params from url
+            const [queryFilters, queryFilterString] = getQuery();
+            // send GET req to backend with search params
+            dispatch(getGames(queryFilterString));
+            setFilters(queryFilters); // set query params (filters) as default filters
+        } else {
+            dispatch(getGames('page=1'));
+        }
         // retrieve all results
-        dispatch(getGames('page=1')).then((res) =>
-            console.log('RES FROM DISPATCH', res)
-        );
     }, []);
 
     const handleFilterChange = (e) => {
-        console.log('EVENT', e);
+        // console.log('EVENT', e);
 
         const { name, value, checked, type } = e.target;
 
-        console.log('NAME, VALUE', { name, value });
+        // console.log('NAME, VALUE', { name, value });
+        console.log('FILTERS IN HANDLER', filters);
 
         if (value === '' || checked === false) {
             delete filters[name];
@@ -67,11 +67,14 @@ const Schedule = () => {
         delete filters['page'];
         delete filters['fromLoadMore'];
 
+        console.log('FILTERS AFTER DELETIONS', filters);
+
+        // set query in url based on new filters
         const search = setQuery(filters);
-        dispatch(getGames(search)).then((res) => {
-            console.log('SEARCH RES', res);
-        });
+        // sends new req with search params
+        dispatch(getGames(search));
         // setFilters(() => {
+        //     console.log('SETFILTERS IN HANDLER IS RUNNING');
         //     filters.page = 1;
         //     return { filters, stateChanged: name === 'season' && true };
         // });

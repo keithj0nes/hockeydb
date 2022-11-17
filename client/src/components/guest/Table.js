@@ -13,9 +13,6 @@ const Table = ({
 }) => {
     const sectionKeys = Object.keys(columns);
 
-    console.log('SELECTED SEASON', selectedSeason);
-    console.log('SELECTED DIVISION', selectedDivison);
-
     if (!data.length) {
         return <h3>{emptyText}</h3>;
     }
