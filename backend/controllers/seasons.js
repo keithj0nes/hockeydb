@@ -1,5 +1,6 @@
-const app = require('../server.js');
-const helpers = require('./helpers');
+const app = require('../server');
+// const helpers = require('./helpers');
+const { buildWhere, buildOrderBy } = require('./helpers/sql');
 
 // const createLimitFragment = (db, limit, offset) => {
 //     if (offset) {
@@ -9,53 +10,402 @@ const helpers = require('./helpers');
 // };
 
 
+// const myQueryThing = (q = {}, allowable = []) => {
+//     console.log('Q var from myQueryThing', q);
+//     const newQuery = {};
+//     for (let i = 0; i < allowable.length; i += 1) {
+//         if (q[allowable[i]]) {
+//             newQuery[allowable[i]] = q[allowable[i]];
+//         }
+//     }
+//     return newQuery;
+// };
+
+// const myQueryThing = (q = {}, allowable = []) => {
+//     console.log('Q var from myQueryThing', q);
+//     const newQuery = {};
+//     for (let i = 0; i < allowable.length; i += 1) {
+//         // console.log(typeof allowable[i]);
+//         // console.log(allowable[i]);
+//         // console.log(q[allowable], 'q[allowable]');
+//         const type = typeof allowable[i];
+//         switch (type) {
+//             case 'string':
+//                 if (q[allowable[i]]) {
+//                     newQuery[allowable[i]] = q[allowable[i]];
+//                 }
+//                 break;
+//             case 'object':
+//                 if (q[allowable[i].key]) {
+//                     // console.log('HITTING LOL')
+//                     // console.log(q[allowable[i].key])
+//                     const queryValue = q[allowable[i].key];
+//                     const checkForNull = allowable[i].checkNullable;
+//                     if (checkForNull) {
+//                         newQuery[allowable[i].column + (JSON.parse(queryValue) ? ' !=' : ' =')] = null;
+//                     }
+//                 }
+//                 break;
+//             default:
+//                 break;
+//         }
+//         newQuery['deleted_at ='] = null;
+//     }
+//     return newQuery;
+// };
+
+
+// const librariesWithBooks = await db.libraries.join({
+//     books: {
+//         type: 'INNER',
+//         on: { library_id: 'id' },
+//     },
+// }).find({
+//     state: 'EV',
+//     'books.author ILIKE': 'calvino, %',
+// });
+
+
+// TODO: massive js joins wont work because not able to select specifc
+// fields or rename fields such as in the "raw" below. need to figure
+// out to build a small where query builder to append to the RAW below
+
+
+// const librariesWithBooks = await db.seasons.join({
+//     users: {
+//         type: 'INNER',
+//         on: { id: 'created_by' },
+//         // omit: true,
+//         // columns: ['id', 'first_name']
+//     },
+// }).find({
+//     ...bbb,
+//     // state: 'EV',
+//     // 'books.author ILIKE': 'calvino, %',
+// }, {
+//     // fields: { my_name: 'name' },
+// });
+
+// console.log({ librariesWithBooks });
+// console.log(librariesWithBooks[0].users);
+
+
+// EXAMPLE TO TRY
+
+// function buildConditions(params) {
+//     const conditions = [];
+//     const values = [];
+//     let conditionsStr;
+
+//     if (typeof params.name !== 'undefined') {
+//         conditions.push('name LIKE ?');
+//         values.push(`%${params.name}%`);
+//     }
+
+//     if (typeof params.age !== 'undefined') {
+//         conditions.push('age = ?');
+//         values.push(parseInt(params.age));
+//     }
+
+//     return {
+//         where: conditions.length
+//             ? conditions.join(' AND ') : '1',
+//         values,
+//     };
+// }
+
+// const conditions = buildConditions(params);
+// const sql = `SELECT * FROM table WHERE ${conditions.where}`;
+
+// connection.query(sql, conditions.values, (err, results) => {
+//     // do things
+// });
+
+// const buildWhere = (params) => {
+//     const conditions = [];
+//     const values = [];
+
+//     if (!!params.type) {
+//         conditions.push(`type = $${conditions.length + 1}`);
+//         values.push(params.type);
+//     }
+
+//     if (!!params.show_hidden) {
+//         conditions.push('hidden_at IS NOT null');
+//     } else {
+//         conditions.push('hidden_at IS null');
+//     }
+
+//     conditions.push('deleted_at IS null');
+
+//     return [conditions.length ? conditions.join(' AND ') : '1', values];
+// };
+
+// function isOrIsNot(k) {
+//     return [k === 'IS' ? 'IS' : 'IS NOT', k === 'IS' ? 'IS NOT' : 'IS'];
+// }
+
+// const buildWhereWithAllowable = (query = {}, allowable = []) => {
+//     const conditions = [];
+//     const values = [];
+
+//     // TODO: figure out how to see if extra params are added that dont exist in "allowable"
+//     // if so, need to return false, alerting the user that their query doesnt hae results
+
+//     // example: url.com/seasons?hello=hi should return false because that query doesnt exist
+
+//     console.log('\n');
+//     for (let i = 0; i < allowable.length; i += 1) {
+//         console.log('query', query);
+//         console.log('allowable[i]', allowable[i]);
+//         console.log('query[allowable[i]]', query[allowable[i].key], '\n');
+
+
+//         if (allowable[i].nulls) {
+//             conditions.push(`${allowable[i].column} ${(query[allowable[i].key] && JSON.parse(query[allowable[i].key])) ? `${isOrIsNot(allowable[i].nulls)[1]} null` : `${isOrIsNot(allowable[i].nulls)[0]} null`}`);
+//             break;
+//         }
+
+//         if (query[allowable[i].key]) {
+//             // if (allowable[i].column) {
+
+//             //     if (allowable[i].nulls) {
+//             //         console.log('here NULL')
+//             //         console.log(JSON.parse(query[allowable[i].key]))
+
+//             //         conditions.push(`${allowable[i].column} ${JSON.parse(query[allowable[i].key]) ? 'IS NOT null' : 'IS null'}`);
+//             //         break;
+//             //     }
+
+//             //     conditions.push(`${allowable[i].column} = $${conditions.length + 1}`);
+//             //     break;
+//             // }
+
+
+//             // if (allowable[i].nulls) {
+//             //     console.log('here NULL')
+//             //     console.log(JSON.parse(query[allowable[i].key]))
+
+//             //     conditions.push(`${allowable[i].column} ${JSON.parse(query[allowable[i].key]) ? 'IS NOT null' : 'IS null'}`);
+//             //     break;
+//             // }
+
+//             conditions.push(`${allowable[i].key} = $${conditions.length + 1}`);
+//             values.push(query.type);
+
+
+//             // TODO: figure out how to get this to work with dynamic values
+//             // idea is to have one BUILDWHERE function that is dynamic for multple occasions
+
+
+//         }
+//     }
+
+
+//     conditions.push('deleted_at IS null');
+
+//     console.log(conditions,' conditions')
+
+//     // console.log('-------------------------------')
+//     // console.log(`WHERE ${conditions.join(' AND ')}`)
+
+//     return [conditions.length ? `WHERE ${conditions.join(' AND ')}` : '', values];
+
+//     // return [conditions.length ? conditions.join(' AND ') : '', values];
+// };
+
+
+// const getSeasons = async (req, res, next) => {
+//     console.log(' \n \n ============================ \n \n');
+
+//     console.log('REQ.QUERY', req.query);
+//     try {
+//         const db = app.get('db');
+//         const allowableQueryKeys = [{ key: 'type' }, { key: 'show_hidden', column: 'hidden_at', nulls: 'IS' }];
+
+//         const [WHERE, whereValues] = buildWhere(req.query, allowableQueryKeys);
+//         const [ORDER_BY, orderByValues] = buildOrderBy(req.query, { by: 's.id', limit: 2, page: 1, dir: 'desc' }, whereValues.length);
+
+//         const raw2 = `
+//             select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+//             cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
+//             uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+//             FROM seasons s
+//             JOIN users cu ON cu.id = s.created_by
+//             LEFT JOIN users uu ON uu.id = s.updated_by
+//             ${WHERE}
+//             ${ORDER_BY}
+//         `;
+
+//         const raw2Count = `
+//             select count(*)
+//             FROM seasons s
+//             JOIN users cu ON cu.id = s.created_by
+//             LEFT JOIN users uu ON uu.id = s.updated_by
+//             ${WHERE}
+//         `;
+//         // -- order by s.id ${dir} limit $${builtQuery[1].length + 1} offset $${builtQuery[1].length + 2}
+//         // order by s.id ${dir} limit $2 offset $3
+
+
+//         console.log({WHERE, ORDER_BY})
+//         console.log({whereValues, orderByValues})
+
+//         console.log(raw2);
+
+//         let seasonsWithBuiltQuery = [];
+//         let seasonCOUNT = null;
+
+//         console.log('raw coutn twooo: ', raw2Count)
+
+//         if (!!ORDER_BY) {
+//             seasonsWithBuiltQuery = await db.query(raw2, [...whereValues, ...orderByValues]);
+//             const [bb] = await db.query(raw2Count, [...whereValues]);
+//             console.log(bb, 'bbbbb')
+
+//             seasonCOUNT = bb.count;
+//         }
+
+//         console.log({ seasonsWithBuiltQuery, seasonCOUNT });
+
+
+//         console.log('\n');
+//         console.log('\n');
+//         console.log('\n');
+
+
+//         // const query = helpers.filter(req.query);
+//         // console.log('REQ.QUERY AFTER FILTER', query);
+
+//         const { limit = 2, page = 1, dir = 'desc' } = req.query;
+
+//         console.log(`LIMIT: ${limit}, PAGE: ${page}, DIR: ${dir}`);
+
+//         const offset = null; (!page || page <= 1) ? 0 : (page - 1) * limit;
+//         console.log('OFFSET', offset);
+//         const total_count = 3; // await db.seasons.count({ ...query });
+//         // const OLDQUERY = await db.seasons.find({
+//         //     ...query,
+//         // }, {
+//         //     // fields: ['name'],
+//         //     order: [{ field: 'id', direction: dir }],
+//         //     offset,
+//         //     limit,
+//         // });
+
+
+//         console.log('TOTAL_COUNT', total_count);
+
+//         // console.log(query, ' querrryyy helper');
+
+//         // select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+//         // u.first_name, u.last_name, u.id AS user_id from seasons s
+//         // join users u on u.id = s.created_by
+//         // where hidden_at IS null AND deleted_at IS null
+//         // order by s.id ${dir} limit $2 offset $3
+//         const raw = `
+//             select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+//             cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
+//             uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+//             from seasons s
+//             join users cu on cu.id = s.created_by
+//             left join users uu on uu.id = s.updated_by
+//             where hidden_at ${req.query.show_hidden ? 'IS NOT null' : 'IS null'} AND deleted_at IS null
+//             order by s.id ${dir} limit $2 offset $3
+//         `;
+
+//         const seasons = await db.query(raw, [dir, limit, offset]);
+
+//         // console.log(seasons, 'new uqery')
+
+//         const total_pages = Math.ceil(total_count / limit);
+//         console.log({ total_count: parseInt(total_count), seasons_length: seasons.length, total_pages, page: parseInt(page) });
+
+//         // return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons', notification_type: 'hi', notification: { type: 'toast', duration: 2, status: 'error' } });
+//         return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons' });
+//     } catch (error) {
+//         console.log('GET SEASONS ERROR: ', error);
+//         return next(error);
+//     }
+// };
+
+
 const getSeasons = async (req, res, next) => {
+    console.log(' \n \n ============================ \n \n');
+
+    console.log('REQ.QUERY', req.query);
     try {
         const db = app.get('db');
-        const query = helpers.filter(req.query);
-        console.log(req.query, ' req.query!');
+        const allowableQueryKeys = [{ key: 'type' }, { key: 'show_hidden', column: 'hidden_at', nulls: 'IS' }, { key: 'search', columns: ['type', 'name'] }];
 
-        const { limit = 50, page = 1, dir = 'desc' } = req.query;
+        const [WHERE, whereValues] = buildWhere(req.query, allowableQueryKeys);
+        const [ORDER_BY, orderByValues, { limit: limite2, page: page2 }] = buildOrderBy(req.query, { by: 's.start_date', limit: 3, page: 1, dir: 'desc' }, whereValues.length);
 
-        const offset = (!page || page <= 1) ? 0 : (page - 1) * limit;
-        console.log(offset);
-        const total_count = await db.seasons.count({ ...query });
-        // const OLDQUERY = await db.seasons.find({
-        //     ...query,
-        // }, {
-        //     // fields: ['name'],
-        //     order: [{ field: 'id', direction: dir }],
-        //     offset,
-        //     limit,
-        // });
+        // const raw2 = `
+        //     select s.id, s.name, s.start_date, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+        //     cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
+        //     uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
+        //     FROM seasons s
+        //     JOIN users cu ON cu.id = s.created_by
+        //     LEFT JOIN users uu ON uu.id = s.updated_by
+        //     ${WHERE}
+        //     ${ORDER_BY}
+        // `;
 
-        console.log(query, ' querrryyy helper');
-
-        // select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
-        // u.first_name, u.last_name, u.id AS user_id from seasons s
-        // join users u on u.id = s.created_by
-        // where hidden_at IS null AND deleted_at IS null
-        // order by s.id ${dir} limit $2 offset $3
-        const raw = `
-
-            select s.id, s.name, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
-            cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name, 
-            uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name
-            from seasons s
-            join users cu on cu.id = s.created_by
-            left join users uu on uu.id = s.updated_by
-            where hidden_at ${req.query.show_hidden ? 'IS NOT null' : 'IS null'} AND deleted_at IS null
-            order by s.id ${dir} limit $2 offset $3
+        // this uses group by to grab teeams count
+        const raw2 = `
+            select s.id, s.name, s.start_date, s.type, s.created_at, s.created_by, s.updated_at, s.updated_by, s.is_active, s.hidden_at,
+            cu.first_name AS created_by_first_name, cu.last_name AS created_by_last_name,
+            uu.first_name AS updated_by_first_name, uu.last_name AS updated_by_last_name,
+            count(tsd.id) as teams_count
+            FROM seasons s
+            JOIN users cu ON cu.id = s.created_by
+            LEFT JOIN users uu ON uu.id = s.updated_by
+            LEFT JOIN team_season_division tsd ON tsd.season_id = s.id
+            ${WHERE}
+            GROUP BY s.id, cu.first_name, cu.last_name, uu.first_name, uu.last_name
+            ${ORDER_BY}
         `;
 
-        const seasons = await db.query(raw, [dir, limit, offset]);
+        const raw2Count = `
+            select count(*)
+            FROM seasons s
+            JOIN users cu ON cu.id = s.created_by
+            LEFT JOIN users uu ON uu.id = s.updated_by
+            ${WHERE}
+        `;
 
-        // console.log(seasons, 'new uqery')
 
-        const total_pages = Math.ceil(total_count / limit);
-        console.log({ total_count: parseInt(total_count), seasons_length: seasons.length, total_pages, page: parseInt(page) });
+        // console.log({ WHERE, ORDER_BY });
+        // console.log({ whereValues, orderByValues, limite2 });
 
-        return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons' });
+        console.log(raw2);
+
+        let seasonsWithBuiltQuery = [];
+        let seasonCOUNT = 0;
+
+        // console.log('raw coutn twooo: ', raw2Count);
+
+        if (!!ORDER_BY) {
+            seasonsWithBuiltQuery = await db.query(raw2, [...whereValues, ...orderByValues]);
+            const [bb] = await db.query(raw2Count, [...whereValues]);
+            // console.log(bb, 'bbbbb');
+
+            seasonCOUNT = bb.count;
+        }
+
+        // console.log({ seasonsWithBuiltQuery, seasonCOUNT });
+        const total_pages2 = Math.ceil(seasonCOUNT / limite2);
+        // console.log(total_pages2, 'total_pages2');
+
+        // console.log('\n');
+        // console.log('\n');
+        // console.log('\n');
+
+        // console.log({ total_count: parseInt(seasonCOUNT), current_count: seasonsWithBuiltQuery.length, total_pages2, page: parseInt(page2) });
+
+        // return res.send({ status: 200, data: { seasons, pagination: { total_count: parseInt(total_count), total_pages, page: parseInt(page) } }, message: 'Retrieved list of seasons', notification_type: 'hi', notification: { type: 'toast', duration: 2, status: 'error' } });
+        return res.send({ status: 200, data: { seasons: seasonsWithBuiltQuery, pagination: { total_count: parseInt(seasonCOUNT), limit: limite2, total_pages: total_pages2, page: parseInt(page2) } }, message: 'Retrieved list of seasons' });
     } catch (error) {
         console.log('GET SEASONS ERROR: ', error);
         return next(error);
@@ -67,30 +417,62 @@ const getSeasonById = async (req, res, next) => {
     try {
         const db = app.get('db');
         const { id } = req.params;
-        const data = await db.query('select * from blog where id = $1', [id]);
-        if (!data) {
-            return res.send({ status: 404, data: [], message: 'Blog cannot be found' });
+        // const seasonQuery = await db.seasons.findOne({ id });
+
+        const season = await db.seasons.findOne({ id }, { fields: ['name', 'type', 'is_active', 'start_date', 'end_date'] });
+
+        if (!season) {
+            return res.send({ status: 404, error: true, message: 'Season not found', notification: { type: 'toast', duration: 2, status: 'error' } });
         }
-        return res.send({ status: 200, data, message: `Retrieved season ${data.id}` });
+
+        const rawTeams = `
+            SELECT t.name AS team_name, t.id AS team_id, d.name AS division_name, d.id AS division_id, COUNT(pts.player_id) AS players_count from team_season_division tsd
+            JOIN teams t ON t.id = tsd.team_id
+            JOIN divisions d ON d.id = tsd.division_id
+            JOIN player_team_season pts ON pts.team_id = t.id
+            WHERE tsd.season_id = $1
+            GROUP BY t.name, t.id, d.name, d.id;
+        `;
+
+        const rawDivisions = `
+            SELECT d.id, d.name, COUNT(tsd.team_id) as teams_count from team_season_division tsd
+            JOIN divisions d ON d.id = tsd.division_id
+            WHERE tsd.season_id = $1
+            GROUP BY tsd.division_id, d.name, d.id;
+        `;
+
+        // const template_registrations = await db.template_registrations.find({ season_id: id });
+        const template_registrations = await db.registrations_templates.find({ season_id: id });
+
+        const teams = await db.query(rawTeams, [id]);
+        const divisions = await db.query(rawDivisions, [id]);
+
+        return res.send({ status: 200, data: { teams, divisions, season, template_registrations }, message: `Retrieved season ${id}` });
     } catch (error) {
         console.log('GET SEASON BY ID ERROR: ', error);
         return next(error);
     }
 };
 
-
 const createSeason = async (req, res, next) => {
     try {
         const db = app.get('db');
-        const { name, type } = req.body;
+        const { name, type, copy_from, start_date } = req.body;
+
+        // TODO: get copy_from (previous season) logic working
 
         const season = await db.seasons.where('lower(name) = $1', [name.toLowerCase()]);
         if (!!season.length) {
-            return res.send({ status: 400, data: [], message: 'Season already exists' });
+            const inlineErrors = {
+                name: 'Season already exists',
+                // start_date: 'Invalid date',
+            };
+
+            return res.send({ status: 400, data: { errors: inlineErrors }, message: 'Season already exists' });
         }
 
-        const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id });
-        return res.send({ status: 200, data, message: 'Season created', notification_type: 'snack' });
+        const data = await db.seasons.insert({ name, type, is_active: false, created_at: new Date(), created_by: req.user.id, start_date: !start_date ? null : start_date });
+        return res.send({ status: 200, data, message: 'Season created', notification: { type: 'toast', duration: 3, status: 'success' } });
     } catch (error) {
         console.log('CREATE SEASON ERROR: ', error);
         return next(error);

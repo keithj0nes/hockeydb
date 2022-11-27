@@ -101,7 +101,7 @@ const signup = async (req, res) => {
 
 const invite = async (req, res) => {
     const db = app.get('db');
-    const { email, first_name, last_name, user_role } = req.body;
+    const { email, first_name, last_name } = req.body;
 
     // console.log(req.user, 'req.user') // need to hook up to  auth.authorizeAccessToken, middleware to work
 
@@ -115,11 +115,11 @@ const invite = async (req, res) => {
     }
 
     // set invite token with expiry
-    const invite_token = jwt.sign({ email, first_name, last_name, user_role }, JWT_SECRET, { expiresIn: '8h' });
+    const invite_token = jwt.sign({ email, first_name, last_name }, JWT_SECRET, { expiresIn: '8h' });
     // add user by email / add user names / add invite_token
-    const newUser = await db.users.insert({ email, first_name, last_name, admin_type: user_role, invite_token, invite_date: new Date() });
+    const newUser = await db.users.insert({ email, first_name, last_name, invite_token, invited_at: new Date() });
     // send email
-    await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role, invite_token } });
+    await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, invite_token } });
     // await for response
     return res.send({ status: 200, data: { ...newUser, full_name: `${first_name} ${last_name}`, status: 'invited' }, message: 'An invitation has been sent', notification_type: 'snack' });
 };
@@ -170,12 +170,12 @@ const resendInvite = async (req, res) => {
     // set invite token with expiry
     const invite_token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name }, JWT_SECRET, { expiresIn: '8h' });
     // update invite_token
-    // update reinvite_date
-    await db.users.update({ id }, { invite_token, reinvite_date: new Date(), invite_date: null });
+    // update reinvited_at
+    await db.users.update({ id }, { invite_token, reinvited_at: new Date(), invited_at: null });
     // send email
-    const { email, first_name, last_name, admin_type } = user;
+    const { email, first_name, last_name } = user;
 
-    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, user_role: admin_type, invite_token } });
+    const sendingMail = await emailer.sendmail({ template: 'inviteUser', data: { email, first_name, last_name, invite_token } });
     if (!sendingMail) {
         return res.send({ status: 400, error: true, message: 'Could not resend invite email, please try again later', notification_type: 'snack' });
     }
@@ -239,7 +239,7 @@ const updatePassword = async (req, res) => {
 
     // store password
     const hash = await bcrypt.hash(password, 10);
-    await db.passwords.update({ user_id: user.id }, { pw: hash });
+    await db.passwords.update({ user_id: user.id }, { pw: hash, updated_at: new Date() });
     // remove token
     await db.users.update({ id: user.id }, { invite_token: null }).catch(err => console.log(err, 'remove invite_token error'));
 
@@ -270,18 +270,56 @@ passport.use('local-login', new LocalStrategy({
 }, async (email, password, done) => {
     try {
         const db = app.get('db');
-        const user = await db.users.findOne({ email });
+
+        // const q = `
+        //     SELECT u.*, p.updated_at AS password_last_updated_at, ARRAY_AGG(json_build_object('role_id', r.id, 'name', r.name)) AS roles
+        //     FROM users u
+        //     JOIN user_role ur ON ur.user_id = u.id
+        //     JOIN passwords p ON p.user_id = u.id
+        //     JOIN roles r ON r.id = ur.role_id
+        //     WHERE email = $1
+        //     GROUP BY u.id, p.updated_at;
+        // `;
+
+        // const q = `
+        //     SELECT u.*, py.id as player_id, p.updated_at AS password_last_updated_at, ARRAY_AGG(json_build_object('role_id', r.id, 'name', r.name)) AS roles
+        //     FROM users u
+        //     JOIN user_role ur ON ur.user_id = u.id
+        //     JOIN passwords p ON p.user_id = u.id
+        //     join players py on py.created_by = u.id
+
+        //     JOIN roles r ON r.id = ur.role_id
+        //     WHERE u.email = $1 and py.parent_id is not null
+        //     GROUP BY u.id, p.updated_at, py.id;
+        // `;
+
+        const q = `
+            SELECT u.*, py.id as player_id, p.updated_at AS password_last_updated_at, ARRAY_AGG(json_build_object('role_id', r.id, 'name', r.name)) AS roles
+            FROM users u
+            JOIN user_role ur ON ur.user_id = u.id
+            JOIN passwords p ON p.user_id = u.id
+            left join players py on py.created_by = u.id
+
+            JOIN roles r ON r.id = ur.role_id
+            WHERE u.email = $1 -- and py.parent_id is not null
+            GROUP BY u.id, p.updated_at, py.id;
+        `;
+
+        const [user] = await db.query(q, [email]);
+
+        console.log(user, 'serrr')
+
         if (!user) {
             return done(null, false, { status: 400, message: 'Incorrect email or password', internal_message: 'USER_NOT_FOUND' });
         }
 
         if (user.is_suspended) {
             // return done(null, false, { message: 'User has been suspended', internal_message: 'USER_SUSPENDED' })
-            return done(null, false, { status: 401, message: 'Your account has been disabled. Please contact the league administrator.', internal_message: 'USER_SUSPENDED' });
+            return done(null, false, { status: 401, message: 'Your account has been disabled. Please contact your league administrator.', internal_message: 'USER_SUSPENDED' });
         }
 
-        if (user.reinvite_date) {
-            await db.users.update({ id: user.id }, { reinvite_date: null }).catch(err => console.log(err, 'update local-login error on sign in'));
+        if (user.reinvited_at) {
+            await db.users.update({ id: user.id }, { reinvited_at: null }).catch(err => console.log(err, 'update local-login error on sign in'));
         }
 
         const pw = await db.passwords.findOne({ user_id: user.id });
@@ -291,29 +329,18 @@ passport.use('local-login', new LocalStrategy({
             return done(null, false, { status: 400, message: 'Invalid password.' });
         }
 
-        // get associated player registrations here
+        // const query = `
+        //     SELECT DISTINCT t.name AS previous_team, p.* FROM "registrations_submissions" r
+        //     JOIN players p ON p.id = r.player_id
+        //     LEFT JOIN player_team_season pt ON pt.player_id = p.id
+        //     LEFT JOIN teams t ON t.id = pt.team_id
+        //     WHERE p.parent_id = $1;
+        // `;
+        // const associated_accounts = await db.query(query, [user.id]);
 
-        // optimize this query so we dont have to run javascript after query happens
-        // query = get all players from previous registrations associated with logged in account
+        const associated_accounts = await db.players.find({ parent_id: user.id });
+        console.log(associated_accounts, 'assAcc')
 
-        const query = `
-            SELECT t.name AS previous_team, p.*, r.* FROM registrations r
-            JOIN players p ON p.id = r.player_id
-            LEFT JOIN player_team_season pt ON pt.player_id = p.id
-            LEFT JOIN teams t ON t.id = pt.team_id
-            WHERE r.user_id = $1 ORDER BY r.player_id desc;
-        `;
-
-        const data = await db.query(query, [user.id]);
-
-        const associated_accounts = [];
-        data.reduce((acc, curr) => {
-            if (acc.indexOf(curr.player_id) === -1) {
-                acc.push(curr.player_id);
-                associated_accounts.push(curr);
-            }
-            return acc;
-        }, []);
 
         return done(null, { ...user, associated_accounts });
     } catch (error) {
@@ -340,10 +367,18 @@ passport.use('local-signup', new LocalStrategy({
         }
 
         const { first_name, last_name } = req.body;
+        const today = new Date();
 
-        const newUser = await db.users.insert({ first_name, last_name, email, created_at: new Date() });
+        const isPlayer = true;
+
+        const newUser = await db.users.insert({ first_name, last_name, email, created_at: today });
         const hash = await bcrypt.hash(password, 10);
-        await db.passwords.insert({ user_id: newUser.id, pw: hash });
+        await db.passwords.insert({ user_id: newUser.id, pw: hash, updated_at: today });
+
+        if (isPlayer) {
+            await db.user_role.insert({ user_id: newUser.id, role_id: 5 });
+            await db.players.insert({ first_name, last_name, created_at: today, created_by: newUser.id });
+        }
 
         return done(null, newUser);
     } catch (error) {
@@ -365,12 +400,13 @@ passport.use('jwt', new JWTStrategy({
     try {
         // console.log(req.roles && req.roles.includes(token.user.admin_type), 'INCLUDEZZ');
 
-        // if list of roles exists, check to see if the current user's admin_type is in the roles list
-        if (req.roles && !req.roles.includes(token.user.admin_type)) {
-            console.log('DOES NOT ROLSE');
-            // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
-            return done(null, false, { status: 401, message: 'You do not have permission for this action', redirect: '/dashboard', notification_type: 'snack' });
-        }
+        // NOTE: took this out as elimited the need for admin_type
+        // // if list of roles exists, check to see if the current user's admin_type is in the roles list
+        // if (req.roles && !req.roles.includes(token.user.admin_type)) {
+        //     console.log('DOES NOT ROLSE');
+        //     // return done(null, false, {message: 'Cant access this route because you must be one of ' + req.roles})
+        //     return done(null, false, { status: 401, message: 'You do not have permission for this action', redirect: '/dashboard', notification_type: 'snack' });
+        // }
 
         const isSuspended = await checkSuspended(token.user.id);
         if (!!isSuspended) {

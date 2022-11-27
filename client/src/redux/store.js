@@ -1,30 +1,28 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { user, news, misc, players, games, standings, users } from './reducers';
-import { seasons } from './reducers/seasons';
-import { teams } from './reducers/teams';
-import { divisions } from './reducers/divisions';
-import { locations } from './reducers/locations';
+import { configureStore } from '@reduxjs/toolkit';
+import counter from './slices/counter';
+import auth from './slices/auth';
+import seasons from './slices/seasons';
+import standings from './slices/standings';
+import games from './slices/games';
+import players from './slices/players';
+import teams from './slices/teams';
+import news from './slices/news';
+import registrations from './slices/registrations';
+import locations from './slices/locations';
+import divisions from './slices/divisions';
 
-console.log(process.env.REACT_APP_SITE_LEVEL, 'SITE_LEVEL');
-
-const SITE_LEVEL = process.env.REACT_APP_SITE_LEVEL; // || config.SITE_LEVEL;
-
-const reducers = combineReducers({
-    user,
-    seasons,
-    misc,
-    news,
-    players,
-    games,
-    locations,
-    teams,
-    divisions,
-    standings,
-    users,
-    // can probably remove site_level from redux state and create a helper function instead
-    site_level: (state = SITE_LEVEL) => (state),
+export const store = configureStore({
+    reducer: {
+        counter,
+        auth,
+        seasons,
+        standings,
+        games,
+        players,
+        teams,
+        news,
+        registrations,
+        locations,
+        divisions,
+    },
 });
-
-const store = createStore(reducers, {}, applyMiddleware(thunk));
-export default store;

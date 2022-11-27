@@ -1,0 +1,168 @@
+
+
+// ant overrides here
+
+
+
+// .ant-col .ant-form-item-label {
+.ant-form-item .ant-form-item-label {
+    padding-bottom: 0;
+    // @apply bg-red-500
+}
+
+.ant-form-item:not(.ant-form-item-with-help) {
+    @apply mb-5;
+}
+
+.ant-form-item-with-help .ant-form-item-explain {
+    @apply text-xs;
+    min-height: theme('spacing.5');
+}
+
+
+.ant-drawer-body {
+    padding: 0;
+}
+
+
+.ant-popover {
+    padding-top: 5px;
+
+    .ant-popover-arrow {
+        display: none;
+    }
+
+    .ant-popover-inner-content {
+        padding: 0;
+    }
+}
+
+// 
+// PAGINATION 
+// 
+
+.ant-pagination-item {
+    @apply m-0 bg-transparent border-0;
+    &:hover a {
+        @apply text-primary-100 opacity-50;
+    }
+
+    a {
+        @apply text-black;
+        display: inline;
+        padding: 0;
+    }
+}
+
+
+.ant-pagination-prev {
+    @apply mr-3;
+}
+
+.ant-pagination-next {
+    @apply ml-3;
+}
+
+.ant-pagination-jump-next, .ant-pagination-jump-prev {
+    @apply m-0;
+}
+
+
+.ant-pagination-prev, .ant-pagination-next,
+.ant-pagination-jump-next, .ant-pagination-jump-prev {
+    @apply inline-flex items-center justify-center;
+    
+    &:not(&.ant-pagination-disabled) {
+        @apply text-db-secondary;
+
+        &:hover a {
+            @apply opacity-70;
+    
+            &:hover {
+                @apply text-db-secondary;
+            }
+        }
+    }
+}
+
+.ant-pagination-prev, .ant-pagination-next {
+    @apply bg-db-secondary px-3;
+
+    &.ant-pagination-disabled {
+        @apply opacity-70;
+
+        a {
+            @apply text-white;
+        }
+    }
+
+    &:not(&.ant-pagination-disabled) {
+        @apply text-white;
+
+        &:hover a:hover {
+            @apply text-white;
+        }
+    }
+}
+
+.ant-pagination-item-active {
+    @apply bg-db-secondary/30 border-0 font-bold;
+
+    a {
+        @apply text-primary;
+        // @apply absolute w-full left-0 -translate-y-3;
+        // tried this out, mehhhh
+        // @apply text-primary border-b-2 border-db-secondary;
+    }
+}
+
+// 
+// DRAWER 
+// 
+
+.floating {
+    &.ant-drawer-right.ant-drawer-open .ant-drawer-content-wrapper {
+        box-shadow: none !important;
+    }
+    .ant-drawer-content {
+        background-color: transparent;
+    }
+}
+
+// 
+// POP OVER 
+// 
+
+.ant-popover.ant-popconfirm.ant-popover-placement-top {
+
+    .ant-popover-arrow {
+        display: block;
+    }
+
+    .ant-popover-inner {
+        @apply p-2
+    }
+
+    .ant-popover-buttons {
+        @apply flex justify-end ;
+
+        // className="flex justify-center items-center p-2 text-sm rounded focus:outline-none active:ring active:ring-gray-200"
+
+        .ant-btn-default {
+            @apply flex justify-center items-center p-2 text-sm rounded border-none hover:text-black focus:outline-none active:ring active:ring-gray-200;
+        }
+
+        .ant-btn-primary {
+            @apply flex justify-center items-center border p-2 px-3 text-sm border-gray-300 rounded bg-primary hover:bg-primary-100 focus:outline-none active:ring active:ring-gray-200 active:bg-gray-100;
+        }
+    }
+}
+
+
+// 
+// MODAL
+// 
+
+.ant-modal-body {
+    padding: 0;
+}

@@ -4,13 +4,14 @@
   "description": "",
   "main": "server.js",
   "engines": {
-    "node": "8.11.3"
+    "node": ">=8.11.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "st___art2": "nodemon server.js & (cd client && npm start)",
     "start": "cd backend && nodemon server.js",
-    "seed": "cd backend && node seed.js",
+    "seed_OLD": "cd backend && node seed.js",
+    "seed": "cd backend && node ./database/migrations/index.js seed",
     "herok-postbuild": "cd .. && cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },

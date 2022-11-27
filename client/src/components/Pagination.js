@@ -1,180 +1,53 @@
-/* eslint-disable react/no-array-index-key */
-import React, { useEffect, useState } from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React from 'react';
 import PropTypes from 'prop-types';
-import './pagination.scss';
+import { Pagination as AntPagination } from 'antd';
 
-// const initialState = {
-//     totalPages: 5,
-//     currentPage: 1
-// }
-
-const [LEFT_PAGE, RIGHT_PAGE, LIMIT] = ['left', 'right', 50];
-
-const Pagination = (props) => {
-    // const [ pages,  setPages ] = useState(initialState)
-    const [pages, setPages] = useState({ limit: LIMIT, ...props });
-
-    useEffect(() => {
-        // console.log('firing')
-        setPages({ limit: LIMIT, ...props });
-    }, [props]);
-
-    // console.log(props, 'pages')
-    if (pages.totalPages <= 1) {
-        return null;
-    }
-
-
-    const changePage = dir => {
-        const { currentPage, totalPages } = pages;
-        // let search;
-        if (dir === 'prev' && currentPage === 1) return;
-        if (dir === 'next' && currentPage === totalPages) return;
-
-        if (typeof dir === 'number') {
-            // search = qs.stringify({ page: dir });
-            props.setFilters({ page: dir }, true);
-            setPages({ ...pages, currentPage: dir });
+const Pagination = ({ onChange, total, pageSize, defaultCurrent, ...props }) => {
+    const itemRender = (_, type, originalElement) => {
+        if (type === 'prev') {
+            return <a><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" /></svg></a>;
         }
 
-        if (dir === 'prev' && currentPage > 1) {
-            // search = qs.stringify({ page: currentPage - 1 });
-            props.setFilters({ page: currentPage - 1 }, true);
-
-            setPages({ ...pages, currentPage: currentPage - 1 });
+        if (type === 'next') {
+            return <a><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg></a>;
         }
 
-        if (dir === 'next' && currentPage < totalPages) {
-            // search = qs.stringify({ page: currentPage + 1 });
-            props.setFilters({ page: currentPage + 1 }, true);
-            // console.log({ ...pages, currentPage: currentPage + 1 })
-            setPages({ ...pages, currentPage: currentPage + 1 });
+        if (type === 'jump-prev') {
+            return <a><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg></a>;
         }
 
-        // history.push({ search });
-        // props.setFilters({search});
-        // useQueryParam({ getMethod: props.getMethod });
+        if (type === 'jump-next') {
+            return <a><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg></a>;
+        }
+
+        return originalElement;
     };
-
-    const getPageNumbers = () => {
-        // totalPages: 10,
-        // currentPage: 1,
-        // neighbors: 1,
-        // limit: 30,
-
-
-        const { totalPages, currentPage, neighbors } = pages;
-
-
-        const totalNumbers = (neighbors * 2) + 3;
-        const totalBlocks = totalNumbers + 2;
-
-
-        if (totalPages > totalBlocks) {
-            const startPage = Math.max(2, currentPage - neighbors);
-            const endPage = Math.min(totalPages - 1, currentPage + neighbors);
-
-            let localPages = range(startPage, endPage);
-
-            /**
-             * hasLeftSpill: has hidden pages to the left
-             * hasRightSpill: has hidden pages to the right
-             * spillOffset: number of hidden pages either to the left or to the right
-             */
-            const hasLeftSpill = startPage > 2;
-            const hasRightSpill = (totalPages - endPage) > 1;
-            const spillOffset = totalNumbers - (localPages.length + 1);
-
-
-            switch (true) {
-            // handle: (1) < {5 6} [7] {8 9} (10)
-            case (hasLeftSpill && !hasRightSpill): {
-                const extraPages = range(startPage - spillOffset, startPage - 1);
-                localPages = [LEFT_PAGE, ...extraPages, ...localPages];
-                // localPages = [LEFT_PAGE, ...extraPages, ...localPages];
-
-                break;
-            }
-
-            // handle: (1) {2 3} [4] {5 6} > (10)
-            case (!hasLeftSpill && hasRightSpill): {
-                const extraPages = range(endPage + 1, endPage + spillOffset);
-                localPages = [...localPages, ...extraPages, RIGHT_PAGE];
-                break;
-            }
-
-            // handle: (1) < {4 5} [6] {7 8} > (10)
-            case (hasLeftSpill && hasRightSpill):
-            default: {
-                // localPages = [LEFT_PAGE, ...localPages, RIGHT_PAGE];
-                localPages = [LEFT_PAGE, ...localPages, RIGHT_PAGE];
-                break;
-            }
-            }
-
-            return [1, ...localPages, totalPages];
-        }
-
-
-        return range(1, totalPages);
-    };
-
-    const pageNumbers = getPageNumbers();
 
     return (
-        <div className="pagination-full-width">
-            <div className="pagination-container">
-                <span className={`left ${pages.currentPage === 1 && 'disabled'}`} onClick={() => changePage('prev')} />
-
-                {pageNumbers.map((page, index) => {
-                    if (page === LEFT_PAGE || page === RIGHT_PAGE) {
-                        return (
-                            <span key={index} style={{ cursor: 'default', color: 'black', padding: '0 8px', display: 'flex', alignItems: 'flex-end' }}>
-                                ...
-                            </span>
-                        );
-                    }
-
-                    return (
-                        <span key={index} className={`page-item${pages.currentPage === page ? ' current-page' : ''}`} onClick={() => changePage(page)}>
-                            { page }
-                        </span>
-                    );
-                })}
-
-                <span className={`right ${pages.currentPage === pages.totalPages && 'disabled'}`} onClick={() => changePage('next')} />
-            </div>
-        </div>
-
+        <AntPagination
+            total={total}
+            pageSize={pageSize}
+            hideOnSinglePage
+            showSizeChanger={false}
+            defaultCurrent={defaultCurrent}
+            onChange={onChange}
+            itemRender={itemRender}
+            {...props}
+        />
     );
 };
 
+export default Pagination;
 
-const range = (from, to, step = 1) => {
-    const range = [];
-    while (from <= to) {
-        range.push(from);
-        from += step;
-    }
-
-    return range;
+Pagination.defaultProps = {
+    pageSize: 100,
+    defaultCurrent: 1,
 };
-
-// Pagination.defaultProps = {
-//     totalPages: 1,
-//     currentPage: 1,
-//     limit: 20,
-//     neighbors: 1,
-//     onPageChange: () => alert('onPageChange function not defined')
-// }
 
 Pagination.propTypes = {
-    totalPages: PropTypes.number.isRequired,
-    currentPage: PropTypes.number.isRequired,
-    limit: PropTypes.number,
-    neighbors: PropTypes.oneOf([0, 1, 2]),
-    onPageChange: PropTypes.func,
-    setFilters: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
+    total: PropTypes.number.isRequired,
+    pageSize: PropTypes.number,
+    defaultCurrent: PropTypes.number,
 };
-
-export default Pagination;

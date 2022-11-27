@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './ant-overrides.scss';
+
+
+body, h1, h2, h3, h4, h5, h6, p {
+    @apply text-black;
+}
+
+// TODO: news body needs custom styles
+
+.--news-body {
+    p, ol, li {
+        letter-spacing: 1.2px;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    ol, ul {
+        margin-left: 24px;
+    }
+
+    ul {
+        list-style-type: circle;
+    }
+}
+
+
+
+input:checked + div {
+    @apply border-blue-500;
+}
+input:checked + div svg {
+    @apply block;
+}
+
+
+
+.flex-one {
+    flex: 1;
+}
+.flex-two {
+    flex: 2;
+}
+.flex-three {
+    flex: 3;
+}
+.flex-four {
+    flex: 4;
+}
+.flex-five {
+    flex: 5;
+}
+
+
+
+
+@layer utilities {
+    .animation-delay-200 {
+      animation-delay: 0.4s;
+    }
+    .animation-delay-400 {
+      animation-delay: 0.8s;
+    }
+}
+
+@layer base {
+  a:hover {
+    color: unset;
+  }
+}
+  
+.custom-label input:checked + svg {
+  /* display: block !important; */
+  opacity: 1;
+}
+
+.toggle-bg:after {
+  content: '';
+  @apply absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition shadow-sm;
+}
+
+input:checked + div > .toggle-bg:after {
+  transform: translateX(100%);
+  @apply border-white;
+}
+
+input:checked + div> .toggle-bg {
+  @apply bg-blue-600 border-blue-600;
+}
+
+
+
+
+.toggle-bg2:after {
+  content: '';
+  @apply absolute z-20 top-0.5 left-0.5 bg-white border border-gray-200 rounded-full h-6 w-6 transition shadow-sm;
+}
+
+input:checked ~ div > .toggle-bg2:after {
+  /* transform: translateX(100%); */
+  transform: translateX(150%);
+  @apply border-white;
+}
+
+input:checked ~ div > .toggle-bg2 {
+  /* @apply bg-blue-600 border-blue-600; */
+  // @apply bg-indigo-600 border-indigo-600;
+  // @apply bg-primary border-primary;
+  @apply bg-db-secondary border-db-secondary;
+}
+
+.custom-checkbox input:checked ~ span:first-of-type {
+    @apply text-white;
+}
+
+.custom-checkbox input:checked ~ span:nth-of-type(2) {
+  @apply opacity-0;
+}
+
+.custom-checkbox input:not(:checked) ~ span:nth-of-type(2) {
+  @apply text-gray-700;
+}

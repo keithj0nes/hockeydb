@@ -1,6 +1,6 @@
 /* eslint-disable no-multi-spaces */
 const express = require('express');
-const massive = require('massive');
+const massive = require('massive'); // connects node to db
 const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
@@ -27,15 +27,23 @@ const teams = require('./controllers/teams');
 const games = require('./controllers/games');
 const locations = require('./controllers/locations');
 const seasons = require('./controllers/seasons');
+const registrations = require('./controllers/registrations');
 const divisions = require('./controllers/divisions');
 const misc = require('./controllers/misc');
 const users = require('./controllers/users');
 const emailer = require('./controllers/helpers/emailer');
+const { isProduction } = require('./controllers/helpers');
+const { selectEnvironment } = require('./database/utils/selectEnvironment');
 
+const scriptsPath = path.join(__dirname, 'database/scripts');
 
 // Make sure to create a local postgreSQL db called hockeydb
+
+const argv = process.argv.slice(2);
+
 let connectionInfo;
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
+    // TODO: change this to use new connection info - connectionInfo = selectEnvironment('production');
     const dbUriSplit = process.env.DB_URI.split(/[:/@]+/);
     connectionInfo = {
         user: dbUriSplit[1],
@@ -47,41 +55,42 @@ if (process.env.NODE_ENV === 'production') {
         poolSize: 2,
     };
 } else {
-    connectionInfo = process.env.DB_URI;
+    connectionInfo = selectEnvironment(argv[0]);
 }
 
-
-massive(connectionInfo, { excludeMatViews: true }).then(instance => {
+massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(instance => {
+    // console.log('INSTANCE', instance);
     app.set('db', instance); // add your connection to express
-}).catch(err => console.log(err, 'massive err'));
+    console.log('Database - connection established to', connectionInfo.database);
+}).catch(err => console.log('Database - connection failed \n', err));
 
 
 // ROUTES //
 
 // Seasons
-app.get('/api/seasons/',    seasons.getSeasons);
+app.get('/api/seasons/', seasons.getSeasons);
 app.get('/api/seasons/:id', seasons.getSeasonById);
 
 // Blog
-app.get('/api/news',     news.getNews);
+app.get('/api/news', news.getNews);
 app.get('/api/news/:id', news.getNewsById);
 
 // Schedule
 // app.get('/api/schedule')
 
 // Games
-app.get('/api/games',     games.getGames);
+app.get('/api/games', games.getGames);
 app.get('/api/games/:id', games.getGameById);
 
 // Teams
-app.get('/api/teams/',             teams.getAllTeams);
-app.get('/api/teams/by-division',  teams.getAllTeamsByDivision);
-app.get('/api/teams/:id',          teams.getTeamById);
+app.get('/api/teams/', teams.getAllTeams);
+app.get('/api/teams/by-division', teams.getAllTeamsByDivision);
+app.get('/api/teams/:id', teams.getTeamById);
 app.get('/api/teams/:id/schedule', teams.getTeamSchedule);
 // app.get('/api/teams/:id/roster', teams.getTeamSchedule);
 
 // Players
-app.get('/api/players',     players.getAllPlayers);
+app.get('/api/players', players.getAllPlayers);
 app.get('/api/players/:id', players.getPlayerById);
 
 app.get('/api/stats', players.getPlayerStats);
@@ -108,9 +117,15 @@ app.get('/api/divisions/', divisions.getAllDivisions);
 // app.get('/api/divisions/:season_id', divisions.getDivisionById);
 
 // Misc
-app.get('/api/misc/teams-filters',     misc.getTeamsPageFilters);
+app.get('/api/misc/teams-filters', misc.getTeamsPageFilters);
 app.get('/api/misc/standings-filters', misc.getStandingsPageFilters);
-app.get('/api/misc/news-tags',         misc.getNewsTags);
+app.get('/api/misc/news-tags', misc.getNewsTags);
+
+// Player Registrations
+app.get('/api/register/:registration_id', auth.authorizeAccessToken, registrations.getRegistration);
+app.post('/api/register/:registration_id', auth.authorizeAccessToken, registrations.submitPlayerRegistration);
+app.put('/api/register/:registration_id', auth.authorizeAccessToken, registrations.updatePlayerRegistration);
+app.get('/api/registrations', auth.authorizeAccessToken, registrations.getOpenRegistrations);
 
 
 // ADMIN
@@ -123,33 +138,43 @@ app.get('/api/misc/news-tags',         misc.getNewsTags);
 
 // Create seasons
 // app.post('/api/admin/seasons',       auth.authorizeAccessToken2(accessAdmin), admin.createSeason);
-app.post('/api/admin/seasons',       auth.authorizeAccessToken, seasons.createSeason);
-app.put('/api/admin/seasons/:id',    auth.authorizeAccessToken, seasons.updateSeason);
+
+app.post('/api/admin/seasons', auth.authorizeAccessToken, seasons.createSeason);
+app.put('/api/admin/seasons/:id', auth.authorizeAccessToken, seasons.updateSeason);
 app.delete('/api/admin/seasons/:id', auth.authorizeAccessToken, seasons.deleteSeason);
 
+// Create Registrations
+app.post('/api/admin/seasons/:season_id/registrations', auth.authorizeAccessToken, registrations.createRegistration);
+// app.get('/api/admin/seasons/:id/registrations/:reg_id', auth.authorizeAccessToken, registrations.getRegistrationByRegId);
+app.get('/api/admin/seasons/:season_id/registrations/:registration_id', registrations.getRegistrationByRegIdAdmin);
+app.put('/api/admin/seasons/:season_id/registrations/:registration_id', registrations.updateRegistrationFields);
+
+// curl -X GET "http://localhost:8010/api/admin/seasons/3/registrations/1"
+
+
 // Create division
-app.post('/api/admin/divisions',       auth.authorizeAccessToken, divisions.createDivision);
-app.put('/api/admin/divisions/:id',    auth.authorizeAccessToken, divisions.updateDivision);
+app.post('/api/admin/divisions', auth.authorizeAccessToken, divisions.createDivision);
+app.put('/api/admin/divisions/:id', auth.authorizeAccessToken, divisions.updateDivision);
 app.delete('/api/admin/divisions/:id', auth.authorizeAccessToken, divisions.deleteDivision);
 
 // Create location
-app.post('/api/admin/locations',       auth.authorizeAccessToken, locations.createLocation);
-app.put('/api/admin/locations/:id',    auth.authorizeAccessToken, locations.updateLocation);
+app.post('/api/admin/locations', auth.authorizeAccessToken, locations.createLocation);
+app.put('/api/admin/locations/:id', auth.authorizeAccessToken, locations.updateLocation);
 app.delete('/api/admin/locations/:id', auth.authorizeAccessToken, locations.deleteLocation);
 
 // Create team
-app.post('/api/admin/teams',       auth.authorizeAccessToken, teams.createTeam);
-app.put('/api/admin/teams/:id',    auth.authorizeAccessToken, teams.updateTeam);
+app.post('/api/admin/teams', auth.authorizeAccessToken, teams.createTeam);
+app.put('/api/admin/teams/:id', auth.authorizeAccessToken, teams.updateTeam);
 app.delete('/api/admin/teams/:id', auth.authorizeAccessToken, teams.deleteTeam);
 
 // Create player
-app.post('/api/admin/players',       auth.authorizeAccessToken, players.createPlayer);
-app.put('/api/admin/players/:id',    auth.authorizeAccessToken, players.updatePlayer);
+app.post('/api/admin/players', auth.authorizeAccessToken, players.createPlayer);
+app.put('/api/admin/players/:id', auth.authorizeAccessToken, players.updatePlayer);
 app.delete('/api/admin/players/:id', auth.authorizeAccessToken, players.deletePlayer);
 
 // Create news post
-app.post('/api/admin/news',       auth.authorizeAccessToken, news.createNews);
-app.put('/api/admin/news/:id',    auth.authorizeAccessToken, news.updateNews);
+app.post('/api/admin/news', auth.authorizeAccessToken, news.createNews);
+app.put('/api/admin/news/:id', auth.authorizeAccessToken, news.updateNews);
 app.delete('/api/admin/news/:id', auth.authorizeAccessToken, news.deleteNews);
 
 // Update about
@@ -174,13 +199,13 @@ app.post('/api/auth/login', auth.login);
 app.post('/api/auth/signup', auth.signup);
 
 // Reset password
-app.post('/api/auth/password/reset',       auth.sendResetPassword);
+app.post('/api/auth/password/reset', auth.sendResetPassword);
 app.put('/api/auth/password/reset/:token', auth.updatePassword);
 
 // Invite user
-app.post('/api/auth/invite',          auth.invite);
+app.post('/api/auth/invite', auth.invite);
 app.post('/api/auth/invite/register', auth.registerFromInvite);
-app.put('/api/auth/invite/:id',       auth.resendInvite);
+app.put('/api/auth/invite/:id', auth.resendInvite);
 
 // Log out (current logout is not logging out on server side, just client side)
 app.post('/api/auth/:id/logout');
@@ -198,7 +223,7 @@ app.put('/api/auth/:id');
 app.post('/api/auth/login/cookie', auth.loginFromCookie);
 
 // Used for production
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
     console.log('running in herooku');
     // Serve any static files
     app.use(express.static(path.join(__dirname, '../client/build')));
