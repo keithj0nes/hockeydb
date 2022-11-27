@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    container_name: backend_api
+    ports:
+      - '8010:8010'
+      # - "${PORT}:${PORT}"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules/
+    depends_on:
+      - postgres
+  client:
+    build: ./client
+    container_name: client_frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+  postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hockeydb
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - '5438:5432'
+    volumes: 
+      # - ./data:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data

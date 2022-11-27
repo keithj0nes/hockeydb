@@ -2,28 +2,10 @@
 
 <!-- CMD + Shift + V to view markdown file in VS code -->
 
-## Running development - BETA
-
-We use Docker for local development. Docker allows us to have a consistent environment while ensuring scalability and flexibility. Install Docker by [Getting Started.](https://docs.docker.com/get-docker/)
-
-To execute any node command in docker, you must run `docker exec $CONTAINER_NAME $NODE_COMMAND` - see [Seed Database](#seed-database) for example 
-
-To start the docker container:
-
-* From the root folder, run&nbsp;&nbsp; `docker compose build`
-* After building, run &nbsp;&nbsp;`docker compose up -d`
-
- OPTIONAL - Use `-d` to detach the docker compose command from the command line. You can then watch the containers via the Docker App. This is useful when needing to run node commands while docker is running. 
-
-To stop the docker container:
-
-* Run&nbsp;&nbsp; `docker compose down`
-
-### Seed Database
-
-TBD: Custom seeding attributes
-
-While docker is running, run&nbsp;&nbsp; `docker exec backend_api npm run seed`
+### Install Dependencies
+- From the project's root level, run &nbsp; `npm install`
+- cd /backend, run &nbsp; `npm install`
+- cd /client, run &nbsp; `npm install`
 
 
 ### Create .env Files
@@ -41,21 +23,44 @@ While docker is running, run&nbsp;&nbsp; `docker exec backend_api npm run seed`
         SENDGRID_API_KEY={{ ASK FOR API KEY }}
         TEST_EMAIL={{ YOUR EMAIL FOR DEVELOPMENT TESTING }}
 
+        # Test database connection
+        TEST_DB_HOST=localhost
+        TEST_DB_PORT=5432
+        TEST_DB_DATABASE=hockeydb-test
+        TEST_DB_USERNAME=YOURUSERNAME
+        TEST_DB_PASSWORD=YOURPASSWORD
+
         # Development database connection
-        DEV_DB_HOST=postgres
+        DEV_DB_HOST=localhost
         DEV_DB_PORT=5432
         DEV_DB_DATABASE=hockeydb
-        DEV_DB_USERNAME=postgres
-        DEV_DB_PASSWORD=
+        DEV_DB_USERNAME=YOURUSERNAME
+        DEV_DB_PASSWORD=YOURPASSWORD
 
 - cd /client and create a `.env` file that looks like:
 
         # REACT_APP_TESTING_PASSWORD must match TESTING_PASSWORD in backend .env file
         REACT_APP_TESTING_PASSWORD=abc123123
 
+### Seed Database OLD
+- Make sure PostgreSQL is installed on your computer https://www.postgresql.org
+- Create a database called &nbsp; `hockeydb`
+- From the project's root level, cd /backend and run &nbsp; `npm run seed  [optional: test | dev (default)]` &nbsp; OR &nbsp; `npm run migrate seed  [optional: test | dev (default)]`
+- If any errors occur, rerun the seed command
+- You can input your own counts for teams, players, and games by editing the variables in the &nbsp;`seedMigration.js`&nbsp; file:
+        
+        const counts = {
+            teams:   { min: 4,  max: 10, exact: null },
+            players: { min: 12, max: 16, exact: 5 },
+            games:   { min: 5,  max: 8,  exact: null },  
+        }
+
+### Launch
+- From the project's root level, cd /backend and run &nbsp; `npm start` (this launches nodemon on the server side)
+- In a new terminal cd /client and run &nbsp; `npm start`
 
 ### Admin
-- If seeding the database is succesfful, login credentials are:
+- If you seeded the database correctly, login credentials are:
         
         email: super@hockeydb.com
         email: admin@hockeydb.com
@@ -65,8 +70,6 @@ While docker is running, run&nbsp;&nbsp; `docker exec backend_api npm run seed`
 
         password: {{ process.env.REACT_APP_TESTING_PASSWORD }}
 
-
-## Advanced Options
 
 ### Database Migrations
 When making updates to the database, a migration can be added to update the database incrementally, such as needing to add new tables, add columns to tables, etc
@@ -86,9 +89,7 @@ When making updates to the database, a migration can be added to update the data
 By default, starting the server will use the `hockeydb` database. If you've created a `hockeydb-test` database, you can run `npm run use:test` to use the test database instead of the default.
 
 
-### Basic Commands (backend)
-
-*reminder these must be used with `docker exec backend_api $NODE_COMMAND`*
+## Basic Commands (backend)
 
     npm start                   // start server using dev database
     npm run use:dev             // start server using dev database
@@ -99,9 +100,3 @@ By default, starting the server will use the `hockeydb` database. If you've crea
     npm run migrate seed        // seed default database
     npm run seed test           // seed test database
     npm run migrate seed test   // seed test database
-
-\
-&nbsp;
-
-## Use Without Docker - DEPRECATED
-Refer to the [deprecated README](https://github.com/keithj0nes/hockeydb)
