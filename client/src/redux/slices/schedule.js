@@ -30,12 +30,9 @@ export const scheduleSlice = createSlice({
         // reducer takes in state and payload
         // updates state with payload
         getScheduleSuccess: (state, { payload }) => {
-            console.log('SCHEDULE STATE', state);
-            console.log('SCHEDULE PAYLOAD', payload);
             // keep old schedule, add games from schedule
             // state.games = [...state.games, ...payload];
             state.games = [...payload];
-            console.log('STATE.GAMES', state.games);
             state.isLoading = false;
         },
     },

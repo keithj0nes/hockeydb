@@ -11,8 +11,8 @@ export const standingsSlice = createSlice({
     name: 'standings',
     initialState,
     reducers: {
-        getInit: state => {
-            // console.log('is loading', state.isLoading);
+        getInit: (state) => {
+            // console.log('is loading standings', state.isLoading);
             state.isLoading = true;
         },
         getStandingSuccess: (state, { payload }) => {
@@ -26,21 +26,30 @@ export const standingsSlice = createSlice({
 export const { getInit, getStandingSuccess } = standingsSlice.actions;
 
 // Pass filter (standings dropdown filter selection)
-export const getStandings = (filter = '') => async dispatch => {
-    // console.log('getting standings here');
-    dispatch(getInit());
+export const getStandings =
+    (filter = '') =>
+    async (dispatch) => {
+        // console.log('getting standings here');
+        dispatch(getInit());
 
-    await wait(3000);
+        await wait(3000);
 
-    const data = await request({ url: `/api/standings?${filter}`, method: 'GET', isPublic: true });
+        const data = await request({
+            url: `/api/standings?${filter}`,
+            method: 'GET',
+            isPublic: true,
+        });
 
-    // console.log('DATA IN STANDINGS REDUCER', data);
+        // console.log('DATA IN STANDINGS REDUCER', data);
 
-    const standings = data.data.standings.map((item) => ({
-        ...item,
-        teams_in_division: item.teams_in_division.map((team, idx) => ({ ...team, rank: idx + 1 })),
-    }));
-    dispatch(getStandingSuccess(standings));
-};
+        const standings = data.data.standings.map((item) => ({
+            ...item,
+            teams_in_division: item.teams_in_division.map((team, idx) => ({
+                ...team,
+                rank: idx + 1,
+            })),
+        }));
+        dispatch(getStandingSuccess(standings));
+    };
 
 export default standingsSlice.reducer;

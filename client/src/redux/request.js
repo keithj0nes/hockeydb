@@ -30,7 +30,7 @@ const request = async ({ url, method, body = {}, isPublic, store = () => true })
 
     const { status, data, message, notification = {}, shouldLogOut, redirect, snack, notification_type, notification_duration } = response.data;
 
-    // console.log({ status, data, message, notification });
+    console.log({ status, data, message, notification });
 
 
     if (notification_type) {
