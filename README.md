@@ -23,7 +23,11 @@ To stop the docker container:
 
 TBD: Custom seeding attributes
 
-While docker is running, run&nbsp;&nbsp; `docker exec backend_api npm run seed`
+While docker is running:
+* Run&nbsp;&nbsp; `docker exec backend_api npm run seed`
+* Then run&nbsp;&nbsp; `docker restart backend_api`
+
+If problems persist, docker down and back up again.
 
 
 ### Create .env Files
@@ -104,4 +108,4 @@ By default, starting the server will use the `hockeydb` database. If you've crea
 &nbsp;
 
 ## Use Without Docker - DEPRECATED
-Refer to the [deprecated README](https://github.com/keithj0nes/hockeydb)
+Refer to the [deprecated README](https://github.com/keithj0nes/hockeydb/blob/master/README_DEPRECATED.md)
