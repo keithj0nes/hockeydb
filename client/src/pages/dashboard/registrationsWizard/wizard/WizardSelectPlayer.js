@@ -124,7 +124,7 @@ const WizardSelectPlayer = () => {
                     {canRegister.map(item => {
                         if (!item.value) return null;
                         const isUser = item.player_id === user.player_id;
-                        const onCurrentStep = steps[item.step];
+                        const onCurrentStep = item.step ? steps[item.step] : steps[];
                         // console.log(item, ' teim');
 
                         const names = {
@@ -159,7 +159,7 @@ const WizardSelectPlayer = () => {
                                         Continue
                                     </div>
                                     <div className="py-0 text-center">
-                                        ({onCurrentStep.name})
+                                        ({onCurrentStep?.name})
                                     </div>
                                 </label>
                             </li>

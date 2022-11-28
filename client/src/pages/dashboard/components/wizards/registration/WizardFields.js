@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Popconfirm } from 'antd';
 import classNames from 'classnames';
-import DrawerAddField from '../components/drawers/DrawerAddField';
-import DrawerAddSection from '../components/drawers/DrawerAddSection';
+import DrawerAddField from '../../drawers/DrawerAddField';
+import DrawerAddSection from '../../drawers/DrawerAddSection';
 // import { useForm } from '../../../hooks';
 // import { Dropdown } from '../../../components/dashboard';
-import { Toggle } from '../../../components';
-import { updateRegistrationFieldsByRegId } from '../../../redux/slices/registrations';
+import { Toggle } from '../../../../../components';
+import { updateRegistrationFieldsByRegId } from '../../../../../redux/slices/registrations';
 
 const WizardFields = () => {
     const [sectionNames, setSectionNames] = useState([]);

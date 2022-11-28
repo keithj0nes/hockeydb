@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, Link } from 'react-router-dom';
 import { currency } from '../../../utils';
 import DrawerCreateRegistration from './drawers/DrawerCreateRegistration';
+import { registrationTabs } from './wizards/registration/RegistrationWizard';
 
 const all_forms = [
     {
@@ -168,7 +169,8 @@ const Registrations = () => {
                             <tr key={item.id} className="w-full border-b">
                                 <td className="py-2">
                                     {item.is_open ? (
-                                        <Link to={`registrations/${item.id.toString()}`}>
+                                        // <Link to={`registrations/${item.id.toString()}`}>
+                                        <Link to={`registrations/${item.id}/${registrationTabs[0].key}`}>
                                             {item.name}
                                         </Link>
 

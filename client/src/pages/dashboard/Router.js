@@ -14,7 +14,7 @@ import SingleSeason from './SingleSeason';
 import Account from './Account';
 import Locations from './Locations';
 
-import RegistrationWizard from './registrationsWizard/RegistrationWizard';
+import RegistrationWizard from './components/wizards/registration/RegistrationWizard';
 import OpenRegistrations from './OpenRegistrations';
 
 const ROLES = {
@@ -98,7 +98,7 @@ const Router = () => {
                     {navigation.map(page => (
                         <Route
                             key={page.to}
-                            path={`${page.to}`}
+                            path={`${page.to}/*`}
                             element={(
                                 <PrivateRoute allowed={page.allowed_roles}>
                                     {page.component}
