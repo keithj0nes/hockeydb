@@ -124,9 +124,7 @@ const WizardSelectPlayer = () => {
                     {canRegister.map(item => {
                         if (!item.value) return null;
                         const isUser = item.player_id === user.player_id;
-                        const onCurrentStep = item.step ? steps[item.step] : steps[];
-                        // console.log(item, ' teim');
-
+                        const onCurrentStep = item.step ? steps[item.step] : steps[0];
                         const names = {
                             first_name: item.value['First Name'],
                             last_name: item.value['Last Name'],
