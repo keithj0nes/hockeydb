@@ -445,10 +445,18 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
         await db.registrations_default_fields.insert({ field_type: 'text', label: 'Last Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 2 });
         await db.registrations_default_fields.insert({ field_type: 'text', label: 'Phone Number', hint: '222-222-2222', section: 'Basic Info', section_display_index: 1, display_index: 3 });
 
+
+        // to use, must put all not nulls in all objects (need to add locked: false to phone number insert)
+        // await db.registrations_default_fields.insert([
+        //     { field_type: 'text', label: 'First Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 1 },
+        //     { field_type: 'text', label: 'Last Name', is_required: true, locked: true, section: 'Basic Info', section_display_index: 1, display_index: 2 },
+        //     { field_type: 'text', label: 'Phone Number', hint: '222-222-2222', section: 'Basic Info', section_display_index: 1, display_index: 3 },
+        // ]);
+
         // add form fields made by admin
         const query = `
-            INSERT INTO "registrations_fields" (field_type, label, hint, options, is_required, registration_template_id, section, section_display_index, display_index)
-            SELECT field_type, label, hint, options, is_required, 1, section, section_display_index, display_index FROM "registrations_default_fields";
+            INSERT INTO "registrations_fields" (field_type, label, hint, options, is_required, locked, registration_template_id, section, section_display_index, display_index)
+            SELECT field_type, label, hint, options, is_required, locked, 1, section, section_display_index, display_index FROM "registrations_default_fields";
         `;
         await db.query(query);
 
