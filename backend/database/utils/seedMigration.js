@@ -487,8 +487,8 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
                             playerId = randomr(1, createdPlayers.length);
                         }
 
-                        console.log({ 'player id: ': playerId, 'user id: ': user.id });
-                        console.log('break -');
+                        // console.log({ 'player id: ': playerId, 'user id: ': user.id });
+                        // console.log('break -');
                         // console.log(createdPlayers, 'plaerys');
 
                         // TODO: promise is firing and updating the db.players.update to a single value
@@ -510,11 +510,11 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
 
                         const myPlayer = createdPlayers.find(p => p.id === playerId);
 
-                        console.log(myPlayer, 'MY PLAYRE')
+                        // console.log(myPlayer, 'MY PLAYRE')
 
                         const subValue = submissionValue(myPlayer);
 
-                        console.log(subValue, 'SUB VALUEEEE')
+                        // console.log(subValue, 'SUB VALUEEEE')
 
 
                         usedPlayerIds.push(playerId);
