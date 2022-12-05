@@ -51,9 +51,6 @@ const DrawerAddSection = ({ onClose, visible, section, onAddSection }) => {
         }
     };
 
-    console.log(section, 'sectionnnn ')
-    console.log(fields, 'fieldssss')
-
     return (
         <Drawer
             maskClosable // true by default -> set to false if has been edited to avoid accidentally closing

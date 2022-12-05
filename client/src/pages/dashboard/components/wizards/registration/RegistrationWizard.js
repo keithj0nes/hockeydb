@@ -6,6 +6,7 @@ import { Routes, Route, Link, Outlet, useParams, useSearchParams, useLocation, m
 import { Tabs } from '../..';
 import { Loader } from '../../../../../components';
 import { getRegistrationByRegIdAdmin } from '../../../../../redux/slices/registrations';
+import RegistrationWaiver from './RegistrationWaiver';
 
 import WizardFields from './WizardFields';
 
@@ -20,7 +21,7 @@ const currentRegistration = {
 export const registrationTabs = [
     { name: 'Fields', key: 'fields', component: <WizardFields /> },
     { name: 'Documents', key: 'documents' },
-    { name: 'Waivers', key: 'waivers' },
+    { name: 'Waivers', key: 'waivers', component: <RegistrationWaiver /> },
     { name: 'Fees', key: 'fees' },
     { name: 'Payments', key: 'payments' },
     { name: 'Review & Publish', key: 'review' },
@@ -30,7 +31,10 @@ export const registrationTabs = [
 const RegistrationWizard = () => {
     const [activeTab, setActiveTab] = useState(registrationTabs[0].key);
 
-    const { isFetching } = useSelector((state) => state.registrations);
+    // const { isFetching } = useSelector((state) => state.registrations);
+    const r = useSelector((state) => state.registrations);
+    console.log(r, 'rrrr')
+
     const dispatch = useDispatch();
     const { id: season_id, registration_id } = useParams();
 
@@ -42,10 +46,12 @@ const RegistrationWizard = () => {
     return (
         <div className="h-screen p-4 sm:p-7 overflow-scroll relative">
 
-            {isFetching && <Loader />}
+            {/* {isFetching && <Loader />} */}
 
             <div className="flex justify-between items-start">
-                <h1 className="text-3xl font-semibold">{currentRegistration.name}</h1>
+                {/* <h1 className="text-3xl font-semibold">{currentRegistration.name}</h1> */}
+                <h1 className="text-3xl font-semibold">{r.registrationModel.name}</h1>
+
             </div>
 
             <Tabs navLink active={activeTab} tabs={registrationTabs} onChange={setActiveTab} />
@@ -66,24 +72,15 @@ const RegistrationWizard = () => {
 
 // export default RegistrationWizard;
 
-const RegistrationLayout = (props) => {
-    console.log(props, 'props');
-    return (
-        <Routes>
-            {/* <Route path="*" element={<PositionWizard {...props} />}> */}
-            {/* <Route path="title" element={<WizardSelectPlayer onNext={handleNext} onBack={handleBack} formData={formData} model={model} />} /> */}
-
-            {/* <Route path="/" element={<Account />} /> */}
-            <Route path="*" element={<RegistrationWizard />}>
-                {registrationTabs.map(tab => (
-                    <Route key={tab.key} path={tab.key} element={tab.component} />
-                ))}
-            </Route>
-            {/* </Route> */}
-
-        </Routes>
-    );
-};
+const RegistrationLayout = () => (
+    <Routes>
+        <Route path="*" element={<RegistrationWizard />}>
+            {registrationTabs.map(tab => (
+                <Route key={tab.key} path={tab.key} element={tab.component} />
+            ))}
+        </Route>
+    </Routes>
+);
 
 export default RegistrationLayout;
 

@@ -192,16 +192,14 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
                         USHL
                     </h1>
 
-                    <div
+                    {/* <div
                         onClick={() => setIsOpen(!isOpen)}
-                        className="hidden lg:flex absolute cursor-pointer hover:shadow-lg hover:shadow-black/30
-
-                        top-1 -right-9 transition duration-200 rounded-full items-center justify-center mr-0 bottom-1/2 w-8 h-8 bg-light-gray"
+                        className="hidden lg:flex absolute cursor-pointer hover:shadow-lg hover:shadow-black/30  -right-9 transition duration-200 rounded-full items-center justify-center mr-0 bottom-1/2 w-8 h-8 bg-light-gray"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className={classNames('h-6 w-6 stroke-black transition duration-200', { 'rotate-180': isOpen })} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
-                    </div>
+                    </div> */}
 
                 </div>
 
@@ -214,7 +212,7 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
                                 <NavLink
                                     to={link.to}
                                     exact={(link.to === '').toString()}
-                                    end
+                                    end={!link.to}
                                     onClick={() => !!setIsOpenMobile && setIsOpenMobile(false)}
                                     className={({ isActive }) => (isActive ? 'flex items-center p-2  hover:text-db-secondary text-db-secondary' : 'flex p-2  items-center gap-x-4 hover:text-white')}
                                     children={({ isActive }) => (
@@ -243,6 +241,15 @@ const DasbhoardNav = ({ isOpen, setIsOpen, setIsOpenMobile, navigation, auth_rol
                         );
                     })}
                 </ul>
+            </div>
+
+            <div
+                onClick={() => setIsOpen(!isOpen)}
+                className="hidden lg:flex absolute z-10 cursor-pointer shadow-lg hover:shadow-black/30 -right-4 transition duration-200 rounded-full items-center justify-center mr-0 bottom-1/2 w-8 h-8 bg-light-gray"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className={classNames('h-6 w-6 stroke-black transition duration-200', { 'rotate-180': isOpen })} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
             </div>
 
             <div>

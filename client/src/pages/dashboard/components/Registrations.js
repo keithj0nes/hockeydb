@@ -168,15 +168,15 @@ const Registrations = () => {
                         {seasonById?.template_registrations.map(item => (
                             <tr key={item.id} className="w-full border-b">
                                 <td className="py-2">
-                                    {item.is_open ? (
-                                        // <Link to={`registrations/${item.id.toString()}`}>
+                                    {/* {item.is_open ? ( */}
+                                        {/* // <Link to={`registrations/${item.id.toString()}`}> */}
                                         <Link to={`registrations/${item.id}/${registrationTabs[0].key}`}>
                                             {item.name}
                                         </Link>
 
-                                    ) : (
+                                    {/* ) : (
                                         <p className="cursor-default">{item.name}</p>
-                                    )}
+                                    )} */}
                                 </td>
                                 <td className="py-2">{item.is_open ? 'Open' : 'Closed'}</td>
                                 {/* <td className="py-2">{item.participants}</td>

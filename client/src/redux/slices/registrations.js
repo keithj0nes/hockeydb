@@ -10,6 +10,7 @@ const initialState = {
     openRegistrations: [],
     myRegistrations: [],
     model: {},
+    registrationModel: {},
 };
 
 export const registrationsSlice = createSlice({
@@ -32,8 +33,13 @@ export const registrationsSlice = createSlice({
         },
         setFormFieldsAdmin: (state, { payload }) => {
             state.isFetching = false;
+            state.formFields = payload.registration_fields;
+            state.registrationModel = payload;
+        },
+        setUpdateFormFieldsAdmin: (state, { payload }) => {
+            state.isFetching = false;
             state.formFields = payload;
-            // state.model = payload;
+            state.registrationModel.registration_fields = payload;
         },
         setOpenRegistrations: (state, { payload }) => {
             state.isFetching = false;
@@ -44,28 +50,29 @@ export const registrationsSlice = createSlice({
             // console.log('SETTING NEW MODEL AFTER UPDATE')
             // console.log({ ...state.model, registered_players: [...state.model.registered_players, payload] })
             state.isFetching = false;
-            state.model = { ...state.model, registered_players: [...state.model.registered_players, payload] }
+            state.model = { ...state.model, registered_players: [...state.model.registered_players, payload] };
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { clearPosting, posting, getInit, setFormFields, setFormFieldsAdmin, setOpenRegistrations, setUpdatePlayerRegistration } = registrationsSlice.actions;
+export const { clearPosting, posting, getInit, setFormFields, setFormFieldsAdmin, setUpdateFormFieldsAdmin, setOpenRegistrations, setUpdatePlayerRegistration } = registrationsSlice.actions;
 
 export const getRegistrationByRegIdAdmin = ({ season_id, registration_id }) => async (dispatch, store) => {
+    console.log('getRegistrationByRegIdAdmin', 'getRegistrationByRegIdAdmin');
     dispatch(getInit());
 
     // await wait(2000);
 
     const data = await request({ url: `/api/admin/seasons/${season_id}/registrations/${registration_id}`, method: 'GET', store });
-    // console.log(data, 'dataaa');
+    console.log(data, 'getRegistrationByRegIdAdmin');
     dispatch(setFormFieldsAdmin(data.data));
 };
 
 export const updateRegistrationFieldsByRegId = ({ season_id, registration_id, fields, removedIds }) => async (dispatch, store) => {
     const data = await request({ url: `/api/admin/seasons/${season_id}/registrations/${registration_id}`, method: 'PUT', body: { season_id, registration_id, fields, removedIds }, store });
     console.log(data, 'updateRegistrationFieldsByRegId');
-    dispatch(setFormFieldsAdmin(data.data.fields));
+    dispatch(setUpdateFormFieldsAdmin(data.data.fields));
     return data.data.deleted;
 };
 
@@ -90,8 +97,8 @@ export const submitPlayerRegistration = ({ registration_id, fields, step }) => a
     dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));
 
     if (data.data.submitted) {
-        console.log('send to confirmation page')
-        history.push(`/dashboard/registrations/${data.data.submission.id}`)
+        console.log('send to confirmation page');
+        history.push(`/dashboard/registrations/${data.data.submission.id}`);
     }
 };
 
@@ -108,6 +115,7 @@ export const updatePlayerRegistration = ({ registration_id, fields, step }) => a
         dispatch(setUpdatePlayerRegistration(data.data));
         return true;
     }
+    return false;
 
     // dispatch(setUser({ ...data.data.user, access_token: data.data.access_token }));
 

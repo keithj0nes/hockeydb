@@ -92,14 +92,36 @@ const getRegistrationByRegIdAdmin = async (req, res) => {
     // console.log('getting getRegistrationByRegIdAdmin', { season_id, registration_id });
 
     const rawReg = `
-        select lsff.id AS field_id, field_type, label, hint, options, is_required, display_index, section_display_index, locked, section, registration_template_id from "registrations_fields" lsff
-        join "registrations_templates" rtba on rtba.id = lsff.registration_template_id
-        where registration_template_id = $2 AND season_id = $1 ORDER BY display_index;
+        SELECT rf.id AS field_id, field_type, label, hint, options, is_required, display_index, section_display_index, locked, section, registration_template_id FROM "registrations_fields" rf
+        JOIN "registrations_templates" rt ON rt.id = rf.registration_template_id
+        WHERE registration_template_id = $2 AND season_id = $1 ORDER BY display_index;
     `;
 
-    const reg = await db.query(rawReg, [season_id, registration_id]);
+    // SELECT
+    //     DISTINCT rt.*,
+    //     (SELECT  COUNT(*) FROM "registrations_submissions" WHERE registration_template_id = rt.id AND submitted_at IS NOT NULL) AS filled_spots
+    // FROM "registrations_templates" rt
+    // JOIN "registrations_submissions" rs ON rs.registration_template_id = rt.id
+    // WHERE rt.id = $1
+    const rawRegModel = `
+        SELECT 
+            DISTINCT rt.id as registration_id, rt.name, rt.is_open, rt.season_id, rt.max_spots, rt.show_max_spots, rt.created_at,
+            (SELECT  COUNT(*) FROM "registrations_submissions" WHERE registration_template_id = rt.id AND submitted_at IS NOT NULL) AS filled_spots
+        FROM "registrations_templates" rt
+        JOIN "registrations_submissions" rs ON rs.registration_template_id = rt.id
+        WHERE rt.id = $1
+    `;
 
-    return res.send({ status: 200, data: reg, message: 'Retrieved registration' });
+    const registration_fields = await db.query(rawReg, [season_id, registration_id]);
+
+    const registering_players = await db.registrations_submissions.find({ registration_template_id: registration_id }, {
+        order: [{ field: 'id' }],
+    });
+
+    const [model] = await db.query(rawRegModel, [registration_id]);
+    const registrationModel = { ...model, registration_fields, registering_players };
+
+    return res.send({ status: 200, data: registrationModel, message: 'Retrieved registration' });
 };
 
 
@@ -119,6 +141,13 @@ const updateRegistrationFields = async (req, res, next) => {
         let deleted = [];
 
         if (removedIds.length) {
+            // this is a safe check to ensure first name / last name are not deleted from registration fields
+            const foundFields = await db.registrations_fields.find({ registration_template_id: registration_id });
+            const found = foundFields.some(field => removedIds.includes(field.id) && (field.label === 'First Name' || field.label === 'Last Name'));
+            if (!!found) {
+                return res.send({ status: 409, data: [], message: 'Cannot remove First Name or Last Name fields' });
+            }
+
             deleted = await Promise.all(removedIds.map(async item => {
                 await db.registrations_fields.save({ id: item, label: `REMOVED-${item}` });
                 return item;
