@@ -147,7 +147,9 @@ const Registrations = () => {
             )}
 
             {!!seasonById?.template_registrations?.length && (
-                <table className="table-auto w-full bg-pink-200 p-8">
+            <div className="p-3 bg-pink-200 mt-10">
+
+                <table className="table-auto w-full">
                     <thead>
                         <tr className="text-left border-b">
                             <th className="py-2">Form Name</th>
@@ -192,6 +194,7 @@ const Registrations = () => {
                     </tbody>
 
                 </table>
+            </div>
             )}
 
             <DrawerCreateRegistration

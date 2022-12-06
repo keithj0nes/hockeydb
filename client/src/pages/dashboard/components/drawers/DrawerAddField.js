@@ -116,6 +116,7 @@ const DrawerAddField = ({ onClose, visible, section, onAddField }) => {
                                     noText="No"
                                     yesText="yes"
                                     name="is_required"
+                                    onChange={handleChange}
                                     // checked={edit.is_active}
                                     // disabled={edit.is_active}
                                 />

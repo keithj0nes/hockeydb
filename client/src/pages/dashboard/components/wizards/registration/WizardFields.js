@@ -57,7 +57,8 @@ const WizardFields = () => {
             case 'checkbox':
                 return <Toggle disabled checked />;
             default:
-                return null;
+                return <input type="text" className="w-full border p-0.5 m-0 text-sm border-gray-300 rounded disabled:bg-gray-50 disabled:cursor-not-allowed" disabled />;
+                // return null;
         }
     };
 
@@ -180,22 +181,33 @@ const WizardFields = () => {
                                 Add Field
                             </button>
                         </div>
+
+                        {/* {sections2[section] && sections2[section].map(field => {
+                            console.log(field, 'field')
+                            // return (
+                            // )
+                        })} */}
+
                         {sections2[section] && sections2[section].map(field => (
                             <div key={field.field_id} className="p-2 sm:flex items-center py-3 border-b">
-                                <div className="w-full sm:w-1/5 pb-2 sm:pb-0">
-                                    {field.label}
+                                <div className="w-full flex justify-between sm:w-1/5 pb-2 sm:pb-0">
+                                    <p className="w-2/3 ">{field.label}</p>
+
+                                    {field.is_required && (<p className="w-1/3 text-center sm:hidden">Required</p>)}
                                 </div>
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-center">
                                     <div className="w-2/3">
                                         {renderInputType({ ...field, value: { field_type: field.field_type } })}
 
                                     </div>
+                                    <p className={classNames('hidden px-4 sm:block', { invisible: !field.is_required })}>Required</p>
                                     <div className="flex justify-center w-1/3">
                                         <Popconfirm
                                             placement="top"
                                             okText="Delete"
                                             onConfirm={() => handleDeleteField2({ field, field_id: field.field_id })}
-                                            title={`Are you sure you want to delete the ${field.label} field?`}
+                                            // title={`Are you sure you want to delete the ${field.label} field?`}
+                                            title={(<span>Are you sure you want to delete the <span className="bg-gray-200 px-2 py-0.5">{field.label}</span> field?</span>)}
                                         >
                                             <button
                                                 type="button"
