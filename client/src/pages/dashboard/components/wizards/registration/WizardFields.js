@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Popconfirm } from 'antd';
+import { Popconfirm, Tooltip } from 'antd';
 import classNames from 'classnames';
 import DrawerAddField from '../../drawers/DrawerAddField';
 import DrawerAddSection from '../../drawers/DrawerAddSection';
@@ -190,18 +190,27 @@ const WizardFields = () => {
 
                         {sections2[section] && sections2[section].map(field => (
                             <div key={field.field_id} className="p-2 sm:flex items-center py-3 border-b">
-                                <div className="w-full flex justify-between sm:w-1/5 pb-2 sm:pb-0">
-                                    <p className="w-2/3 ">{field.label}</p>
+                                <div className="w-full flex justify-between sm:w-2/6 pb-2 sm:pb-0">
+                                    <p className="w-2/3 sm:w-full">{field.label}</p>
 
                                     {field.is_required && (<p className="w-1/3 text-center sm:hidden">Required</p>)}
                                 </div>
-                                <div className="flex justify-between items-center">
+                                <div className="flex justify-between items-center w-full">
                                     <div className="w-2/3">
                                         {renderInputType({ ...field, value: { field_type: field.field_type } })}
 
                                     </div>
-                                    <p className={classNames('hidden px-4 sm:block', { invisible: !field.is_required })}>Required</p>
-                                    <div className="flex justify-center w-1/3">
+                                    <div className="flex justify-center gap-x-2 px-2">
+                                        <Tooltip title="Required Field">
+                                            <p className={classNames('hidden sm:block text-amber-600', { invisible: !field.is_required })}>
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                            </p>
+                                        </Tooltip>
+
+                                        <Tooltip title="Edit Field">
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                        </Tooltip>
+
                                         <Popconfirm
                                             placement="top"
                                             okText="Delete"
@@ -211,36 +220,15 @@ const WizardFields = () => {
                                         >
                                             <button
                                                 type="button"
-                                                className={classNames('flex justify-center items-center text-red-400 p-0 text-sm rounded focus:outline-none active:ring active:ring-gray-200', {
+                                                className={classNames('flex justify-center items-center text-red-600 p-0 text-sm rounded focus:outline-none active:ring active:ring-gray-200', {
                                                     invisible: !field.removable && field.locked,
                                                 })}
                                             >
-                                                Remove
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                             </button>
                                         </Popconfirm>
-                                        {/* <Popconfirm
-                                                    placement="top"
-                                                    okText="Delete"
-                                                    // onConfirm={() => console.log({ field, field_id: field.field_id, section: section.key })}
-                                                    // onConfirm={() => handleDelete2({ field, field_id: field.field_id, section: section.key })}
-                                                    // title="Are you sure you want to delete this field?"
-                                                    title={`Are you sure you want to delete the ${field.label} field?`}
-                                                >
-                                                      <button
-                                                        type="button"
-                                                        // className="flex justify-center items-center text-red-400 p-0 text-sm rounded focus:outline-none active:ring active:ring-gray-200"
-                                                        className={classNames('flex justify-center items-center text-red-400 p-0 text-sm rounded focus:outline-none active:ring active:ring-gray-200', {
-                                                            invisible: !field.removable && field.locked,
-                                                        })}
-                                                    >
-                                                        Remove
-                                                    </button>
-                                                </Popconfirm> */}
-
                                     </div>
-
                                 </div>
-
                             </div>
                         ))}
                     </div>

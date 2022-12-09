@@ -5,7 +5,6 @@ import { Popover } from 'antd';
 import debounce from 'lodash.debounce';
 import classNames from 'classnames';
 import { format, parseISO } from 'date-fns';
-import { getSeasons } from '../../redux/slices/seasons';
 import { Loader, Pagination } from '../../components';
 import { Dropdown } from '../../components/dashboard';
 import { DrawerCreateSeason } from './components';
@@ -15,7 +14,7 @@ import { getLocations } from '../../redux/slices/locations';
 import { useQueryParams } from '../../hooks/useQueryParams';
 
 
-const Seasons = () => {
+const Locations = () => {
     const PAGE_TITLE = 'Locations';
     const [filters, setFilters] = useQueryParams(getLocations);
     const [showFiltersModal, setShowFiltersModal] = useState(false);
@@ -288,4 +287,4 @@ const Seasons = () => {
     );
 };
 
-export default Seasons;
+export default Locations;
