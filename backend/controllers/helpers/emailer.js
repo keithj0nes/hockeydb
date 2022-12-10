@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
-const sgMail = require('@sendgrid/mail');
-const { isProduction } = require('../helpers');
+import sgMail from '@sendgrid/mail';
+import { isProduction } from '../helpers.js';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const testEmail = process.env.TEST_EMAIL;
@@ -93,7 +93,7 @@ const templates = {
     },
 };
 
-module.exports = {
+export default {
     newUserEmail,
     sendmail,
 };

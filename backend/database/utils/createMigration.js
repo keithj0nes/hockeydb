@@ -1,11 +1,10 @@
-const fs = require('fs');
-const { format } = require('date-fns');
-const { exec } = require('node:child_process');
-
+import fs from 'fs';
+import { format } from 'date-fns';
+import { exec } from 'node:child_process';
 // to use
 // npm run migrate create your-migration-name-here
 
-const createNewMigration = (fileName, filePath) => {
+export const createNewMigration = (fileName, filePath) => {
     if (!fileName) {
         throw new Error('Must contain a migration name \n\nExample: npm run migrate create some-file-name\n\n');
     }
@@ -54,8 +53,4 @@ const createNewMigration = (fileName, filePath) => {
             return console.log('Migration file created and opened\n\n');
         });
     });
-};
-
-module.exports = {
-    createNewMigration,
 };

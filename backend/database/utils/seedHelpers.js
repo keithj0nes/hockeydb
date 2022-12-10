@@ -2,18 +2,18 @@
 /* eslint-disable no-continue */
 
 // this function takes an array and divides it out into an array of multiple arrays depeneding on SIZE variable
-const chunkArray = (arr, size) => (arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr]);
+export const chunkArray = (arr, size) => (arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr]);
 
-const randomr = (num, max) => {
+export const randomr = (num, max) => {
     if (num && !max) {
         return Math.floor(Math.random() * num); // mainly used for array indexs
     }
     return Math.floor(Math.random() * (max - num + 1)) + num; // used for between min and max
 };
 
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+export const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function colorRandomizer() {
+export function colorRandomizer() {
     const colors_list = [
         { id: 1, name: 'Black', color: '#000000' },
         { id: 2, name: 'White', color: '#FFFFFF' },
@@ -64,10 +64,3 @@ function colorRandomizer() {
     }
     return JSON.stringify(res);
 }
-
-module.exports = {
-    chunkArray,
-    randomr,
-    colorRandomizer,
-    wait,
-};

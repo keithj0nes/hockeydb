@@ -1,9 +1,11 @@
-const fs = require('fs');
-const { createNewMigration } = require('../utils/createMigration');
-const { runMigration } = require('../utils/runMigration');
-const { dropTables, seedTables } = require('../utils/seedMigration');
+import fs from 'fs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { createNewMigration } from '../utils/createMigration.js';
+import { runMigration } from '../utils/runMigration.js';
+import { dropTables, seedTables } from '../utils/seedMigration.js';
 
-
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const migrationsSQLFolder = `${__dirname}/sql`;
 const argv = process.argv.slice(2);
 

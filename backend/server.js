@@ -1,14 +1,23 @@
 /* eslint-disable no-multi-spaces */
-const express = require('express');
-const massive = require('massive'); // connects node to db
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import massive from 'massive';
+import cors from 'cors';
+import 'dotenv/config.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-// const app = module.exports = express();
+import { isProduction } from './controllers/helpers.js';
+import { selectEnvironment } from './database/utils/selectEnvironment.js';
+
+// controller imports
+import { news, auth, players, teams, games, locations, seasons, registrations, divisions, misc, users, emailer } from './controllers/index.js';
+
 const app = express();
-module.exports = app;
 const port = process.env.PORT;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const scriptsPath = `${__dirname}/database/scripts`;
+
+export default app;
 
 app.use(cors());
 app.use(express.json());
@@ -18,24 +27,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
-// controller imports
-const news = require('./controllers/news');
-const auth = require('./controllers/auth');
-const players = require('./controllers/players');
-const teams = require('./controllers/teams');
-const games = require('./controllers/games');
-const locations = require('./controllers/locations');
-const seasons = require('./controllers/seasons');
-const registrations = require('./controllers/registrations');
-const divisions = require('./controllers/divisions');
-const misc = require('./controllers/misc');
-const users = require('./controllers/users');
-const emailer = require('./controllers/helpers/emailer');
-const { isProduction } = require('./controllers/helpers');
-const { selectEnvironment } = require('./database/utils/selectEnvironment');
-
-const scriptsPath = path.join(__dirname, 'database/scripts');
 
 // Make sure to create a local postgreSQL db called hockeydb
 
@@ -223,15 +214,16 @@ app.put('/api/auth/:id');
 app.post('/api/auth/login/cookie', auth.loginFromCookie);
 
 // Used for production
-if (isProduction) {
-    console.log('running in herooku');
-    // Serve any static files
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    // Handle React routing, return all requests to React app
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-    });
-}
+// need to figure __dirname with ES modules
+// if (isProduction) {
+//     console.log('running in herooku');
+//     // Serve any static files
+//     app.use(express.static(path.join(__dirname, '../client/build')));
+//     // Handle React routing, return all requests to React app
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+//     });
+// }
 
 // 404
 app.use((req, res) => {

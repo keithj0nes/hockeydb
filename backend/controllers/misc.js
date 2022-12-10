@@ -1,4 +1,4 @@
-const app = require('../server.js');
+import app from '../server.js';
 
 
 const getTeamsPageFilters = async (req, res, next) => {
@@ -68,7 +68,7 @@ const getNewsTags = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getTeamsPageFilters,
     getStandingsPageFilters,
     getNewsTags,

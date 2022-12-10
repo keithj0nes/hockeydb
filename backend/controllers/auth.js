@@ -1,13 +1,12 @@
 /* eslint-disable no-use-before-define */
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const JWTStrategy = require('passport-jwt').Strategy;
-const ExtractJWT = require('passport-jwt').ExtractJwt;
-const app = require('../server.js');
-const emailer = require('./helpers/emailer');
 
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as JWTStrategy, ExtractJwt as ExtractJWT } from 'passport-jwt';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import app from '../server.js';
+import emailer from './helpers/emailer.js';
 
 const { JWT_SECRET } = process.env;
 
@@ -246,7 +245,7 @@ const updatePassword = async (req, res) => {
     return res.send({ status: 200, data: [], message: 'Password reset', redirect: '/login', notification_type: 'snack' });
 };
 
-module.exports = {
+export default {
     authorizeAccessToken,
     authorizeAccessToken2,
     login,

@@ -1,27 +1,26 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-continue */
-const massive = require('massive');
-const faker = require('faker');
-const bcrypt = require('bcrypt');
-const path = require('path');
-const { add } = require('date-fns');
-// const { nanoid } = require('nanoid');
-const { customAlphabet } = require('nanoid');
+import massive from 'massive';
+import faker from 'faker';
+import bcrypt from 'bcrypt';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { add } from 'date-fns';
+import { customAlphabet } from 'nanoid';
+import { chunkArray, randomr, colorRandomizer, wait } from './seedHelpers.js';
+import { selectEnvironment } from './selectEnvironment.js';
 
-const { chunkArray, randomr, colorRandomizer, wait } = require('./seedHelpers');
-const { selectEnvironment } = require('./selectEnvironment');
-// const nanoid2 = nanoid.customAlphabet('1234567890abcdef', 10);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const scriptsPath = path.join(__dirname, '..', 'scripts');
-
 const nanoid = customAlphabet('1234567890abcdef', 10);
+const argv = process.argv.slice(2);
+const connectionInfo = selectEnvironment(argv[1]);
+const todaysDate = new Date();
 
 
 // TODO: add more registrations based on seasons
 // TODO: make password_last_updated_at same as account creation date (need to add to auth controller too)
 
-const argv = process.argv.slice(2);
-const connectionInfo = selectEnvironment(argv[1]);
-const todaysDate = new Date();
 
 const submissionValue = (player, submissionWithoutPlayer = false) => {
     if (submissionWithoutPlayer) {
@@ -42,7 +41,7 @@ const submissionValue = (player, submissionWithoutPlayer = false) => {
 };
 
 
-const dropTables = async () => massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(async (db) => {
+export const dropTables = async () => massive(connectionInfo, { excludeMatViews: true, scripts: scriptsPath }).then(async (db) => {
     console.log('\n\nDropping tables');
     console.log('---------------');
 
@@ -59,7 +58,7 @@ const dropTables = async () => massive(connectionInfo, { excludeMatViews: true, 
 });
 
 
-const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
+export const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }).then(async (db) => {
     console.log('\nInitializing seeding');
     console.log('--------------------');
 
@@ -590,9 +589,3 @@ const seedTables = async () => massive(connectionInfo, { excludeMatViews: true }
 }).catch(err => {
     console.log(err, 'massive error in npm run seed');
 });
-
-
-module.exports = {
-    dropTables,
-    seedTables,
-};

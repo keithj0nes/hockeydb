@@ -1,6 +1,5 @@
-const app = require('../server');
-// const helpers = require('./helpers');
-const { buildWhere, buildOrderBy } = require('./helpers/sql');
+import app from '../server.js';
+import { buildWhere, buildOrderBy } from './helpers/sql.js';
 
 // const createLimitFragment = (db, limit, offset) => {
 //     if (offset) {
@@ -547,7 +546,7 @@ const deleteSeason = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getSeasons,
     getSeasonById,
     createSeason,

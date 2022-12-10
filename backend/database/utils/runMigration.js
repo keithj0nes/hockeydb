@@ -1,8 +1,9 @@
-const pm = require('postgres-migrations');
-const { selectEnvironment } = require('./selectEnvironment');
-require('dotenv').config();
+import pm from 'postgres-migrations';
+import 'dotenv/config.js';
+import { selectEnvironment } from './selectEnvironment.js';
 
-async function runMigration(filePath, environment) {
+// async function runMigration(filePath, environment) {
+export const runMigration = async (filePath, environment) => {
     const connectionInfo = selectEnvironment(environment);
 
     try {
@@ -23,8 +24,4 @@ async function runMigration(filePath, environment) {
         console.error(error, ': => error in migration');
         return true;
     }
-}
-
-module.exports = {
-    runMigration,
 };

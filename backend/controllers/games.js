@@ -1,4 +1,4 @@
-const app = require('../server.js');
+import app from '../server.js';
 
 const getGames = async (req, res, next) => {
     try {
@@ -92,12 +92,12 @@ const getGameById = async (req, res, next) => {
         const db = app.get('db');
         const { id } = req.params;
         const data = await db.query(`
-        select games.*, h.name AS home_team_name, a.name AS away_team_name, l.name AS location_name  from games
-        join teams h on h.id = games.home_team
-        join teams a on a.id = games.away_team
-        join locations l on l.id = games.location_id
-        where games.id = $1;
-      `, [id]);
+            select games.*, h.name AS home_team_name, a.name AS away_team_name, l.name AS location_name  from games
+            join teams h on h.id = games.home_team
+            join teams a on a.id = games.away_team
+            join locations l on l.id = games.location_id
+            where games.id = $1;`,
+        [id]);
 
         console.log(data, 'DATA GET GAMES BY ID');
         if (!data) {
@@ -138,7 +138,7 @@ const createGame = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getGames,
     getGameById,
     createGame,

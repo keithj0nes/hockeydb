@@ -1,16 +1,6 @@
-const app = require('../server.js');
-const { buildWhere } = require('./helpers/sql');
+import app from '../server.js';
+import { buildWhere } from './helpers/sql.js';
 
-// const getLocations = async (req, res, next) => {
-//     try {
-//         const db = app.get('db');
-//         const data = await db.query('SELECT * FROM locations WHERE deleted_at IS NULL ORDER BY UPPER(name)');
-//         return res.send({ status: 200, data, message: 'Retrieved list of locations' });
-//     } catch (error) {
-//         console.log('GET LOCATIONS ERROR: ', error);
-//         return next(error);
-//     }
-// };
 
 const getLocations = async (req, res, next) => {
     try {
@@ -91,7 +81,7 @@ const deleteLocation = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getLocations,
     createLocation,
     updateLocation,

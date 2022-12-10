@@ -1,6 +1,5 @@
-const dateFormat = require('date-fns/format');
-const app = require('../server.js');
-
+import { format as dateFormat } from 'date-fns';
+import app from '../server.js';
 
 const getNews = async (req, res, next) => {
     try {
@@ -173,7 +172,7 @@ const deleteNews = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getNews,
     getNewsById,
     createNews,

@@ -1,7 +1,7 @@
 /* eslint-disable no-continue */
 
 
-function isOrIsNot(queryItem, allowableItem) {
+export function isOrIsNot(queryItem, allowableItem) {
     if (queryItem && JSON.parse(queryItem)) {
         return `${allowableItem === 'IS' ? 'IS NOT' : 'IS'} null`;
     }
@@ -14,7 +14,7 @@ function isOrIsNot(queryItem, allowableItem) {
 //     return JSON.stringify(aKeys) === JSON.stringify(bKeys);
 // }
 
-const buildWhere = (query = {}, allowable = []) => {
+export const buildWhere = (query = {}, allowable = []) => {
     const conditions = [];
     const values = [];
 
@@ -82,7 +82,7 @@ const buildWhere = (query = {}, allowable = []) => {
 // TODO: get dynamic order by working
 // exmaple: click table header to change sorting
 
-const buildOrderBy = (query = {}, defaults = {}, whereLength = 0) => {
+export const buildOrderBy = (query = {}, defaults = {}, whereLength = 0) => {
     const conditions = [];
     const values = [];
 
@@ -120,9 +120,4 @@ const buildOrderBy = (query = {}, defaults = {}, whereLength = 0) => {
         values,
         { page, limit, dir, offset },
     ];
-};
-
-module.exports = {
-    buildWhere,
-    buildOrderBy,
 };

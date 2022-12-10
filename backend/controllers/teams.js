@@ -1,4 +1,4 @@
-const app = require('../server.js');
+import app from '../server.js';
 
 const getAllTeams = async (req, res, next) => {
     try {
@@ -369,7 +369,7 @@ const deleteTeam = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getAllTeams,
     getAllTeamsByDivision,
     getTeamById,

@@ -1,5 +1,5 @@
 
-const selectEnvironment = (environment) => {
+export const selectEnvironment = (environment) => {
     let connectionInfo = {};
 
     switch (environment) {
@@ -61,8 +61,4 @@ const selectEnvironment = (environment) => {
     connectionInfo.ensureDatabaseExists = true;
 
     return connectionInfo;
-};
-
-module.exports = {
-    selectEnvironment,
 };

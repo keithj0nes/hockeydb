@@ -1,5 +1,5 @@
-const app = require('../server.js');
-const helpers = require('./helpers');
+import app from '../server.js';
+import { tryCatch } from './helpers.js';
 
 const getUsers = async (req, res, next) => {
     try {
@@ -37,7 +37,7 @@ const getUsers = async (req, res, next) => {
         }
         // const data = await db.users.find();
         // const [ err, data ] = await helpers.tryCatch(db.users.find({...query}, { order: [ {field: 'id', direction: 'desc'}]}))
-        const [err, data] = await helpers.tryCatch(db.query(myNewStuffz));
+        const [err, data] = await tryCatch(db.query(myNewStuffz));
         if (err) {
             return console.log(err, 'ERRORRRRRR 😎');
             // return res.send({ status: 404, data: [], message: 'An error occured with the query', redirect: 'current' });
@@ -77,6 +77,6 @@ const getUsers = async (req, res, next) => {
     }
 };
 
-module.exports = {
+export default {
     getUsers,
 };

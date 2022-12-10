@@ -1,5 +1,5 @@
 
-const app = require('../server.js');
+import app from '../server.js';
 
 
 const getAllPlayers = async (req, res, next) => {
@@ -118,7 +118,7 @@ const deletePlayer = async (req, res, next) => {
 };
 
 
-module.exports = {
+export default {
     getAllPlayers,
     getPlayerById,
     getPlayerStats,

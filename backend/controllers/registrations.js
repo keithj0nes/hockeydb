@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const app = require('../server');
+import jwt from 'jsonwebtoken';
+import app from '../server.js';
 
 const { JWT_SECRET } = process.env;
 
@@ -394,7 +394,7 @@ const submitPlayerRegistration = async (req, res) => {
 };
 
 
-module.exports = {
+export default {
     getRegistration,
     getOpenRegistrations,
     getRegistrationByRegIdAdmin,
